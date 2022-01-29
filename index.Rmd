@@ -1,0 +1,283 @@
+---
+title: "Psicometria"
+date: "Pagina aggiornata il: `r format.Date(file.mtime('index.Rmd'),'%Y-%m-%d')`"
+---
+
+```{r include = FALSE}
+library("tidyverse")
+library("lubridate")
+```
+
+```{r include = FALSE}
+firstday <- "28-02-2022"
+    
+meetings <- dmy(firstday) + c(0:15) * weeks(1)
+
+meeting_headers <- paste0(
+  "Settimana ", 1:15, ", ", day(meetings), " ", months(meetings), " 2022"
+)
+```
+
+Questa è la pagina web dell'insegnamento B000286 Psicometria (L-Z), prof. [Corrado Caudek](https://ccaudek.github.io/caudeklab/), Corso di Laurea in [Scienze e Tecniche Psicologiche](https://www.scienzetecnichepsicologiche.unifi.it), [Università degli Studi di Firenze](https://www.unifi.it), anno accademico 2021-2022.
+
+Questa pagina web verrà aggiornata durante il periodo di svolgimento dell'insegnamento (marzo-maggio 2022).
+
+## Descrizione sintetica 
+
+L'insegnamento Psicometria (B000286) ha lo scopo di fornire agli studenti le conoscenze di base di statistica, di analisi dei dati e di metodologia della ricerca che costituiscono uno degli aspetti centrali del bagaglio professionale dello psicologo. Il presente insegnamento non si limiterà ad una descrizione astratta degli argomenti trattati, anche perché tali concetti risultano poco comprensibili se non vengono utilizzati nell'ambito di applicazioni concrete. Gli argomenti del corso verranno invece accompagnati da esercitazioni pratiche e labo- ratori didattici. Per tali analisi guidate dei dati sarà necessario utilizzare un computer e un linguaggio di programmazione per l'analisi statistica dei dati. In questo insegnamento utilizzeremo il linguaggio di programmazione $\textsf{R}$ e il linguaggio di programmazione probabilistico Stan.
+
+## Obiettivi formativi
+
+1. Conoscere i concetti base della misurazione psicologica.
+2. Capire concetti elementi importanti dell’analisi dei dati, quali la tendenza centrale e la varianza, e sapere calcolare, interpretare e comunicare tali quantità.
+3. Essere in grado di replicare alcune delle analisi dei dati presentate in recenti pubbli- cazioni scientifiche in ambito psicologico.
+4. Acquisire familiarità con argomenti avanzati come l’approccio Bayesiano.
+5. Imparare gli aspetti di base del linguaggio di programmazione $\textsf{R}$. La conoscenza di R costituisce un’importante aggiunta al curriculum di qualsiasi psicologo ed è uno strumento essenziale per qualsiasi approfondimento successivo (compreso l’ambito dello sviluppo e della validazione dei reattivi psicologici).
+6. Essere in grado di interpretare gli aspetti di base della sezione Risultati delle pubblicazioni scientifiche in ambito psicologico.
+7. Produrre un report scritto che riassume i risultati quantitativi di una ricerca psicolo- gica.
+8. Realizzare una presentazione orale di un progetto di analisi di dati psicologici.
+9. Imparare a collaborare con un gruppo di pari in un progetto di analisi di dati.
+
+## Prerequisiti
+
+Non è richiesta nessuna conoscenza preliminare. Tutte le informazioni necessarie per frequentare con profitto e per superare l'esame saranno fornite dalle lezioni, dalle esercitazioni guidate e dal materiale didattico messo a disposizione.
+
+## Ricevimento
+
+Questo è un periodo storico insolito, per tutti noi. Non avremo un "luogo fisico" in cui poterci incontrare al di fuori delle lezioni. Il COVID-19 non è ancora stato neutralizzato. Detto questo, e date le preoccupazioni per il mio benessere e il benessere dei membri della mia famiglia, durante le lezioni in presenza mi comporterò nel modo seguente: me ne andrò dall’aula immediatamente dopo avere finito la lezione. È normale voler chiedere al professore qualcosa in privato dopo la lezione, o anche solo chiacchierare con lui sugli argomenti della lezione, durante la pausa. Tuttavia, questo non è un momento normale e dobbiamo adattarci alla situazione in cui ci troviamo. Ciò nonostante, continuerò ad essere facilmente reperibile. Dato il numero elevato di studenti, vi prego di _non_ inviarmi email. Vi incoraggio, invece, a contattarmi via Moodle, anche organizzando incontri di gruppo (ma non necessariamente). In tali incontri potremo chiacchierare tranquillamente via Google Meet.
+
+
+## Calendario delle lezioni e delle attività didattiche
+
+Viene qui fornito un calendario di ciò che faremo durante il semestre insieme alle scadenze per la consegna degli esercizi WarmUp e dei report in itinere. I compiti assegnati vanno svolti nella settimana indicata e rigurardano gli argomenti che discuteremo la settimana successiva. Il termine ultimo per la consegna degli esercizi WarmUp è domenica -- per esempio, gli esercizi WarmUp assegnati nella settimana del 28 febbraio dovranno essere consegnati entro domenica 6 marzo. 
+
+**Il presente calendario non è definitivo e potrà subire delle variazioni che saranno comunicate mediante l'aggiornamento di questa pagina web.**
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[1]`: presentazione dell'insegnamento
+
+*Incontri di lezione ed esercitazioni pratiche:* 1
+
+*Letture:*  
+
+ - DSpP capitoli 1, 2, 3.
+ - DSpP appendici A, B, C, D, F.
+
+*Compiti*: 
+
+- Iscrizione al corso su Moodle.
+- Familiarizzazione con la pagina Moodle dell'insegnamento.
+- Completare il questionario `All about you`.
+- Installazione di $\textsf{R}$ e RStudio sul proprio computer.
+- Formazione dei gruppi.
+- Fare esercizi in $\textsf{R}$.
+- Imparare a usare $\textsf{R}$ Markdown in RStudio.
+- Esercizi WarmUp 1, 2.
+
+*Risorse aggiuntive:*
+
+- [R for Data Science](https://r4ds.had.co.nz/data-import.html).
+- Twitter: [Rstats](https://twitter.com/rstatstweet), [R-LADIES](https://rladies.org/directory/#), [R4DS online learning community](https://twitter.com/r4dscommunity), `#TidyTuesday`.
+
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[2]`: analisi esplorativa dei dati
+
+*Incontri di lezione ed esercitazioni pratiche:* 2, 3, 4
+
+*Letture:*  
+
+ - DSpP capitoli 4, 5, 6, 7
+
+*Compiti*: 
+
+- Esercizi WarmUp 3, 4, 5
+
+*Risorse aggiuntive*
+
+- [Introduction to The New Statistics](https://www.bookdown.org/pbaumgartner/itns-exercises/chapter-03-R.html)
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[3]`: teoria delle probabilità (I)
+
+*Incontri di lezione ed esercitazioni pratiche:* 5, 6, 7
+
+*Letture:*  
+
+ - DSpP capitoli 8, 9, 10, 11
+
+*Compiti*: 
+
+- **\textcolor{red}{Relazione in itinere 1:}** 
+  - leggere l'articolo di riferimento.
+  - Importare i dati degli autori in $\textsf{R}$.
+  - Completare gli esercizi assegnati inserendoli in un file RMarkdown; consegnare il file compilato in html.
+- WU_1, WU_2
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[4]`: teoria delle probabilità (II)
+
+*Incontri di lezione ed esercitazioni pratiche:* 8, 9, 10
+
+*Letture:*  
+
+ - DSpP capitoli 12, 13, 14
+
+*Compiti*: 
+
+- Installazione di `cmdstanr`
+- WU_1, WU_2
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[5]`: introduzione all'inferenza bayesiana
+
+*Incontri di lezione ed esercitazioni pratiche:* 11, 12, 13
+
+*Letture:*  
+
+ - DSpP capitoli 15, 16
+
+*Compiti*: 
+
+- WU_1, WU_2
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[6]`: stima della distribuzione a posteriori
+
+*Incontri di lezione ed esercitazioni pratiche:* 14, 15, 16
+
+*Letture:*  
+
+ - DSpP capitoli 17, 18, 19
+
+*Compiti*: 
+
+- **Relazione in itinere 2:** completare le analisi descrittivie e replicare le analisi frequentiste svolte dagli autori;
+- WU_1, WU_2
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[7]`: primo parziale
+
+*Incontri di lezione ed esercitazioni pratiche:* 17
+
+- **\textcolor{red}{Primo parziale}**
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[8]`: inferenza bayesiana (I)
+
+*Incontri di lezione ed esercitazioni pratiche:* 18, 19, 20
+
+*Letture:*  
+
+ - DSpP capitoli 12, 13, 14, 15
+
+*Compiti*: 
+
+- WU_1, WU_2
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[9]`: inferenza bayesiana (II)
+
+*Incontri di lezione ed esercitazioni pratiche:* 21, 22, 23
+
+*Letture:*  
+
+ - DSpP capitoli 16, 17, 18, 19, 20
+
+*Compiti*: 
+
+- WU_1, WU_2
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[10]`: il modello statistico lineare
+
+*Incontri di lezione ed esercitazioni pratiche:* 24, 25, 26
+
+*Letture:*  
+
+ - DSpP capitoli 21, 22, 23, 24
+
+*Compiti*: 
+
+- **\textcolor{red}{Relazione in itinere 3:}** impostare l'analisi bayesiana usando i dati forniti dagli autori;
+- WU_1, WU_2
+
+*Risorse aggiuntive*
+
+- Interessante discussione su [come NON fare una ricerca psicologica](https://statmodeling.stat.columbia.edu/2021/06/16/wow-just-wow-if-you-think-psychological-science-as-bad-in-the-2010-2015-era-you-cant-imagine-how-bad-it-was-back-in-1999/).
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[11]`: il confronto tra modelli
+
+*Incontri di lezione ed esercitazioni pratiche:* 27, 28, 29
+
+*Letture:*  
+
+ - DSpP capitoli 25, 26, 27, 28
+
+*Compiti*: 
+
+- WU_1, WU_2
+- Consegna del progetto di gruppo
+
+<!-- ------------------------------------------------------ -->
+
+### `r meeting_headers[12]`: secondo parziale e presentazione dei progetti
+
+*Incontri di lezione ed esercitazioni pratiche:* 30, 31, 32
+
+- **Secondo parziale**
+- **Presentazione dei progetti dei gruppi**
+
+
+## Ulteriori informazioni
+
+### Norme relative all'uso della posta elettronica
+
+Di solito rispondo rapidamente alle e-mail degli studenti. Tuttavia, ricevo molto spesso richieste di informazioni che sono disponibili in questo Syllabus, a cui preferirei non dovere rispondere. Per favore, _leggete attentamente il Syllabus prima di contattarmi_. Ribadisco qui sotto alcuni punti.
+
+1. Il programma d’esame per gli studenti non frequentanti è descritto in questo Syllabus.
+2. Le modalità d’esame per gli studenti non frequentanti sono descritte in questo Syllabus.
+3. I testi da utilizzare per la preparazione dell’esame per gli studenti non frequentanti sono descritti in questo Syllabus.
+4. Per richiedere un incontro Google Meet con me, per favore, inviatemi un messaggio personale tramite Moodle. Dato che ciascuno studente farà parte di un gruppo, preferisco interagire con gli studenti organizzando degli incontri “di gruppo”. Ma, talvolta, un incontro “privato” con me può essere utile; se ci sono le condizioni, non esitate a chiederlo.
+
+### Politica sulla disonestà accademica
+
+Prendo sul serio l’integrità accademica e non mostrerò alcuna tolleranza per comportamenti disonesti. Evitate di commettere intenzionalmente o inavvertitamente uno qualsiasi di questi atti:
+
+- dare, ricevere o utilizzare aiuti non autorizzati durante le prove in itinere o durante l’esame;
+- copiare intenzionalmente o non intenzionalmente il linguaggio, la struttura o le idee di un'altra persona attribuendovene la paternità.
+
+Ho ricevuto da altri colleghi segnalazioni di comportamenti disonesti in sede d’esame. Per tali ragioni ho deciso di adottare la seguente procedura che verrà implementata sia nelle prove in itinere sia nelle sessioni d’esame per non frequentanti.
+
+- Le prove in itinere e gli esami si svolgeranno mediante quiz Moodle (ripeto, per partecipare è necessario usare il proprio computer). Tali quiz obbligheranno lo studente a rispondere alle domande nella modalità “sequenziale”, ovvero senza potere tornare indietro alla domanda precedente o andare avanti alla domanda successiva saltandone una.
+- I problemi assegnati a ciascuno studente saranno estratti casualmente da un database; ciò significa che, a studenti diversi, potranno essere assegnati problemi diversi.
+- Anche se lo stesso problema verrà proposto a studenti diversi, la sequenza delle possibili risposte sarà ordinata in maniera casuale per ciascuno studente. Inoltre, ci saranno varianti dello stesso problema nelle quali sarà usato lo stesso testo, ma con valori numerici diversi, per cui i risultati numerici corretti varieranno da studente a studente.
+- Le prove in itinere e gli esami si svolgeranno sotto pressione temporale. Non mi aspetto che lo studente completi tutti i quiz assegnati. Valuterò le prestazioni in maniera relativa, per cui agli studenti che otterranno i risultati migliori verrà assegnato il massimo dei voti, anche se non avranno risolto tutti i problemi proposti. Nelle sessioni d’esame per studenti non frequentanti -– alle quali, di solito, partecipa un numero esiguo di studenti –- valuterò la prestazione con riferimento alla distribuzione delle prestazioni ottenute dagli studenti frequentati (la quasi totalità di studenti in questo insegnamento).
+
+### Politica sulle disabilità
+
+Se uno studente ha dei bisogni educativi speciali, lo incoraggio a farmelo sapere _privatamente_ il prima possibile. Rispetterò ovviamente il diritto alla privacy in materia, con tutto il cuore.
+
+
+## Considerazioni finali
+
+Come per tutti gli insegnamenti, ciò che gli studenti avranno imparato alla fine del corso dipenderà dal loro impegno durante il semestre. Chiedere aiuto ai vostri compagni e a me è importante: non abbiate timore di fare una domanda su qualcosa che non sapete o se volete verificare le vostre conoscenze su qualcosa che pensate di sapere.
+
+**Questo documento è l'unica fonte che va consultata per informazioni sul programma e sulle modalità d'esame.**
+\
+\
+\
+
+Questa pagina web è stata creata con rmarkdown's site generator.
