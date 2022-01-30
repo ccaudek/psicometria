@@ -8,4 +8,4 @@ The course material in the repo can be used in other courses. Text and other mat
 
 The electronic version of the course book _Data science per psicologi_, by Corrado Caudek is available for non-commercial purposes and is licensed under CC-BY-NC 4.0.
 
-The teaching materials here provided will be updated during the semester. Exercise instructions and _Data science per psicologi_ will be updated at latest on Monday of the corresponding week.
+The teaching materials here provided will be updated during the semester. 
