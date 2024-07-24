@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analisi dei dati per psicologi - 4&nbsp; NumPy</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/chapter_1/04_pandas.html" rel="next">
+<link href="../../chapters/chapter_1/02_python_2.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_1/00_prelims.html">Python</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_1/03_numpy.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi dei dati per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/03_numpy.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/00_scientific_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">La scienza dei dati e il metodo scientifico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/03_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Distribuzioni di Frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/06_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/01_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduzione al calcolo delle probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/02_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Inferenza Bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/15_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a13a_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Sigma algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#preparazione-del-notebook" id="toc-preparazione-del-notebook" class="nav-link active" data-scroll-target="#preparazione-del-notebook"><span class="header-section-number">4.1</span> Preparazione del Notebook</a></li>
+  <li><a href="#utilizzo-degli-array-nel-modulo-numpy" id="toc-utilizzo-degli-array-nel-modulo-numpy" class="nav-link" data-scroll-target="#utilizzo-degli-array-nel-modulo-numpy"><span class="header-section-number">4.2</span> Utilizzo degli Array nel Modulo NumPy</a>
+  <ul class="collapse">
+  <li><a href="#funzioni-per-ndarray" id="toc-funzioni-per-ndarray" class="nav-link" data-scroll-target="#funzioni-per-ndarray"><span class="header-section-number">4.2.1</span> Funzioni per <code>ndarray</code></a></li>
+  </ul></li>
+  <li><a href="#manipolazione-di-array-con-numpy" id="toc-manipolazione-di-array-con-numpy" class="nav-link" data-scroll-target="#manipolazione-di-array-con-numpy"><span class="header-section-number">4.3</span> Manipolazione di Array con NumPy</a>
+  <ul class="collapse">
+  <li><a href="#cosa-significa-vettorizzare-unoperazione" id="toc-cosa-significa-vettorizzare-unoperazione" class="nav-link" data-scroll-target="#cosa-significa-vettorizzare-unoperazione"><span class="header-section-number">4.3.1</span> Cosa Significa Vettorizzare un’Operazione</a></li>
+  </ul></li>
+  <li><a href="#broadcasting" id="toc-broadcasting" class="nav-link" data-scroll-target="#broadcasting"><span class="header-section-number">4.4</span> Broadcasting</a>
+  <ul class="collapse">
+  <li><a href="#esempio-di-broadcasting" id="toc-esempio-di-broadcasting" class="nav-link" data-scroll-target="#esempio-di-broadcasting"><span class="header-section-number">4.4.1</span> Esempio di Broadcasting</a></li>
+  </ul></li>
+  <li><a href="#altre-operazioni-sugli-array" id="toc-altre-operazioni-sugli-array" class="nav-link" data-scroll-target="#altre-operazioni-sugli-array"><span class="header-section-number">4.5</span> Altre operazioni sugli array</a></li>
+  <li><a href="#lavorare-con-formule-matematiche" id="toc-lavorare-con-formule-matematiche" class="nav-link" data-scroll-target="#lavorare-con-formule-matematiche"><span class="header-section-number">4.6</span> Lavorare con formule matematiche</a></li>
+  <li><a href="#slicing" id="toc-slicing" class="nav-link" data-scroll-target="#slicing"><span class="header-section-number">4.7</span> Slicing</a></li>
+  <li><a href="#copia-e-copia-profonda-in-python" id="toc-copia-e-copia-profonda-in-python" class="nav-link" data-scroll-target="#copia-e-copia-profonda-in-python"><span class="header-section-number">4.8</span> Copia e “Copia Profonda” in Python</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">4.9</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_1/03_numpy.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_1/00_prelims.html">Python</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_1/03_numpy.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-numpy" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>La Standard Library di Python mette a disposizione un’ampia gamma di funzioni utili per l’analisi dei dati. Tuttavia, per un’analisi più approfondita ed efficiente, è raccomandato avvalersi di funzioni specifiche disponibili in altri moduli esterni. Tra questi, i più rilevanti per l’analisi dei dati includono NumPy, Pandas, Matplotlib e Seaborn.</p>
+<p>NumPy, abbreviazione di Numerical Python, rappresenta un’estensione del linguaggio Python focalizzata sul calcolo algebrico e matriciale. Questo modulo è essenziale per la maggior parte delle operazioni di calcolo numerico in Python, poiché introduce strutture dati avanzate progettate per l’elaborazione efficiente di vettori, matrici e insiemi di dati di grandi dimensioni. Beneficiando dell’implementazione in linguaggi ad alte prestazioni come C e Fortran, NumPy offre un’elevata efficienza, specialmente in operazioni vettorializzate che sfruttano vettori e matrici per formulare calcoli. Parallelamente, Pandas si afferma come strumento fondamentale per l’importazione e la manipolazione dei dati, mentre Matplotlib e Seaborn si distinguono per le loro capacità di visualizzazione, facilitando notevolmente la creazione di rappresentazioni grafiche dei dati. Questi moduli, combinati insieme, costituiscono un ecosistema robusto e versatile per l’analisi e l’elaborazione dei dati in Python.</p>
+<p>In questo capitolo, introdurremo NumPy, che è ampiamente utilizzato in quasi tutti i calcoli numerici in Python. NumPy consente di lavorare con vettori e matrici in modo più efficiente e veloce rispetto alle liste e alle liste di liste (utilizzate come matrici) di Python. Oltre a ciò, NumPy fornisce una vasta gamma di funzioni matematiche di base, nonché strumenti avanzati per la generazione di numeri casuali – si veda <span class="quarto-unresolved-ref">?sec-generate-random-numbers</span>.</p>
+<section id="preparazione-del-notebook" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="preparazione-del-notebook"><span class="header-section-number">4.1</span> Preparazione del Notebook</h2>
+<div id="da1bf650-3fc1-4209-a493-0f3b0488110f" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="utilizzo-degli-array-nel-modulo-numpy" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="utilizzo-degli-array-nel-modulo-numpy"><span class="header-section-number">4.2</span> Utilizzo degli Array nel Modulo NumPy</h2>
+<p>In Python standard, abbiamo a disposizione tipi di dati numerici (come numeri interi e decimali) e strutture come liste, dizionari e insiemi. NumPy, d’altro canto, introduce un nuovo tipo di struttura dati: l’array N-dimensionale, noto come <code>ndarray</code>. Questi array hanno alcune caratteristiche distintive:</p>
+<ul>
+<li><strong>Dimensioni</strong>: Gli <code>ndarray</code> possono variare nel numero di dimensioni, definite come “assi”. Ad esempio, un array può essere unidimensionale (simile a un vettore lineare), bidimensionale (come una matrice o una tabella), tridimensionale (simile a un cubo), e così via.</li>
+<li><strong>Tipo di Dato</strong>: A differenza delle liste in Python standard che possono contenere diversi tipi di dati, ogni elemento all’interno di un <code>ndarray</code> deve essere dello stesso tipo, come numeri interi, decimali, booleani o stringhe.</li>
+<li><strong>Forma</strong>: La “forma” di un <code>ndarray</code> si riferisce alle sue dimensioni, ovvero quante righe, colonne o altri livelli di profondità ha. Per esempio, la forma (3, 4) indica un array con 3 righe e 4 colonne.</li>
+<li><strong>Indicizzazione</strong>: Gli <code>ndarray</code> possono essere indicizzati in modo simile agli array standard di Python, ma offrono anche opzioni più avanzate per l’indicizzazione.</li>
+</ul>
+<p>Gli <code>ndarray</code> sono potenti per manipolare e analizzare i dati, grazie alle loro funzioni e metodi che includono operazioni matematiche e statistiche, trasformazioni e altre manipolazioni dei dati.</p>
+<p><strong>Terminologia Importante:</strong> - <strong>Size</strong>: Indica il numero totale di elementi in un array. - <strong>Rank</strong>: Si riferisce al numero di dimensioni, o assi, di un array. - <strong>Shape</strong>: Denota le dimensioni specifiche dell’array, ovvero una sequenza di numeri che rappresentano il conteggio degli elementi in ogni dimensione.</p>
+<p><strong>Come Creare un <code>ndarray</code>:</strong> Il modo più diretto per creare un <code>ndarray</code> è attraverso la conversione di una lista Python. Ad esempio, è possibile creare un array unidimensionale (1-D) a partire da una lista standard di Python.</p>
+<div id="9e33c32c-3bde-4ec9-bc3c-f6f8de1681cc" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>L’istruzione precedente crea un array in NumPy, assegnandolo alla variabile <code>x</code>. Questo array è un vettore unidimensionale contenente sei elementi, che sono i numeri interi specificati all’interno delle parentesi quadre.</p>
+<div id="4a0c1adf-f432-45f1-adaa-82764853ef80" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1 2 3 4 5 6]</code></pre>
+</div>
+</div>
+<p><strong>Indicizzazione</strong></p>
+<p>Se vogliamo estrarre un singolo elemento del vettore lo indicizziamo con la sua posizione (si ricordi che l’indice inizia da 0):</p>
+<div id="98cd0f02-86ee-43a9-bd4f-61d1133aab36" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>1</code></pre>
+</div>
+</div>
+<div id="7fb54269-af83-4934-803c-61727c1c4333" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>3</code></pre>
+</div>
+</div>
+<p>Un array 2-D si crea nel modo seguente:</p>
+<div id="a18e9fc0-310c-458e-8c2b-86a34fbb0645" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>]])</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+<p>Estraiamo un singolo elemento dall’array:</p>
+<div id="465a2810-d728-46b4-8f83-28a393cd3b80" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">0</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>3</code></pre>
+</div>
+</div>
+<p>Estraiamo la seconda riga dall’array:</p>
+<div id="20e0d470-ab91-43f8-9c49-d5a579f5497c" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>array([5, 6, 7, 8])</code></pre>
+</div>
+</div>
+<p>Estraiamo la seconda colonna dall’array:</p>
+<div id="8e16978d-2391-4b03-baed-38fe42d0c30a" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>y[:, <span class="dv">1</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>array([ 2,  6, 10])</code></pre>
+</div>
+</div>
+<p>La sintassi con i due punti è chiamata “slicing” dell’array.</p>
+<div id="603ed4d1-99a2-414c-b490-280e9c0dc2b9" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first row of the array</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Displaying the first row:"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[<span class="dv">0</span>, :])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Displaying the first row:
+[1 2 3 4]</code></pre>
+</div>
+</div>
+<div id="485a2b56-a9aa-4b73-a3df-d292ab34c904" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the last two elements in the first row</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Showing the last two elements in the first row:"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[<span class="dv">0</span>, <span class="op">-</span><span class="dv">2</span>:])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Showing the last two elements in the first row:
+[3 4]</code></pre>
+</div>
+</div>
+<div id="9ec80a86-0964-44d4-ab99-141abc9770f9" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve every second element in the first row</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retrieving every second element in the first row:"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[<span class="dv">0</span>, ::<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Retrieving every second element in the first row:
+[1 3]</code></pre>
+</div>
+</div>
+<div id="5b945d8c-7d14-4cc7-b693-fe55d810c239" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract a submatrix from the original array</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Extracting a submatrix:"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[:<span class="dv">2</span>, <span class="dv">1</span>:<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Extracting a submatrix:
+[[2 3]
+ [6 7]]</code></pre>
+</div>
+</div>
+<section id="funzioni-per-ndarray" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="funzioni-per-ndarray"><span class="header-section-number">4.2.1</span> Funzioni per <code>ndarray</code></h3>
+<p>Numpy offre varie funzioni per creare <code>ndarray</code>. Per esempio, è possibile creare un array 1-D con la funzione <code>.arange(start, stop, incr, dtype=..)</code> che fornisce l’intervallo di numeri compreso fra <code>start</code>, <code>stop</code>, al passo <code>incr</code>:</p>
+<div id="6ea2e3f9-09e9-45c4-b4e5-1a4f1e47971a" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.arange(<span class="dv">2</span>, <span class="dv">9</span>, <span class="dv">2</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[2 4 6 8]</code></pre>
+</div>
+</div>
+<p>Si usa spesso <code>.arange</code> per creare sequenze a incrementi unitari:</p>
+<div id="c82eb798-ae2f-4c9d-8151-9c83cdb87f5b" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.arange(<span class="dv">11</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 0  1  2  3  4  5  6  7  8  9 10]</code></pre>
+</div>
+</div>
+<p>Un’altra funzione molto utile è <code>.linspace</code>:</p>
+<div id="d23ea5bc-89a2-4cb6-8f79-6f529973d12d" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, num<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 0.          0.52631579  1.05263158  1.57894737  2.10526316  2.63157895
+  3.15789474  3.68421053  4.21052632  4.73684211  5.26315789  5.78947368
+  6.31578947  6.84210526  7.36842105  7.89473684  8.42105263  8.94736842
+  9.47368421 10.        ]</code></pre>
+</div>
+</div>
+<p>Fissati gli estremi (qui 0, 10) e il numero di elementi desiderati, <code>.linspace</code> determina in maniera automatica l’incremento.</p>
+<p>Una proprietà molto utile dei <code>ndarray</code> è la possibilità di filtrare gli elementi di un array che rispondono come <code>True</code> ad un criterio. Per esempio:</p>
+<div id="8c038319-f4b6-4bcd-99bf-99da4a7dc548" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[x <span class="op">&gt;</span> <span class="dv">7</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 7.36842105  7.89473684  8.42105263  8.94736842  9.47368421 10.        ]</code></pre>
+</div>
+</div>
+<p>perché solo gli ultimi sei elementi di <code>x</code> rispondono <code>True</code> al criterio <span class="math inline">\(x &gt; 7\)</span>.</p>
+<p>Le dimensioni (“assi”) di un <code>ndarray</code> vengono ritornate dal metodo <code>.dim</code>. Per esempio:</p>
+<div id="ac3b1dcf-2b6d-4079-9f20-960605cb6c00" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+<div id="5a4644c2-7c02-42ec-a32a-7d140deac377" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>y.ndim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>2</code></pre>
+</div>
+</div>
+<div id="408a98cb-b9dd-40b7-9d93-4c8131f67503" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 4  8 12]</code></pre>
+</div>
+</div>
+<div id="d808f34c-8acc-4429-b0b7-1de521414efc" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 9 10 11 12]</code></pre>
+</div>
+</div>
+<p>Il numero di elementi per ciascun asse viene ritornato dal metodo <code>.shape</code>:</p>
+<div id="d215d0f2-7360-48f1-99a7-624fb1a4c202" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>y.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>(3, 4)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="manipolazione-di-array-con-numpy" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="manipolazione-di-array-con-numpy"><span class="header-section-number">4.3</span> Manipolazione di Array con NumPy</h2>
+<p>NumPy rende più agevole lavorare con grandi quantità di dati. Un concetto fondamentale in NumPy sono gli array monodimensionali, spesso utilizzati per rappresentare vettori, ovvero sequenze di numeri che possono rappresentare, ad esempio, le misurazioni di una variabile specifica. Grazie a NumPy, possiamo eseguire operazioni aritmetiche su questi vettori in modo semplice, applicando la stessa operazione a tutti gli elementi dell’array contemporaneamente.</p>
+<section id="cosa-significa-vettorizzare-unoperazione" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="cosa-significa-vettorizzare-unoperazione"><span class="header-section-number">4.3.1</span> Cosa Significa Vettorizzare un’Operazione</h3>
+<p>La vettorizzazione è una delle funzionalità più efficaci di NumPy. Quando diciamo che un’operazione è vettorizzata, significa che questa operazione viene applicata in un colpo solo a tutti gli elementi dell’array, invece di dover agire su ciascun elemento individualmente. Questo approccio rende la manipolazione di grandi insiemi di dati non solo più veloce ma anche più intuitiva, poiché consente di trattare l’intero insieme di dati come un’unica entità anziché come una serie di punti dati individuali.</p>
+<p>Supponiamo di avere raccolto i dati di 4 individui</p>
+<div id="c684fac9-2343-4b30-a396-6e622bc969d8" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> np.array([<span class="fl">1.62</span>, <span class="fl">1.75</span>, <span class="fl">1.55</span>, <span class="fl">1.74</span>])</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>kg <span class="op">=</span> np.array([<span class="fl">55.4</span>, <span class="fl">73.6</span>, <span class="fl">57.1</span>, <span class="fl">59.5</span>])</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(kg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1.62 1.75 1.55 1.74]
+[55.4 73.6 57.1 59.5]</code></pre>
+</div>
+</div>
+<p>dove <code>m</code> è l’array che contiene i dati relativi all’altezza in metri dei quattro individui e <code>kg</code> è l’array che contiene i dati relativi al peso in kg. I dati sono organizzati in modo tale che il primo elemento di entrambi i vettori si riferisce alle misure del primo individuo, il secondo elemento dei due vettori si riferisce alle misure del secondo individuo, ecc.</p>
+<p>Supponiamo di volere calcolare l’indice BMI:</p>
+<p><span class="math display">\[
+BMI = \frac{kg}{m^2}.
+\]</span></p>
+<p>Per il primo individuo del campione, l’indice di massa corporea è</p>
+<div id="467d6b0c-dc3d-4b7a-bcb1-47ba57ed220f" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fl">55.4</span> <span class="op">/</span> <span class="fl">1.62</span><span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>21.109586953208346</code></pre>
+</div>
+</div>
+<p>Si noti che non abbiamo bisogno di scrivere <code>55.4 / (1.62**2)</code> in quanto, in Python, l’elevazione a potenza viene eseguita prima della somma e della divisione (come in tutti i linguaggi). Usando i dati immagazzinati nei due vettori, lo stesso risultato si ottiene nel modo seguente:</p>
+<div id="84e5f9a0-1197-43c8-861c-d7e1de654b74" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>kg[<span class="dv">0</span>] <span class="op">/</span> m[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>21.109586953208346</code></pre>
+</div>
+</div>
+<p>Se ora non specifichiamo l’indice (per esempio, <code>[0]</code>), le operazioni aritmetiche indicate verranno eseguite <em>per ciascuna coppia</em> di elementi corrispondenti nei due vettori:</p>
+<div id="cec41877-1d19-45a3-aa7f-154c73adcb1a" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>bmi <span class="op">=</span> kg <span class="op">/</span> m<span class="op">**</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Otteniamo così, con una sola istruzione, l’indice BMI dei quattro individui:</p>
+<div id="96dc74b4-cad7-4d6e-9994-ced6afe9a4de" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>bmi.<span class="bu">round</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>array([21.1, 24. , 23.8, 19.7])</code></pre>
+</div>
+</div>
+<p>Questo esempio illustra come le operazioni aritmetiche standard vengano eseguite elemento per elemento negli array, grazie al processo di vettorizzazione.</p>
+</section>
+</section>
+<section id="broadcasting" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="broadcasting"><span class="header-section-number">4.4</span> Broadcasting</h2>
+<p>Il broadcasting è una caratteristica distintiva di NumPy che facilita l’esecuzione di operazioni tra array di dimensioni diverse o tra un array e uno scalare, anche se le loro dimensioni non sono direttamente compatibili. Grazie al broadcasting, NumPy è in grado di “espandere” automaticamente le dimensioni di uno degli operandi per rendere possibile l’operazione.</p>
+<p>Questo significa che possiamo, per esempio, eseguire un’operazione tra un array e un numero singolo (un vettore e uno scalare) o tra due array di dimensioni differenti, senza la necessità di modificare manualmente le dimensioni di questi array. Il broadcasting si occupa di adattare le dimensioni in modo coerente per consentire l’operazione desiderata. Ciò rende il codice più snello e leggibile, eliminando la necessità di espandere gli array manualmente.</p>
+<p>In breve, il broadcasting in NumPy è un potente strumento che semplifica l’esecuzione di operazioni su array di dimensioni diverse o tra array e scalari, automatizzando l’allineamento delle dimensioni.</p>
+<section id="esempio-di-broadcasting" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="esempio-di-broadcasting"><span class="header-section-number">4.4.1</span> Esempio di Broadcasting</h3>
+<p>Immaginiamo di avere un array <code>A</code> con dimensioni 3x3 e un numero scalare <code>B</code>. Senza broadcasting, dovremmo espandere <code>B</code> in un array 3x3 riempiendo ogni cella con il valore di <code>B</code> per eseguire un’operazione come l’addizione su ciascun elemento di <code>A</code>. Grazie al broadcasting, possiamo semplicemente scrivere <code>A + B</code>, e NumPy si occuperà automaticamente di “espandere” <code>B</code> durante l’operazione, applicando il valore scalare a ogni elemento di <code>A</code>.</p>
+<div id="bce77494-004a-4f9e-9d48-e4dc6a37889f" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creiamo un array 3x3</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>], [<span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>]])</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Definiamo uno scalare</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Applichiamo il broadcasting per aggiungere lo scalare a ogni elemento dell'array</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> A <span class="op">+</span> B</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(C)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 6  7  8]
+ [ 9 10 11]
+ [12 13 14]]</code></pre>
+</div>
+</div>
+<p>In questo esempio, <code>C</code> conterrà l’array originale <code>A</code> con ogni elemento incrementato di 5, dimostrando come il broadcasting semplifichi operazioni che altrimenti richiederebbero passaggi aggiuntivi.</p>
+</section>
+</section>
+<section id="altre-operazioni-sugli-array" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="altre-operazioni-sugli-array"><span class="header-section-number">4.5</span> Altre operazioni sugli array</h2>
+<p>C’è un numero enorme di funzioni predefinite in NumPy che calcolano automaticamente diverse quantità sugli <code>ndarray</code>. Ad esempio:</p>
+<ul>
+<li><code>mean()</code>: calcola la media di un vettore o matrice;</li>
+<li><code>sum()</code>: calcola la somma di un vettore o matrice;</li>
+<li><code>std()</code>: calcola la deviazione standard;</li>
+<li><code>min()</code>: trova il minimo nel vettore o matrice;</li>
+<li><code>max()</code>: trova il massimo;</li>
+<li><code>ndim</code>: dimensione del vettore o matrice;</li>
+<li><code>shape</code>: restituisce una tupla con la “forma” del vettore o matrice;</li>
+<li><code>size</code>: restituisce la dimensione totale del vettore (=ndim) o della matrice;</li>
+<li><code>dtype</code>: scrive il tipo numpy del dato;</li>
+<li><code>zeros(num)</code>: scrive un vettore di num elementi inizializzati a zero;</li>
+<li><code>arange(start,stop,step)</code>: genera un intervallo di valori (interi o reali, a seconda dei valori di start, ecc.) intervallati di step. Nota che i dati vengono generati nell’intervallo aperto [start,stop)!</li>
+<li><code>linstep(start,stop,num)</code>: genera un intervallo di num valori interi o reali a partire da start fino a stop (incluso!);</li>
+<li><code>astype(tipo)</code>: converte l’ndarray nel tipo specificato</li>
+</ul>
+<p>Per esempio:</p>
+<div id="33e55dcd-a32c-49a0-a5d2-bc8e28e0ceda" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1 2 3]</code></pre>
+</div>
+</div>
+<div id="697afda4-44f1-48ad-a58d-495628a8dcbf" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>[x.<span class="bu">min</span>(), x.<span class="bu">max</span>(), x.<span class="bu">sum</span>(), x.mean(), x.std()]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>[1, 3, 6, 2.0, 0.816496580927726]</code></pre>
+</div>
+</div>
+</section>
+<section id="lavorare-con-formule-matematiche" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="lavorare-con-formule-matematiche"><span class="header-section-number">4.6</span> Lavorare con formule matematiche</h2>
+<p>L’implementazione delle formule matematiche sugli array è un processo molto semplice con Numpy. Possiamo prendere ad esempio la formula della deviazione standard che discuteremo nel capitolo {ref}<code>loc-scale-notebook</code>:</p>
+<p><span class="math display">\[
+s = \sqrt{\sum_{i=1}^n\frac{(x_i - \bar{x})^2}{n}}
+\]</span></p>
+<p>L’implementazione su un array NumPy è la seguente:</p>
+<div id="489953ff-b444-4d73-95d6-bad64c57fcd9" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1 2 3]</code></pre>
+</div>
+</div>
+<div id="e0bba5bd-1404-43bf-96c9-64f0c59c6fca" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>np.sqrt(np.<span class="bu">sum</span>((x <span class="op">-</span> np.mean(x)) <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> np.size(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>0.816496580927726</code></pre>
+</div>
+</div>
+<p>Questa implementazione funziona nello stesso modo sia che <code>x</code> contenga 3 elementi (come nel caso presente) sia che <code>x</code> contenga migliaia di elementi. È importante notare l’utilizzo delle parentesi tonde per specificare l’ordine di esecuzione delle operazioni. In particolare, nel codice fornito, si inizia calcolando la media degli elementi del vettore <code>x</code> per mezzo della funzione <code>np.mean(x)</code>. Questa operazione produce uno scalare, ovvero un singolo valore numerico che rappresenta la media degli elementi del vettore. L’utilizzo delle parentesi tonde è fondamentale per garantire l’ordine corretto delle operazioni. In questo caso, la funzione <code>np.mean()</code> viene applicata al vettore <code>x</code> prima di qualsiasi altra operazione matematica. Senza le parentesi tonde, le operazioni verrebbero eseguite in un ordine diverso e il risultato potrebbe essere errato.</p>
+<div id="7b51c9a5-a1bf-40a3-ade7-a2f223457e51" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>np.mean(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<pre><code>2.0</code></pre>
+</div>
+</div>
+<p>Successivamente, eseguiamo la sottrazione dei singoli elementi del vettore <code>x</code> per la media del vettore stesso, ovvero <span class="math inline">\(x_i - \bar{x}\)</span>, utilizzando il meccanismo del broadcasting.</p>
+<div id="890bda3c-de03-4f99-8ee9-cec786ed3d64" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">-</span> np.mean(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>array([-1.,  0.,  1.])</code></pre>
+</div>
+</div>
+<p>Eleviamo poi al quadrato gli elementi del vettore che abbiamo ottenuto:</p>
+<div id="930b711a-30bb-4986-a456-2848f1233b3a" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>(x <span class="op">-</span> np.mean(x)) <span class="op">**</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<pre><code>array([1., 0., 1.])</code></pre>
+</div>
+</div>
+<p>Sommiamo gli elementi del vettore:</p>
+<div id="2c61dea9-365c-4f94-a8c4-141d75eb3cd0" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>((x <span class="op">-</span> np.mean(x)) <span class="op">**</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>2.0</code></pre>
+</div>
+</div>
+<p>Dividiamo il numero ottenuto per <span class="math inline">\(n\)</span>. Questa è la varianza di <span class="math inline">\(x\)</span>:</p>
+<div id="3243c47c-35a3-4599-8d8a-e730c5966ef8" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> np.<span class="bu">sum</span>((x <span class="op">-</span> np.mean(x)) <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> np.size(x)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="49">
+<pre><code>0.6666666666666666</code></pre>
+</div>
+</div>
+<p>Infine, per ottenere la deviazione standard, prendiamo la radice quadrata:</p>
+<div id="a09b7f04-c2a0-4958-988a-2795d9d8329f" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>np.sqrt(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>0.816496580927726</code></pre>
+</div>
+</div>
+<p>Il risultato ottenuto coincide con quello che si trova applicando la funzione <code>np.std()</code>:</p>
+<div id="191a4e95-44cb-4a47-9d05-45e8d9859bd4" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>np.std(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<pre><code>0.816496580927726</code></pre>
+</div>
+</div>
+</section>
+<section id="slicing" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="slicing"><span class="header-section-number">4.7</span> Slicing</h2>
+<p>Per concludere, spendiamo ancora alcune parole sull’indicizzazione degli <code>ndarray</code>.</p>
+<p>Slicing in Numpy è un meccanismo che consente di selezionare una porzione di un array multidimensionale, ovvero una sotto-matrice o un sotto-vettore. Per selezionare una porzione di un array, si utilizza la sintassi <code>[start:stop:step]</code>, dove <code>start</code> indica l’indice di partenza della porzione, <code>stop</code> indica l’indice di fine e <code>step</code> indica il passo da utilizzare per la selezione. Se uno o più di questi valori vengono omessi, vengono utilizzati dei valori di default.</p>
+<p>Ad esempio, se abbiamo un array <code>arr</code> di dimensione (3, 4) e vogliamo selezionare la seconda colonna, possiamo usare la sintassi <code>arr[:, 1]</code>. In questo caso, il simbolo <code>:</code> indica che vogliamo selezionare tutte le righe, mentre il numero <code>1</code> indica che vogliamo selezionare la seconda colonna.</p>
+<p>Inoltre, possiamo utilizzare il meccanismo di slicing anche per selezionare porzioni di array multidimensionali. Ad esempio, se abbiamo un array <code>arr</code> di dimensione (3, 4, 5) e vogliamo selezionare la prima riga di ciascuna matrice 4x5, possiamo usare la sintassi <code>arr[:, 0, :]</code>.</p>
+<p>Per esempio, creiamo l’array <code>x</code> di rango 2 con shape (3, 4):</p>
+<div id="852bb4ca-5114-4d69-9bd7-ee5087e7a366" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>]])</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+<p>Utilizziamo il meccanismo di slicing per estrarre la sottomatrice composta dalle prime 2 righe e dalle colonne 1 e 2. <code>y</code> è l’array risultante di dimensione (2, 2):</p>
+<div id="9457e99f-f767-481b-8918-9fa91757d39d" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x[:<span class="dv">2</span>, <span class="dv">1</span>:<span class="dv">3</span>]</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[2 3]
+ [6 7]]</code></pre>
+</div>
+</div>
+<p>È importante sapere che uno slice di un array in Numpy è una vista degli stessi dati, il che significa che modificarlo implica la modifica dell’array originale. In pratica, quando si modifica uno slice di un array, si sta modificando direttamente l’array originale e tutte le altre visualizzazioni dell’array vedranno la stessa modifica. Questo avviene perché Numpy è progettato per gestire enormi quantità di dati, pertanto cerca di evitare il più possibile di effettuare copie dei dati.</p>
+<p>Questo comportamento deve essere preso in considerazione durante la modifica degli array in Numpy, al fine di evitare modifiche accidentali o indesiderate. In alcuni casi, è possibile utilizzare il metodo <code>copy()</code> per creare una copia indipendente di un array e lavorare sulla copia senza modificare l’originale. Vediamo un esempio.</p>
+<div id="972f650b-a524-4a95-992d-7dbd6422b40b" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x[<span class="dv">0</span>, <span class="dv">1</span>])   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2</code></pre>
+</div>
+</div>
+<div id="e6c0fdda-1778-49d2-8d53-d01171d5b126" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">0</span>, <span class="dv">0</span>] <span class="op">=</span> <span class="dv">77</span>     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c4fd99e7-68c7-471a-8807-6fad5f0d28e0" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1 77  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+<div id="19e9a438-f73e-4b0e-8fbd-49653b408524" class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>], [<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>]])</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> x.copy()</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+<div id="afa86357-ceec-4f90-a3b6-5f9f267d4661" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>z[<span class="dv">0</span>, <span class="dv">1</span>] <span class="op">=</span> <span class="dv">33</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1 33  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+<div id="29d85501-fdfe-4a37-b7c8-aa1ff25febba" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 1  2  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]</code></pre>
+</div>
+</div>
+</section>
+<section id="copia-e-copia-profonda-in-python" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="copia-e-copia-profonda-in-python"><span class="header-section-number">4.8</span> Copia e “Copia Profonda” in Python</h2>
+<p>In Python, per ottimizzare le prestazioni, le assegnazioni di solito non copiano gli oggetti sottostanti. Questo è particolarmente importante, ad esempio, quando gli oggetti vengono passati tra funzioni, per evitare una quantità eccessiva di copie in memoria quando non sono necessarie (questo approccio è noto tecnicamente come “passaggio per riferimento”).</p>
+<p>Consideriamo il seguente esempio con un array <code>A</code>:</p>
+<div id="c330ed53-c100-4154-9490-3b15da6536e9" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se creiamo un nuovo riferimento <code>B</code> a <code>A</code>:</p>
+<div id="f452acd6-79e9-4450-9115-25652588cafb" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> A</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ora <code>B</code> si riferisce allo stesso insieme di dati di <code>A</code>. Se modifichiamo <code>B</code>, anche <code>A</code> viene modificato di conseguenza:</p>
+<div id="0b174a8a-6161-43b4-9984-488e26878133" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>B[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="dv">10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dopo questa modifica, sia <code>B</code> che <code>A</code> saranno:</p>
+<div id="783fdc97-96da-4f7e-9aab-e3ba0c3534fa" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[10  2]
+ [ 3  4]]</code></pre>
+</div>
+</div>
+<p>Se desideriamo evitare questo comportamento, in modo tale che <code>B</code> diventi un oggetto completamente indipendente da <code>A</code>, dobbiamo effettuare una cosiddetta “copia profonda” utilizzando la funzione <code>copy</code>:</p>
+<div id="cf99b402-0b99-4cda-b6a1-70975643192c" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> np.copy(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ora, se modificassimo <code>B</code>, <code>A</code> non subirebbe alcuna modifica. Ad esempio:</p>
+<div id="0d92ea47-7bd0-4bca-a8f1-8b3b1469e73b" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>B[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A questo punto, <code>B</code> sarà:</p>
+<div id="2e41d4e4-b689-489d-8924-64c08af115a0" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[-5  2]
+ [ 3  4]]</code></pre>
+</div>
+</div>
+<p>Ma <code>A</code> rimarrà invariato:</p>
+<div id="d170294e-a542-4260-8cc6-0e5c3e10eae1" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[10  2]
+ [ 3  4]]</code></pre>
+</div>
+</div>
+<p>Questo esempio mostra chiaramente la differenza tra una semplice assegnazione, che crea un riferimento all’oggetto originale, e una “copia profonda”, che crea un nuovo oggetto indipendente.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">4.9</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="bcb9842e-1760-47b2-802c-30881f8f7c5b" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Mon Jan 29 2024
+
+Python implementation: CPython
+Python version       : 3.11.7
+IPython version      : 8.19.0
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.3.0
+Machine     : x86_64
+Processor   : i386
+CPU cores   : 8
+Architecture: 64bit
+
+numpy: 1.26.2
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/chapter_1/02_python_2.html" class="pagination-link" aria-label="Python (2)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (2)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/chapter_1/04_pandas.html" class="pagination-link" aria-label="Pandas (1)">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_1/03_numpy.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>

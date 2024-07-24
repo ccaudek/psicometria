@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analisi dei dati per psicologi - 19&nbsp; Il teorema di Bayes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/chapter_4/15_stan_beta_binomial.html" rel="next">
+<link href="../../chapters/chapter_3/02_conditional_prob.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_3/01_intro_prob.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_3/03_bayes_theorem.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi dei dati per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/00_scientific_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">La scienza dei dati e il metodo scientifico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/03_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Distribuzioni di Frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/06_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/01_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduzione al calcolo delle probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/02_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/03_bayes_theorem.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Inferenza Bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/15_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a13a_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Sigma algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">19.1</span> Introduzione</a></li>
+  <li><a href="#storia" id="toc-storia" class="nav-link" data-scroll-target="#storia"><span class="header-section-number">19.2</span> Storia</a></li>
+  <li><a href="#teorema" id="toc-teorema" class="nav-link" data-scroll-target="#teorema"><span class="header-section-number">19.3</span> Teorema</a>
+  <ul class="collapse">
+  <li><a href="#interpretazione-della-formula-di-bayes" id="toc-interpretazione-della-formula-di-bayes" class="nav-link" data-scroll-target="#interpretazione-della-formula-di-bayes"><span class="header-section-number">19.3.1</span> Interpretazione della Formula di Bayes</a></li>
+  </ul></li>
+  <li><a href="#alcuni-esempi" id="toc-alcuni-esempi" class="nav-link" data-scroll-target="#alcuni-esempi"><span class="header-section-number">19.4</span> Alcuni esempi</a>
+  <ul class="collapse">
+  <li><a href="#il-valore-predittivo-di-un-test-di-laboratorio" id="toc-il-valore-predittivo-di-un-test-di-laboratorio" class="nav-link" data-scroll-target="#il-valore-predittivo-di-un-test-di-laboratorio"><span class="header-section-number">19.4.1</span> Il Valore Predittivo di un Test di Laboratorio</a></li>
+  </ul></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">19.5</span> Commenti e considerazioni finali</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">19.6</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_3/03_bayes_theorem.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_3/01_intro_prob.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_3/03_bayes_theorem.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-bayes_theorem" class="quarto-section-identifier"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p>Prima di procedere con il presente capitolo, è essenziale leggere l’<a href="../chapter_7/a15_calculus.html" class="quarto-xref"><span>Appendix K</span></a>.</p>
+<p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Capire in profondità il teorema di Bayes e la sua importanza.</li>
+<li>Utilizzare il teorema di Bayes per analizzare e interpretare i test diagnostici, tenendo in considerazione la prevalenza della malattia in questione.</li>
+<li>Affrontare e risolvere problemi di probabilità discreta che necessitano dell’applicazione del teorema di Bayes.</li>
+</ul>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="55181c8b-b24b-4eed-82e8-1fdb0a15ffa3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="56a119a2-25a6-4856-9520-2fef953fb881" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed to make the results fully reproducible</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"bayes_theorem"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">19.1</span> Introduzione</h2>
+<p>In questo capitolo esploreremo il teorema di Bayes, un fondamentale risultato della teoria delle probabilità che ci permette di calcolare le probabilità a posteriori di eventi ipotetici, dati i loro valori a priori e nuove informazioni. In altre parole, ci consente di aggiornare razionalmente le nostre conoscenze alla luce di nuove evidenze.</p>
+</section>
+<section id="storia" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="storia"><span class="header-section-number">19.2</span> Storia</h2>
+<p>Il teorema di Bayes, così denominato in onore del Reverendo Thomas Bayes, un matematico e filosofo del XVIII secolo, rappresenta uno dei concetti fondamentali nel campo della statistica e del calcolo delle probabilità. Sebbene Bayes non abbia pubblicato il suo lavoro durante la sua vita, ritenendolo non abbastanza significativo, fu il suo amico Richard Price a riconoscere il valore delle sue scoperte. Price non solo editò il manoscritto inedito di Bayes ma lo arricchì significativamente prima di sottometterlo per la pubblicazione nelle “Philosophical Transactions” nel 1763. Questa pubblicazione non solo introdusse il teorema di Bayes al mondo scientifico ma fornì anche una base filosofica per quello che sarebbe poi diventato noto come l’approccio bayesiano alla statistica.</p>
+<p>Parallelamente e indipendentemente dai lavori di Bayes, Pierre-Simon Laplace, un eminente matematico e astronomo francese, formulò concetti simili. Nel 1774, e più dettagliatamente nella sua opera “Théorie analytique des probabilités” del 1812, Laplace esplorò l’uso della probabilità condizionale per aggiornare le conoscenze precedenti (probabilità a priori) sulla base di nuove evidenze (probabilità a posteriori). Sebbene Laplace abbia sviluppato questi principi senza conoscere il lavoro di Bayes, i suoi contributi hanno notevolmente esteso l’applicazione e l’interpretazione delle statistiche bayesiane.</p>
+<p>Il teorema di Bayes, nella sua essenza, fornisce un meccanismo matematico per aggiornare le probabilità iniziali di un’ipotesi in base all’osservazione di nuove evidenze. Questo processo di revisione continua della probabilità si basa sulla combinazione di conoscenze preesistenti (il prior) con informazioni appena acquisite (la likelihood), per produrre una nuova comprensione (il posterior). Tale meccanismo riflette un approccio olistico alla conoscenza, che considera la comprensione come un processo dinamico e iterativo.</p>
+<p>Nel contesto contemporaneo, l’importanza e l’applicabilità del teorema di Bayes vanno ben oltre la teoria della probabilità e la statistica, influenzando vari campi come l’intelligenza artificiale, l’apprendimento automatico, la psicologia, la medicina e persino la presa di decisioni nella vita quotidiana. La capacità di aggiornare costantemente le nostre convinzioni in base a nuove informazioni è fondamentale in un’era caratterizzata da un flusso incessante di dati. In modo emblematico, potremmo affermare che rilevanza universale del teorema di Bayes nella comprensione dei fenomeni e nella previsione degli eventi è enfatizzata nel titolo del libro di Tom Chivers pubblicato nel 2024: “Everything is predictable: how bayesian statistics explain our world”.</p>
+</section>
+<section id="teorema" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="teorema"><span class="header-section-number">19.3</span> Teorema</h2>
+<p>Consideriamo una situazione in cui lo spazio degli eventi possibili, <span class="math inline">\(\Omega\)</span>, è diviso in due eventi distinti e mutualmente esclusivi, denominati ipotesi <span class="math inline">\(H_1\)</span> e <span class="math inline">\(H_2\)</span>. Supponiamo di avere già una certa comprensione di questi eventi, espressa attraverso le loro probabilità a priori <span class="math inline">\(P(H_1)\)</span> e <span class="math inline">\(P(H_2)\)</span>. A questo punto, introduciamo un nuovo evento <span class="math inline">\(E\)</span>, la cui occorrenza è accompagnata da una probabilità non nulla e per il quale conosciamo le probabilità condizionate <span class="math inline">\(P(E \mid H_1)\)</span> e <span class="math inline">\(P(E \mid H_2)\)</span>, che indicano quanto sia probabile osservare <span class="math inline">\(E\)</span> assumendo che una delle due ipotesi sia vera. Se <span class="math inline">\(E\)</span> si verifica, siamo interessati a determinare le probabilità a posteriori <span class="math inline">\(P(H_1 \mid E)\)</span> e <span class="math inline">\(P(H_2 \mid E)\)</span> delle nostre ipotesi alla luce di questa nuova evidenza.</p>
+<p>La seguente illustrazione rappresenta come lo spazio totale degli eventi si suddivide tra le ipotesi <span class="math inline">\(H_1\)</span> e <span class="math inline">\(H_2\)</span>, con l’evidenza <span class="math inline">\(E\)</span> posizionata all’interno di questo contesto.</p>
+<div id="fig-bayes" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bayes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/bayes_theorem.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bayes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19.1: Partizione dello spazio campionario per il teorema di Bayes.
+</figcaption>
+</figure>
+</div>
+<p>Per calcolare la probabilità a posteriori dell’ipotesi 1 data l’osservazione di <span class="math inline">\(E\)</span>, utilizziamo la formula:</p>
+<p><span class="math display">\[
+P(H_1 \mid E) = \frac{P(E \cap H_1)}{P(E)}.
+\]</span></p>
+<p>Questo calcolo può essere semplificato sfruttando la definizione di probabilità condizionata, che ci permette di sostituire <span class="math inline">\(P(E \cap H_1)\)</span> con <span class="math inline">\(P(E \mid H_1)P(H_1)\)</span>. Applicando questa sostituzione, otteniamo:</p>
+<p><span class="math display">\[
+P(H_1 \mid E) = \frac{P(E \mid H_1) P(H_1)}{P(E)}.
+\]</span></p>
+<p>Dato che <span class="math inline">\(H_1\)</span> e <span class="math inline">\(H_2\)</span> si escludono a vicenda, la probabilità totale di <span class="math inline">\(E\)</span> può essere espressa come la somma delle probabilità di <span class="math inline">\(E\)</span> occorrente in concomitanza con ciascuna ipotesi, utilizzando il teorema della probabilità totale:</p>
+<p><span class="math display">\[
+P(E) = P(E \mid H_1)P(H_1) + P(E \mid H_2)P(H_2).
+\]</span></p>
+<p>Incorporando questi valori nella formula di Bayes, giungiamo a:</p>
+<p><span id="eq-bayes1"><span class="math display">\[
+P(H_1 \mid E) = \frac{P(E \mid H_1)P(H_1)}{P(E \mid H_1)P(H_1) + P(E \mid H_2)P(H_2)}.
+\tag{19.1}\]</span></span></p>
+<p>Questa espressione costituisce l’essenza della formula di Bayes per il caso semplificato in cui le ipotesi si limitano a due eventi mutualmente esclusivi, <span class="math inline">\(H_1\)</span> e <span class="math inline">\(H_2\)</span>.</p>
+<p>Nel quadro delle probabilità discrete, questa formula può essere generalizzata per accogliere un insieme più ampio di ipotesi che formano una partizione completa dello spazio degli eventi <span class="math inline">\(\Omega\)</span>, dove ogni <span class="math inline">\(E\)</span> rappresenta un evento con probabilità maggiore di zero. Per ogni ipotesi <span class="math inline">\(H_i\)</span> all’interno di un insieme numerabile, la formula di Bayes si estende come segue:</p>
+<p><span id="eq-bayes2"><span class="math display">\[
+P(H_i \mid E) = \frac{P(E \mid H_i)P(H_i)}{\sum_{j=1}^{\infty}P(E \mid H_j)P(H_j)}.
+\tag{19.2}\]</span></span></p>
+<p>Qui, il denominatore agisce come un fattore di normalizzazione che integra i prodotti delle probabilità a priori e delle verosimiglianze associate a ogni ipotesi considerata.</p>
+<p>Per variabili continue, la formula di Bayes assume una forma integrale, adattandosi a situazioni in cui le ipotesi <span class="math inline">\(H_i\)</span> rappresentano valori in un continuum. In questo contesto, la formula diventa:</p>
+<p><span id="eq-bayes-cont"><span class="math display">\[
+P(H_i \mid E) = \frac{P(E \mid H_i) \cdot P(H_i)}{\int P(E \mid H) \cdot P(H) \, dH},
+\tag{19.3}\]</span></span></p>
+<p>offrendo un framework potente per aggiornare le probabilità a posteriori di ipotesi continue basate su nuove evidenze, sottolineando l’importanza della formula di Bayes non solo come strumento matematico, ma anche come filosofia di apprendimento continuo e adattamento alle nuove informazioni.</p>
+<section id="interpretazione-della-formula-di-bayes" class="level3" data-number="19.3.1">
+<h3 data-number="19.3.1" class="anchored" data-anchor-id="interpretazione-della-formula-di-bayes"><span class="header-section-number">19.3.1</span> Interpretazione della Formula di Bayes</h3>
+<p>La formula di Bayes si articola in tre elementi fondamentali che ne facilitano la comprensione e l’applicazione in diversi campi di studio:</p>
+<ul>
+<li><strong>Probabilità a Priori, <span class="math inline">\(P(H)\)</span></strong>: Questa componente riflette la nostra valutazione preliminare riguardo la verosimiglianza dell’ipotesi <span class="math inline">\(H\)</span> prima di prendere in esame nuove evidenze <span class="math inline">\(E\)</span>. Essa incarna il livello di credibilità o fiducia attribuita all’ipotesi, basandosi su conoscenze preesistenti o su deduzioni logiche. In sostanza, la probabilità a priori quantifica le nostre convinzioni pregresse o le aspettative iniziali su quanto sia probabile che l’ipotesi sia vera.</li>
+<li><strong>Probabilità a Posteriori, <span class="math inline">\(P(H \mid E)\)</span></strong>: Questo valore aggiorna la nostra fiducia nell’ipotesi <span class="math inline">\(H\)</span> in seguito all’osservazione dell’evidenza <span class="math inline">\(E\)</span>. In termini più intuitivi, rappresenta il livello di convinzione ricalibrato in <span class="math inline">\(H\)</span> dopo aver considerato l’evidenza. La formula di Bayes ci offre un meccanismo matematicamente rigoroso per modulare questa probabilità alla luce delle nuove informazioni ricevute.</li>
+<li><strong>Verosimiglianza, <span class="math inline">\(P(E \mid H)\)</span></strong>: La verosimiglianza esprime la probabilità di rilevare l’evidenza <span class="math inline">\(E\)</span> dato che l’ipotesi <span class="math inline">\(H\)</span> sia vera. È un indice di quanto l’evidenza supporti o confermi l’ipotesi. Un valore elevato di verosimiglianza indica che l’evidenza è fortemente in linea o prevista dalla veridicità dell’ipotesi.</li>
+</ul>
+<p>Grazie alla formula di Bayes, possiamo adottare un processo di aggiornamento continuo delle nostre credenze in base a nuove informazioni, promuovendo un metodo dinamico per navigare tra conoscenza e incertezza. Questa metodologia ci fornisce un approccio strutturato per rivedere e adattare le nostre convinzioni riguardo l’ipotesi <span class="math inline">\(H\)</span> di fronte a nuovi dati o evidenze <span class="math inline">\(E\)</span>. La capacità di rielaborare costantemente le nostre aspettative in funzione di informazioni aggiuntive si rivela essenziale in una vasta gamma di ambiti, inclusi l’intelligenza artificiale, la ricerca statistica, le discipline scientifiche e umanistiche. Tale prassi ci consente di prendere decisioni più informate, di interpretare con maggiore precisione i dati disponibili e di affinare significativamente le nostre previsioni e comprensioni del mondo circostante.</p>
+</section>
+</section>
+<section id="alcuni-esempi" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="alcuni-esempi"><span class="header-section-number">19.4</span> Alcuni esempi</h2>
+<p>Esamineremo alcuni esempi basilari per illustrare in maniera più chiara il modo in cui il teorema di Bayes viene applicato e funziona.</p>
+<div id="exm-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 19.1</strong></span> Consideriamo il caso in cui osserviamo una persona con i capelli lunghi e desideriamo valutare la probabilità che questa persona sia femminile. In termini formali, definiamo <span class="math inline">\(H = \text{"donna"}\)</span> e <span class="math inline">\(E = \text{"capelli lunghi"}\)</span>, e miriamo a stimare <span class="math inline">\(P(H \mid E)\)</span>.</p>
+<p>Le nostre conoscenze preliminari includono:</p>
+<ul>
+<li>La probabilità a priori che la persona osservata sia una donna, <span class="math inline">\(P(H) = 0.5\)</span>,</li>
+<li>La probabilità generale di osservare qualcuno con i capelli lunghi, <span class="math inline">\(P(E) = 0.4\)</span>,</li>
+<li>La probabilità di avere i capelli lunghi dato che la persona è una donna, <span class="math inline">\(P(E \mid H) = 0.7\)</span>.</li>
+</ul>
+<p>Applicando la formula di Bayes, possiamo determinare:</p>
+<p><span class="math display">\[ P(H \mid E) = \frac{P(H) \cdot P(E \mid H)}{P(E)} = \frac{0.5 \cdot 0.7}{0.4} = 0.875. \]</span></p>
+<p>Questo risultato ci mostra che, alla luce delle informazioni a nostra disposizione, la probabilità che una persona con i capelli lunghi sia una donna è dell’0.875. In altre parole, prima di osservare l’evidenza (i capelli lunghi), partivamo da una conoscenza di base secondo cui c’era una chance su due (50%) che la persona fosse una donna. Dopo aver considerato l’evidenza dei capelli lunghi, abbiamo aggiornato la nostra stima alla probabilità “a posteriori” di 0.875, riflettendo così un incremento della nostra convinzione che la persona sia una donna basandoci su quest’ultima osservazione.</p>
+</div>
+<div id="exm-2" class="theorem example">
+<p><span class="theorem-title"><strong>Example 19.2</strong></span> Un esempio pratico che illustra efficacemente l’uso del teorema di Bayes è l’analisi del rapporto tra la mammografia e la diagnosi del cancro al seno, già considerato in precedenza. In questo contesto, si considerano due ipotesi: la presenza della malattia, indicata con <span class="math inline">\(M^+\)</span>, e l’assenza della malattia, denotata con <span class="math inline">\(M^-\)</span>. L’evidenza in questo caso è rappresentata dal risultato positivo di un test di mammografia, che indicheremo con <span class="math inline">\(T^+\)</span>. Applicando la formula di Bayes, possiamo esprimere la probabilità di avere il cancro al seno dato un risultato positivo al test come segue:</p>
+<p><span class="math display">\[
+P(M^+ \mid T^+) = \frac{P(T^+ \mid M^+) \cdot P(M^+)}{P(T^+ \mid M^+) \cdot P(M^+) + P(T^+ \mid M^-) \cdot P(M^-)},
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(P(M^+ \mid T^+)\)</span> è la probabilità di avere il cancro (<span class="math inline">\(M^+\)</span>) dato un risultato positivo al test (<span class="math inline">\(T^+\)</span>),</li>
+<li><span class="math inline">\(P(T^+ \mid M^+)\)</span> rappresenta la probabilità che il test di mammografia risulti positivo (<span class="math inline">\(T^+\)</span>) in presenza effettiva del cancro (<span class="math inline">\(M^+\)</span>),</li>
+<li><span class="math inline">\(P(M^+)\)</span> denota la probabilità a priori che una persona abbia il cancro prima di sottoporsi al test,</li>
+<li><span class="math inline">\(P(T^+ \mid M^-)\)</span> indica la probabilità che il test risulti positivo (<span class="math inline">\(T^+\)</span>) nonostante l’assenza del cancro (<span class="math inline">\(M^-\)</span>); dal momento che la specificità è data e uguale a 0.9, possiamo calcolare la probabilità di un falso positivo come segue:</li>
+</ul>
+<p><span class="math display">\[ P(T^+ \mid M^-) = 1 - \text{Specificità} = 1 - 0.9 = 0.1. \]</span></p>
+<p>Quindi, in questo contesto, <span class="math inline">\(P(T^+ \mid M^-) = 0.1\)</span> significa che c’è un 10% di probabilità che il test diagnostichi erroneamente la presenza del cancro in una persona sana.</p>
+<ul>
+<li><span class="math inline">\(P(M^-)\)</span> rappresenta la probabilità a priori che una persona non sia affetta da cancro prima di effettuare il test.</li>
+</ul>
+<p>Inserendo i valori specifici del contesto analizzato otteniamo:</p>
+<p><span class="math display">\[
+\begin{align}
+P(M^+ \mid T^+) &amp;= \frac{0.9 \cdot 0.01}{0.9 \cdot 0.01 + 0.1 \cdot 0.99} \\
+&amp;= \frac{9}{108} \\
+&amp;\approx 0.083.
+\end{align}
+\]</span></p>
+<p>Questo calcolo dimostra che, considerando una mammografia con risultato positivo ottenuta tramite un test con una sensibilità del 90% e una specificità del 90%, la probabilità che il paziente sia effettivamente affetto da cancro al seno è approssimativamente dell’8.3%.</p>
+</div>
+<section id="il-valore-predittivo-di-un-test-di-laboratorio" class="level3" data-number="19.4.1">
+<h3 data-number="19.4.1" class="anchored" data-anchor-id="il-valore-predittivo-di-un-test-di-laboratorio"><span class="header-section-number">19.4.1</span> Il Valore Predittivo di un Test di Laboratorio</h3>
+<p>L’applicazione del teorema di Bayes nell’interpretazione dei risultati dei test di laboratorio è cruciale nella pratica clinica. Questo teorema consente di calcolare la probabilità che un individuo sia affetto da una specifica malattia dopo un risultato positivo al test, nonché la probabilità di non essere malati in caso di esito negativo. La comprensione di tre elementi è fondamentale per questo calcolo: la prevalenza della malattia, la sensibilità e la specificità del test.</p>
+<ul>
+<li><p><strong>Prevalenza:</strong> Si riferisce alla percentuale di individui in una popolazione che sono affetti da una certa malattia in un determinato momento. Viene espressa come percentuale o frazione della popolazione. Per esempio, una prevalenza del 0.5% indica che su mille persone, cinque sono affette dalla malattia.</p></li>
+<li><p><strong>Sensibilità:</strong> Indica la capacità del test di identificare correttamente la malattia negli individui malati. Viene calcolata come la frazione di veri positivi (individui malati correttamente identificati) sul totale degli individui malati. La formula della sensibilità (<span class="math inline">\(Sens\)</span>) è la seguente:</p></li>
+</ul>
+<p><span class="math display">\[ Sens = \frac{TP}{TP + FN}, \]</span></p>
+<p>dove <span class="math inline">\(TP\)</span> rappresenta i veri positivi e <span class="math inline">\(FN\)</span> i falsi negativi. Pertanto, la sensibilità misura la probabilità che il test risulti positivo se la malattia è effettivamente presente.</p>
+<ul>
+<li><strong>Specificità:</strong> Misura la capacità del test di riconoscere gli individui sani, producendo un risultato negativo per chi non è affetto dalla malattia. Si calcola come la frazione di veri negativi (individui sani correttamente identificati) sul totale degli individui sani. La specificità (<span class="math inline">\(Spec\)</span>) si definisce come:</li>
+</ul>
+<p><span class="math display">\[ Spec = \frac{TN}{TN + FP}, \]</span></p>
+<p>dove <span class="math inline">\(TN\)</span> sono i veri negativi e <span class="math inline">\(FP\)</span> i falsi positivi. Così, la specificità rappresenta la probabilità che il test risulti negativo in assenza della malattia.</p>
+<p>Questa tabella riassume la terminologia:</p>
+<table class="table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 40%">
+<col style="width: 40%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;"><span class="math inline">\(T^+\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(T^-\)</span></th>
+<th style="text-align: center;">Totale</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(M^+\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(P(T^+ \cap M^+)\)</span> <br> (Sensibilità)</td>
+<td style="text-align: center;"><span class="math inline">\(P(T^- \cap M^+)\)</span> <br> (1 - Sensibilità)</td>
+<td style="text-align: center;"><span class="math inline">\(P(M^+)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(M^-\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(P(T^+ \cap M^-)\)</span> <br> (1 - Specificità)</td>
+<td style="text-align: center;"><span class="math inline">\(P(T^- \cap M^-)\)</span> <br> (Specificità)</td>
+<td style="text-align: center;"><span class="math inline">\(P(M^-)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Totale</td>
+<td style="text-align: center;"><span class="math inline">\(P(T^+)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(P(T^-)\)</span></td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<p>dove <span class="math inline">\(T^+\)</span> e <span class="math inline">\(T^-\)</span> indicano rispettivamente un risultato positivo o negativo del test, mentre <span class="math inline">\(M^+\)</span> e <span class="math inline">\(M^-\)</span> la presenza o assenza effettiva della malattia. In questa tabella, i totali marginali rappresentano:</p>
+<ul>
+<li><strong>Totale per <span class="math inline">\(M^+\)</span> e <span class="math inline">\(M^-\)</span></strong> (ultima colonna): La probabilità totale di avere la malattia (<span class="math inline">\(P(M^+)\)</span>) e la probabilità totale di non avere la malattia (<span class="math inline">\(P(M^-)\)</span>), rispettivamente. Questi valori sono calcolati sommando le probabilità all’interno di ciascuna riga.</li>
+<li><strong>Totale per <span class="math inline">\(T^+\)</span> e <span class="math inline">\(T^-\)</span></strong> (ultima riga): La probabilità totale di un risultato positivo al test (<span class="math inline">\(P(T^+)\)</span>) e la probabilità totale di un risultato negativo al test (<span class="math inline">\(P(T^-)\)</span>), rispettivamente. Questi valori sono calcolati sommando le probabilità all’interno di ciascuna colonna.</li>
+<li><strong>Totale generale</strong> (angolo in basso a destra): La somma di tutte le probabilità, che per definizione è 1, rappresentando l’intera popolazione o il set di casi considerati.</li>
+</ul>
+<p>Mediante il teorema di Bayes, possiamo usare queste informazioni per stimare la probabilità post-test di avere o non avere la malattia basandoci sul risultato del test, fornendo così una base razionale per decisioni diagnostiche e terapeutiche.</p>
+<p>La probabilità post-test che un individuo sia malato dato un risultato positivo del test è calcolata come:</p>
+<p><span class="math display">\[
+P(M^+ \mid T^+) = \frac{P(T^+ \mid M^+) \cdot P(M^+)}{P(T^+ \mid M^+) \cdot P(M^+) + P(T^+ \mid M^-) \cdot P(M^-)}.
+\]</span></p>
+<p>Questa formula rappresenta il valore predittivo positivo, indicando la probabilità che un individuo sia realmente malato se il test è positivo. Analogamente, il valore predittivo negativo, che è la probabilità che un individuo non sia malato dato un risultato negativo del test, si calcola come:</p>
+<p><span class="math display">\[
+P(M^- \mid T^-) = \frac{P(T^- \mid M^-) \cdot (1 - P(M^+))}{P(T^- \mid M^-) \cdot (1 - P(M^+)) + P(T^- \mid M^+) \cdot P(M^+)}.
+\]</span></p>
+<p>Questi valori predittivi sono essenziali per valutare l’efficacia di un test diagnostico, aiutando a determinare quanto sia affidabile un risultato positivo o negativo nel contesto di una specifica popolazione e malattia.</p>
+<div id="fig-bayes-theorem2" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bayes-theorem2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/bayes_theorem_2x.png" class="img-fluid figure-img" style="width:35.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-bayes-theorem2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19.2
+</figcaption>
+</figure>
+</div>
+<div id="exm-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 19.3</strong></span> Calcoliamo ora il valore predittivo del test positivo e il valore predittivo del test negativo per i dati dell’esempio sulla mammografia e cancro al seno.</p>
+<div id="c7c8dbed-04e0-46ca-85fc-924be5f24bde" class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> positive_predictive_value_of_diagnostic_test(sens, spec, prev):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (sens <span class="op">*</span> prev) <span class="op">/</span> (sens <span class="op">*</span> prev <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> spec) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prev))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Valore Predittivo Positivo (Positive Predictive Value, PPV):</strong> Questa misura indica la probabilità che un individuo sia effettivamente malato se ha ricevuto un risultato positivo al test. La formula che hai fornito per il PPV è:</p>
+<p><span class="math display">\[ PPV = \frac{Sens \cdot Prev}{Sens \cdot Prev + (1 - Spec) \cdot (1 - Prev)} \]</span></p>
+<p>Qui, <code>sens</code> rappresenta la sensibilità del test, <code>spec</code> la specificità, e <code>prev</code> la prevalenza della malattia nella popolazione. La formula riflette il calcolo del PPV basato sul teorema di Bayes.</p>
+<div id="0a14c214-3564-4d65-9833-d4b4db55581f" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> negative_predictive_value_of_diagnostic_test(sens, spec, prev):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (spec <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prev)) <span class="op">/</span> (spec <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> prev) <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> sens) <span class="op">*</span> prev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Valore Predittivo Negativo (Negative Predictive Value, NPV):</strong> Questa misura indica la probabilità che un individuo non sia malato se ha ricevuto un risultato negativo al test. La formula per il NPV è:</p>
+<p><span class="math display">\[ NPV = \frac{Spec \cdot (1 - Prev)}{Spec \cdot (1 - Prev) + (1 - Sens) \cdot Prev} \]</span></p>
+<p>Anche in questo caso, <code>sens</code>, <code>spec</code>, e <code>prev</code> hanno gli stessi significati menzionati sopra. Questa formula calcola il NPV basandosi sul teorema di Bayes.</p>
+<p>Inseriamo i dati del problema.</p>
+<div id="633a535b-6c92-48ab-a55a-255eb47e6b13" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sens <span class="op">=</span> <span class="fl">0.9</span>  <span class="co"># sensibilità</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>spec <span class="op">=</span> <span class="fl">0.9</span>  <span class="co"># specificità</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>prev <span class="op">=</span> <span class="fl">0.01</span>  <span class="co"># prevalenza</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il valore predittivo del test positivo è:</p>
+<div id="69571aa8-46ef-4258-8908-3cd7644a39da" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>res_pos <span class="op">=</span> positive_predictive_value_of_diagnostic_test(sens, spec, prev)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"P(M+ | T+) = </span><span class="sc">{</span><span class="bu">round</span>(res_pos, <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(M+ | T+) = 0.083</code></pre>
+</div>
+</div>
+<p>Il valore predittivo del test negativo è:</p>
+<div id="1f3f7241-4859-4043-9ad5-13972f9ac345" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>res_neg <span class="op">=</span> negative_predictive_value_of_diagnostic_test(sens, spec, prev)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"P(M- | T-) = </span><span class="sc">{</span><span class="bu">round</span>(res_neg, <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(M- | T-) = 0.999</code></pre>
+</div>
+</div>
+</div>
+<div id="exm-4" class="theorem example">
+<p><span class="theorem-title"><strong>Example 19.4</strong></span> Consideriamo ora un altro esempio relativo al test antigenico rapido per il virus SARS-CoV-2, che può essere eseguito mediante tampone nasale, tampone naso-orofaringeo o campione di saliva. L’Istituto Superiore di Sanità ha pubblicato un documento il 5 novembre 2020, nel quale viene sottolineato che, fino a quel momento, i dati disponibili sui vari test sono quelli forniti dai produttori: la sensibilità varia tra il 70% e l’86%, mentre la specificità si attesta tra il 95% e il 97%.</p>
+<p>Per fare un esempio, consideriamo i dati di un certo momento temporale. Nella settimana tra il 17 e il 23 marzo 2023, in Italia, il numero di individui positivi al virus è stato stimato essere di 138.599 (fonte: Il Sole 24 Ore). Questo dato corrisponde a una prevalenza di circa 0.2% su una popolazione totale di circa 59 milioni di persone.</p>
+<div id="496b4410-4562-4d9a-8b3f-13e502cf4316" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a> prev <span class="op">=</span> <span class="dv">138599</span> <span class="op">/</span> <span class="dv">59000000</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> prev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>0.002349135593220339</code></pre>
+</div>
+</div>
+<p>L’obiettivo è determinare la probabilità di essere effettivamente affetti da Covid-19, dato un risultato positivo al test antigenico rapido, ossia <span class="math inline">\(P(M^+ \mid T^+)\)</span>. Per raggiungere questo scopo, useremo la formula relativa al valore predittivo positivo del test.</p>
+<div id="d02716f1-63ef-45c9-ae84-5a40a9d1a742" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sens <span class="op">=</span> (<span class="fl">0.7</span> <span class="op">+</span> <span class="fl">0.86</span>) <span class="op">/</span> <span class="dv">2</span>  <span class="co"># sensibilità</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>spec <span class="op">=</span> (<span class="fl">0.95</span> <span class="op">+</span> <span class="fl">0.97</span>) <span class="op">/</span> <span class="dv">2</span> <span class="co"># specificità</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>res_pos <span class="op">=</span> positive_predictive_value_of_diagnostic_test(sens, spec, prev)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"P(M+ | T+) = </span><span class="sc">{</span><span class="bu">round</span>(res_pos, <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(M+ | T+) = 0.044</code></pre>
+</div>
+</div>
+<p>Pertanto, se il risultato del tampone è positivo, la probabilità di essere effettivamente affetti da Covid-19 è solo del 4.4%, approssimativamente.</p>
+<p>Se la prevalenza fosse 100 volte superiore (cioè, pari al 23.5%), la probabilità di avere il Covid-19, dato un risultato positivo del tampone, aumenterebbe notevolmente e sarebbe pari a circa l’86%.</p>
+<div id="191caf07-8f89-4f20-a3a1-19b43f6e7fe0" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>prev <span class="op">=</span> <span class="dv">138599</span> <span class="op">/</span> <span class="dv">59000000</span> <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>res_pos <span class="op">=</span> positive_predictive_value_of_diagnostic_test(sens, spec, prev)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"P(M+ | T+) = </span><span class="sc">{</span><span class="bu">round</span>(res_pos, <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(M+ | T+) = 0.857</code></pre>
+</div>
+</div>
+<p>Se il risultato del test fosse negativo, considerando la prevalenza stimata del Covid-19 nella settimana dal 17 al 23 marzo 2023, la probabilità di non essere infetto sarebbe del 99.9%, approssimativamente.</p>
+<div id="fe9b7fc8-aa79-4a1c-a50f-fb9edd0d81b7" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sens <span class="op">=</span> (<span class="fl">0.7</span> <span class="op">+</span> <span class="fl">0.86</span>) <span class="op">/</span> <span class="dv">2</span>  <span class="co"># sensibilità</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>spec <span class="op">=</span> (<span class="fl">0.95</span> <span class="op">+</span> <span class="fl">0.97</span>) <span class="op">/</span> <span class="dv">2</span>  <span class="co"># specificità</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>prev <span class="op">=</span> <span class="dv">138599</span> <span class="op">/</span> <span class="dv">59000000</span>  <span class="co"># prevalenza</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>res_neg <span class="op">=</span> negative_predictive_value_of_diagnostic_test(sens, spec, prev)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"P(M- | T-) = </span><span class="sc">{</span><span class="bu">round</span>(res_neg, <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(M- | T-) = 0.999</code></pre>
+</div>
+</div>
+<p>Tuttavia, un’esito del genere non dovrebbe sorprenderci, considerando che la prevalenza della malattia è molto bassa; in altre parole, il risultato negativo conferma una situazione già presunta prima di sottoporsi al test. Il vero ostacolo, specialmente nel caso di malattie rare come il Covid-19 in quel periodo specifico, non risiede tanto nell’asserire l’assenza della malattia quanto piuttosto nel confermarne la presenza.</p>
+</div>
+</section>
+</section>
+<section id="commenti-e-considerazioni-finali" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">19.5</span> Commenti e considerazioni finali</h2>
+<p>La riflessione epistemologica contemporanea ha ribadito che la conoscenza non può essere vista come una certezza inconfutabile o una garanzia razionale di verità. Invece, essa emerge come una serie di decisioni prese all’interno di un contesto di incertezza. Questa comprensione è particolarmente pertinente nel campo della ricerca scientifica, dove né la logica deduttiva né le rigorose dimostrazioni matematiche sono sufficienti. Di conseguenza, la scienza necessita di una “logica dell’incertezza,” che è efficacemente fornita dalla teoria delle probabilità, e più specificamente, dal teorema di Bayes.</p>
+<p>Il teorema di Bayes ci offre un framework per interpretare la probabilità come una valutazione soggettiva influenzata da diversi fattori condizionanti. In pratica, il teorema esprime la probabilità a posteriori <span class="math inline">\(P(H_i \mid E)\)</span> come un risultato derivato dalla combinazione della probabilità a priori <span class="math inline">\(P(H_i)\)</span> e della verosimiglianza <span class="math inline">\(P(E \mid H_i)\)</span>. Questa formulazione sottolinea che la nostra valutazione probabilistica di una data ipotesi <span class="math inline">\(H_i\)</span> è modulata sia dall’evidenza empirica <span class="math inline">\(E\)</span> che dalle nostre credenze a priori <span class="math inline">\(P(H_i)\)</span>.</p>
+<p>Poiché la probabilità è una valutazione intrinsecamente soggettiva, è possibile che diversi osservatori arrivino a conclusioni differenti. Tuttavia, il teorema di Bayes fornisce un meccanismo razionale—conosciuto come “aggiornamento bayesiano”—per ricalibrare queste credenze in risposta a nuove informazioni o evidenze.</p>
+<p>L’approccio bayesiano offre strumenti per valutare l’efficacia di diverse strategie di trattamento o interventi in psicologia clinica. Per esempio, se si afferma che la meditazione mattutina è efficace nel trattamento della depressione, è essenziale valutare questa affermazione nel contesto di tutte le evidenze disponibili, compresi i casi in cui la meditazione non ha portato a miglioramenti.</p>
+<p>In sintesi, la metodologia bayesiana fornisce una cornice robusta per l’aggiornamento delle probabilità in presenza di nuove informazioni, offrendo spunti importanti sia per la ricerca che per la pratica clinica in psicologia.</p>
+<p>Nel contesto di questo capitolo, abbiamo focalizzato la nostra discussione sul teorema di Bayes nel caso delle variabili casuali discrete. Tuttavia, nel prossimo capitolo, esploreremo come il teorema può essere applicato in modo più intuitivo alle variabili casuali continue.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">19.6</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="ca5cf3a4-13bb-44fc-ae47-bc0a5cbb8da3" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Sat Mar 16 2024
+
+Python implementation: CPython
+Python version       : 3.11.8
+IPython version      : 8.22.2
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.4.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+seaborn   : 0.13.2
+pandas    : 2.2.1
+matplotlib: 3.8.3
+numpy     : 1.26.4
+arviz     : 0.17.0
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/chapter_3/02_conditional_prob.html" class="pagination-link" aria-label="Probabilità condizionata">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/chapter_4/15_stan_beta_binomial.html" class="pagination-link" aria-label="Linguaggio Stan">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_3/03_bayes_theorem.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>
