@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Analisi dei dati per psicologi - 33&nbsp; Modello di regressione lineare bayesiano</title>
+<title>Analisi dei dati per psicologi - 35&nbsp; Modello di regressione lineare bayesiano</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -84,7 +84,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/chapter_5/05_04_synt_sugar.html" rel="next">
-<link href="../../chapters/chapter_4/15_stan_beta_binomial.html" rel="prev">
+<link href="../../chapters/chapter_4/22_stan_normal_normal.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -166,7 +166,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -434,6 +434,18 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/19_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/22_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -448,19 +460,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/chapter_5/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/chapter_5/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/chapter_5/05_05_two_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
       </ul>
@@ -570,45 +582,45 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">33.1</span> Introduzione</a></li>
-  <li><a href="#modellare-lassociazione-statistica-tra-variabili" id="toc-modellare-lassociazione-statistica-tra-variabili" class="nav-link" data-scroll-target="#modellare-lassociazione-statistica-tra-variabili"><span class="header-section-number">33.2</span> Modellare l’associazione statistica tra variabili</a></li>
-  <li><a href="#modello-generativo-dei-dati" id="toc-modello-generativo-dei-dati" class="nav-link" data-scroll-target="#modello-generativo-dei-dati"><span class="header-section-number">33.3</span> Modello Generativo dei Dati</a></li>
-  <li><a href="#modello-bayesiano-della-regressione-bivariata" id="toc-modello-bayesiano-della-regressione-bivariata" class="nav-link" data-scroll-target="#modello-bayesiano-della-regressione-bivariata"><span class="header-section-number">33.4</span> Modello Bayesiano della Regressione Bivariata</a>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">35.1</span> Introduzione</a></li>
+  <li><a href="#modellare-lassociazione-statistica-tra-variabili" id="toc-modellare-lassociazione-statistica-tra-variabili" class="nav-link" data-scroll-target="#modellare-lassociazione-statistica-tra-variabili"><span class="header-section-number">35.2</span> Modellare l’associazione statistica tra variabili</a></li>
+  <li><a href="#modello-generativo-dei-dati" id="toc-modello-generativo-dei-dati" class="nav-link" data-scroll-target="#modello-generativo-dei-dati"><span class="header-section-number">35.3</span> Modello Generativo dei Dati</a></li>
+  <li><a href="#modello-bayesiano-della-regressione-bivariata" id="toc-modello-bayesiano-della-regressione-bivariata" class="nav-link" data-scroll-target="#modello-bayesiano-della-regressione-bivariata"><span class="header-section-number">35.4</span> Modello Bayesiano della Regressione Bivariata</a>
   <ul class="collapse">
-  <li><a href="#verosimiglianza" id="toc-verosimiglianza" class="nav-link" data-scroll-target="#verosimiglianza"><span class="header-section-number">33.4.1</span> Verosimiglianza</a></li>
-  <li><a href="#distribuzioni-a-priori" id="toc-distribuzioni-a-priori" class="nav-link" data-scroll-target="#distribuzioni-a-priori"><span class="header-section-number">33.4.2</span> Distribuzioni a Priori</a></li>
-  <li><a href="#distribuzioni-a-posteriori" id="toc-distribuzioni-a-posteriori" class="nav-link" data-scroll-target="#distribuzioni-a-posteriori"><span class="header-section-number">33.4.3</span> Distribuzioni a Posteriori</a></li>
-  <li><a href="#codice-stan" id="toc-codice-stan" class="nav-link" data-scroll-target="#codice-stan"><span class="header-section-number">33.4.4</span> Codice Stan</a></li>
-  <li><a href="#dizionario-con-i-dati" id="toc-dizionario-con-i-dati" class="nav-link" data-scroll-target="#dizionario-con-i-dati"><span class="header-section-number">33.4.5</span> Dizionario con i dati</a></li>
-  <li><a href="#campionamento-mcmc" id="toc-campionamento-mcmc" class="nav-link" data-scroll-target="#campionamento-mcmc"><span class="header-section-number">33.4.6</span> Campionamento MCMC</a></li>
-  <li><a href="#distribuzioni-a-posteriori-1" id="toc-distribuzioni-a-posteriori-1" class="nav-link" data-scroll-target="#distribuzioni-a-posteriori-1"><span class="header-section-number">33.4.7</span> Distribuzioni a posteriori</a></li>
-  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">33.4.8</span> Interpretazione</a></li>
+  <li><a href="#verosimiglianza" id="toc-verosimiglianza" class="nav-link" data-scroll-target="#verosimiglianza"><span class="header-section-number">35.4.1</span> Verosimiglianza</a></li>
+  <li><a href="#distribuzioni-a-priori" id="toc-distribuzioni-a-priori" class="nav-link" data-scroll-target="#distribuzioni-a-priori"><span class="header-section-number">35.4.2</span> Distribuzioni a Priori</a></li>
+  <li><a href="#distribuzioni-a-posteriori" id="toc-distribuzioni-a-posteriori" class="nav-link" data-scroll-target="#distribuzioni-a-posteriori"><span class="header-section-number">35.4.3</span> Distribuzioni a Posteriori</a></li>
+  <li><a href="#codice-stan" id="toc-codice-stan" class="nav-link" data-scroll-target="#codice-stan"><span class="header-section-number">35.4.4</span> Codice Stan</a></li>
+  <li><a href="#dizionario-con-i-dati" id="toc-dizionario-con-i-dati" class="nav-link" data-scroll-target="#dizionario-con-i-dati"><span class="header-section-number">35.4.5</span> Dizionario con i dati</a></li>
+  <li><a href="#campionamento-mcmc" id="toc-campionamento-mcmc" class="nav-link" data-scroll-target="#campionamento-mcmc"><span class="header-section-number">35.4.6</span> Campionamento MCMC</a></li>
+  <li><a href="#distribuzioni-a-posteriori-1" id="toc-distribuzioni-a-posteriori-1" class="nav-link" data-scroll-target="#distribuzioni-a-posteriori-1"><span class="header-section-number">35.4.7</span> Distribuzioni a posteriori</a></li>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">35.4.8</span> Interpretazione</a></li>
   </ul></li>
-  <li><a href="#predizione" id="toc-predizione" class="nav-link" data-scroll-target="#predizione"><span class="header-section-number">33.5</span> Predizione</a>
+  <li><a href="#predizione" id="toc-predizione" class="nav-link" data-scroll-target="#predizione"><span class="header-section-number">35.5</span> Predizione</a>
   <ul class="collapse">
-  <li><a href="#quantificazione-dellincertezza" id="toc-quantificazione-dellincertezza" class="nav-link" data-scroll-target="#quantificazione-dellincertezza"><span class="header-section-number">33.5.1</span> Quantificazione dell’incertezza</a></li>
+  <li><a href="#quantificazione-dellincertezza" id="toc-quantificazione-dellincertezza" class="nav-link" data-scroll-target="#quantificazione-dellincertezza"><span class="header-section-number">35.5.1</span> Quantificazione dell’incertezza</a></li>
   </ul></li>
-  <li><a href="#ricodifica-dei-dati" id="toc-ricodifica-dei-dati" class="nav-link" data-scroll-target="#ricodifica-dei-dati"><span class="header-section-number">33.6</span> Ricodifica dei dati</a>
+  <li><a href="#ricodifica-dei-dati" id="toc-ricodifica-dei-dati" class="nav-link" data-scroll-target="#ricodifica-dei-dati"><span class="header-section-number">35.6</span> Ricodifica dei dati</a>
   <ul class="collapse">
-  <li><a href="#centratura-della-variabile-x" id="toc-centratura-della-variabile-x" class="nav-link" data-scroll-target="#centratura-della-variabile-x"><span class="header-section-number">33.6.1</span> Centratura della variabile $ x $</a></li>
-  <li><a href="#interpretazione-della-nuova-intercetta" id="toc-interpretazione-della-nuova-intercetta" class="nav-link" data-scroll-target="#interpretazione-della-nuova-intercetta"><span class="header-section-number">33.6.2</span> Interpretazione della nuova intercetta</a></li>
+  <li><a href="#centratura-della-variabile-x" id="toc-centratura-della-variabile-x" class="nav-link" data-scroll-target="#centratura-della-variabile-x"><span class="header-section-number">35.6.1</span> Centratura della variabile $ x $</a></li>
+  <li><a href="#interpretazione-della-nuova-intercetta" id="toc-interpretazione-della-nuova-intercetta" class="nav-link" data-scroll-target="#interpretazione-della-nuova-intercetta"><span class="header-section-number">35.6.2</span> Interpretazione della nuova intercetta</a></li>
   </ul></li>
-  <li><a href="#distribizioni-a-priori-sui-parametri" id="toc-distribizioni-a-priori-sui-parametri" class="nav-link" data-scroll-target="#distribizioni-a-priori-sui-parametri"><span class="header-section-number">33.7</span> Distribizioni a priori sui parametri</a>
+  <li><a href="#distribizioni-a-priori-sui-parametri" id="toc-distribizioni-a-priori-sui-parametri" class="nav-link" data-scroll-target="#distribizioni-a-priori-sui-parametri"><span class="header-section-number">35.7</span> Distribizioni a priori sui parametri</a>
   <ul class="collapse">
-  <li><a href="#interpretazione-delle-distribuzioni-a-priori" id="toc-interpretazione-delle-distribuzioni-a-priori" class="nav-link" data-scroll-target="#interpretazione-delle-distribuzioni-a-priori"><span class="header-section-number">33.7.1</span> Interpretazione delle Distribuzioni a Priori</a></li>
-  <li><a href="#posterior-predictive-check" id="toc-posterior-predictive-check" class="nav-link" data-scroll-target="#posterior-predictive-check"><span class="header-section-number">33.7.2</span> Posterior-predictive check</a></li>
+  <li><a href="#interpretazione-delle-distribuzioni-a-priori" id="toc-interpretazione-delle-distribuzioni-a-priori" class="nav-link" data-scroll-target="#interpretazione-delle-distribuzioni-a-priori"><span class="header-section-number">35.7.1</span> Interpretazione delle Distribuzioni a Priori</a></li>
+  <li><a href="#posterior-predictive-check" id="toc-posterior-predictive-check" class="nav-link" data-scroll-target="#posterior-predictive-check"><span class="header-section-number">35.7.2</span> Posterior-predictive check</a></li>
   </ul></li>
-  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">33.8</span> Commenti e considerazioni finali</a></li>
-  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">33.9</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">35.8</span> Commenti e considerazioni finali</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">35.9</span> Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_5/05_03_reglin_bayesian.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></h1>
+<h1 class="title"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></h1>
 </div>
 
 
@@ -683,8 +695,8 @@ window.Quarto = {
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> ipython <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    ipython.run_line_magic(<span class="st">"config"</span>, <span class="st">"InlineBackend.figure_format = 'retina'"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduzione" class="level2" data-number="33.1">
-<h2 data-number="33.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">33.1</span> Introduzione</h2>
+<section id="introduzione" class="level2" data-number="35.1">
+<h2 data-number="35.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">35.1</span> Introduzione</h2>
 <p>I modelli lineari sono stati utilizzati in varie forme per molto tempo. <span class="citation" data-cites="stigler1986">Stigler (<a href="../../99-references.html#ref-stigler1986" role="doc-biblioref">1986</a>)</span> descrive come il metodo dei minimi quadrati, una tecnica per adattare una semplice regressione lineare, fosse associato a problemi fondamentali in astronomia nel 1700, come la determinazione del moto della luna e la riconciliazione del moto non periodico di Giove e Saturno. All’epoca, gli astronomi erano tra i primi a sentirsi a proprio agio nell’utilizzare questi metodi, poiché raccoglievano personalmente le loro osservazioni e sapevano che le condizioni di raccolta dei dati erano simili, anche se i valori delle osservazioni differivano. Questo contrastava con l’approccio più cauto delle scienze sociali, dove la riluttanza a combinare dati eterogenei ritardava l’adozione dei modelli lineari <span class="citation" data-cites="stigler1986">(<a href="../../99-references.html#ref-stigler1986" role="doc-biblioref">Stigler 1986</a>)</span>.</p>
 <p>Come nota <span class="citation" data-cites="alexander2023telling">Alexander (<a href="../../99-references.html#ref-alexander2023telling" role="doc-biblioref">2023</a>)</span>, quando costruiamo modelli, non stiamo scoprendo “la verità”. Un modello non può essere una rappresentazione fedele della realtà. Utilizziamo i modelli per esplorare e comprendere i nostri dati. Non esiste un modello migliore in assoluto, ma solo modelli utili che ci aiutano a imparare qualcosa sui dati che abbiamo e, si spera, qualcosa sul mondo da cui sono stati generati. Quando utilizziamo i modelli, cerchiamo di comprendere il mondo, ma ci sono limiti alla prospettiva che portiamo in questo. Non dovremmo semplicemente inserire dati in un modello sperando che risolva tutto. Non lo farà.</p>
 <blockquote class="blockquote">
@@ -725,8 +737,8 @@ window.Quarto = {
 <p>Indipendentemente dall’approccio scelto, è fondamentale tenere presente che l’analisi di regressione è essenzialmente una forma di media ponderata. Di conseguenza, i risultati ottenuti riflettono inevitabilmente i bias e le peculiarità del dataset utilizzato.</p>
 <p>Infine, una nota sulla terminologia e sulla notazione. Per ragioni storiche e specifiche del contesto, esistono vari termini usati per descrivere la stessa idea nella letteratura. Seguiamo <span class="citation" data-cites="gelman2020regression">Gelman, Hill, e Vehtari (<a href="../../99-references.html#ref-gelman2020regression" role="doc-biblioref">2020</a>)</span> e utilizziamo i termini “outcome” e “predictor”, e la specificazione del modello bayesiano di <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>.</p>
 </section>
-<section id="modellare-lassociazione-statistica-tra-variabili" class="level2" data-number="33.2">
-<h2 data-number="33.2" class="anchored" data-anchor-id="modellare-lassociazione-statistica-tra-variabili"><span class="header-section-number">33.2</span> Modellare l’associazione statistica tra variabili</h2>
+<section id="modellare-lassociazione-statistica-tra-variabili" class="level2" data-number="35.2">
+<h2 data-number="35.2" class="anchored" data-anchor-id="modellare-lassociazione-statistica-tra-variabili"><span class="header-section-number">35.2</span> Modellare l’associazione statistica tra variabili</h2>
 <p>Per introdurre l’approccio bayesiano al modello di regressione, esamineremo un set di <a href="https://www.bgsu.edu/content/dam/BGSU/nwo/documents/COMP-6-8/June21_2016/IcecreamSalesvsTemperature.pdf">dati</a> che riguarda la relazione tra la temperatura media e gli introiti (in dollari) di un particolare negozio di gelati. Sebbene questa possa non sembrare una questione scientifica particolarmente entusiasmante, è un esempio semplice e intuitivo da analizzare. La relazione tra consumo di gelati e temperatura può apparire banale, ma offre una chiara opportunità per comprendere i meccanismi alla base dell’associazione tra due variabili. In questo momento, ci concentreremo esclusivamente sui metodi per stimare tale associazione.</p>
 <p>In precedenza, abbiamo applicato il modello Normale ad una singola variabile. Tuttavia, di solito siamo interessati a modellare come una variabile di esito sia correlata a un’altra variabile predittiva. Se la variabile predittiva ha una qualche associazione statistica con la variabile di esito, possiamo utilizzarla per predire il risultato. Quando la variabile predittiva è integrata nel modello in un modo specifico, otteniamo una regressione lineare.</p>
 <p>I dati dell’esempio sono forniti di seguito.</p>
@@ -814,8 +826,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="modello-generativo-dei-dati" class="level2" data-number="33.3">
-<h2 data-number="33.3" class="anchored" data-anchor-id="modello-generativo-dei-dati"><span class="header-section-number">33.3</span> Modello Generativo dei Dati</h2>
+<section id="modello-generativo-dei-dati" class="level2" data-number="35.3">
+<h2 data-number="35.3" class="anchored" data-anchor-id="modello-generativo-dei-dati"><span class="header-section-number">35.3</span> Modello Generativo dei Dati</h2>
 <p>Per descrivere la relazione tra introiti e temperatura, utilizzeremo un modello statistico lineare. Assumeremo che la relazione media tra <span class="math inline">\(x\)</span> (temperatura) e <span class="math inline">\(y\)</span> (introiti) possa essere rappresentata da una retta, ma influenzata da un certo grado di errore. Supponiamo che questo errore sia costante ai vari livelli di <span class="math inline">\(x\)</span> e segua una distribuzione Normale. Inoltre, presupponiamo che gli errori attorno alla retta di regressione siano indipendenti tra loro.</p>
 <p>In questo contesto, le nostre assunzioni delineano un modello statistico lineare, formalizzato come segue:</p>
 <p><span class="math display">\[ y_i = \alpha + \beta x_i + \epsilon_i \]</span></p>
@@ -838,24 +850,24 @@ window.Quarto = {
 </ul>
 <p>Questo modello ci consente di stimare l’effetto della temperatura sulle vendite di gelati e di quantificare l’incertezza associata a queste stime.</p>
 </section>
-<section id="modello-bayesiano-della-regressione-bivariata" class="level2" data-number="33.4">
-<h2 data-number="33.4" class="anchored" data-anchor-id="modello-bayesiano-della-regressione-bivariata"><span class="header-section-number">33.4</span> Modello Bayesiano della Regressione Bivariata</h2>
-<section id="verosimiglianza" class="level3" data-number="33.4.1">
-<h3 data-number="33.4.1" class="anchored" data-anchor-id="verosimiglianza"><span class="header-section-number">33.4.1</span> Verosimiglianza</h3>
+<section id="modello-bayesiano-della-regressione-bivariata" class="level2" data-number="35.4">
+<h2 data-number="35.4" class="anchored" data-anchor-id="modello-bayesiano-della-regressione-bivariata"><span class="header-section-number">35.4</span> Modello Bayesiano della Regressione Bivariata</h2>
+<section id="verosimiglianza" class="level3" data-number="35.4.1">
+<h3 data-number="35.4.1" class="anchored" data-anchor-id="verosimiglianza"><span class="header-section-number">35.4.1</span> Verosimiglianza</h3>
 <p>Assumiamo la verosimiglianza che abbiamo descritto in precedenza:</p>
 <p><span class="math display">\[ y \sim \text{Normale}(\alpha + \beta x, \sigma) \]</span></p>
 <p>Questo significa che i dati <span class="math inline">\(y\)</span> seguono una distribuzione normale con media <span class="math inline">\(\alpha + \beta x\)</span> e deviazione standard <span class="math inline">\(\sigma\)</span>. In altre parole, il valore osservato <span class="math inline">\(y\)</span> è generato come una combinazione lineare di <span class="math inline">\(\alpha\)</span> (intercetta), <span class="math inline">\(\beta\)</span> (coefficiente della variabile <span class="math inline">\(x\)</span>), più un errore che segue una distribuzione normale con deviazione standard <span class="math inline">\(\sigma\)</span>.</p>
 </section>
-<section id="distribuzioni-a-priori" class="level3" data-number="33.4.2">
-<h3 data-number="33.4.2" class="anchored" data-anchor-id="distribuzioni-a-priori"><span class="header-section-number">33.4.2</span> Distribuzioni a Priori</h3>
+<section id="distribuzioni-a-priori" class="level3" data-number="35.4.2">
+<h3 data-number="35.4.2" class="anchored" data-anchor-id="distribuzioni-a-priori"><span class="header-section-number">35.4.2</span> Distribuzioni a Priori</h3>
 <p>In una prima versione del modello, useremo delle distribuzioni a priori uniformi per i tre parametri.</p>
 </section>
-<section id="distribuzioni-a-posteriori" class="level3" data-number="33.4.3">
-<h3 data-number="33.4.3" class="anchored" data-anchor-id="distribuzioni-a-posteriori"><span class="header-section-number">33.4.3</span> Distribuzioni a Posteriori</h3>
+<section id="distribuzioni-a-posteriori" class="level3" data-number="35.4.3">
+<h3 data-number="35.4.3" class="anchored" data-anchor-id="distribuzioni-a-posteriori"><span class="header-section-number">35.4.3</span> Distribuzioni a Posteriori</h3>
 <p>Le distribuzioni a priori vengono combinate con i dati osservati attraverso il teorema di Bayes per aggiornare le nostre credenze sui parametri del modello. Il risultato è una distribuzione a posteriori per ciascun parametro che riflette sia l’informazione contenuta nei dati che le credenze iniziali incorporate nelle distribuzioni a priori. Questo processo permette di fare inferenze più robuste, specialmente quando i dati sono limitati o rumorosi.</p>
 </section>
-<section id="codice-stan" class="level3" data-number="33.4.4">
-<h3 data-number="33.4.4" class="anchored" data-anchor-id="codice-stan"><span class="header-section-number">33.4.4</span> Codice Stan</h3>
+<section id="codice-stan" class="level3" data-number="35.4.4">
+<h3 data-number="35.4.4" class="anchored" data-anchor-id="codice-stan"><span class="header-section-number">35.4.4</span> Codice Stan</h3>
 <p>Il codice Stan che implementa il modello precedente è contenuto nel file <code>icecream_model_1.stan</code>. Compiliamo e stampiamo il modello.</p>
 <div id="cell-11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:06.728618Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:05.671604Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">'stan'</span>, <span class="st">'icecream_model_1.stan'</span>)</span>
@@ -881,8 +893,8 @@ model {
 </div>
 <p>Si noti che, non avendo specificato le distribuzioni a priori per i parametri <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> e <span class="math inline">\(\sigma\)</span>, Stan assume distribuzioni a priori uniformi.</p>
 </section>
-<section id="dizionario-con-i-dati" class="level3" data-number="33.4.5">
-<h3 data-number="33.4.5" class="anchored" data-anchor-id="dizionario-con-i-dati"><span class="header-section-number">33.4.5</span> Dizionario con i dati</h3>
+<section id="dizionario-con-i-dati" class="level3" data-number="35.4.5">
+<h3 data-number="35.4.5" class="anchored" data-anchor-id="dizionario-con-i-dati"><span class="header-section-number">35.4.5</span> Dizionario con i dati</h3>
 <p>Sistemiamo i dati in un dizionario come richiesto dal modello Stan.</p>
 <div id="cell-14" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:10.217268Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:10.214117Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
@@ -920,8 +932,8 @@ Name: icecream, dtype: int64}</code></pre>
 </div>
 </div>
 </section>
-<section id="campionamento-mcmc" class="level3" data-number="33.4.6">
-<h3 data-number="33.4.6" class="anchored" data-anchor-id="campionamento-mcmc"><span class="header-section-number">33.4.6</span> Campionamento MCMC</h3>
+<section id="campionamento-mcmc" class="level3" data-number="35.4.6">
+<h3 data-number="35.4.6" class="anchored" data-anchor-id="campionamento-mcmc"><span class="header-section-number">35.4.6</span> Campionamento MCMC</h3>
 <p>Eseguiamo il campionamento MCMC.</p>
 <div id="cell-17" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:14.524548Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:13.793216Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
@@ -934,8 +946,8 @@ Name: icecream, dtype: int64}</code></pre>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="distribuzioni-a-posteriori-1" class="level3" data-number="33.4.7">
-<h3 data-number="33.4.7" class="anchored" data-anchor-id="distribuzioni-a-posteriori-1"><span class="header-section-number">33.4.7</span> Distribuzioni a posteriori</h3>
+<section id="distribuzioni-a-posteriori-1" class="level3" data-number="35.4.7">
+<h3 data-number="35.4.7" class="anchored" data-anchor-id="distribuzioni-a-posteriori-1"><span class="header-section-number">35.4.7</span> Distribuzioni a posteriori</h3>
 <p>Esaminiamo le distribuzioni a posteriori dei parametri.</p>
 <div id="cell-20" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:19.008797Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:17.795902Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(fit, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1073,8 +1085,8 @@ Name: icecream, dtype: int64}</code></pre>
 </div>
 <p>La somiglianza tra le due soluzioni conferma che, nel caso di modelli semplici come questo, e quando vengono usati dei prior non informativi, i due approcci producono risultati sostanzialmente equivalenti.</p>
 </section>
-<section id="interpretazione" class="level3" data-number="33.4.8">
-<h3 data-number="33.4.8" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">33.4.8</span> Interpretazione</h3>
+<section id="interpretazione" class="level3" data-number="35.4.8">
+<h3 data-number="35.4.8" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">35.4.8</span> Interpretazione</h3>
 <p>Possiamo interpretare i parametri come segue:</p>
 <ul>
 <li>La media a posteriori di <span class="math inline">\(\alpha = -159.47\)</span> indica che il valore atteso degli introiti del negozio di gelati è di -159.47 dollari quando la temperatura è di 0 gradi centigradi.</li>
@@ -1082,8 +1094,8 @@ Name: icecream, dtype: int64}</code></pre>
 </ul>
 </section>
 </section>
-<section id="predizione" class="level2" data-number="33.5">
-<h2 data-number="33.5" class="anchored" data-anchor-id="predizione"><span class="header-section-number">33.5</span> Predizione</h2>
+<section id="predizione" class="level2" data-number="35.5">
+<h2 data-number="35.5" class="anchored" data-anchor-id="predizione"><span class="header-section-number">35.5</span> Predizione</h2>
 <p>La distribuzione a posteriori non contiene solo informazioni su ciascun parametro singolarmente, ma anche sulle dipendenze tra i parametri. Queste dipendenze sono riflesse nei campioni a posteriori che possono essere trasformati arbitrariamente.</p>
 <p>Ad esempio, supponiamo che <code>alpha</code> e <code>beta</code> siano vettori di campioni a posteriori.</p>
 <p>Con l’istruzione seguente nel blocco <code>generated quantities</code>, possiamo calcolare la predizione a posteriori per 30 gradi Celsius:</p>
@@ -1171,8 +1183,8 @@ generated quantities {
 </div>
 </div>
 </div>
-<section id="quantificazione-dellincertezza" class="level3" data-number="33.5.1">
-<h3 data-number="33.5.1" class="anchored" data-anchor-id="quantificazione-dellincertezza"><span class="header-section-number">33.5.1</span> Quantificazione dell’incertezza</h3>
+<section id="quantificazione-dellincertezza" class="level3" data-number="35.5.1">
+<h3 data-number="35.5.1" class="anchored" data-anchor-id="quantificazione-dellincertezza"><span class="header-section-number">35.5.1</span> Quantificazione dell’incertezza</h3>
 <p>Per quantificare l’incertezza nelle predizioni del modello, possiamo estendere il metodo esaminato in precedenza per calcolare la distribuzione a posteriori delle predizioni per tutti i valori di <span class="math inline">\(x\)</span> considerati. Questo ci permette di ottenere non solo le stime puntuali delle predizioni, ma anche una misura dell’incertezza associata a ciascuna predizione.</p>
 <p>Per fare ciò, modifichiamo il blocco <code>generated quantities</code> nel seguente modo:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
@@ -1338,17 +1350,17 @@ generated quantities {
 </ol>
 </section>
 </section>
-<section id="ricodifica-dei-dati" class="level2" data-number="33.6">
-<h2 data-number="33.6" class="anchored" data-anchor-id="ricodifica-dei-dati"><span class="header-section-number">33.6</span> Ricodifica dei dati</h2>
+<section id="ricodifica-dei-dati" class="level2" data-number="35.6">
+<h2 data-number="35.6" class="anchored" data-anchor-id="ricodifica-dei-dati"><span class="header-section-number">35.6</span> Ricodifica dei dati</h2>
 <p>L’intercetta (<span class="math inline">\(\alpha\)</span>) corrisponde al valore atteso degli introiti quando la temperatura è di 0 gradi centigradi. Un valore negativo dell’intercetta indica che, in tali circostanze, ci aspettiamo una perdita. Tuttavia, possiamo ricodificare i dati in modo che l’intercetta abbia un’interpretazione più utile.</p>
-<section id="centratura-della-variabile-x" class="level3" data-number="33.6.1">
-<h3 data-number="33.6.1" class="anchored" data-anchor-id="centratura-della-variabile-x"><span class="header-section-number">33.6.1</span> Centratura della variabile $ x $</h3>
+<section id="centratura-della-variabile-x" class="level3" data-number="35.6.1">
+<h3 data-number="35.6.1" class="anchored" data-anchor-id="centratura-della-variabile-x"><span class="header-section-number">35.6.1</span> Centratura della variabile $ x $</h3>
 <p>Centriamo la variabile <span class="math inline">\(x\)</span> (temperatura), sottraendo la media della temperatura (<span class="math inline">\(\bar{x}\)</span>) da ciascun valore di <span class="math inline">\(x\)</span>. In questo modo otteniamo la nuova variabile <span class="math inline">\(xc\)</span> la cui media è 0. La trasformazione è definita come:</p>
 <p><span class="math display">\[ xc_i = x_i - \bar{x} \]</span></p>
 <p>Dove <span class="math inline">\(\bar{x}\)</span> è la media della temperatura.</p>
 </section>
-<section id="interpretazione-della-nuova-intercetta" class="level3" data-number="33.6.2">
-<h3 data-number="33.6.2" class="anchored" data-anchor-id="interpretazione-della-nuova-intercetta"><span class="header-section-number">33.6.2</span> Interpretazione della nuova intercetta</h3>
+<section id="interpretazione-della-nuova-intercetta" class="level3" data-number="35.6.2">
+<h3 data-number="35.6.2" class="anchored" data-anchor-id="interpretazione-della-nuova-intercetta"><span class="header-section-number">35.6.2</span> Interpretazione della nuova intercetta</h3>
 <p>Il valore 0 di <span class="math inline">\(xc\)</span> corrisponde al valore medio di <span class="math inline">\(x\)</span>. Dato che la retta di regressione passa per il punto <span class="math inline">\((\bar{x}, \bar{y})\)</span>, se utilizziamo <span class="math inline">\(xc\)</span> al posto di <span class="math inline">\(x\)</span>, la nuova intercetta (<span class="math inline">\(\alpha\)</span>) ci dirà qual è il valore atteso degli introiti (<span class="math inline">\(y\)</span>) quando la temperatura assume il suo valore medio (<span class="math inline">\(\bar{x}\)</span>).</p>
 <div id="cell-44" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:25.618842Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:25.614428Z&quot;}" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della temperatura media</span></span>
@@ -1467,8 +1479,8 @@ Name: icecream, dtype: int64}</code></pre>
 <p>Notiamo che la media a posteriori di <span class="math inline">\(\beta\)</span> è rimasta invariata. Tuttavia, la media a posteriori di <span class="math inline">\(\alpha\)</span> è ora pari a 402,4 dollari. Questo rappresenta il valore atteso degli introiti del negozio di gelati quando la temperatura è al suo valore medio.</p>
 </section>
 </section>
-<section id="distribizioni-a-priori-sui-parametri" class="level2" data-number="33.7">
-<h2 data-number="33.7" class="anchored" data-anchor-id="distribizioni-a-priori-sui-parametri"><span class="header-section-number">33.7</span> Distribizioni a priori sui parametri</h2>
+<section id="distribizioni-a-priori-sui-parametri" class="level2" data-number="35.7">
+<h2 data-number="35.7" class="anchored" data-anchor-id="distribizioni-a-priori-sui-parametri"><span class="header-section-number">35.7</span> Distribizioni a priori sui parametri</h2>
 <p>Spefichiamo ora le seguenti distribuzioni a priori debolmente informative sui parametri del modello.</p>
 <ol type="1">
 <li><strong>Intercetta (<span class="math inline">\(\alpha\)</span>)</strong>:
@@ -1487,8 +1499,8 @@ Name: icecream, dtype: int64}</code></pre>
 <li>La distribuzione Half-Cauchy è scelta perché è debolmente informativa e adatta per i parametri di scala come la deviazione standard residua. La scala di 5 consente a <span class="math inline">\(\sigma\)</span> di assumere una vasta gamma di valori positivi, riflettendo l’incertezza riguardo alla variabilità residua.</li>
 </ul></li>
 </ol>
-<section id="interpretazione-delle-distribuzioni-a-priori" class="level3" data-number="33.7.1">
-<h3 data-number="33.7.1" class="anchored" data-anchor-id="interpretazione-delle-distribuzioni-a-priori"><span class="header-section-number">33.7.1</span> Interpretazione delle Distribuzioni a Priori</h3>
+<section id="interpretazione-delle-distribuzioni-a-priori" class="level3" data-number="35.7.1">
+<h3 data-number="35.7.1" class="anchored" data-anchor-id="interpretazione-delle-distribuzioni-a-priori"><span class="header-section-number">35.7.1</span> Interpretazione delle Distribuzioni a Priori</h3>
 <p>Queste distribuzioni a priori rappresentano le credenze iniziali riguardanti i parametri del modello prima di osservare i dati. Le distribuzioni normali per <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> con deviazioni standard ampie permettono una grande flessibilità, mentre la distribuzione Half-Cauchy per <span class="math inline">\(\sigma\)</span> è scelta per la sua capacità di gestire bene i parametri di scala. Queste scelte garantiscono che il modello sia debolmente informativo, permettendo ai dati osservati di avere un’influenza significativa sulle stime posteriori dei parametri.</p>
 <div id="cell-50" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:39.597858Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:39.459995Z&quot;}" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"icecream_model_prior.stan"</span>)</span>
@@ -1596,8 +1608,8 @@ model {
 </div>
 <p>Si noti che, utilizzando distribuzioni a priori debolmente informative, le distribuzioni a posteriori dei parametri risultano molto simili a quelle ottenute usando distribuzioni uniformi. Tuttavia, le distribuzioni a priori debolmente informative sono preferibili poiché forniscono una maggiore stabilità numerica e sono generalmente più affidabili e robuste, specialmente quando si lavora con dati reali. L’uso di distribuzioni uniformi è sconsigliato per via delle possibili instabilità numeriche che possono introdurre nei modelli.</p>
 </section>
-<section id="posterior-predictive-check" class="level3" data-number="33.7.2">
-<h3 data-number="33.7.2" class="anchored" data-anchor-id="posterior-predictive-check"><span class="header-section-number">33.7.2</span> Posterior-predictive check</h3>
+<section id="posterior-predictive-check" class="level3" data-number="35.7.2">
+<h3 data-number="35.7.2" class="anchored" data-anchor-id="posterior-predictive-check"><span class="header-section-number">35.7.2</span> Posterior-predictive check</h3>
 <p>Generiamo ora un PPC plot per confrontare le predizioni del modello con i dati osservati.</p>
 <div id="cell-57" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:49.537296Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:49.418999Z&quot;}" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"icecream_model_3.stan"</span>)</span>
@@ -1638,13 +1650,13 @@ model {
 </div>
 </section>
 </section>
-<section id="commenti-e-considerazioni-finali" class="level2" data-number="33.8">
-<h2 data-number="33.8" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">33.8</span> Commenti e considerazioni finali</h2>
+<section id="commenti-e-considerazioni-finali" class="level2" data-number="35.8">
+<h2 data-number="35.8" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">35.8</span> Commenti e considerazioni finali</h2>
 <p>In questo capitolo abbiamo esplorato la stima dei parametri di un modello di regressione bivariato utilizzando l’approccio bayesiano.</p>
 <p>Per fornire un confronto con un metodo alternativo, in appendice è presentata un’introduzione all’approccio frequentista per il modello di regressione lineare bivariato. Questa sezione aggiuntiva offre una panoramica degli aspetti chiave dell’approccio frequentista, consentendo di confrontare e comprendere le differenze tra i due approcci nella stima dei parametri e nell’interpretazione dei risultati.</p>
 </section>
-<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="33.9">
-<h2 data-number="33.9" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">33.9</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="35.9">
+<h2 data-number="35.9" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">35.9</span> Informazioni sull’Ambiente di Sviluppo</h2>
 <div id="cell-65" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:16.259171Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:03:16.203222Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>m  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2111,13 +2123,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/chapter_4/15_stan_beta_binomial.html" class="pagination-link" aria-label="Linguaggio Stan">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span>
+      <a href="../../chapters/chapter_4/22_stan_normal_normal.html" class="pagination-link" aria-label="Inferenza bayesiana su una media">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../chapters/chapter_5/05_04_synt_sugar.html" class="pagination-link" aria-label="Zucchero sintattico">
-        <span class="nav-page-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
