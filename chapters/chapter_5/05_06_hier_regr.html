@@ -1,0 +1,2988 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analisi dei dati per psicologi - 46&nbsp; Il modello lineare gerarchico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/chapter_5/05_07_robust_regr.html" rel="next">
+<link href="../../chapters/chapter_5/05_05a_stan_multreg.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_06_hier_regr.html"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi dei dati per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/00_scientific_method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">La scienza dei dati e il metodo scientifico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/03_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Distribuzioni di Frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/06_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/01_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Introduzione al calcolo delle probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/02_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/03_bayes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/04a_random_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/04b_expval_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/04c_sampling_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/05_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/06_density_func.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/07_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/08_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/09_likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/10_grid_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Inferenza Bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/02_subj_prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/03_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/06_balance_prior_post.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/10_metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/15_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/16_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/17_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/18_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/19_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/22_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_05a_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_06_hier_regr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_07_robust_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_08_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_09_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_21_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_22_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_23_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_24_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_30_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_31_kl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_32_stan_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_35_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_40_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a13a_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Sigma algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a44_montecarlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Simulazione Monte Carlo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/a46_stan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda"><span class="header-section-number">46.1</span> EDA</a></li>
+  <li><a href="#modello-complete-pooling" id="toc-modello-complete-pooling" class="nav-link" data-scroll-target="#modello-complete-pooling"><span class="header-section-number">46.2</span> Modello complete pooling</a></li>
+  <li><a href="#modello-no-pooling" id="toc-modello-no-pooling" class="nav-link" data-scroll-target="#modello-no-pooling"><span class="header-section-number">46.3</span> Modello no-pooling</a></li>
+  <li><a href="#modello-partial-pooling" id="toc-modello-partial-pooling" class="nav-link" data-scroll-target="#modello-partial-pooling"><span class="header-section-number">46.4</span> Modello partial pooling</a>
+  <ul class="collapse">
+  <li><a href="#modello-gerarchico-e-distribuzione-dei-coefficienti" id="toc-modello-gerarchico-e-distribuzione-dei-coefficienti" class="nav-link" data-scroll-target="#modello-gerarchico-e-distribuzione-dei-coefficienti"><span class="header-section-number">46.4.1</span> Modello Gerarchico e Distribuzione dei Coefficienti</a></li>
+  <li><a href="#implicazioni" id="toc-implicazioni" class="nav-link" data-scroll-target="#implicazioni"><span class="header-section-number">46.4.2</span> Implicazioni</a></li>
+  </ul></li>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">46.5</span> Interpretazione</a></li>
+  <li><a href="#confronto-dei-modelli" id="toc-confronto-dei-modelli" class="nav-link" data-scroll-target="#confronto-dei-modelli"><span class="header-section-number">46.6</span> Confronto dei modelli</a>
+  <ul class="collapse">
+  <li><a href="#utilizzo-di-az.compare" id="toc-utilizzo-di-az.compare" class="nav-link" data-scroll-target="#utilizzo-di-az.compare"><span class="header-section-number">46.6.1</span> Utilizzo di <code>az.compare()</code></a></li>
+  <li><a href="#conclusione" id="toc-conclusione" class="nav-link" data-scroll-target="#conclusione"><span class="header-section-number">46.6.2</span> Conclusione</a></li>
+  </ul></li>
+  <li><a href="#conclusioni" id="toc-conclusioni" class="nav-link" data-scroll-target="#conclusioni"><span class="header-section-number">46.7</span> Conclusioni</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_5/05_06_hier_regr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_03_reglin_bayesian.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/05_06_hier_regr.html"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-multilevel-model" class="quarto-section-identifier"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e competenze chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bambi <span class="im">as</span> bmb</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"hierarchical_models"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>In questo capitolo, esploreremo in dettaglio la metodologia della regressione lineare gerarchica Bayesiana, facendo uso delle API della libreria Bambi. Il nostro obiettivo principale è quello di applicare questo metodo statistico a un dataset multilivello. Nello specifico, ci concentreremo su un dataset che comprende diverse unità di osservazione, rappresentate dai soggetti, ciascuna delle quali è associata a più misurazioni. Per avere una comprensione visiva più chiara dei modelli gerarchici, possiamo consultare il demo di Michael Freeman disponibile <a href="http://mfviz.com/hierarchical-models/">su questo sito</a>.</p>
+<p>Nei vari ambiti disciplinari, come la sociologia, l’economia, la demografia e l’epidemiologia, si osserva sempre più frequentemente l’analisi di fenomeni con una struttura informativa gerarchica. In questi casi, i dati si riferiscono a più livelli di osservazione o appartenenza, quali quello individuale, familiare, territoriale e sociale. In psicologia, questa struttura gerarchica si evidenzia nei disegni a misure ripetute, dove un singolo soggetto esegue un numero ( n ) di prove per ciascun compito. Specificatamente, lo studio delle interazioni tra l’individuo e il suo contesto è tipicamente analizzato attraverso fenomeni a struttura gerarchica. I modelli più adatti per l’elaborazione di dati con questa complessità sono i cosiddetti modelli multilivello.</p>
+<p>I modelli gerarchici, conosciuti anche come modelli multilivello, modelli ad effetti misti, modelli ad effetti casuali o modelli nidificati, rappresentano un approccio efficace per l’analisi di dati organizzati in gruppi o livelli. Tali modelli possono applicarsi a dati geograficamente nidificati (ad esempio, dati di città all’interno di province, province all’interno di stati), dati organizzati gerarchicamente (come studenti all’interno di scuole o pazienti in ospedali), o dati che implicano misurazioni ripetute sugli stessi individui. Questi modelli sono particolarmente utili per gestire le complessità intrinseche a tali dati, consentendo di tenere conto delle variazioni sia condivise che uniche tra i gruppi.</p>
+<p>I modelli gerarchici facilitano la condivisione di informazioni tra i gruppi mediante l’impiego di distribuzioni priori per i parametri, che a loro volta sono influenzate da distribuzioni priori di livello superiore, comunemente chiamate iperpriori. Il prefisso “iper” deriva dal termine greco per “sopra”, indicando che queste distribuzioni priori operano a un livello superiore rispetto alle distribuzioni priori standard. Le distribuzioni degli iperparametri permettono al modello di equilibrare la descrizione delle caratteristiche specifiche dei gruppi con una descrizione delle tendenze comuni tra i gruppi. In definitiva, i parametri delle distribuzioni priori sono trattati come facenti parte di una popolazione di parametri più ampia. Questo principio è rappresentato graficamente nella figura di riferimento {numref}<code>hierarchical-model-fig</code>, che contrappone gli approcci dei modelli aggregati (dove i dati sono trattati come se provenissero da un unico gruppo), dei modelli non aggregati (dove ogni gruppo è trattato separatamente) e dei modelli gerarchici (o parzialmente aggregati), dove le informazioni sono condivise tra i gruppi.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="../../figures/hierarchical_model.pdf" class="img-fluid" style="width:80.0%"></p>
+<figcaption>Le differenze tra un modello aggregato (pooled), un modello non aggregato (unpooled) e un modello gerarchico. (Figura tratta da <span class="citation" data-cites="martin2024bayesian">Martin (<a href="../../99-references.html#ref-martin2024bayesian" role="doc-biblioref">2024</a>)</span>).</figcaption>
+</figure>
+</div>
+<p>Nei capitoli precedenti, abbiamo introdotto il concetto di modellazione gerarchica bayesiana, focalizzandoci sulla stima dei parametri di distribuzioni di probabilità. Per ulteriori dettagli, si rimanda al capitolo {ref}<code>hier_beta_binom_model</code>. In questo capitolo, estenderemo tale concetto alla stima dei parametri in un modello di regressione lineare, prendendo in esame dati suddivisi in vari gruppi.</p>
+<p>Affrontando l’analisi di dati provenienti da gruppi eterogenei, potrebbe emergere la tentazione di ignorare le differenze intergruppo, applicando un modello unico che non distingua i vari gruppi. Un tale approccio, pur potenziando la precisione delle stime aggregando tutti i dati, potrebbe comportare la perdita di informazioni preziose specifiche per ciascun gruppo. Al contrario, analizzando i gruppi separatamente, si otterrebbe una panoramica dettagliata ma potenzialmente meno accurata per carenza di dati condivisi.</p>
+<p>L’analisi gerarchica offre un compromesso tra questi due estremi, sintetizzando i benefici di entrambe le metodologie. Nel dettaglio, confronteremo tre diversi approcci di modellazione nei paragrafi seguenti:</p>
+<ul>
+<li><strong>Complete Pooling:</strong> Questo modello ignora la struttura gerarchica dei dati, trattando tutte le unità osservative come se appartenessero a una singola popolazione. Questo approccio può essere eccessivamente generalizzante e rischia di mascherare le variazioni intergruppo.</li>
+<li><strong>No Pooling:</strong> In netto contrasto, questo modello tratta ogni gruppo come indipendente dagli altri, senza riconoscere alcuna struttura gerarchica. Sebbene questo metodo possa mettere in luce le specificità di ciascun gruppo, può portare a conclusioni meno robuste per mancanza di un contesto più ampio.</li>
+<li><strong>Partial Pooling</strong> (o Modello Multi-Livello): Questo approccio è il più equilibrato tra i tre, presumendo che pendenze e intercette di ogni gruppo siano realizzazioni di variabili casuali, distribuite normalmente con parametri di media e varianza condivisi tra tutti i gruppi.</li>
+</ul>
+<p>Il modello di “partial pooling” si distingue per la sua capacità di bilanciare l’indipendenza dei gruppi con la necessità di un’analisi aggregata. Facilita un adeguato “shrinkage” dei parametri, mitigando l’effetto di valori anomali o di gruppi con campioni limitati, e permettendo alle stime parametriche di ogni gruppo di essere influenzate sia dai dati specifici che dalla tendenza generale osservata nei dati aggregati.</p>
+</section>
+<section id="eda" class="level2" data-number="46.1">
+<h2 data-number="46.1" class="anchored" data-anchor-id="eda"><span class="header-section-number">46.1</span> EDA</h2>
+<p>Iniziamo importando i dati e ispezionando la struttura delle osservazioni suddivise nei diversi cluster.</p>
+<div id="cell-6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> bmb.load_data(<span class="st">"sleepstudy"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reaction</th>
+<th data-quarto-table-cell-role="th">Days</th>
+<th data-quarto-table-cell-role="th">Subject</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>249.5600</td>
+<td>0</td>
+<td>308</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>258.7047</td>
+<td>1</td>
+<td>308</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>250.8006</td>
+<td>2</td>
+<td>308</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>321.4398</td>
+<td>3</td>
+<td>308</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>356.8519</td>
+<td>4</td>
+<td>308</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Eliminiamo le righe in cui la colonna “Days” ha valore 0 o 1 dal dataset “sleepstudy” utilizzando il seguente codice:</p>
+<div id="cell-8" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[data[<span class="st">'Days'</span>].isin([<span class="dv">0</span>, <span class="dv">1</span>]) <span class="op">==</span> <span class="va">False</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Reaction</th>
+<th data-quarto-table-cell-role="th">Days</th>
+<th data-quarto-table-cell-role="th">Subject</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>250.8006</td>
+<td>2</td>
+<td>308</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>321.4398</td>
+<td>3</td>
+<td>308</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>356.8519</td>
+<td>4</td>
+<td>308</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>414.6901</td>
+<td>5</td>
+<td>308</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>382.2038</td>
+<td>6</td>
+<td>308</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Analizziamo il tempo di reazione medio in relazione ai giorni di deprivazione del sonno, osservando come questo varia per ciascun soggetto coinvolto nello studio.</p>
+<div id="cell-10" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_data(data):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">6</span>, sharey<span class="op">=</span><span class="va">True</span>, sharex<span class="op">=</span><span class="va">True</span>, dpi<span class="op">=</span><span class="dv">100</span>, constrained_layout<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    fig.subplots_adjust(left<span class="op">=</span><span class="fl">0.075</span>, right<span class="op">=</span><span class="fl">0.975</span>, bottom<span class="op">=</span><span class="fl">0.075</span>, top<span class="op">=</span><span class="fl">0.925</span>, wspace<span class="op">=</span><span class="fl">0.03</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    axes_flat <span class="op">=</span> axes.ravel()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, subject <span class="kw">in</span> <span class="bu">enumerate</span>(data[<span class="st">"Subject"</span>].unique()):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        ax <span class="op">=</span> axes_flat[i]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> data.index[data[<span class="st">"Subject"</span>] <span class="op">==</span> subject].tolist()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        days <span class="op">=</span> data.loc[idx, <span class="st">"Days"</span>].values</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        reaction <span class="op">=</span> data.loc[idx, <span class="st">"Reaction"</span>].values</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Plot observed data points</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        ax.scatter(days, reaction, color<span class="op">=</span><span class="st">"C0"</span>, ec<span class="op">=</span><span class="st">"black"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add a title</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        ax.set_title(<span class="ss">f"Subject: </span><span class="sc">{</span>subject<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remove axis labels for individual plots</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes_flat:</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">''</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(<span class="st">''</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set x-axis ticks for the last row</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes[<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        ax.xaxis.set_ticks([<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>])</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> axes</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-11" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plot_data(data)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="modello-complete-pooling" class="level2" data-number="46.2">
+<h2 data-number="46.2" class="anchored" data-anchor-id="modello-complete-pooling"><span class="header-section-number">46.2</span> Modello complete pooling</h2>
+<p>Il modello complete pooling tratta tutte le osservazioni come se fossero indipendenti, aggregandole in un unico gruppo. In questo modello, le rette di regressione lineare per tutti i soggetti hanno la stessa pendenza e la stessa intercetta. Il modello può essere descritto esplicitamente come segue:</p>
+<p>Se disponiamo di $ m $ soggetti e ciascun soggetto $ i $ ha $ n_i $ osservazioni, il modello può essere definito da:</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Per il soggetto } i = 1, \ldots, m, \text{ e per l'osservazione } j = 1, \ldots, n_i:
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Reaction}_{ij} &amp;= \alpha + \beta \cdot \text{Days}_{ij} + \epsilon_{ij}, \\
+\epsilon_{ij} &amp;\sim \mathcal{N}(0, \sigma^2),
+\end{align*}
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(\text{Reaction}_{ij}\)</span> è il tempo di reazione per il soggetto $ i $ al giorno $ j $.</li>
+<li><span class="math inline">\(\text{Days}_{ij}\)</span> è il numero di giorni per il soggetto $ i $ all’osservazione $ j $.</li>
+<li><span class="math inline">\(\alpha\)</span> è l’intercetta comune a tutti i soggetti.</li>
+<li><span class="math inline">\(\beta\)</span> è la pendenza comune a tutti i soggetti.</li>
+<li><span class="math inline">\(\epsilon_{ij}\)</span> è il termine di errore casuale per il soggetto $ i $ all’osservazione $ j $, che si suppone sia distribuito normalmente con media 0 e varianza costante $ ^2 $.</li>
+</ul>
+<p>Questo modello non distingue tra i gruppi di osservazoni che appartengono a soggetti diversi e stima un’unica pendenza e un’unica intercetta dai dati di tutti i soggetti. In Bambi, questo modello può essere specificato utilizzando solo la variabile <code>Days</code> come predittore, senza includere il <code>Subject</code> come fattore.</p>
+<div id="cell-13" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model_pooling <span class="op">=</span> bmb.Model(<span class="st">"Reaction ~ 1 + Days"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Procediamo con l’esecuzione del campionamento MCMC, utilizzando il metodo NUTS specifico per il campionatore JAX. Questo può essere fatto semplicemente passando l’opzione <code>method="nuts_numpyro"</code> durante la chiamata al campionamento. In questo modo, stiamo invocando direttamente il campionatore JAX, sfruttando le sue caratteristiche avanzate.</p>
+<div id="cell-15" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>results_pooling <span class="op">=</span> model_pooling.fit(nuts_sampler<span class="op">=</span><span class="st">"numpyro"</span>, idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model_pooling.build()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model_pooling.graph()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-10-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Un sommario numerico delle distribuzioni a posteriori dei parametri si ottiene con <code>az.summary</code>.</p>
+<div id="cell-18" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>az.summary(results_pooling, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days</td>
+<td>11.47</td>
+<td>1.84</td>
+<td>8.04</td>
+<td>14.91</td>
+<td>0.03</td>
+<td>0.02</td>
+<td>3988.87</td>
+<td>2810.71</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Intercept</td>
+<td>244.78</td>
+<td>10.92</td>
+<td>224.46</td>
+<td>264.45</td>
+<td>0.17</td>
+<td>0.12</td>
+<td>4041.97</td>
+<td>2658.41</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>51.10</td>
+<td>2.98</td>
+<td>45.65</td>
+<td>56.55</td>
+<td>0.04</td>
+<td>0.03</td>
+<td>5329.35</td>
+<td>2790.09</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="modello-no-pooling" class="level2" data-number="46.3">
+<h2 data-number="46.3" class="anchored" data-anchor-id="modello-no-pooling"><span class="header-section-number">46.3</span> Modello no-pooling</h2>
+<p>Il modello no-pooling tratta ogni soggetto come indipendente e adatta una retta di regressione separata per ciascun soggetto. Se disponiamo di $ m $ soggetti e ciascun soggetto $ i $ ha $ n_i $ osservazioni, il modello può essere definito da:</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Per il soggetto } i = 1, \ldots, m:
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Reaction}_{ij} &amp;= \alpha_i + \beta_i \cdot \text{Days}_{ij} + \epsilon_{ij}, \\
+\epsilon_{ij} &amp;\sim \mathcal{N}(0, \sigma^2), \quad j = 1, \ldots, n_i,
+\end{align*}
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(\text{Reaction}_{ij}\)</span> è il tempo di reazione per il soggetto $ i $ al giorno $ j $.</li>
+<li><span class="math inline">\(\text{Days}_{ij}\)</span> è il numero di giorni per il soggetto $ i $ all’osservazione $ j $.</li>
+<li><span class="math inline">\(\alpha_i\)</span> è l’intercetta per il soggetto $ i $.</li>
+<li><span class="math inline">\(\beta_i\)</span> è la pendenza per il soggetto $ i $.</li>
+<li><span class="math inline">\(\epsilon_{ij}\)</span> è il termine di errore casuale per il soggetto $ i $ all’osservazione $ j $, che si suppone sia distribuito normalmente con media 0 e varianza costante $ ^2 $.</li>
+</ul>
+<p>Questo modello non fa alcuna ipotesi sulle relazioni tra diversi soggetti e stima la pendenza e l’intercetta di ciascun soggetto indipendentemente dagli altri soggetti. In Bambi, questo modello viene specificato con l’interazione tra <code>Days</code> e <code>Subject</code>, come descritto in seguito.</p>
+<div id="cell-20" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model_no_pooling <span class="op">=</span> bmb.Model(<span class="st">"Reaction ~ Days * C(Subject)"</span>, data<span class="op">=</span>data)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>results_no_pooling <span class="op">=</span> model_no_pooling.fit(nuts_sampler<span class="op">=</span><span class="st">"numpyro"</span>, idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-21" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model_no_pooling.build()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>model_no_pooling.graph()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-13-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-22" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>az.summary(results_no_pooling, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[309]</td>
+<td>-57.29</td>
+<td>32.32</td>
+<td>-119.91</td>
+<td>-0.59</td>
+<td>1.26</td>
+<td>0.89</td>
+<td>662.53</td>
+<td>1434.66</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[310]</td>
+<td>-29.91</td>
+<td>32.67</td>
+<td>-90.85</td>
+<td>32.36</td>
+<td>1.29</td>
+<td>0.91</td>
+<td>648.02</td>
+<td>1215.34</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[330]</td>
+<td>9.31</td>
+<td>32.28</td>
+<td>-51.03</td>
+<td>69.55</td>
+<td>1.29</td>
+<td>0.91</td>
+<td>623.35</td>
+<td>1415.59</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[331]</td>
+<td>39.59</td>
+<td>32.86</td>
+<td>-22.53</td>
+<td>99.38</td>
+<td>1.22</td>
+<td>0.86</td>
+<td>726.64</td>
+<td>1777.99</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[332]</td>
+<td>62.43</td>
+<td>33.19</td>
+<td>-0.00</td>
+<td>123.60</td>
+<td>1.32</td>
+<td>0.93</td>
+<td>635.82</td>
+<td>1623.17</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[333]</td>
+<td>15.26</td>
+<td>32.99</td>
+<td>-46.96</td>
+<td>75.75</td>
+<td>1.31</td>
+<td>0.93</td>
+<td>633.21</td>
+<td>1420.10</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[334]</td>
+<td>-46.36</td>
+<td>33.38</td>
+<td>-109.42</td>
+<td>18.03</td>
+<td>1.26</td>
+<td>0.89</td>
+<td>696.22</td>
+<td>1434.39</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[335]</td>
+<td>22.36</td>
+<td>32.50</td>
+<td>-43.55</td>
+<td>80.35</td>
+<td>1.26</td>
+<td>0.89</td>
+<td>659.74</td>
+<td>1582.60</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[337]</td>
+<td>19.29</td>
+<td>33.02</td>
+<td>-40.61</td>
+<td>82.56</td>
+<td>1.29</td>
+<td>0.91</td>
+<td>658.50</td>
+<td>1695.98</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[349]</td>
+<td>-51.72</td>
+<td>32.23</td>
+<td>-118.13</td>
+<td>3.73</td>
+<td>1.26</td>
+<td>0.89</td>
+<td>654.21</td>
+<td>1426.79</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[350]</td>
+<td>-47.43</td>
+<td>32.62</td>
+<td>-108.30</td>
+<td>13.58</td>
+<td>1.19</td>
+<td>0.84</td>
+<td>751.73</td>
+<td>1721.29</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[351]</td>
+<td>-1.28</td>
+<td>32.99</td>
+<td>-63.34</td>
+<td>61.14</td>
+<td>1.31</td>
+<td>0.93</td>
+<td>634.10</td>
+<td>1422.43</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[352]</td>
+<td>68.60</td>
+<td>33.01</td>
+<td>6.21</td>
+<td>131.53</td>
+<td>1.26</td>
+<td>0.89</td>
+<td>691.31</td>
+<td>1521.12</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[369]</td>
+<td>-9.54</td>
+<td>32.80</td>
+<td>-72.64</td>
+<td>50.24</td>
+<td>1.30</td>
+<td>0.92</td>
+<td>635.85</td>
+<td>1376.31</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[370]</td>
+<td>-55.22</td>
+<td>32.46</td>
+<td>-117.63</td>
+<td>3.85</td>
+<td>1.20</td>
+<td>0.85</td>
+<td>738.95</td>
+<td>1906.24</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">C(Subject)[371]</td>
+<td>-15.04</td>
+<td>33.29</td>
+<td>-76.39</td>
+<td>47.31</td>
+<td>1.29</td>
+<td>0.91</td>
+<td>664.32</td>
+<td>1407.51</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">C(Subject)[372]</td>
+<td>20.02</td>
+<td>33.39</td>
+<td>-43.71</td>
+<td>81.76</td>
+<td>1.34</td>
+<td>0.95</td>
+<td>622.00</td>
+<td>1289.03</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days</td>
+<td>21.05</td>
+<td>3.80</td>
+<td>13.56</td>
+<td>27.66</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>374.59</td>
+<td>915.48</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[309]</td>
+<td>-16.64</td>
+<td>5.40</td>
+<td>-26.55</td>
+<td>-6.78</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>669.58</td>
+<td>1435.91</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[310]</td>
+<td>-17.16</td>
+<td>5.47</td>
+<td>-27.42</td>
+<td>-6.93</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>673.88</td>
+<td>1335.52</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[330]</td>
+<td>-13.11</td>
+<td>5.40</td>
+<td>-23.92</td>
+<td>-3.79</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>636.31</td>
+<td>1462.66</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[331]</td>
+<td>-16.06</td>
+<td>5.49</td>
+<td>-26.63</td>
+<td>-6.24</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>755.43</td>
+<td>1782.57</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[332]</td>
+<td>-18.55</td>
+<td>5.53</td>
+<td>-28.16</td>
+<td>-7.66</td>
+<td>0.22</td>
+<td>0.15</td>
+<td>650.04</td>
+<td>1629.90</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[333]</td>
+<td>-10.14</td>
+<td>5.49</td>
+<td>-20.40</td>
+<td>-0.26</td>
+<td>0.22</td>
+<td>0.15</td>
+<td>650.65</td>
+<td>1325.11</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[334]</td>
+<td>-2.96</td>
+<td>5.58</td>
+<td>-13.08</td>
+<td>7.98</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>711.41</td>
+<td>1505.34</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[335]</td>
+<td>-25.15</td>
+<td>5.41</td>
+<td>-35.37</td>
+<td>-14.88</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>672.31</td>
+<td>1594.75</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[337]</td>
+<td>1.47</td>
+<td>5.50</td>
+<td>-9.04</td>
+<td>11.35</td>
+<td>0.22</td>
+<td>0.15</td>
+<td>647.87</td>
+<td>1650.71</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[349]</td>
+<td>-4.65</td>
+<td>5.40</td>
+<td>-14.49</td>
+<td>5.76</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>687.64</td>
+<td>1563.10</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[350]</td>
+<td>2.39</td>
+<td>5.46</td>
+<td>-7.64</td>
+<td>12.93</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>742.08</td>
+<td>1511.57</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[351]</td>
+<td>-12.56</td>
+<td>5.51</td>
+<td>-24.47</td>
+<td>-3.13</td>
+<td>0.22</td>
+<td>0.15</td>
+<td>646.65</td>
+<td>1645.59</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[352]</td>
+<td>-13.79</td>
+<td>5.50</td>
+<td>-23.85</td>
+<td>-3.52</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>712.39</td>
+<td>1694.37</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[369]</td>
+<td>-7.23</td>
+<td>5.45</td>
+<td>-17.20</td>
+<td>3.08</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>647.46</td>
+<td>1631.52</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[370]</td>
+<td>-0.36</td>
+<td>5.44</td>
+<td>-10.58</td>
+<td>9.64</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>763.49</td>
+<td>1403.81</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[371]</td>
+<td>-8.73</td>
+<td>5.48</td>
+<td>-19.12</td>
+<td>1.17</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>657.08</td>
+<td>1425.90</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days:C(Subject)[372]</td>
+<td>-9.87</td>
+<td>5.60</td>
+<td>-20.45</td>
+<td>0.70</td>
+<td>0.22</td>
+<td>0.15</td>
+<td>658.55</td>
+<td>1577.27</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Intercept</td>
+<td>248.27</td>
+<td>22.88</td>
+<td>205.30</td>
+<td>290.34</td>
+<td>1.20</td>
+<td>0.85</td>
+<td>368.87</td>
+<td>797.77</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>25.77</td>
+<td>1.80</td>
+<td>22.42</td>
+<td>29.16</td>
+<td>0.03</td>
+<td>0.02</td>
+<td>3476.61</td>
+<td>2776.06</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Per ricavare i coefficienti <span class="math inline">\(\alpha\)</span> delle regressioni individuali, dobbiamo sommare <code>Intercept</code> al valore del singolo soggetto. Per esempio, per il soggetto 309 abbiamo</p>
+<div id="cell-24" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fl">246.98</span> <span class="op">+</span> <span class="op">-</span><span class="fl">55.29</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>191.69</code></pre>
+</div>
+</div>
+<p>Facciamo lo stesso per la pendenza individuale delle rette di regressione. Per il soggetto 309 otteniamo</p>
+<div id="cell-26" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fl">21.30</span> <span class="op">+</span> <span class="op">-</span><span class="fl">16.97</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>4.330000000000002</code></pre>
+</div>
+</div>
+<p>Questi valori sono identici a quelli che si otterrebbero se adattassimo il modello di regressione separatamente per ciascun soggetto. In effetti, abbiamo fatto proprio questo, utilizzando un modello unico. Per esempio, esaminiamo i singoli dati del soggetto 309.</p>
+<div id="cell-28" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_subject_309 <span class="op">=</span> data[data[<span class="st">"Subject"</span>] <span class="op">==</span> <span class="dv">309</span>]</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data_subject_309.shape</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>(8, 3)</code></pre>
+</div>
+</div>
+<p>Stimiamo l’intercetta e la pendenza della retta di regressione usando l’approccio frequentista mediante la funzione <code>linear_regression</code> del pacchetto <code>pingouin</code>.</p>
+<div id="cell-30" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> pg.linear_regression(data_subject_309[<span class="st">"Days"</span>], data_subject_309[<span class="st">"Reaction"</span>])</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       names        coef        se          T          pval        r2  \
+0  Intercept  191.576970  3.723259  51.454104  3.615788e-09  0.890144   
+1       Days    4.357144  0.624898   6.972569  4.325982e-04  0.890144   
+
+     adj_r2    CI[2.5%]   CI[97.5%]  
+0  0.871834  182.466483  200.687458  
+1  0.871834    2.828074    5.886214  </code></pre>
+</div>
+</div>
+<p>Si noti che i risultati ottenuti sono sostanzialmente gli stessi, con solo qualche minima differenza numerica. Questa discrepanza deriva dalla diversità degli approcci utilizzati: in un caso abbiamo applicato un metodo bayesiano, mentre nell’altro abbiamo adottato una tecnica di stima frequentista.</p>
+</section>
+<section id="modello-partial-pooling" class="level2" data-number="46.4">
+<h2 data-number="46.4" class="anchored" data-anchor-id="modello-partial-pooling"><span class="header-section-number">46.4</span> Modello partial pooling</h2>
+<p>Il modello gerarchico, conosciuto anche come modello di “partial pooling”, consente di gestire la complessità presente nei dati raggruppati o clusterizzati, come nel caso presente. La regressione lineare classica presume che ogni osservazione sia indipendente dalle altre, ma questa ipotesi viene meno quando i dati sono organizzati in gruppi. Le osservazioni all’interno dello stesso gruppo tendono ad essere più correlate tra loro rispetto a quelle in gruppi diversi. Trascurare questa struttura gerarchica potrebbe portare a stime errate e conclusioni fuorvianti.</p>
+<p>Il modello gerarchico affronta questo problema introducendo la nozione di effetti casuali, in contrapposizione agli effetti fissi del modello classico. Gli effetti fissi rappresentano l’effetto medio di una variabile predittiva su tutti gli individui o gruppi, mentre gli effetti casuali considerano come l’effetto di una variabile possa variare da un gruppo all’altro. Mentre gli effetti fissi sono comuni a tutto il dataset, gli effetti casuali tengono conto delle differenze tra i gruppi.</p>
+<p>Questo modello gerarchico unisce effetti fissi e casuali per fornire una rappresentazione più accurata dei dati, quando questi mostrano relazioni gerarchiche o raggruppate. Il modello gerarchico di “partial pooling” considera le somiglianze tra i soggetti stimando un’intercetta e una pendenza comuni, ma consente anche variazioni individuali attorno a questi valori medi.</p>
+<p>Possiamo rappresentare matematicamente il modello come segue:</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Per il soggetto } i = 1, \ldots, m, \text{ e per l'osservazione } j = 1, \ldots, n_i:
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Reaction}_{ij} &amp;= \alpha_i + \beta_i \cdot \text{Days}_{ij} + \epsilon_{ij}, \\
+\epsilon_{ij} &amp;\sim \mathcal{N}(0, \sigma^2),
+\end{align*}
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(\text{Reaction}_{ij}\)</span> è il tempo di reazione del soggetto <span class="math inline">\(i\)</span> al giorno <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(\text{Days}_{ij}\)</span> è il numero di giorni per il soggetto <span class="math inline">\(i\)</span> all’osservazione <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(\alpha_i\)</span> è l’intercetta per il soggetto <span class="math inline">\(i\)</span>, che segue la distribuzione <span class="math inline">\(\alpha_i \sim \mathcal{N}(\alpha, \tau_\alpha^2)\)</span>.</li>
+<li><span class="math inline">\(\beta_i\)</span> è la pendenza per il soggetto <span class="math inline">\(i\)</span>, che segue la distribuzione <span class="math inline">\(\beta_i \sim \mathcal{N}(\beta, \tau_\beta^2)\)</span>.</li>
+<li><span class="math inline">\(\epsilon_{ij}\)</span> è l’errore casuale per il soggetto <span class="math inline">\(i\)</span> all’osservazione <span class="math inline">\(j\)</span>, distribuito normalmente con media 0 e varianza costante <span class="math inline">\(\sigma^2\)</span>.</li>
+</ul>
+<p>I parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> rappresentano l’intercetta e la pendenza medie per tutti i soggetti, e le varianze <span class="math inline">\(\tau_\alpha^2\)</span> e <span class="math inline">\(\tau_\beta^2\)</span> quantificano le differenze tra gli individui.</p>
+<p>In questo modo, il modello gerarchico riesce a rappresentare sia le informazioni comuni a tutti i soggetti, sia le differenze individuali, considerando sia gli effetti fissi che quelli casuali. Può quindi offrire una visione più completa e realistica dei dati, tenendo conto della loro struttura gerarchica. In Bambi, questo modello può essere specificato utilizzando la variabile <code>Days</code> come predittore e includendo <code>Subject</code> come effetto casuale.</p>
+<div id="cell-33" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model_partial_pooling <span class="op">=</span> bmb.Model(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Reaction ~ 1 + Days + (Days | Subject)"</span>, data, categorical<span class="op">=</span><span class="st">"Subject"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo il campionamento.</p>
+<div id="cell-35" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>results_partial_pooling <span class="op">=</span> model_partial_pooling.fit(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    nuts_sampler<span class="op">=</span><span class="st">"numpyro"</span>, idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>}</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model_partial_pooling.build()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>model_partial_pooling.graph()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-21-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Esaminiamo i risultati.</p>
+<div id="cell-38" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>az.summary(results_partial_pooling, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[308]</td>
+<td>10.73</td>
+<td>18.79</td>
+<td>-24.56</td>
+<td>46.04</td>
+<td>0.33</td>
+<td>0.26</td>
+<td>3255.73</td>
+<td>2937.78</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[309]</td>
+<td>-42.84</td>
+<td>20.61</td>
+<td>-80.32</td>
+<td>-4.47</td>
+<td>0.33</td>
+<td>0.25</td>
+<td>3875.37</td>
+<td>3221.67</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[310]</td>
+<td>-25.54</td>
+<td>19.29</td>
+<td>-60.53</td>
+<td>13.25</td>
+<td>0.30</td>
+<td>0.23</td>
+<td>4138.84</td>
+<td>3018.13</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[330]</td>
+<td>4.47</td>
+<td>18.66</td>
+<td>-30.44</td>
+<td>39.57</td>
+<td>0.29</td>
+<td>0.28</td>
+<td>4114.34</td>
+<td>3137.90</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[331]</td>
+<td>22.25</td>
+<td>18.84</td>
+<td>-14.37</td>
+<td>56.09</td>
+<td>0.31</td>
+<td>0.24</td>
+<td>3647.27</td>
+<td>3190.14</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[332]</td>
+<td>35.47</td>
+<td>19.78</td>
+<td>-0.75</td>
+<td>72.90</td>
+<td>0.35</td>
+<td>0.27</td>
+<td>3136.07</td>
+<td>2682.60</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[333]</td>
+<td>12.45</td>
+<td>18.57</td>
+<td>-20.87</td>
+<td>48.62</td>
+<td>0.30</td>
+<td>0.24</td>
+<td>3864.22</td>
+<td>3219.57</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[334]</td>
+<td>-21.86</td>
+<td>19.05</td>
+<td>-57.62</td>
+<td>13.62</td>
+<td>0.32</td>
+<td>0.25</td>
+<td>3551.77</td>
+<td>3113.72</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[335]</td>
+<td>1.86</td>
+<td>19.13</td>
+<td>-36.87</td>
+<td>36.23</td>
+<td>0.31</td>
+<td>0.29</td>
+<td>3914.21</td>
+<td>3033.18</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[337]</td>
+<td>26.90</td>
+<td>19.72</td>
+<td>-9.49</td>
+<td>64.95</td>
+<td>0.31</td>
+<td>0.24</td>
+<td>4180.78</td>
+<td>3018.97</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[349]</td>
+<td>-27.34</td>
+<td>19.51</td>
+<td>-65.31</td>
+<td>8.17</td>
+<td>0.31</td>
+<td>0.24</td>
+<td>3972.05</td>
+<td>2986.81</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[350]</td>
+<td>-17.19</td>
+<td>18.91</td>
+<td>-51.29</td>
+<td>19.54</td>
+<td>0.32</td>
+<td>0.24</td>
+<td>3485.99</td>
+<td>2853.81</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[351]</td>
+<td>-1.03</td>
+<td>18.39</td>
+<td>-34.22</td>
+<td>35.64</td>
+<td>0.30</td>
+<td>0.28</td>
+<td>3653.60</td>
+<td>2564.84</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[352]</td>
+<td>43.42</td>
+<td>20.05</td>
+<td>5.56</td>
+<td>80.18</td>
+<td>0.34</td>
+<td>0.25</td>
+<td>3378.64</td>
+<td>2900.83</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[369]</td>
+<td>-1.29</td>
+<td>18.93</td>
+<td>-37.66</td>
+<td>32.85</td>
+<td>0.30</td>
+<td>0.28</td>
+<td>3884.22</td>
+<td>2969.10</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[370]</td>
+<td>-25.14</td>
+<td>19.29</td>
+<td>-60.79</td>
+<td>11.51</td>
+<td>0.31</td>
+<td>0.24</td>
+<td>3877.94</td>
+<td>3063.29</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject[371]</td>
+<td>-7.30</td>
+<td>18.51</td>
+<td>-39.34</td>
+<td>29.39</td>
+<td>0.29</td>
+<td>0.26</td>
+<td>4032.75</td>
+<td>3045.50</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1|Subject[372]</td>
+<td>15.07</td>
+<td>19.42</td>
+<td>-22.61</td>
+<td>49.98</td>
+<td>0.31</td>
+<td>0.25</td>
+<td>4032.08</td>
+<td>2887.51</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1|Subject_sigma</td>
+<td>31.48</td>
+<td>8.82</td>
+<td>16.73</td>
+<td>48.74</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>1782.73</td>
+<td>2284.94</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days</td>
+<td>11.37</td>
+<td>1.92</td>
+<td>7.83</td>
+<td>15.09</td>
+<td>0.05</td>
+<td>0.04</td>
+<td>1504.68</td>
+<td>2031.47</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[308]</td>
+<td>8.15</td>
+<td>3.34</td>
+<td>2.37</td>
+<td>15.12</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2208.09</td>
+<td>2299.43</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[309]</td>
+<td>-8.11</td>
+<td>3.50</td>
+<td>-14.30</td>
+<td>-1.30</td>
+<td>0.06</td>
+<td>0.05</td>
+<td>3145.27</td>
+<td>2942.98</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[310]</td>
+<td>-7.27</td>
+<td>3.43</td>
+<td>-13.58</td>
+<td>-0.78</td>
+<td>0.06</td>
+<td>0.04</td>
+<td>3102.23</td>
+<td>2932.11</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[330]</td>
+<td>-2.10</td>
+<td>3.30</td>
+<td>-8.62</td>
+<td>3.83</td>
+<td>0.06</td>
+<td>0.05</td>
+<td>2822.25</td>
+<td>3029.09</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[331]</td>
+<td>-3.05</td>
+<td>3.42</td>
+<td>-9.04</td>
+<td>3.88</td>
+<td>0.06</td>
+<td>0.05</td>
+<td>2803.83</td>
+<td>2444.38</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[332]</td>
+<td>-3.97</td>
+<td>3.45</td>
+<td>-10.17</td>
+<td>2.89</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2581.99</td>
+<td>2954.28</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[333]</td>
+<td>0.45</td>
+<td>3.25</td>
+<td>-6.01</td>
+<td>6.29</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2399.69</td>
+<td>2255.14</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[334]</td>
+<td>3.23</td>
+<td>3.31</td>
+<td>-2.61</td>
+<td>9.64</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2494.35</td>
+<td>2739.00</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[335]</td>
+<td>-11.16</td>
+<td>3.42</td>
+<td>-17.82</td>
+<td>-4.83</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2765.99</td>
+<td>2593.76</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[337]</td>
+<td>9.87</td>
+<td>3.59</td>
+<td>3.35</td>
+<td>16.88</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2994.53</td>
+<td>2701.91</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[349]</td>
+<td>1.61</td>
+<td>3.46</td>
+<td>-5.02</td>
+<td>8.00</td>
+<td>0.07</td>
+<td>0.06</td>
+<td>2725.31</td>
+<td>2506.06</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[350]</td>
+<td>7.40</td>
+<td>3.43</td>
+<td>1.15</td>
+<td>14.15</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2300.64</td>
+<td>2640.02</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[351]</td>
+<td>-2.24</td>
+<td>3.27</td>
+<td>-8.15</td>
+<td>4.07</td>
+<td>0.06</td>
+<td>0.04</td>
+<td>2932.11</td>
+<td>2337.58</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[352]</td>
+<td>0.27</td>
+<td>3.49</td>
+<td>-6.25</td>
+<td>6.74</td>
+<td>0.06</td>
+<td>0.05</td>
+<td>2991.34</td>
+<td>2788.30</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[369]</td>
+<td>1.63</td>
+<td>3.40</td>
+<td>-4.75</td>
+<td>7.98</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2480.67</td>
+<td>2606.23</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[370]</td>
+<td>4.96</td>
+<td>3.45</td>
+<td>-1.25</td>
+<td>11.48</td>
+<td>0.07</td>
+<td>0.05</td>
+<td>2484.65</td>
+<td>2426.40</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject[371]</td>
+<td>0.23</td>
+<td>3.34</td>
+<td>-5.78</td>
+<td>6.78</td>
+<td>0.06</td>
+<td>0.05</td>
+<td>2679.35</td>
+<td>2791.42</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days|Subject[372]</td>
+<td>1.01</td>
+<td>3.41</td>
+<td>-5.36</td>
+<td>7.32</td>
+<td>0.06</td>
+<td>0.05</td>
+<td>3482.98</td>
+<td>3000.94</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Days|Subject_sigma</td>
+<td>6.79</td>
+<td>1.54</td>
+<td>4.13</td>
+<td>9.76</td>
+<td>0.04</td>
+<td>0.03</td>
+<td>1702.73</td>
+<td>2415.41</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Intercept</td>
+<td>245.11</td>
+<td>9.81</td>
+<td>227.19</td>
+<td>263.98</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>2510.76</td>
+<td>2918.52</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>26.08</td>
+<td>1.79</td>
+<td>22.81</td>
+<td>29.56</td>
+<td>0.03</td>
+<td>0.02</td>
+<td>2791.82</td>
+<td>2675.76</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Consideriamo il soggetto 309. Per questo soggetto l’intercetta è</p>
+<div id="cell-40" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fl">245.24</span> <span class="op">+</span> <span class="op">-</span><span class="fl">42.22</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>203.02</code></pre>
+</div>
+</div>
+<p>e la pendenza della retta di regressione è</p>
+<div id="cell-42" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fl">11.34</span> <span class="op">+</span> <span class="op">-</span><span class="fl">8.27</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>3.0700000000000003</code></pre>
+</div>
+</div>
+<p>Si noti che questi valori sono diversi da quelli ottenuti con la procedura di no-pooling. Entrambi i modelli di no pooling e il modello gerarchico di partial pooling riconoscono che ci possono essere differenze tra i diversi gruppi (o soggetti) nel dataset, ma gestiscono queste differenze in modi diversi.</p>
+<p>Nel modello di no pooling, ogni gruppo viene trattato in modo completamente indipendente dagli altri. Ogni intercetta e pendenza viene stimata separatamente per ogni gruppo, senza fare riferimento agli altri gruppi. In altre parole, si adatta una regressione lineare separata per ciascun gruppo. Ciò significa che se si hanno molti gruppi, ci saranno molti parametri da stimare.</p>
+<p>Questo approccio può catturare le differenze tra i gruppi molto accuratamente se ci sono molte osservazioni in ogni gruppo, ma può essere problematico se ci sono poche osservazioni per gruppo. Inoltre, non sfrutta le informazioni comuni tra i gruppi e può portare a stime molto variabili.</p>
+<p>Il modello gerarchico di partial pooling, invece, riconosce che, anche se ci sono differenze tra i gruppi, questi potrebbero condividere alcune caratteristiche comuni. Invece di stimare le intercette e pendenze completamente separatamente per ogni gruppo, il modello gerarchico stima una media comune e una varianza comune per l’intercetta e la pendenza, e poi consente a ciascun gruppo di variare attorno a questi valori comuni.</p>
+<p>Questo porta al concetto di “shrinkage”. Le stime delle intercette e pendenze per ciascun gruppo tendono a essere “compresse” verso i valori medi. Se un gruppo ha poche osservazioni, la sua stima sarà più fortemente influenzata dalla media comune. Se ha molte osservazioni, la sua stima sarà meno influenzata dalla media comune. In questo modo, il modello riesce a bilanciare tra due tendenze opposte: rendere conto delle differenze tra i gruppi e sfruttare le informazioni comuni.</p>
+<p>In sintesi, la differenza principale tra il modello no-pooling e il modello gerarchico partial-pooling sta nel modo in cui gestiscono le intercette e pendenze individuali:</p>
+<ul>
+<li>Il modello no-pooling tratta ogni gruppo separatamente, stimando le intercette e pendenze individuali senza considerare gli altri gruppi.</li>
+<li>Il modello gerarchico partial-pooling stima le intercette e pendenze comuni e consente a ciascun gruppo di variare attorno a questi valori comuni, dando luogo al fenomeno dello shrinkage.</li>
+</ul>
+<p>Il modello di no pooling può essere più adatto se i gruppi sono veramente indipendenti e molto diversi tra loro, mentre il modello gerarchico è maggiormente appropriato quando ci sono somiglianze tra i gruppi che possono essere sfruttate per ottenere stime più precise e robuste.</p>
+<section id="modello-gerarchico-e-distribuzione-dei-coefficienti" class="level3" data-number="46.4.1">
+<h3 data-number="46.4.1" class="anchored" data-anchor-id="modello-gerarchico-e-distribuzione-dei-coefficienti"><span class="header-section-number">46.4.1</span> Modello Gerarchico e Distribuzione dei Coefficienti</h3>
+<p>In un contesto di modello gerarchico con partial pooling, gli effetti casuali, inclusi intercette e pendenze specifiche per ciascun gruppo o individuo, vengono trattati come esiti di variabili aleatorie. Questo approccio si distingue nettamente da quello adottato nei modelli di no pooling, nei quali ciascun coefficiente viene considerato come un parametro statico e indipendente.</p>
+<p>All’interno di un modello gerarchico, l’assunzione di base è che questi effetti casuali siano distribuiti normalmente. Ciò implica che ogni coefficiente specifico di un gruppo o individuo (come l’intercetta per un dato soggetto) è visto come una manifestazione di una variabile aleatoria che segue una distribuzione normale. La distribuzione di queste variabili aleatorie, che rappresenta la popolazione degli effetti casuali, è caratterizzata da una media e una varianza condivise tra tutti i gruppi o soggetti, le quali vengono inferite direttamente dai dati raccolti. Questo permette di modellare la variabilità intra-gruppo e inter-gruppo in modo più flessibile e informato, offrendo una rappresentazione più accurata della struttura dei dati e delle relazioni sottostanti.</p>
+<p>Ad esempio, le intercette individuali <span class="math inline">\(\alpha_i\)</span> possono essere modellate come:</p>
+<p><span class="math display">\[
+\alpha_i \sim \mathcal{N}(\alpha, \tau_\alpha^2),
+\]</span></p>
+<p>dove <span class="math inline">\(\alpha\)</span> è l’intercetta media per tutti i soggetti e <span class="math inline">\(\tau_\alpha^2\)</span> è la varianza delle intercette tra i soggetti. Analogamente, le pendenze individuali <span class="math inline">\(\beta_i\)</span> possono essere modellate come:</p>
+<p><span class="math display">\[
+\beta_i \sim \mathcal{N}(\beta, \tau_\beta^2),
+\]</span></p>
+<p>dove <span class="math inline">\(\beta\)</span> è la pendenza media e <span class="math inline">\(\tau_\beta^2\)</span> è la varianza delle pendenze.</p>
+</section>
+<section id="implicazioni" class="level3" data-number="46.4.2">
+<h3 data-number="46.4.2" class="anchored" data-anchor-id="implicazioni"><span class="header-section-number">46.4.2</span> Implicazioni</h3>
+<p>Questa struttura ha diverse implicazioni importanti:</p>
+<ol type="1">
+<li><p><strong>Shrinkage:</strong> Come discusso in precedenza, le stime dei coefficienti individuali tendono a essere “compresse” verso i valori medi. Questo aiuta a stabilizzare le stime, specialmente quando ci sono poche osservazioni per gruppo.</p></li>
+<li><p><strong>Scambio di informazioni tra i gruppi:</strong> Poiché i coefficienti individuali sono considerati come estratti dalla stessa distribuzione, ciò permette uno scambio di informazioni tra i gruppi. Se un gruppo ha molte osservazioni, può aiutare a informare le stime per un gruppo con poche osservazioni.</p></li>
+<li><p><strong>Interpretazione gerarchica:</strong> Il modello riconosce una struttura gerarchica nei dati, con osservazioni raggruppate all’interno di gruppi, e gruppi che condividono caratteristiche comuni. Questa struttura può riflettere una realtà sottostante nella quale gli individui o i gruppi non sono completamente indipendenti l’uno dall’altro.</p></li>
+</ol>
+<p>In conclusione, il modello gerarchico di partial-pooling offre un quadro flessibile e potente per analizzare dati raggruppati o clusterizzati, riconoscendo sia le somiglianze che le differenze tra i gruppi e utilizzando una struttura probabilistica per modellare le relazioni tra di loro.</p>
+</section>
+</section>
+<section id="interpretazione" class="level2" data-number="46.5">
+<h2 data-number="46.5" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">46.5</span> Interpretazione</h2>
+<p>Iniziamo considerando le stime a posteriori degli effetti fissi.</p>
+<div id="cell-45" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>az.summary(results_partial_pooling, var_names<span class="op">=</span>[<span class="st">"Intercept"</span>, <span class="st">"Days"</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Intercept</td>
+<td>245.11</td>
+<td>9.81</td>
+<td>227.19</td>
+<td>263.98</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>2510.76</td>
+<td>2918.52</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Days</td>
+<td>11.37</td>
+<td>1.92</td>
+<td>7.83</td>
+<td>15.09</td>
+<td>0.05</td>
+<td>0.04</td>
+<td>1504.68</td>
+<td>2031.47</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>In media, il tempo di reazione medio delle persone all’inizio dello studio è compreso tra 227 e 264 millisecondi. Con ogni giorno aggiuntivo di privazione del sonno, i tempi di reazione medi aumentano, in media, tra 7.9 e 15.1 millisecondi.</p>
+<p>L’interpretazione degli effetti fissi è semplice. Ma quest’analisi sarebbe incompleta e fuorviante se non valutiamo i termini specifici per i singoli soggetti che abbiamo aggiunto al modello. Questi termini ci dicono quanto i soggetti differiscono l’uno dall’altro in termini di tempo di reazione iniziale e dell’associazione tra giorni di privazione del sonno e tempi di reazione.</p>
+<p>Di seguito, utilizziamo ArviZ per ottenere un traceplot delle intercetti specifiche per i soggetti <code>1|Subject</code> e delle pendenze <code>Days|Subject</code>. Questo traceplot contiene due colonne. A sinistra, abbiamo le distribuzioni posteriori e a destra abbiamo i trace-plots. L’aspetto casuale stazionario, o l’apparenza di rumore bianco, ci dice che il campionatore ha raggiunto la convergenza e le catene sono ben mescolate.</p>
+<div id="cell-47" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>az.plot_trace(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    results_partial_pooling, combined<span class="op">=</span><span class="va">True</span>, var_names<span class="op">=</span>[<span class="st">"1|Subject"</span>, <span class="st">"Days|Subject"</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Dall’ampiezza delle distribuzioni a posteriori delle intercette per i singoli soggetti possiamo vedere che il tempo di reazione medio iniziale per un determinato soggetto può differire notevolmente dalla media generale che abbiamo visto nella tabella precedente. C’è anche una grande differenza nelle pendenze. Alcuni soggetti vedono aumentare rapidamente i loro tempi di reazione quando vengono deprivati del sonno, mentre altri hanno una tolleranza migliore e peggiorano più lentamente.</p>
+<p>Una rappresentazione grafica della stima a posteriore dei parametri e dei dati si ottiene con <code>az.plot_forest()</code>.</p>
+<div id="cell-50" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>az.plot_forest(data<span class="op">=</span>results_partial_pooling, r_hat<span class="op">=</span><span class="va">False</span>, combined<span class="op">=</span><span class="va">True</span>, textsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In sintesi, il modello gerarchico cattura il comportamento che abbiamo visto nella fase di esplorazione dei dati. Le persone differiscono sia nei tempi di reazione iniziali che nel modo in cui questi tempi di reazione sono influenzati dai giorni di deprivazione del sonno. Possiamo dunque giungere alle seguenti conclusioni:</p>
+<ul>
+<li>Il tempo di reazione medio delle persone aumenta quando sono deprivate del sonno.</li>
+<li>I soggetti hanno tempi di reazione diversi all’inizio dello studio.</li>
+<li>Alcuni soggetti sono più colpiti dalla privazione del sonno rispetto ad altri.</li>
+</ul>
+<p>Ma c’è un’altra domanda a cui non abbiamo ancora risposto: I tempi di reazione iniziali sono associati a quanto la deprivazione del sonno influisce sull’evoluzione dei tempi di reazione?</p>
+<p>Creiamo un diagramma a dispersione per visualizzare le stime a posteriori congiunte delle intercette e delle pendenze specifiche per i soggetti. Questo grafico usa colori diversi per i soggetti. Se guardiamo il quadro generale, cioè trascurando i ragruppamenti dei dati in base ai soggetti, possiamo concludere che non c’è associazione tra l’intercetta e la pendenza. In altre parole, avere tempi di reazione iniziali più bassi o più alti non dice nulla su quanto la deprivazione del sonno influisca sul tempo di reazione medio di un determinato soggetto.</p>
+<p>D’altra parte, se guardiamo la distribuzione a posteriori congiunta per un determinato individuo, possiamo vedere una correlazione negativa tra l’intercetta e la pendenza. Questo indica che, condizionalmente a un determinato soggetto, le stime a posteriori dell’intercetta e della pendenza non sono indipendenti.</p>
+<div id="cell-52" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  extract a subsample from the posterior and stack the chain and draw dims</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>posterior <span class="op">=</span> az.extract(results_partial_pooling, num_samples<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>_, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>results_partial_pooling.posterior.plot.scatter(</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"1|Subject"</span>, y<span class="op">=</span><span class="st">"Days|Subject"</span>,</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Subject__factor_dim"</span>,</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    add_colorbar<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    add_legend<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    edgecolors<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>ax.axhline(c<span class="op">=</span><span class="st">"0.25"</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>ax.axvline(c<span class="op">=</span><span class="st">"0.25"</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Subject-specific intercept"</span>)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Subject-specific slope"</span>)<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="confronto-dei-modelli" class="level2" data-number="46.6">
+<h2 data-number="46.6" class="anchored" data-anchor-id="confronto-dei-modelli"><span class="header-section-number">46.6</span> Confronto dei modelli</h2>
+<p>Un aspetto finale e cruciale del nostro studio riguarda il confronto tra i diversi modelli che abbiamo esaminato. La nostra intenzione è determinare quale modello fornisce una rappresentazione migliore dei dati, trovando un equilibrio appropriato tra l’accuratezza del modello e la sua complessità, cioè la parsimonia.</p>
+<p>Per raggiungere questo scopo, faremo uso della metrica ELPD (Expected Log Predictive Density), che abbiamo introdotto in precedenza. ELPD ci consente di valutare un modello in termini di adattamento ai dati, considerando sia l’accuratezza delle previsioni che la complessità del modello.</p>
+<section id="utilizzo-di-az.compare" class="level3" data-number="46.6.1">
+<h3 data-number="46.6.1" class="anchored" data-anchor-id="utilizzo-di-az.compare"><span class="header-section-number">46.6.1</span> Utilizzo di <code>az.compare()</code></h3>
+<p>In Python, possiamo sfruttare la funzione <code>az.compare()</code> per confrontare direttamente modelli bayesiani. Questa funzione accetta un dizionario contenente gli oggetti <code>InferenceData</code>, risultanti dalla funzione <code>Model.fit()</code>, e restituisce un dataframe. I modelli vengono ordinati dal migliore al peggiore in base ai criteri selezionati, e di default, ArviZ usa il criterio di convalida incrociata “leave one out” (LOO).</p>
+<section id="convalida-incrociata-leave-one-out-loo" class="level4" data-number="46.6.1.1">
+<h4 data-number="46.6.1.1" class="anchored" data-anchor-id="convalida-incrociata-leave-one-out-loo"><span class="header-section-number">46.6.1.1</span> Convalida Incrociata “Leave One Out” (LOO)</h4>
+<p>LOO è una tecnica di convalida che addestra il modello su tutti i dati disponibili tranne uno, utilizzando il singolo punto escluso come dati di test. Questo processo viene ripetuto per ogni punto dati nel set, e la media delle misure di errore fornisce una stima accurata dell’errore di generalizzazione del modello. Anche se computazionalmente impegnativa, LOO fornisce una valutazione affidabile delle prestazioni del modello. In ArviZ, la funzione <code>loo</code> implementa questo metodo seguendo un approccio bayesiano.</p>
+</section>
+<section id="widely-applicable-information-criterion-waic" class="level4" data-number="46.6.1.2">
+<h4 data-number="46.6.1.2" class="anchored" data-anchor-id="widely-applicable-information-criterion-waic"><span class="header-section-number">46.6.1.2</span> Widely Applicable Information Criterion (WAIC)</h4>
+<p>Oltre a LOO, possiamo anche utilizzare il criterio WAIC (Widely Applicable Information Criterion). Il WAIC è uno strumento per la selezione del modello che mira a trovare il modello ottimale in un insieme di candidati, equilibrando l’adattamento ai dati e la complessità del modello, evitando così il sovradattamento. WAIC è particolarmente utile nel contesto bayesiano, poiché tiene conto dell’incertezza associata ai parametri del modello.</p>
+<p>Sia LOO che WAIC possono essere visti come stime empiriche dell’ELPD, fornendo un quadro comprensivo delle prestazioni dei modelli.</p>
+</section>
+</section>
+<section id="conclusione" class="level3" data-number="46.6.2">
+<h3 data-number="46.6.2" class="anchored" data-anchor-id="conclusione"><span class="header-section-number">46.6.2</span> Conclusione</h3>
+<p>Utilizzando la funzione <code>az.compare()</code>, siamo in grado di effettuare una comparazione rapida ed efficace tra i diversi modelli, valutandoli secondo i criteri LOO e WAIC. Nel nostro caso specifico, il modello di “partial pooling” emerge come il migliore, presentando il valore ELPD stimato più alto. Questo risultato conferma la validità del modello nel rappresentare la struttura dei dati, tenendo conto delle differenze individuali all’interno dei cluster, e fornendo una stima coerente e informativa dell’effetto della deprivazione del sonno sul tempo di reazione.</p>
+<div id="cell-54" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>models_dict <span class="op">=</span> {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"pooling"</span>: results_pooling,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"no_pooling"</span>: results_no_pooling,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"partial_pooling"</span>: results_partial_pooling</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>df_compare <span class="op">=</span> az.compare(models_dict)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>df_compare</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">elpd_loo</th>
+<th data-quarto-table-cell-role="th">p_loo</th>
+<th data-quarto-table-cell-role="th">elpd_diff</th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">dse</th>
+<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">scale</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">partial_pooling</td>
+<td>0</td>
+<td>-691.713947</td>
+<td>30.295799</td>
+<td>0.000000</td>
+<td>0.891306</td>
+<td>21.342364</td>
+<td>0.000000</td>
+<td>True</td>
+<td>log</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">no_pooling</td>
+<td>1</td>
+<td>-694.191320</td>
+<td>35.912449</td>
+<td>2.477372</td>
+<td>0.059001</td>
+<td>21.481324</td>
+<td>3.252636</td>
+<td>True</td>
+<td>log</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">pooling</td>
+<td>2</td>
+<td>-772.071995</td>
+<td>2.953189</td>
+<td>80.358048</td>
+<td>0.049694</td>
+<td>9.029538</td>
+<td>19.939206</td>
+<td>False</td>
+<td>log</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>È importante sottolineare che, per ottenere una stima dell’ELPD (Expected Log Predictive Density), è necessario includere l’opzione <code>idata_kwargs={"log_likelihood": True}</code> all’interno della funzione responsabile dell’esecuzione del campionamento MCMC.</p>
+<p>La figura che segue illustra visivamente le informazioni rilevanti per il confronto tra i diversi modelli. In grigio è indicata l’incertezza nella stima della differenza tra i valori ELPD dei diversi modelli.</p>
+<div id="cell-56" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_compare(df_compare, insample_dev<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il confronto tra i modelli guida il processo di selezione. In particolare, la comparazione tra il modello di partial-pooling e il modello completo di pooling è resa chiara dall’<code>elpd_diff</code> di 80.17 e dal suo errore standard di 19.97. Questi valori indicano inequivocabilmente che il modello di partial-pooling è superiore.</p>
+<p>La situazione diventa più sfumata quando confrontiamo il modello di partial-pooling con il modello di no-pooling. In questo caso, le stime dell’ELPD mostrano una grande sovrapposizione, suggerendo che non c’è una differenza netta tra i due modelli in termini di adattamento ai dati.</p>
+<p>Tuttavia, nonostante la vicinanza dei valori di ELPD, il modello di partial-pooling è da preferire. La ragione risiede nelle sue proprietà: esso fornisce stime più robuste e conservative delle differenze individuali. A differenza del modello di no-pooling, che può essere troppo sensibile alle variazioni all’interno dei cluster, il modello di partial-pooling incorpora un equilibrio tra la condivisione delle informazioni all’interno del gruppo e il riconoscimento delle differenze tra i gruppi. Questo lo rende più resistente alle fluttuazioni nei dati e offre una rappresentazione più affidabile delle relazioni sottostanti, rendendolo la scelta preferibile in questo contesto.</p>
+<section id="ppc-plots" class="level4" data-number="46.6.2.1">
+<h4 data-number="46.6.2.1" class="anchored" data-anchor-id="ppc-plots"><span class="header-section-number">46.6.2.1</span> PPC plots</h4>
+<p>Per affrontare il tema della selezione di modelli, <span class="citation" data-cites="Johnson2022bayesrules">Johnson, Ott, e Dogucu (<a href="../../99-references.html#ref-Johnson2022bayesrules" role="doc-biblioref">2022</a>)</span> usano anche il metodo dei <em>posterior predictive checks</em>. Creiamo dunque i PPC plots per i tre modelli.</p>
+<div id="cell-59" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>model_pooling_fitted <span class="op">=</span> model_pooling.fit(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>model_pooling.predict(model_pooling_fitted, kind<span class="op">=</span><span class="st">"pps"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-60" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(model_pooling_fitted, num_pp_samples<span class="op">=</span><span class="dv">50</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-32-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-61" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>model_no_pooling_fitted <span class="op">=</span> model_no_pooling.fit(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>model_no_pooling.predict(model_no_pooling_fitted, kind<span class="op">=</span><span class="st">"pps"</span>)<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-62" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(model_no_pooling_fitted, num_pp_samples<span class="op">=</span><span class="dv">50</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-34-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-63" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>model_partial_pooling_fitted <span class="op">=</span> model_partial_pooling.fit(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>model_partial_pooling.predict(model_partial_pooling_fitted, kind<span class="op">=</span><span class="st">"pps"</span>)<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-64" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(model_partial_pooling_fitted, num_pp_samples<span class="op">=</span><span class="dv">50</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_06_hier_regr_files/figure-html/cell-36-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In questo contesto specifico, l’analisi tramite i PPC (Posterior Predictive Checks) plots non rivela differenze evidenti tra i tre modelli in esame: tutti sembrano egualmente adeguati nell’adattarsi ai dati. Di conseguenza, i PPC plots non forniscono ulteriori chiarimenti o conferme alle conclusioni già raggiunte attraverso il confronto tra modelli basato sulla differenza ELPD (Expected Log Predictive Density). In altre parole, l’analisi visiva tramite i PPC plots non aggiunge valore o informazioni supplementari a quanto già dedotto dalle metriche di confronto.</p>
+</section>
+</section>
+</section>
+<section id="conclusioni" class="level2" data-number="46.7">
+<h2 data-number="46.7" class="anchored" data-anchor-id="conclusioni"><span class="header-section-number">46.7</span> Conclusioni</h2>
+<p>In questo capitolo, abbiamo esaminato e confrontato i modelli di pooling, no pooling e partial pooling utilizzando i dati provenienti dallo studio sul sonno di <span class="citation" data-cites="belenky2003patterns">Belenky et al. (<a href="../../99-references.html#ref-belenky2003patterns" role="doc-biblioref">2003</a>)</span> (“sleepstudy”). Ciascun modello presenta caratteristiche distintive: il pooling per la sua struttura comune, il no pooling per la sua indipendenza tra i gruppi e il partial pooling come un compromesso equilibrato tra i due.</p>
+<p>L’analisi basata sulla differenza della densità predittiva logaritmica attesa (ELPD) è stata cruciale per selezionare il modello più appropriato. Nonostante ciascun modello abbia vantaggi specifici, valutare l’ELPD ha fornito una misura obiettiva della qualità di adattamento, facilitando la scelta del modello che meglio rispecchia la struttura sottostante dei dati.</p>
+<p>In conclusione, l’approccio combinato di comprensione delle caratteristiche dei modelli e l’applicazione di metodi quantitativi come l’ELPD ha permesso una selezione dei modelli informata ed efficace.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="cell-67" class="cell" data-tags="[&quot;hide-input&quot;]" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Fri Jul 26 2024
+
+Python implementation: CPython
+Python version       : 3.12.4
+IPython version      : 8.26.0
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.5.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+arviz     : 0.18.0
+pingouin  : 0.5.4
+bambi     : 0.14.0
+matplotlib: 3.9.1
+numpy     : 1.26.4
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-belenky2003patterns" class="csl-entry" role="listitem">
+Belenky, Gregory, Nancy J Wesensten, David R Thorne, Maria L Thomas, Helen C Sing, Daniel P Redmond, Michael B Russo, e Thomas J Balkin. 2003. <span>«Patterns of performance degradation and restoration during sleep restriction and subsequent recovery: A sleep dose-response study»</span>. <em>Journal of Sleep Research</em> 12 (1): 1–12.
+</div>
+<div id="ref-Johnson2022bayesrules" class="csl-entry" role="listitem">
+Johnson, Alicia A., Miles Ott, e Mine Dogucu. 2022. <em><span>Bayes Rules! An Introduction to Bayesian Modeling with R</span></em>. CRC Press.
+</div>
+<div id="ref-martin2024bayesian" class="csl-entry" role="listitem">
+Martin, Osvaldo. 2024. <em>Bayesian analysis with python</em>. Packt Publishing Ltd.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/chapter_5/05_05a_stan_multreg.html" class="pagination-link" aria-label="Regressione multipla con Stan">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/chapter_5/05_07_robust_regr.html" class="pagination-link" aria-label="Regressione robusta">
+        <span class="nav-page-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_5/05_06_hier_regr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>
