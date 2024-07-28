@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -299,7 +319,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/chapter_3/01a_intro_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione al calcolo delle probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -836,7 +856,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Il riepilogo dei dati in Pandas è un’attività fondamentale nell’analisi dei dati e consiste nel calcolare statistiche descrittive di un insieme di dati. In questo capitolo esamineremo come calcolare le statistiche descrittive di base usando Pandas (si veda il capitolo {ref}<code>loc-scale-notebook</code>).</p>
 <section id="preparazione-del-notebook" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="preparazione-del-notebook"><span class="header-section-number">7.1</span> Preparazione del Notebook</h2>
-<div id="c1fe899a-92c2-4d21-bcb1-714fb12d4deb" class="cell" data-execution_count="2">
+<div id="c1fe899a-92c2-4d21-bcb1-714fb12d4deb" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -844,12 +864,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1c5df5af-7235-4bae-b1bd-2c319bebcfd6" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">'retina'</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>RANDOM_SEED <span class="op">=</span> <span class="dv">42</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(RANDOM_SEED)</span>
+<div id="1c5df5af-7235-4bae-b1bd-2c319bebcfd6" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>RANDOM_SEED <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(RANDOM_SEED)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">'retina'</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="calcolo-delle-statistiche-descrittive" class="level2" data-number="7.2">
@@ -951,14 +971,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Tali metodi possono essere applicati a tutto il DataFrame, oppure soltanto ad una o più colonne.</p>
 <p>Per fare un esempio, esamineremo nuovamente i dati <code>penguins.csv</code>. Come in precedenza, dopo avere caricato i dati, rimuoviamo i dati mancanti.</p>
-<div id="64607eaf-37f1-4e14-871a-f18eae70bee8" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../data/penguins.csv"</span>)</span>
+<div id="64607eaf-37f1-4e14-871a-f18eae70bee8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"../../data/penguins.csv"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df.dropna(inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Usiamo il metodo <code>describe()</code> su tutto il DataFrame:</p>
-<div id="ce11e9ef-1350-4f20-bfa7-205bfec17cbe" class="cell" data-execution_count="5">
+<div id="ce11e9ef-1350-4f20-bfa7-205bfec17cbe" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df.describe(include<span class="op">=</span><span class="st">"all"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
 
@@ -1107,9 +1127,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Se desideriamo solo le informazioni relative alle variabili qualitative, usiamo l’argomento <code>include='object'</code>.</p>
-<div id="9080b35e-a57f-4706-ba37-94207080a131" class="cell" data-execution_count="6">
+<div id="9080b35e-a57f-4706-ba37-94207080a131" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.describe(include<span class="op">=</span><span class="st">"object"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 <div>
 
@@ -1157,23 +1177,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>I valori NaN indicano dati mancanti. Ad esempio, la colonna <code>species</code> contiene stringhe, quindi non esiste alcun valore per <code>mean</code>; allo stesso modo, <code>bill_length_mm</code> è una variabile numerica, quindi non vengono calcolate le statistiche riassuntive per le variabili categoriali (<code>unique</code>, <code>top</code>, <code>freq</code>).</p>
 <p>Esaminimiamo le colonne singolarmente. Ad esempio, troviamo la media della colonna <code>bill_depth_mm</code>.</p>
-<div id="01d5f46d-c2c4-478d-9589-02aa5369f0b6" class="cell" data-execution_count="7">
+<div id="01d5f46d-c2c4-478d-9589-02aa5369f0b6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"bill_depth_mm"</span>].mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>17.164864864864867</code></pre>
 </div>
 </div>
 <p>Per la deviazione standard usiamo il metodo <code>std()</code>. Si noti l’argomento opzionale <code>ddof</code>:</p>
-<div id="5796de87-3f28-49c9-ba61-39cea01a1853" class="cell" data-execution_count="8">
+<div id="5796de87-3f28-49c9-ba61-39cea01a1853" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"bill_length_mm"</span>].std(ddof<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>5.46866834264756</code></pre>
 </div>
 </div>
 <p>La cella seguente fornisce l’indice della riga nella quale la colonna <code>bill_length_mm</code> assume il suo valore massimo:</p>
-<div id="e21c13ab-e656-4ef4-9a7b-b4b71399941c" class="cell" data-execution_count="9">
+<div id="e21c13ab-e656-4ef4-9a7b-b4b71399941c" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"bill_length_mm"</span>].idxmax()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>185</code></pre>
 </div>
 </div>
@@ -1207,15 +1227,17 @@ Name: proportion, dtype: float64</code></pre>
 </div>
 </div>
 <p>Consideriamo la lunghezza del becco dei pinguini suddivisa per ciascuna specie. Con l’istruzione seguente, possiamo generare gli istogrammi corrispondenti che rappresentano la distribuzione della lunghezza del becco in ciascun gruppo.</p>
-<div id="d71462f0-6a7e-4874-842b-4f59706b5322" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> df.hist(</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    column<span class="op">=</span><span class="st">"bill_length_mm"</span>,</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    by<span class="op">=</span>[<span class="st">"species"</span>],</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    layout<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">3</span>),</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    rwidth<span class="op">=</span><span class="fl">0.9</span>,</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d71462f0-6a7e-4874-842b-4f59706b5322" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#b97c7c"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> df.hist(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    column<span class="op">=</span><span class="st">"bill_length_mm"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    by<span class="op">=</span>[<span class="st">"species"</span>],</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    layout<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">3</span>),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    rwidth<span class="op">=</span><span class="fl">0.9</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>color_fill</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1224,9 +1246,9 @@ Name: proportion, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<div id="4a55d5ae-da84-4577-9ec3-7cd898497aa5" class="cell" data-execution_count="23">
+<div id="4a55d5ae-da84-4577-9ec3-7cd898497aa5" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 <div>
 
@@ -1384,11 +1406,11 @@ Name: proportion, dtype: float64</code></pre>
 <li><code>stdev()</code>: la deviazione standard;</li>
 </ul>
 <p>Se vogliamo applicare più funzioni di aggregazione, allora possiamo raccogliere prima le funzioni in una lista e poi passare la lista ad <code>aggregate()</code>.</p>
-<div id="b62a50c3-36e3-4514-9adc-d29e276aba32" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List of summary statistics functions</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> [np.<span class="bu">min</span>, np.median, np.mean, np.std, np.<span class="bu">max</span>]</span>
+<div id="b62a50c3-36e3-4514-9adc-d29e276aba32" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lista delle funzioni statistiche di riepilogo come stringhe</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> [<span class="st">"min"</span>, <span class="st">"median"</span>, <span class="st">"mean"</span>, <span class="st">"std"</span>, <span class="st">"max"</span>]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate summary statistics for numeric columns using aggregate</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola le statistiche di riepilogo per le colonne numeriche usando aggregate</span></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> df[</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"bill_length_mm"</span>, <span class="st">"bill_depth_mm"</span>, <span class="st">"flipper_length_mm"</span>, <span class="st">"body_mass_g"</span>]</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>].aggregate(summary_stats)</span>
@@ -1406,7 +1428,16 @@ max          59.600000      21.500000         231.000000  6300.000000</code></pr
 <p>Si noti che Pandas ha applicato le funzioni di riepilogo a ogni colonna, ma, per alcune colonne, le statistiche riassuntive non si possono calcolare, ovvero tutte le colonne che contengono stringhe anziché numeri. Di conseguenza, vediamo che alcuni dei risultati per tali colonne sono contrassegnati con “NaN”. Questa è un’abbreviazione di “Not a Number”, talvolta utilizzata nell’analisi dei dati per rappresentare valori mancanti o non definiti.</p>
 <p>Molto spesso vogliamo calcolare le statistiche descrittive separatamente per ciascun gruppo di osservazioni – per esempio, nel caso presente, potremmo volere distinguere le statistiche descrittive in base alla specie dei pinguini. Questo risultato si ottiene con il metodo <code>.groupby()</code>.</p>
 <p>Il nome “group by” deriva da un comando nel linguaggio del database SQL, ma forse è più semplice pensarlo nei termini coniati da Hadley Wickham: split, apply, combine. Un esempio canonico di questa operazione di split-apply-combine, in cui “apply” è un’aggregazione di sommatoria, è illustrato nella figura seguente:</p>
-<p><code>eqjalco ../images/split_apply_combine.png :height: 400px :name: split_apply_combine</code></p>
+<div id="fig-pandas" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pandas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/split_apply_combine.png" class="img-fluid figure-img" style="width:70.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pandas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;7.1: Split, apply, combine.
+</figcaption>
+</figure>
+</div>
 <p>La figura rende chiaro ciò che si ottiene con <code>groupby</code>:</p>
 <ul>
 <li>la fase “split” prevede la suddivisione e il raggruppamento di un DataFrame in base al valore della chiave specificata;</li>
@@ -1414,16 +1445,13 @@ max          59.600000      21.500000         231.000000  6300.000000</code></pr
 <li>la fase “combine” unisce i risultati di queste operazioni in una matrice di output.</li>
 </ul>
 <p>Per esempio, ragruppiamo le osservazioni <code>body_mass_g</code> in funzione delle modalità della variabile <code>species</code>.</p>
-<div id="16a05d8a-d1c7-4bd7-ab04-8c2832c7a374" class="cell" data-execution_count="29">
+<div id="16a05d8a-d1c7-4bd7-ab04-8c2832c7a374" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>grouped <span class="op">=</span> df[<span class="st">"body_mass_g"</span>].groupby(df[<span class="st">"species"</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
-<pre><code>&lt;pandas.core.groupby.generic.SeriesGroupBy object at 0x16276b490&gt;</code></pre>
-</div>
 </div>
 <p>Calcoliamo ora la media della variabile <code>body_mass_g</code> separatamente per ciascun gruppo di osservazioni.</p>
-<div id="6085e89e-4ff0-4399-bb48-478c480bca5f" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>grouped.mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+<div id="6085e89e-4ff0-4399-bb48-478c480bca5f" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>grouped.mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>species
 Adelie       3706.164384
 Chinstrap    3733.088235
@@ -1432,9 +1460,9 @@ Name: body_mass_g, dtype: float64</code></pre>
 </div>
 </div>
 <p>È possibile applicare criteri di classificazione multipli. Per fare un altro esempio, contiamo il numero di pinguini presenti sulle tre isole, distinguendoli per specie e genere.</p>
-<div id="39390a87-123f-4d66-b563-8f3bf5432d59" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">"island"</span>, <span class="st">"species"</span>, <span class="st">"sex"</span>]).size()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
+<div id="39390a87-123f-4d66-b563-8f3bf5432d59" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">"island"</span>, <span class="st">"species"</span>, <span class="st">"sex"</span>]).size()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>island     species    sex   
 Biscoe     Adelie     female    22
                       male      22
@@ -1451,13 +1479,13 @@ dtype: int64</code></pre>
 </div>
 <p>Con il metodo <code>aggregate()</code> possiamo applicare diverse funzioni di aggregazione alle osservazioni ragruppate. Ad esempio</p>
 <div id="3015c1ab-97bb-4879-86bd-881784c05a82" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> [np.mean, np.std]</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by "species" and calculate summary statistics for numeric columns</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> df.groupby(<span class="st">"species"</span>).agg(</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    {col: summary_stats <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> pd.api.types.is_numeric_dtype(df[col])}</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> [np.mean, np.std]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by "species" and calculate summary statistics for numeric columns</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> df.groupby(<span class="st">"species"</span>).agg(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    {col: summary_stats <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> pd.api.types.is_numeric_dtype(df[col])}</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          bill_length_mm           bill_depth_mm           flipper_length_mm  \
                     mean       std          mean       std              mean   
@@ -1476,7 +1504,7 @@ Gentoo     6.585431  5092.436975  501.476154  2008.067227  0.789025  </code></pr
 </div>
 <p>Nella cella seguente troviamo la media di <code>body_mass_g</code> e <code>flipper_length_mm</code> separatamente per ciascuna isola e ciascuna specie:</p>
 <div id="8f58ccb0-b79f-405d-8684-bd1ade1476ee" class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">"island"</span>, <span class="st">"species"</span>])[[<span class="st">"body_mass_g"</span>, <span class="st">"flipper_length_mm"</span>]].mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">"island"</span>, <span class="st">"species"</span>])[[<span class="st">"body_mass_g"</span>, <span class="st">"flipper_length_mm"</span>]].mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="35">
 <div>
 <div>
@@ -1535,7 +1563,7 @@ Gentoo     6.585431  5092.436975  501.476154  2008.067227  0.789025  </code></pr
 </div>
 <p>Facciamo la stessa cosa per la deviazione standard.</p>
 <div id="e08b641c-ba90-4bed-b68b-8b926e098408" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">"island"</span>, <span class="st">"species"</span>])[[<span class="st">"body_mass_g"</span>, <span class="st">"flipper_length_mm"</span>]].std(ddof<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">"island"</span>, <span class="st">"species"</span>])[[<span class="st">"body_mass_g"</span>, <span class="st">"flipper_length_mm"</span>]].std(ddof<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="36">
 <div>
 <div>
@@ -1594,12 +1622,12 @@ Gentoo     6.585431  5092.436975  501.476154  2008.067227  0.789025  </code></pr
 </div>
 <p>Prestiamo attenzione alla seguente sintassi:</p>
 <div id="cb5570a0-6b14-4251-85be-f0b74e0b0f54" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> (</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    df.loc[:, [<span class="st">"island"</span>, <span class="st">"species"</span>, <span class="st">"body_mass_g"</span>, <span class="st">"flipper_length_mm"</span>]]</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    .groupby([<span class="st">"island"</span>, <span class="st">"species"</span>])</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    .aggregate([<span class="st">"mean"</span>, <span class="st">"std"</span>, <span class="st">"count"</span>])</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>summary_stats</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> (</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    df.loc[:, [<span class="st">"island"</span>, <span class="st">"species"</span>, <span class="st">"body_mass_g"</span>, <span class="st">"flipper_length_mm"</span>]]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    .groupby([<span class="st">"island"</span>, <span class="st">"species"</span>])</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    .aggregate([<span class="st">"mean"</span>, <span class="st">"std"</span>, <span class="st">"count"</span>])</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>summary_stats</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="37">
 <div>
 <div>
@@ -1691,14 +1719,14 @@ Gentoo     6.585431  5092.436975  501.476154  2008.067227  0.789025  </code></pr
 </div>
 </div>
 <p>Nell’istruzione precedente selezioniamo tutte le righe (<code>:</code>) di tre colonne di interesse: <code>df.loc[:, ["island", "species", "body_mass_g", "flipper_length_mm"]]</code>. L’istruzione <code>.groupby(["island", "species"])</code> ragruppa le osservazioni (righe) secondo le modalità delle variabili <code>island</code> e <code>species</code>. Infine <code>.aggregate(["mean", "std", "count"])</code> applica i metodi statistici specificati a ciascun gruppo di osservazioni. Con questa sintassi la sequenza delle operazioni da eseguire diventa molto intuitiva.</p>
-<p>È possibile approfondire questo argomento consultanto il <a href="https://wesmckinney.com/book/data-aggregation.html">capitolo 10</a> del testo <em>Python for Data Analysis</em> di {cite:t}<code>mckinney2022python</code>.</p>
+<p>È possibile approfondire questo argomento consultanto il <a href="https://wesmckinney.com/book/data-aggregation.html">capitolo 10</a> del testo <em>Python for Data Analysis</em> di <span class="citation" data-cites="mckinney2022python">McKinney (<a href="../../99-references.html#ref-mckinney2022python" role="doc-biblioref">2022</a>)</span>.</p>
 </section>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">7.3</span> Informazioni sull’Ambiente di Sviluppo</h2>
 <div id="b64bb9cd-6742-42f9-8965-737f3424e329" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Last updated: Mon Jan 29 2024
 
@@ -1727,6 +1755,11 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-mckinney2022python" class="csl-entry" role="listitem">
+McKinney, Wes. 2022. <em>Python for Data Analysis</em>. " O’Reilly Media, Inc.".
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

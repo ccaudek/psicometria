@@ -328,7 +328,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/chapter_3/01a_intro_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione al calcolo delle probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -930,20 +930,21 @@ window.Quarto = {
 <p><strong>Prerequisiti</strong></p>
 <p><strong>Concetti e competenze chiave</strong></p>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:42:44.487021Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:42:44.472635Z&quot;}" data-execution_count="3">
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:42:44.487021Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:42:44.472635Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> stat</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> stat</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="5">
+<div id="cell-3" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"beta_binomial_model"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
@@ -1182,7 +1183,7 @@ p(\theta \mid y, N) = \text{beta}(\theta \mid y + 1, N - y + 1).
 <h3 data-number="42.6.5" class="anchored" data-anchor-id="implementazione-in-stan"><span class="header-section-number">42.6.5</span> Implementazione in Stan</h3>
 <p>A differenza del primo modello Stan che abbiamo visto, che generava solo dati, il seguente programma Stan richiede che vengano forniti dati, specificamente il numero di nascite maschili (<span class="math inline">\(y\)</span>) e il numero totale di nascite (<span class="math inline">\(N\)</span>). Il modello ci permetterà di stimare la probabilità di nascita di un maschio (<span class="math inline">\(\theta\)</span>) e la probabilità che nascano più maschi che femmine (<span class="math inline">\(\theta &gt; 0.5\)</span>).</p>
 <p>Ecco come possiamo specificare il modello Stan:</p>
-<div id="cell-17" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:25.807379Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:25.792780Z&quot;}" data-execution_count="6">
+<div id="cell-17" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:25.807379Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:25.792780Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">'stan'</span>, <span class="st">'sex-ratio.stan'</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(stan_file, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
@@ -1220,11 +1221,11 @@ generated quantities {
 <section id="compilazione-del-codice-stan" class="level3" data-number="42.6.7">
 <h3 data-number="42.6.7" class="anchored" data-anchor-id="compilazione-del-codice-stan"><span class="header-section-number">42.6.7</span> Compilazione del Codice Stan</h3>
 <p>Per utilizzare Stan, dobbiamo compilare il codice del modello. Questo crea un file eseguibile che, nel nostro caso, abbiamo chiamato <code>model</code>.</p>
-<div id="cell-20" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:31.306498Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:31.042628Z&quot;}" data-execution_count="18">
+<div id="cell-20" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:31.306498Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:31.042628Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Inseriamo i dati in un dizionario.</p>
-<div id="cell-22" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:34.351552Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:34.346224Z&quot;}" data-execution_count="19">
+<div id="cell-22" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:34.351552Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:34.346224Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>boys <span class="op">=</span> <span class="dv">110312</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>girls <span class="op">=</span> <span class="dv">105287</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1241,7 +1242,7 @@ generated quantities {
 </div>
 </div>
 <p>Eseguiamo il campionamento MCMC con la seguente chiamata.</p>
-<div id="cell-24" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:37.757595Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:37.350419Z&quot;}" data-execution_count="20">
+<div id="cell-24" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:37.757595Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:37.350419Z&quot;}" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> model.sample(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>data,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">1000</span>,</span>
@@ -1255,7 +1256,7 @@ generated quantities {
 <p>Avendo assunto una distribuzione a priori per il parametro <span class="math inline">\(\theta\)</span>, l’algoritmo procede in maniera ciclica, aggiornando la distribuzione a priori di <span class="math inline">\(\theta\)</span> condizionandola ai valori già generati. Dopo un certo numero di iterazioni, l’algoritmo raggiunge la convergenza, e i valori estratti possono essere considerati campioni dalla distribuzione a posteriori di <span class="math inline">\(\theta\)</span>.</p>
 <p>All’inizio del campionamento, la distribuzione dei campioni può essere significativamente diversa dalla distribuzione stazionaria. Questo periodo iniziale è chiamato “burn-in”. Durante il burn-in, i campioni possono non rappresentare accuratamente la distribuzione a posteriori e sono tipicamente scartati. Man mano che il numero di iterazioni aumenta, la distribuzione dei campioni si avvicina sempre più alla distribuzione target.</p>
 <p>Dopo aver eseguito il modello in Stan, otteniamo una serie di campioni <span class="math inline">\(\theta^{(m)}\)</span> dalla distribuzione a posteriori <span class="math inline">\(p(\theta \mid N, y)\)</span>. Ogni campione rappresenta un possibile valore di <span class="math inline">\(\theta\)</span> compatibile con i dati osservati <span class="math inline">\(y\)</span>. Procediamo quindi a estrarre i campioni a posteriori per le variabili <code>theta</code> e <code>boys_gt_girls</code>.</p>
-<div id="cell-26" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:41.108104Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:41.102113Z&quot;}" data-execution_count="21">
+<div id="cell-26" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:41.108104Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:41.102113Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>theta_draws <span class="op">=</span> sample.stan_variable(<span class="st">'theta'</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>boys_gt_girls_draws <span class="op">=</span> sample.stan_variable(<span class="st">'boys_gt_girls'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1266,15 +1267,21 @@ generated quantities {
 </ul>
 <p>Se l’istogramma è stretto e concentrato attorno a un valore specifico, significa che c’è poca incertezza nella stima di <span class="math inline">\(\theta\)</span>. In altre parole, possiamo essere abbastanza sicuri che il valore vero di <span class="math inline">\(\theta\)</span> sia vicino a questo valore.</p>
 <p>Se l’istogramma è largo e distribuito, significa che c’è maggiore incertezza nella stima di <span class="math inline">\(\theta\)</span>. Questo indica che i dati osservati non forniscono una stima precisa e che il valore di <span class="math inline">\(\theta\)</span> potrebbe variare notevolmente.</p>
-<div id="cell-28" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:44.900508Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:44.527902Z&quot;}" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.hist(theta_draws, bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'b'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggiunta di titolo e etichette agli assi</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Istogramma della distribizione a posteriori di theta'</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valori'</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequenza'</span>)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-28" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:44.900508Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:44.527902Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#b97c7c"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>color_edge <span class="op">=</span> <span class="st">"#8f2727"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    theta_draws,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>color_fill,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    edgecolor<span class="op">=</span>color_edge,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Istogramma della distribizione a posteriori di theta'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valori'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequenza'</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
