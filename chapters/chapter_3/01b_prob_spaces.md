@@ -9,27 +9,28 @@
 
 ## Introduzione {.unnumbered}
 
-Dal punto di vista matematico, da dove derivano i numeri che chiamiamo "probabilità"? Per rispondere a questa domanda, seguiremo l'approccio proposto da [Michael Betancourt](https://github.com/betanalpha/quarto_chapters/tree/main), il quale mira a spiegare la nozione di *distribuzione di probabilità*. Questo capitolo presenta una versione leggermente semplificata del suo lavoro, mantenendone però la notazione e le figure originali.
+### Introduzione alle Probabilità: Origine e Definizione
 
-Betancourt afferma che le basi della teoria della probabilità sono piuttosto semplici. Le difficoltà matematiche emergono principalmente quando si applica la teoria della probabilità a insiemi complessi come i numeri reali. Betancourt evita queste complicazioni introducendo i fondamenti della teoria della probabilità astratta su uno spazio campionario semplice: una collezione di un numero finito di elementi.
+Dal punto di vista matematico, da dove derivano i numeri che chiamiamo "probabilità"? Per rispondere a questa domanda, ci baseremo sulla trattazione proposta da [Michael Betancourt](https://github.com/betanalpha/quarto_chapters/tree/main), che ha l'obiettivo di spiegare in maniera chiara e precisa cosa sia una *distribuzione di probabilità*. Questo capitolo presenta una versione leggermente semplificata del suo lavoro, mantenendone però la notazione e le figure originali, per garantire coerenza con la trattazione originale.
+
+Betancourt sostiene che le basi della teoria della probabilità siano piuttosto semplici. Le difficoltà matematiche emergono principalmente quando si applica la teoria della probabilità a insiemi complessi, come i numeri reali. Per evitare queste complicazioni, Betancourt introduce i fondamenti della teoria della probabilità astratta utilizzando uno spazio campionario semplice, costituito da una collezione di un numero finito di elementi.
 
 ## Insiemi Finiti
 
-Un **insieme finito** contiene un numero finito di elementi distinti,
+Un **insieme finito** è costituito da un numero finito di elementi distinti,
 $$
 X = \{x_1, ..., x_N\}.
 $$
-Qui l'indice numerico ci permette di distinguere i $N$ elementi individuali, ma non implica necessariamente un ordine particolare tra di essi. Per evitare qualsiasi presunzione di ordine, userò l'insieme di cinque elementi
+Qui, l'indice numerico serve a distinguere gli $N$ elementi individuali, senza implicare necessariamente un ordine particolare tra di essi. Per evitare qualsiasi presunzione di ordine, Betancourt utilizza un insieme di cinque elementi come esempio:
 $$
-X = \{\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit\}
+X = \{\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit\}.
 $$
-come esempio.
 
 ![Un insieme finito contiene un numero finito di elementi. Questo particolare insieme ne contiene cinque.](figures/ambient_set/ambient_set){width=50% #fig-ambient_set}
 
-Nelle applicazioni pratiche della teoria della probabilità, gli elementi astratti $x_{n}$ rappresentano oggetti significativi, ma in questo capitolo si eviterà qualsiasi interpretazione particolare e ci si concentrerà sui concetti matematici. Detto ciò, quando $X$ è inteso per catturare _tutti_ gli oggetti di interesse in una data applicazione, viene chiamato **spazio campionario**.
+Nelle applicazioni pratiche della teoria della probabilità, gli elementi astratti $x_{n}$ rappresentano oggetti concreti e significativi. Tuttavia, in questo capitolo, ci si concentrerà esclusivamente sui concetti matematici, evitando qualsiasi interpretazione particolare. Quando $X$ è inteso a rappresentare *tutti* gli oggetti di interesse in una data applicazione, viene denominato **spazio campionario**.
 
-Una volta definito uno spazio campionario, abbiamo vari modi per organizzare i suoi elementi individuali e manipolare tali organizzazioni.
+Una volta definito lo spazio campionario, possiamo organizzare e manipolare i suoi elementi in vari modi.
 
 ## Sottoinsiemi
 

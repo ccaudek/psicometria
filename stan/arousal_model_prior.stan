@@ -9,13 +9,10 @@ parameters {
   real<lower=0> sigma; // deviazione standard residua
 }
 model {
+  // distribuzioni a priori
+  alpha ~ normal(0, 2);
+  beta ~ normal(0, 2);
+  sigma ~ cauchy(0, 2);
   // verosimiglianza
   y ~ normal(alpha + beta * x, sigma);
-}
-generated quantities {
-  vector[N] y_rep; // variabili predette
-  
-  for (n in 1 : N) {
-    y_rep[n] = normal_rng(alpha + beta * x[n], sigma);
-  }
 }

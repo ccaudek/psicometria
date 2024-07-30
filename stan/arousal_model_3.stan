@@ -10,9 +10,16 @@ parameters {
 }
 model {
   // distribuzioni a priori
-  alpha ~ normal(0, 100);
-  beta ~ normal(0, 50);
-  sigma ~ cauchy(0, 5);
+  alpha ~ normal(0, 2);
+  beta ~ normal(0, 2);
+  sigma ~ cauchy(0, 2);
   // verosimiglianza
   y ~ normal(alpha + beta * x, sigma);
+}
+generated quantities {
+  vector[N] y_rep; // variabili predette
+  
+  for (n in 1 : N) {
+    y_rep[n] = normal_rng(alpha + beta * x[n], sigma);
+  }
 }
