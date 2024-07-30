@@ -678,6 +678,18 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">La Crisi della Replicabilità dei Risultati della Ricerca</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -869,11 +881,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#quantificazione-dellincertezza" id="toc-quantificazione-dellincertezza" class="nav-link" data-scroll-target="#quantificazione-dellincertezza"><span class="header-section-number">52.4.1</span> Quantificazione dell’incertezza</a></li>
   </ul></li>
-  <li><a href="#ricodifica-dei-dati" id="toc-ricodifica-dei-dati" class="nav-link" data-scroll-target="#ricodifica-dei-dati"><span class="header-section-number">52.5</span> Ricodifica dei dati</a>
-  <ul class="collapse">
-  <li><a href="#centratura-della-variabile-x" id="toc-centratura-della-variabile-x" class="nav-link" data-scroll-target="#centratura-della-variabile-x"><span class="header-section-number">52.5.1</span> Centratura della variabile $ x $</a></li>
-  <li><a href="#interpretazione-della-nuova-intercetta" id="toc-interpretazione-della-nuova-intercetta" class="nav-link" data-scroll-target="#interpretazione-della-nuova-intercetta"><span class="header-section-number">52.5.2</span> Interpretazione della nuova intercetta</a></li>
-  </ul></li>
+  <li><a href="#ricodifica-dei-dati" id="toc-ricodifica-dei-dati" class="nav-link" data-scroll-target="#ricodifica-dei-dati"><span class="header-section-number">52.5</span> Ricodifica dei dati</a></li>
   <li><a href="#distribizioni-a-priori-sui-parametri" id="toc-distribizioni-a-priori-sui-parametri" class="nav-link" data-scroll-target="#distribizioni-a-priori-sui-parametri"><span class="header-section-number">52.6</span> Distribizioni a priori sui parametri</a>
   <ul class="collapse">
   <li><a href="#interpretazione-delle-distribuzioni-a-priori" id="toc-interpretazione-delle-distribuzioni-a-priori" class="nav-link" data-scroll-target="#interpretazione-delle-distribuzioni-a-priori"><span class="header-section-number">52.6.1</span> Interpretazione delle Distribuzioni a Priori</a></li>
@@ -923,35 +931,38 @@ window.Quarto = {
 </ul>
 <p><strong>Concetti e competenze chiave</strong></p>
 <ul>
-<li>I modelli lineari sono una componente chiave dell’inferenza statistica e ci permettono di esplorare rapidamente un’ampia gamma di dati.</li>
-<li>La regressione lineare semplice e multipla modella una variabile di esito continua in funzione di una o più variabili predittive, rispettivamente.</li>
-<li>I modelli lineari tendono a concentrarsi sia sull’inferenza che sulla previsione.</li>
+<li>I modelli lineari costituiscono il metodo più popolare per effettuare l’inferenza statistica.</li>
+<li>La regressione lineare semplice e multipla modella una variabile di esito continua in funzione di una o più variabili predittive.</li>
+<li>I modelli lineari possono essere usati sia per l’inferenza che per la previsione.</li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:47.833443Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:46.436472Z&quot;}" data-execution_count="3">
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:47.833443Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:46.436472Z&quot;}" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython <span class="im">import</span> get_ipython</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython <span class="im">import</span> get_ipython</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="5">
+<div id="cell-3" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"bayesian_bivariate_regression"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(home_directory, <span class="st">"_repositories"</span>, <span class="st">"psicometria"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(home_directory, <span class="st">"_repositories"</span>, <span class="st">"psicometria"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
@@ -988,41 +999,25 @@ window.Quarto = {
 <p>In conclusione, mentre la statistica rimane uno strumento di inestimabile valore, il suo utilizzo efficace richiede un equilibrio tra una solida conoscenza dei principi fondamentali e la flessibilità necessaria per adattarsi a scenari di ricerca in continua evoluzione. L’integrazione di metodologie diverse è essenziale per garantire l’affidabilità e la robustezza dei modelli statistici. Solo attraverso questo approccio olistico e adattativo possiamo sperare di comprendere e interpretare adeguatamente la complessità del mondo contemporaneo.</p>
 <p>In questo capitolo, esploreremo due modelli statistici fondamentali: la regressione lineare bivariata e la regressione lineare multipla. La prima considera una sola variabile esplicativa, mentre la seconda ne include diverse. Per ciascun modello, esamineremo due approcci distinti:</p>
 <ol type="1">
-<li>L’utilizzo di R base, concentrandoci sulle funzioni <code>lm()</code> e <code>glm()</code> (oppure le funzioni di <code>pingouin</code> in Python). Queste sono particolarmente utili per l’analisi esplorativa dei dati (EDA) quando si necessita di risultati rapidi.</li>
+<li>L’utilizzo delle funzioni di <code>pingouin</code>, particolarmente utili per l’analisi esplorativa dei dati (EDA) quando si necessita di risultati rapidi.</li>
 <li>L’approccio bayesiano, ideale quando l’obiettivo principale è l’inferenza statistica.</li>
 </ol>
-<p>È importante sottolineare che i modelli statistici sono generalmente ottimizzati per uno di due scopi: l’inferenza o la previsione. La focalizzazione sulla previsione è una caratteristica distintiva del machine learning, un campo tradizionalmente dominato da Python. Tuttavia, in R, il pacchetto <code>tidymodels</code> offre ora funzionalità simili.</p>
+<p>È importante sottolineare che i modelli statistici vengono utilizzati principalmente per due scopi: inferenza e previsione. Mentre la previsione si limita a descrivere l’associazione tra le variabili, l’inferenza mira a stabilire relazioni di causa-effetto attraverso l’uso del modello lineare. L’inferenza causale richiede una profonda conoscenza del fenomeno in esame e una progettazione sperimentale o quasi-sperimentale adeguata per giustificare le assunzioni necessarie.</p>
 <p>Indipendentemente dall’approccio scelto, è fondamentale tenere presente che l’analisi di regressione è essenzialmente una forma di media ponderata. Di conseguenza, i risultati ottenuti riflettono inevitabilmente i bias e le peculiarità del dataset utilizzato.</p>
 <p>Infine, una nota sulla terminologia e sulla notazione. Per ragioni storiche e specifiche del contesto, esistono vari termini usati per descrivere la stessa idea nella letteratura. Seguiamo <span class="citation" data-cites="gelman2020regression">Gelman, Hill, e Vehtari (<a href="../../99-references.html#ref-gelman2020regression" role="doc-biblioref">2020</a>)</span> e utilizziamo i termini “outcome” e “predictor”, e la specificazione del modello bayesiano di <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>.</p>
 </section>
 <section id="modellare-lassociazione-statistica-tra-variabili" class="level2" data-number="52.1">
 <h2 data-number="52.1" class="anchored" data-anchor-id="modellare-lassociazione-statistica-tra-variabili"><span class="header-section-number">52.1</span> Modellare l’associazione statistica tra variabili</h2>
-<p>Per introdurre l’approccio bayesiano al modello di regressione, esamineremo un set di <a href="https://www.bgsu.edu/content/dam/BGSU/nwo/documents/COMP-6-8/June21_2016/IcecreamSalesvsTemperature.pdf">dati</a> che riguarda la relazione tra la temperatura media e gli introiti (in dollari) di un particolare negozio di gelati. Sebbene questa possa non sembrare una questione scientifica particolarmente entusiasmante, è un esempio semplice e intuitivo da analizzare. La relazione tra consumo di gelati e temperatura può apparire banale, ma offre una chiara opportunità per comprendere i meccanismi alla base dell’associazione tra due variabili. In questo momento, ci concentreremo esclusivamente sui metodi per stimare tale associazione.</p>
-<p>In precedenza, abbiamo applicato il modello Normale ad una singola variabile. Tuttavia, di solito siamo interessati a modellare come una variabile di esito sia correlata a un’altra variabile predittiva. Se la variabile predittiva ha una qualche associazione statistica con la variabile di esito, possiamo utilizzarla per predire il risultato. Quando la variabile predittiva è integrata nel modello in un modo specifico, otteniamo una regressione lineare.</p>
+<p>Per introdurre l’approccio bayesiano al modello di regressione, esamineremo un set di <a href="../../data/affect.csv">dati</a> che riguarda la relazione tra i punteggi di affect e arousal. I dati provengono da due studi condotti nel Personality, Motivation and Cognition Laboratory della Northwestern University, in cui sono stati utilizzati film per indurre stati affettivi <span class="citation" data-cites="rafaeli2006premature">(<a href="../../99-references.html#ref-rafaeli2006premature" role="doc-biblioref">Rafaeli e Revelle 2006</a>)</span>.</p>
+<p>Qui ci concentreremo sull’associazione tra l’ansia di stato, considerata come variabile indipendente, e la scala di Tense Arousal del <em>Motivational State Questionnaire</em> (MSQ), considerata come variabile dipendente.</p>
+<p>In precedenza, abbiamo applicato il modello normale a una singola variabile. Tuttavia, di solito siamo interessati a modellare come una variabile di esito sia associata a una variabile predittiva. Se esiste un’associazione statistica tra la variabile predittiva e la variabile di esito, possiamo utilizzarla per predire il risultato. Quando la variabile predittiva è incorporata nel modello in un modo specifico, otteniamo una regressione lineare.</p>
 <p>I dati dell’esempio sono forniti di seguito.</p>
-<div id="cell-6" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:52.266341Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:52.243658Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"temperature"</span>: [</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="fl">14.2</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="fl">16.4</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fl">11.9</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="fl">15.2</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="fl">18.5</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="fl">22.1</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="fl">19.4</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="fl">25.1</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="fl">23.4</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="fl">18.1</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="fl">22.6</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="fl">17.2</span>,</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"icecream"</span>: [<span class="dv">215</span>, <span class="dv">325</span>, <span class="dv">185</span>, <span class="dv">332</span>, <span class="dv">406</span>, <span class="dv">522</span>, <span class="dv">412</span>, <span class="dv">614</span>, <span class="dv">544</span>, <span class="dv">421</span>, <span class="dv">445</span>, <span class="dv">408</span>],</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DataFrame</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div id="cell-6" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"../../data/affect.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le colonne state1 e TA1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> data[[<span class="st">"state1"</span>, <span class="st">"TA1"</span>]]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 <div>
 
@@ -1031,35 +1026,35 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">temperature</th>
-<th data-quarto-table-cell-role="th">icecream</th>
+<th data-quarto-table-cell-role="th">state1</th>
+<th data-quarto-table-cell-role="th">TA1</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>14.2</td>
-<td>215</td>
+<td>41</td>
+<td>11.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>16.4</td>
-<td>325</td>
+<td>26</td>
+<td>5.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>11.9</td>
-<td>185</td>
+<td>31</td>
+<td>8.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
-<td>15.2</td>
-<td>332</td>
+<td>28</td>
+<td>8.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
-<td>18.5</td>
-<td>406</td>
+<td>47</td>
+<td>12.0</td>
 </tr>
 </tbody>
 </table>
@@ -1068,12 +1063,12 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>L’associazione tra le due variabili (gli introiti derivanti dalla vendita di gelati e la temperatura) è chiaramente visualizzata nel grafico seguente. Il grafico indica che l’associazione tra le due variabili può essere approssimata da una semplice funzione matematica, ovvero una retta. Tuttavia, è evidente che una funzione lineare sia troppo semplice per rappresentare accuratamente questi dati: non è possibile trovare una singola retta che passi per tutti i punti del diagramma di dispersione.</p>
-<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:57.143715Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:57.000582Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(df[<span class="st">"temperature"</span>], df[<span class="st">"icecream"</span>], color<span class="op">=</span><span class="st">"blue"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Temperature (°C)"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Ice Cream Sales ($)"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<p>L’associazione tra le due variabili, ansia di stato e Tense Arousal, è rappresentata nel grafico sottostante. Il grafico suggerisce che l’associazione può essere approssimata da una semplice funzione matematica, come una retta. Tuttavia, è evidente che una funzione lineare sia troppo semplicistica per rappresentare accuratamente questi dati, poiché non è possibile trovare una singola retta che passi per tutti i punti del diagramma di dispersione.</p>
+<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:57.143715Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:57.000582Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#b97c7c"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(df[<span class="st">"state1"</span>], df[<span class="st">"TA1"</span>], color<span class="op">=</span>color_fill)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"State Anxiety"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Tense Arousal"</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1086,27 +1081,32 @@ window.Quarto = {
 </section>
 <section id="modello-generativo-dei-dati" class="level2" data-number="52.2">
 <h2 data-number="52.2" class="anchored" data-anchor-id="modello-generativo-dei-dati"><span class="header-section-number">52.2</span> Modello Generativo dei Dati</h2>
-<p>Per descrivere la relazione tra introiti e temperatura, utilizzeremo un modello statistico lineare. Assumeremo che la relazione media tra <span class="math inline">\(x\)</span> (temperatura) e <span class="math inline">\(y\)</span> (introiti) possa essere rappresentata da una retta, ma influenzata da un certo grado di errore. Supponiamo che questo errore sia costante ai vari livelli di <span class="math inline">\(x\)</span> e segua una distribuzione Normale. Inoltre, presupponiamo che gli errori attorno alla retta di regressione siano indipendenti tra loro.</p>
+<p>Per descrivere la relazione tra ansia di stato e Tense Arousal, utilizzeremo un modello statistico lineare. Assumeremo che la relazione media tra <span class="math inline">\(x\)</span> (ansia di stato) e <span class="math inline">\(y\)</span> (Tense Arousal) possa essere rappresentata da una retta, ma influenzata da un certo grado di errore. Supponiamo che questo errore sia costante ai vari livelli di <span class="math inline">\(x\)</span> e segua una distribuzione Normale. Inoltre, presupponiamo che gli errori attorno alla retta di regressione siano indipendenti tra loro.</p>
 <p>In questo contesto, le nostre assunzioni delineano un modello statistico lineare, formalizzato come segue:</p>
 <p><span class="math display">\[ y_i = \alpha + \beta x_i + \epsilon_i \]</span></p>
-<p>dove: - <span class="math inline">\(\alpha\)</span> è l’intercetta, - <span class="math inline">\(\beta\)</span> è il coefficiente angolare, - <span class="math inline">\(\epsilon_i \sim \text{Normale}(0, \sigma^2)\)</span> rappresenta l’errore, con media zero e varianza costante <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(\alpha\)</span> è l’intercetta,</li>
+<li><span class="math inline">\(\beta\)</span> è il coefficiente angolare,</li>
+<li><span class="math inline">\(\epsilon_i \sim \text{Normale}(0, \sigma^2)\)</span> rappresenta l’errore, con media zero e varianza costante <span class="math inline">\(\sigma^2\)</span>.</li>
+</ul>
 <p>Queste assunzioni ci permettono di applicare metodi di regressione lineare per stimare i parametri del modello (<span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>) e quantificare l’incertezza delle predizioni, considerando la variabilità nei dati.</p>
 <p>Il modello lineare descritto sopra costituisce il modello generativo dei dati (verosimiglianza):</p>
-<p><span class="math display">\[ y_n = \alpha + \beta x_n + \epsilon_n \]</span></p>
+<p><span class="math display">\[ y_i = \alpha + \beta x_i + \epsilon_i,  \quad i \in 1, \dots N \]</span></p>
 <p>o equivalentemente</p>
 <p><span class="math display">\[ \epsilon_n \sim \text{Normale}(0, \sigma) \]</span></p>
-<p>Questo modello descrive come i dati $ y_n $ sono generati. Ogni osservazione $ y_n $ è una combinazione lineare di una costante <span class="math inline">\(\alpha\)</span> (intercetta), un coefficiente <span class="math inline">\(\beta\)</span> che moltiplica il valore della variabile $ x_n $ (temperatura), e un termine di errore <span class="math inline">\(\epsilon_n\)</span> che cattura la variabilità non spiegata dal modello lineare.</p>
-<p>Il termine di errore <span class="math inline">\(\epsilon_n\)</span> è distribuito secondo una distribuzione normale con media 0 e deviazione standard <span class="math inline">\(\sigma\)</span>. Questo implica che l’errore è simmetricamente distribuito attorno a zero e ha una variabilità definita da <span class="math inline">\(\sigma\)</span>.</p>
+<p>Questo modello descrive come i dati <span class="math inline">\(y\)</span> sono generati. Ogni osservazione <span class="math inline">\(y_i\)</span> è una combinazione lineare di una costante <span class="math inline">\(\alpha\)</span> (intercetta), un coefficiente <span class="math inline">\(\beta\)</span> che moltiplica il valore della variabile <span class="math inline">\(x\)</span> (ansia di stato), e un termine di errore <span class="math inline">\(\epsilon_n\)</span> che cattura la variabilità non spiegata dal modello lineare.</p>
+<p>Il termine di errore <span class="math inline">\(\epsilon_i\)</span> è distribuito secondo una distribuzione normale con media 0 e deviazione standard <span class="math inline">\(\sigma\)</span>. Questo implica che l’errore è simmetricamente distribuito attorno a zero e ha una variabilità definita da <span class="math inline">\(\sigma\)</span>.</p>
 <p>L’equazione</p>
-<p><span class="math display">\[ y_n \sim \text{Normale}(\alpha + \beta x_n, \sigma) \]</span></p>
-<p>mostra come il valore osservato $ y_n $ segue una distribuzione normale con media <span class="math inline">\(\alpha + \beta x_n\)</span> e deviazione standard <span class="math inline">\(\sigma\)</span>. Questo significa che, dato $ x_n $, i valori di $ y_n $ sono distribuiti normalmente attorno alla retta di regressione definita da <span class="math inline">\(\alpha + \beta x_n\)</span>.</p>
-<p>Consideriamo il caso in cui $ y_n $ rappresenta le vendite di gelati e $ x_n $ rappresenta la temperatura media. Secondo il nostro modello:</p>
+<p><span class="math display">\[ y_i \sim \text{Normale}(\alpha + \beta x_i, \sigma), \quad i \in 1, \dots N \]</span></p>
+<p>mostra come il valore osservato <span class="math inline">\(y_i\)</span> segue una distribuzione normale con media <span class="math inline">\(\alpha + \beta x_i\)</span> e deviazione standard <span class="math inline">\(\sigma\)</span>. Questo significa che, dato <span class="math inline">\(x_i\)</span>, i valori di <span class="math inline">\(y_i\)</span> sono distribuiti normalmente attorno alla retta di regressione definita da <span class="math inline">\(\alpha + \beta x_i\)</span>.</p>
+<p>Consideriamo il caso in cui <span class="math inline">\(y_i\)</span> rappresenta Tense Arousal e <span class="math inline">\(x_i\)</span> rappresenta l’ansia di stato. Secondo il nostro modello:</p>
 <ul>
-<li><strong><span class="math inline">\(\alpha\)</span></strong> è l’intercetta, ovvero le vendite di gelati previste quando la temperatura è zero.</li>
-<li><strong><span class="math inline">\(\beta\)</span></strong> è il coefficiente che indica quanto aumentano (o diminuiscono) le vendite di gelati per ogni aumento di un grado della temperatura.</li>
-<li><strong><span class="math inline">\(\sigma\)</span></strong> è la deviazione standard che misura la variabilità delle vendite di gelati attorno alla media prevista dal modello.</li>
+<li><span class="math inline">\(\alpha\)</span> è l’intercetta, ovvero il valore atteso di Tense Arousal quando l’ansia di stato è zero.</li>
+<li><span class="math inline">\(\beta\)</span> è il coefficiente che indica quanto aumenta (o diminuisce) Tense Arousal per ogni aumento di un punto dell’ansia di stato.</li>
+<li><span class="math inline">\(\sigma\)</span> è la deviazione standard che misura la variabilità di Tense Arousal attorno alla media prevista dal modello.</li>
 </ul>
-<p>Questo modello ci consente di stimare l’effetto della temperatura sulle vendite di gelati e di quantificare l’incertezza associata a queste stime.</p>
+<p>Questo modello ci consente di stimare l’effetto dell’ansia di stato su Tense Arousal e di quantificare l’incertezza associata a queste stime.</p>
 </section>
 <section id="modello-bayesiano-della-regressione-bivariata" class="level2" data-number="52.3">
 <h2 data-number="52.3" class="anchored" data-anchor-id="modello-bayesiano-della-regressione-bivariata"><span class="header-section-number">52.3</span> Modello Bayesiano della Regressione Bivariata</h2>
@@ -1126,9 +1126,9 @@ window.Quarto = {
 </section>
 <section id="codice-stan" class="level3" data-number="52.3.4">
 <h3 data-number="52.3.4" class="anchored" data-anchor-id="codice-stan"><span class="header-section-number">52.3.4</span> Codice Stan</h3>
-<p>Il codice Stan che implementa il modello precedente è contenuto nel file <code>icecream_model_1.stan</code>. Compiliamo e stampiamo il modello.</p>
-<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:06.728618Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:05.671604Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">'stan'</span>, <span class="st">'icecream_model_1.stan'</span>)</span>
+<p>Il codice Stan che implementa il modello precedente è contenuto nel file <code>arousal_model_1.stan</code>. Compiliamo e stampiamo il modello.</p>
+<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:06.728618Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:05.671604Z&quot;}" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">'stan'</span>, <span class="st">'arousal_model_1.stan'</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1149,51 +1149,49 @@ model {
 </code></pre>
 </div>
 </div>
-<p>Si noti che, non avendo specificato le distribuzioni a priori per i parametri <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> e <span class="math inline">\(\sigma\)</span>, Stan assume distribuzioni a priori uniformi.</p>
+<p>Si osservi che, in questa prima istanziazione del modello bayesiano, non avendo specificato le distribuzioni a priori per i parametri <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> e <span class="math inline">\(\sigma\)</span>, Stan assume distribuzioni a priori uniformi per questi parametri.</p>
 </section>
 <section id="dizionario-con-i-dati" class="level3" data-number="52.3.5">
 <h3 data-number="52.3.5" class="anchored" data-anchor-id="dizionario-con-i-dati"><span class="header-section-number">52.3.5</span> Dizionario con i dati</h3>
 <p>Sistemiamo i dati in un dizionario come richiesto dal modello Stan.</p>
-<div id="cell-15" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:10.217268Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:10.214117Z&quot;}" data-execution_count="7">
+<div id="cell-15" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:10.217268Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:10.214117Z&quot;}" data-execution_count="71">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: <span class="bu">len</span>(df[<span class="st">"temperature"</span>]),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: df[<span class="st">"temperature"</span>],</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: df[<span class="st">"icecream"</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: <span class="bu">len</span>(df[<span class="st">"TA1"</span>]),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: df[<span class="st">"state1"</span>],</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: df[<span class="st">"TA1"</span>]</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'N': 12, 'x': 0     14.2
-1     16.4
-2     11.9
-3     15.2
-4     18.5
-5     22.1
-6     19.4
-7     25.1
-8     23.4
-9     18.1
-10    22.6
-11    17.2
-Name: temperature, dtype: float64, 'y': 0     215
-1     325
-2     185
-3     332
-4     406
-5     522
-6     412
-7     614
-8     544
-9     421
-10    445
-11    408
-Name: icecream, dtype: int64}</code></pre>
+<pre><code>{'N': 78, 'x': 0     41
+1     26
+2     31
+3     28
+4     47
+      ..
+73    40
+74    60
+75    24
+76    33
+77    33
+Name: state1, Length: 78, dtype: int64, 'y': 0     11.0
+1      5.0
+2      8.0
+3      8.0
+4     12.0
+      ... 
+73    13.0
+74    20.0
+75    10.0
+76    10.0
+77     6.0
+Name: TA1, Length: 78, dtype: float64}</code></pre>
 </div>
 </div>
 </section>
 <section id="campionamento-mcmc" class="level3" data-number="52.3.6">
 <h3 data-number="52.3.6" class="anchored" data-anchor-id="campionamento-mcmc"><span class="header-section-number">52.3.6</span> Campionamento MCMC</h3>
 <p>Eseguiamo il campionamento MCMC.</p>
-<div id="cell-18" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:14.524548Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:13.793216Z&quot;}" data-execution_count="8">
+<div id="cell-18" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:14.524548Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:13.793216Z&quot;}" data-execution_count="72">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
@@ -1207,7 +1205,7 @@ Name: icecream, dtype: int64}</code></pre>
 <section id="distribuzioni-a-posteriori-1" class="level3" data-number="52.3.7">
 <h3 data-number="52.3.7" class="anchored" data-anchor-id="distribuzioni-a-posteriori-1"><span class="header-section-number">52.3.7</span> Distribuzioni a posteriori</h3>
 <p>Esaminiamo le distribuzioni a posteriori dei parametri.</p>
-<div id="cell-21" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:19.008797Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:17.795902Z&quot;}" data-execution_count="9">
+<div id="cell-21" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:19.008797Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:17.795902Z&quot;}" data-execution_count="73">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(fit, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1218,9 +1216,9 @@ Name: icecream, dtype: int64}</code></pre>
 </div>
 </div>
 <p>L’oggetto <code>fit</code> generato da <code>cmdstanpy</code> appartiene alla classe <code>cmdstanpy.stanfit.mcmc.CmdStanMCMC</code>. Questo oggetto è funzionalmente equivalente a un oggetto della classe <code>InferenceData</code>, permettendo quindi la sua manipolazione tramite le funzioni fornite da ArviZ. Esaminiamo dunque un sommario delle distribuzioni a posteriori dei parametri del modello lineare.</p>
-<div id="cell-23" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:23.493778Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:23.419555Z&quot;}" data-execution_count="10">
+<div id="cell-23" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:23.493778Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:23.419555Z&quot;}" data-execution_count="74">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="74">
 <div>
 <div>
 
@@ -1243,38 +1241,38 @@ Name: icecream, dtype: int64}</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">alpha</td>
-<td>-158.315</td>
-<td>64.516</td>
-<td>-271.588</td>
-<td>-28.269</td>
-<td>1.429</td>
-<td>1.010</td>
-<td>2051.0</td>
-<td>2311.0</td>
+<td>1.552</td>
+<td>1.256</td>
+<td>-0.859</td>
+<td>3.816</td>
+<td>0.026</td>
+<td>0.019</td>
+<td>2395.0</td>
+<td>2748.0</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">beta</td>
-<td>30.032</td>
-<td>3.372</td>
-<td>23.574</td>
-<td>36.268</td>
-<td>0.074</td>
-<td>0.053</td>
-<td>2065.0</td>
-<td>2329.0</td>
+<td>0.267</td>
+<td>0.029</td>
+<td>0.213</td>
+<td>0.323</td>
+<td>0.001</td>
+<td>0.000</td>
+<td>2436.0</td>
+<td>2858.0</td>
 <td>1.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">sigma</td>
-<td>44.162</td>
-<td>12.121</td>
-<td>25.540</td>
-<td>66.813</td>
-<td>0.270</td>
-<td>0.195</td>
-<td>2120.0</td>
-<td>2226.0</td>
+<td>2.716</td>
+<td>0.227</td>
+<td>2.314</td>
+<td>3.149</td>
+<td>0.004</td>
+<td>0.003</td>
+<td>3410.0</td>
+<td>3273.0</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1284,12 +1282,11 @@ Name: icecream, dtype: int64}</code></pre>
 </div>
 </div>
 </div>
-<p>Avendo definito nel modello il predittore lineare come <span class="math inline">\(x - \bar{x}\)</span>, l’intercetta corrisponderà alla media dei valori dell’altezza. La pendenza <span class="math inline">\(\beta\)</span> ci informa sull’incremento atteso dell’altezza quando il peso aumenta di un’unità. Il parametro <span class="math inline">\(\sigma\)</span> descrive la deviazione standard della dispersione dei dati attorno alla retta di regressione.</p>
 <p>Confrontiamo i valori ottenuti con l’approccio bayesiano con quelli trovati usando la procedura di massima verosimiglianza.</p>
-<div id="cell-25" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:27.411444Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:27.372191Z&quot;}" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lm <span class="op">=</span> pg.linear_regression(df[<span class="st">"temperature"</span>], df[<span class="st">"icecream"</span>])</span>
+<div id="cell-25" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:27.411444Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:27.372191Z&quot;}" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lm <span class="op">=</span> pg.linear_regression(df[<span class="st">"state1"</span>], df[<span class="st">"TA1"</span>])</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>lm.<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="75">
 <div>
 <div>
 
@@ -1313,26 +1310,26 @@ Name: icecream, dtype: int64}</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>Intercept</td>
-<td>-159.47</td>
-<td>54.64</td>
-<td>-2.92</td>
-<td>0.02</td>
-<td>0.92</td>
-<td>0.91</td>
-<td>-281.22</td>
-<td>-37.73</td>
+<td>1.56</td>
+<td>1.25</td>
+<td>1.25</td>
+<td>0.22</td>
+<td>0.52</td>
+<td>0.52</td>
+<td>-0.93</td>
+<td>4.04</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>temperature</td>
-<td>30.09</td>
-<td>2.87</td>
-<td>10.50</td>
+<td>state1</td>
+<td>0.27</td>
+<td>0.03</td>
+<td>9.14</td>
 <td>0.00</td>
-<td>0.92</td>
-<td>0.91</td>
-<td>23.70</td>
-<td>36.47</td>
+<td>0.52</td>
+<td>0.52</td>
+<td>0.21</td>
+<td>0.33</td>
 </tr>
 </tbody>
 </table>
@@ -1341,26 +1338,25 @@ Name: icecream, dtype: int64}</code></pre>
 </div>
 </div>
 </div>
-<p>La somiglianza tra le due soluzioni conferma che, nel caso di modelli semplici come questo, e quando vengono usati dei prior non informativi, i due approcci producono risultati sostanzialmente equivalenti.</p>
+<p>La somiglianza tra le due soluzioni conferma che, quando usiamo dei prior uniformi per i parametri, i due approcci producono risultati equivalenti.</p>
 </section>
 <section id="interpretazione" class="level3" data-number="52.3.8">
 <h3 data-number="52.3.8" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">52.3.8</span> Interpretazione</h3>
 <p>Possiamo interpretare i parametri come segue:</p>
 <ul>
-<li>La media a posteriori di <span class="math inline">\(\alpha = -159.47\)</span> indica che il valore atteso degli introiti del negozio di gelati è di -159.47 dollari quando la temperatura è di 0 gradi centigradi.</li>
-<li>La media a posteriori di <span class="math inline">\(\beta = 30.09\)</span> suggerisce che ci aspettiamo un aumento medio di 30.09 dollari negli introiti del negozio di gelati per ogni incremento di 1 grado centigrado nella temperatura.</li>
+<li>l’intercetta <span class="math inline">\(\alpha\)</span> corrisponde al valore atteso di Tense Arousal quando l’ansia di stato vale 0;</li>
+<li>la pendenza <span class="math inline">\(\beta\)</span> ci informa sull’incremento atteso di Tense Arousal quando l’ansia di stato aumenta di un’unità;</li>
+<li>il parametro <span class="math inline">\(\sigma\)</span> descrive la deviazione standard della dispersione di Tense Arousal attorno alla retta di regressione.</li>
 </ul>
 </section>
 </section>
 <section id="predizione" class="level2" data-number="52.4">
 <h2 data-number="52.4" class="anchored" data-anchor-id="predizione"><span class="header-section-number">52.4</span> Predizione</h2>
-<p>La distribuzione a posteriori non contiene solo informazioni su ciascun parametro singolarmente, ma anche sulle dipendenze tra i parametri. Queste dipendenze sono riflesse nei campioni a posteriori che possono essere trasformati arbitrariamente.</p>
-<p>Ad esempio, supponiamo che <code>alpha</code> e <code>beta</code> siano vettori di campioni a posteriori.</p>
-<p>Con l’istruzione seguente nel blocco <code>generated quantities</code>, possiamo calcolare la predizione a posteriori per 30 gradi Celsius:</p>
+<p>La distribuzione a posteriori non fornisce solo informazioni sui singoli parametri, ma anche sulle loro interdipendenze. Queste relazioni sono riflesse nei campioni a posteriori, che possono essere trasformati in vari modi. Ad esempio, possiamo calcolare la predizione a posteriori del modello lineare per il valore atteso di Tense Arousal quando l’ansia di stato è pari a 30 usando il seguente comando nel blocco <code>generated quantities</code>:</p>
 <p><code>pred = alpha + beta * 30;</code></p>
-<p>Modifichiamo il modello Stan per aggiungere il blocco <code>generated quantities</code> con questa istruzione e compiliamo il modello.</p>
-<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:31.850046Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:31.723538Z&quot;}" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"icecream_model_2.stan"</span>)</span>
+<p>Modifichiamo il modello Stan per aggiungere questo comando nel blocco <code>generated quantities</code> e compiliamo il modello.</p>
+<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:31.850046Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:31.723538Z&quot;}" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"arousal_model_2.stan"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1386,9 +1382,9 @@ generated quantities {
 </code></pre>
 </div>
 </div>
-<p>In questo modello Stan aggiornato, il blocco <code>generated quantities</code> calcola la predizione a posteriori <code>pred</code> per una variabile predittore con valore 30. Questa aggiunta consente di ottenere la distribuzione a posteriori della predizione per un determinato valore del predittore.</p>
+<p>In questo modello Stan aggiornato, il blocco <code>generated quantities</code> calcola la predizione a posteriori <code>pred</code> per una variabile predittore con valore 30. Questa modifica permette di ottenere la distribuzione a posteriori della predizione per un valore specifico del predittore.</p>
 <p>Eseguiamo il campionamento.</p>
-<div id="cell-31" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:35.496470Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:35.073796Z&quot;}" data-execution_count="13">
+<div id="cell-31" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:35.496470Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:35.073796Z&quot;}" data-execution_count="77">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="op">=</span> model.sample(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
@@ -1398,10 +1394,10 @@ generated quantities {
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Esaminiamo la stima a posteriori dell’introito previsto per il negozio di gelati quando la temperatura raggiunge i 30 gradi Celsius. Questa analisi fornirà sia una stima puntuale dell’introito che una misura dell’incertezza associata, rappresentata dall’intervallo di credibilità al livello di confidenza prescelto.</p>
-<div id="cell-33" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:38.848287Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:38.806241Z&quot;}" data-execution_count="14">
+<p>Esaminiamo la stima a posteriori del valore atteso di Tense Arousal quando l’ansia di stato è pari a 30. Questa analisi fornirà sia una stima puntuale di Tense Arousal che una misura dell’incertezza associata, rappresentata dall’intervallo di credibilità al livello di confidenza scelto.</p>
+<div id="cell-33" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:38.848287Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:38.806241Z&quot;}" data-execution_count="78">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit2, var_names<span class="op">=</span>([<span class="st">"pred"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="78">
 <div>
 <div>
 
@@ -1424,14 +1420,14 @@ generated quantities {
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">pred</td>
-<td>742.651</td>
-<td>40.123</td>
-<td>664.016</td>
-<td>816.924</td>
-<td>0.818</td>
-<td>0.579</td>
-<td>2409.0</td>
-<td>3196.0</td>
+<td>9.566</td>
+<td>0.456</td>
+<td>8.722</td>
+<td>10.392</td>
+<td>0.008</td>
+<td>0.006</td>
+<td>3111.0</td>
+<td>4351.0</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1443,34 +1439,35 @@ generated quantities {
 </div>
 <section id="quantificazione-dellincertezza" class="level3" data-number="52.4.1">
 <h3 data-number="52.4.1" class="anchored" data-anchor-id="quantificazione-dellincertezza"><span class="header-section-number">52.4.1</span> Quantificazione dell’incertezza</h3>
-<p>Per quantificare l’incertezza nelle predizioni del modello, possiamo estendere il metodo esaminato in precedenza per calcolare la distribuzione a posteriori delle predizioni per tutti i valori di <span class="math inline">\(x\)</span> considerati. Questo ci permette di ottenere non solo le stime puntuali delle predizioni, ma anche una misura dell’incertezza associata a ciascuna predizione.</p>
+<p>Per quantificare l’incertezza complessiva nelle predizioni del modello, possiamo calcolare la distribuzione a posteriori delle predizioni per tutti i valori di <span class="math inline">\(x\)</span> del campione. Questo ci permette di ottenere sia le stime puntuali delle predizioni sia una misura dell’incertezza associata.</p>
 <p>Per fare ciò, modifichiamo il blocco <code>generated quantities</code> nel seguente modo:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N] y_rep; <span class="co">// predizioni a posteriori per ciascun valore di x</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[N] y_rep; <span class="co">// Predizioni a posteriori per ciascun valore di x</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    y_rep[n] = normal_rng(alpha + beta * x[n], sigma);</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Esaminiamo nei dettagli la modifica allo script Stan.</p>
+<p>Esaminiamo le modifiche:</p>
 <ol type="1">
-<li><strong>Dichiarazione del vettore <code>y_rep</code></strong>:
+<li><p><strong>Dichiarazione del vettore <code>y_rep</code></strong>:</p>
 <ul>
-<li><code>vector[N] y_rep;</code>: Questa linea dichiara un vettore <code>y_rep</code> di lunghezza <code>N</code> che conterrà le predizioni a posteriori per ciascun valore di <code>x</code>.</li>
+<li><code>vector[N] y_rep;</code>: Dichiara un vettore <code>y_rep</code> di lunghezza <code>N</code> per contenere le predizioni a posteriori per ciascun valore di <code>x</code>.</li>
 </ul></li>
-<li><strong>Ciclo <code>for</code> per generare le predizioni</strong>:
+<li><p><strong>Ciclo <code>for</code> per generare le predizioni</strong>:</p>
 <ul>
-<li><code>for (n in 1:N)</code>: Questo ciclo iterativo va da <code>1</code> a <code>N</code>, cioè copre tutte le osservazioni.</li>
-<li><code>y_rep[n] = normal_rng(alpha + beta * x[n], sigma);</code>: Per ogni valore di <code>x[n]</code>, questa linea genera una predizione dalla distribuzione normale con media <code>alpha + beta * x[n]</code> e deviazione standard <code>sigma</code>. La funzione <code>normal_rng</code> è utilizzata per generare numeri casuali dalla distribuzione normale specificata, rappresentando così l’incertezza nelle predizioni.</li>
+<li><code>for (n in 1:N)</code>: Itera su tutte le osservazioni.</li>
+<li><code>y_rep[n] = normal_rng(alpha + beta * x[n], sigma);</code>: Per ogni valore di <code>x[n]</code>, genera una predizione dalla distribuzione normale con media <code>alpha + beta * x[n]</code> e deviazione standard <code>sigma</code>. La funzione <code>normal_rng</code> genera numeri casuali dalla distribuzione normale specificata, rappresentando l’incertezza nelle predizioni.</li>
 </ul></li>
 </ol>
+<p>Questo approccio consente di ottenere la distribuzione a posteriori delle predizioni, fornendo una visione completa dell’incertezza associata. Dalla distribuzione a posteriori di <code>y_rep</code>, possiamo calcolare sia la stima puntuale (come la media o la mediana delle predizioni) sia gli intervalli di credibilità (come l’intervallo al 95%) per ogni valore di <code>x</code>. Questo offre una misura dell’incertezza delle predizioni, riflettendo la variabilità e l’affidabilità del modello.</p>
+<p>Modifichiamo il modello imponendo distribuzioni a priori debolmente informative sui parametri:</p>
 <ul>
-<li><p>Questo approccio consente di ottenere la distribuzione a posteriori delle predizioni, fornendo una visione completa dell’incertezza associata a ciascuna predizione.</p></li>
-<li><p>Dalla distribuzione a posteriori di <code>y_rep</code>, possiamo calcolare sia la stima puntuale (ad esempio, la media o la mediana delle predizioni) sia gli intervalli di credibilità (ad esempio, l’intervallo al 95%) per ogni valore di <code>x</code>. Questo offre una misura dell’incertezza delle predizioni, riflettendo la variabilità e l’affidabilità del modello.</p></li>
+<li>Per <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>, utilizziamo una distribuzione Normale centrata su 0 con una deviazione standard di 2.</li>
+<li>Per <span class="math inline">\(\sigma\)</span>, utilizziamo una distribuzione di Cauchy centrata su 0 con una scala di 2.</li>
 </ul>
-<p>In sintesi, questa modifica ci permette di valutare l’incertezza delle predizioni del modello in modo robusto e dettagliato, migliorando la comprensione della performance del modello e della sua capacità predittiva.</p>
-<div id="cell-35" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:46.225485Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:46.100450Z&quot;}" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"icecream_model_3.stan"</span>)</span>
+<div id="cell-35" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:46.225485Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:46.100450Z&quot;}" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"arousal_model_3.stan"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1485,6 +1482,10 @@ parameters {
   real&lt;lower=0&gt; sigma; // deviazione standard residua
 }
 model {
+  // distribuzioni a priori
+  alpha ~ normal(0, 2);
+  beta ~ normal(0, 2);
+  sigma ~ cauchy(0, 2);
   // verosimiglianza
   y ~ normal(alpha + beta * x, sigma);
 }
@@ -1498,7 +1499,7 @@ generated quantities {
 </code></pre>
 </div>
 </div>
-<div id="cell-36" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:49.829487Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:49.406283Z&quot;}" data-execution_count="16">
+<div id="cell-36" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:01:49.829487Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:01:49.406283Z&quot;}" data-execution_count="80">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="op">=</span> model.sample(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
@@ -1508,169 +1509,9 @@ generated quantities {
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Costruiamo ora un grafico che rappresenta i valori osservati insieme alla linea di regressione stimata tramite il modello bayesiano. Al grafico aggiungeremo diverse linee di regressione, ciascuna orientata in base ai valori campionati casualmente dalla distribuzione a posteriori dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>.</p>
-<div id="cell-38" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:03.783546Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:03.776749Z&quot;}" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract posterior samples</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>alpha_samples <span class="op">=</span> fit3.stan_variable(<span class="st">"alpha"</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>beta_samples <span class="op">=</span> fit3.stan_variable(<span class="st">"beta"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-39" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:08.662836Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:07.723497Z&quot;}" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot y vs x</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df[<span class="st">"temperature"</span>] </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, df[<span class="st">"icecream"</span>], color<span class="op">=</span><span class="st">"blue"</span>, label<span class="op">=</span><span class="st">"Data"</span>, s<span class="op">=</span><span class="dv">10</span>)  <span class="co"># s is the size of the point</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw lines from posterior samples</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">300</span>):  <span class="co"># assuming you have at least 300 samples</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        x,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        alpha_samples[i] <span class="op">+</span> beta_samples[i] <span class="op">*</span> x,</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"gray"</span>,</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.05</span>,</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Line using the mean of posterior estimates</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>mean_alpha <span class="op">=</span> np.mean(alpha_samples)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>mean_beta <span class="op">=</span> np.mean(beta_samples)</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    x,</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    mean_alpha <span class="op">+</span> mean_beta <span class="op">*</span> x,</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"red"</span>,</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    linewidth<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Mean Posterior Prediction"</span>,</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Additional plot formatting</span></span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Regression with Posterior Samples"</span>)</span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="05_03_reglin_bayesian_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Le numerose linee di regressione presenti nel grafico visualizzano la nostra incertezza riguardo l’inclinazione esatta della linea di regressione principale. Tuttavia, il grafico mostra chiaramente che questa incertezza è minima.</p>
-<p>Possiamo procedere in un altro modo per descrivere l’incertezza della stima. Anziché utilizzare le distribuzioni a posteriori di <code>alpha</code> e <code>beta</code>, possiamo utilizzare la distribuzione a posteriori di <code>y_rep</code>. Procedendo in questo modo otteniamo il grafico mostrato qui sotto.</p>
-<p>In questo plot, la linea rossa rappresenta la media delle predizioni a posteriori, mentre l’area grigia rappresenta l’intervallo di credibilità al 95%, mostrando l’incertezza delle predizioni del modello. Questo approccio fornisce una visione più completa e realistica dell’incertezza nelle predizioni rispetto all’approccio che utilizza solo <code>alpha</code> e <code>beta</code>.</p>
-<div id="cell-42" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:19.269136Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:18.848625Z&quot;}" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai i campioni posteriori di y_rep</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>y_rep_samples <span class="op">=</span> fit3.stan_variable(<span class="st">"y_rep"</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola la media e l'intervallo di credibilità (ad esempio, 95%) per y_rep</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>y_rep_mean <span class="op">=</span> np.mean(y_rep_samples, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>y_rep_lower <span class="op">=</span> np.percentile(y_rep_samples, <span class="fl">2.5</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>y_rep_upper <span class="op">=</span> np.percentile(y_rep_samples, <span class="fl">97.5</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot y vs x</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df[<span class="st">"temperature"</span>]</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">"icecream"</span>]</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, y, color<span class="op">=</span><span class="st">"blue"</span>, label<span class="op">=</span><span class="st">"Dati"</span>, s<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della media delle predizioni a posteriori</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y_rep_mean, color<span class="op">=</span><span class="st">"red"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Media delle predizioni"</span>)</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot dell'intervallo di credibilità</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>plt.fill_between(</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    x,</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    y_rep_lower,</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    y_rep_upper,</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"gray"</span>,</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.3</span>,</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Intervallo di credibilità 95%"</span>,</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Formattazione del plot</span></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Temperatura (Celsius)"</span>)</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Vendite di gelati"</span>)</span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Incertezza delle predizioni del modello"</span>)</span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="05_03_reglin_bayesian_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Nel primo approccio, calcoliamo l’incertezza delle predizioni utilizzando le distribuzioni a posteriori di <code>alpha</code> e <code>beta</code>. Questo metodo consiste nel generare predizioni lineari per ciascun campione a posteriori di <code>alpha</code> e <code>beta</code>, tracciando quindi le linee di regressione risultanti. Questo ci permette di vedere come varia la linea di regressione in base alle incertezze nei parametri <code>alpha</code> e <code>beta</code>. Questo metodo visualizza come l’incertezza nei parametri del modello si traduce in incertezza nelle predizioni.</p>
-<p>Nel secondo approccio, descriviamo l’incertezza delle predizioni utilizzando direttamente la distribuzione a posteriori di <code>y_rep</code>. In questo caso, generiamo predizioni per ciascun valore osservato di <code>x</code> nel modello Stan, tenendo conto delle distribuzioni a posteriori dei parametri del modello. Questo metodo visualizza direttamente l’incertezza nelle predizioni, tenendo conto delle variazioni nei dati osservati e delle distribuzioni a posteriori dei parametri.</p>
-<p>Le due descrizioni dell’incertezza delle predizioni del modello sono diverse perché riflettono aspetti differenti della distribuzione a posteriori:</p>
-<ol type="1">
-<li><p><strong>Distribuzione a posteriori di <code>alpha</code> e <code>beta</code></strong>: Questo approccio considera solo l’incertezza nei parametri del modello (<code>alpha</code> e <code>beta</code>). Le linee di regressione tracciate variano in base a questi parametri, ma non tengono conto dell’incertezza residua (<code>sigma</code>).</p></li>
-<li><p><strong>Distribuzione a posteriori di <code>y_rep</code></strong>: Questo approccio include non solo l’incertezza nei parametri <code>alpha</code> e <code>beta</code>, ma anche l’incertezza residua (<code>sigma</code>). La distribuzione di <code>y_rep</code> riflette la variabilità totale nel modello, inclusa la variabilità nei dati osservati. Pertanto, l’incertezza nelle predizioni è maggiore perché tiene conto di tutte le fonti di variabilità.</p></li>
-</ol>
-</section>
-</section>
-<section id="ricodifica-dei-dati" class="level2" data-number="52.5">
-<h2 data-number="52.5" class="anchored" data-anchor-id="ricodifica-dei-dati"><span class="header-section-number">52.5</span> Ricodifica dei dati</h2>
-<p>L’intercetta (<span class="math inline">\(\alpha\)</span>) corrisponde al valore atteso degli introiti quando la temperatura è di 0 gradi centigradi. Un valore negativo dell’intercetta indica che, in tali circostanze, ci aspettiamo una perdita. Tuttavia, possiamo ricodificare i dati in modo che l’intercetta abbia un’interpretazione più utile.</p>
-<section id="centratura-della-variabile-x" class="level3" data-number="52.5.1">
-<h3 data-number="52.5.1" class="anchored" data-anchor-id="centratura-della-variabile-x"><span class="header-section-number">52.5.1</span> Centratura della variabile $ x $</h3>
-<p>Centriamo la variabile <span class="math inline">\(x\)</span> (temperatura), sottraendo la media della temperatura (<span class="math inline">\(\bar{x}\)</span>) da ciascun valore di <span class="math inline">\(x\)</span>. In questo modo otteniamo la nuova variabile <span class="math inline">\(xc\)</span> la cui media è 0. La trasformazione è definita come:</p>
-<p><span class="math display">\[ xc_i = x_i - \bar{x} \]</span></p>
-<p>Dove <span class="math inline">\(\bar{x}\)</span> è la media della temperatura.</p>
-</section>
-<section id="interpretazione-della-nuova-intercetta" class="level3" data-number="52.5.2">
-<h3 data-number="52.5.2" class="anchored" data-anchor-id="interpretazione-della-nuova-intercetta"><span class="header-section-number">52.5.2</span> Interpretazione della nuova intercetta</h3>
-<p>Il valore 0 di <span class="math inline">\(xc\)</span> corrisponde al valore medio di <span class="math inline">\(x\)</span>. Dato che la retta di regressione passa per il punto <span class="math inline">\((\bar{x}, \bar{y})\)</span>, se utilizziamo <span class="math inline">\(xc\)</span> al posto di <span class="math inline">\(x\)</span>, la nuova intercetta (<span class="math inline">\(\alpha\)</span>) ci dirà qual è il valore atteso degli introiti (<span class="math inline">\(y\)</span>) quando la temperatura assume il suo valore medio (<span class="math inline">\(\bar{x}\)</span>).</p>
-<div id="cell-45" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:25.618842Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:25.614428Z&quot;}" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della temperatura media</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mean_temp <span class="op">=</span> df[<span class="st">"temperature"</span>].mean()</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione della variabile centrata</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"temp_c"</span>] <span class="op">=</span> df[<span class="st">"temperature"</span>] <span class="op">-</span> mean_temp</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-46" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:28.616378Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:28.608697Z&quot;}" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>stan_data2 <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(df[<span class="st">"temp_c"</span>]), <span class="st">"x"</span>: df[<span class="st">"temp_c"</span>], <span class="st">"y"</span>: df[<span class="st">"icecream"</span>]}</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{'N': 12, 'x': 0    -4.475
-1    -2.275
-2    -6.775
-3    -3.475
-4    -0.175
-5     3.425
-6     0.725
-7     6.425
-8     4.725
-9    -0.575
-10    3.925
-11   -1.475
-Name: temp_c, dtype: float64, 'y': 0     215
-1     325
-2     185
-3     332
-4     406
-5     522
-6     412
-7     614
-8     544
-9     421
-10    445
-11    408
-Name: icecream, dtype: int64}</code></pre>
-</div>
-</div>
-<div id="cell-47" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:32.624353Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:32.337744Z&quot;}" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fit4 <span class="op">=</span> model.sample(</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data2,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-48" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:35.265226Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:35.213028Z&quot;}" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit4, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div id="cell-37" class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit3, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="102">
 <div>
 <div>
 
@@ -1693,38 +1534,38 @@ Name: icecream, dtype: int64}</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">alpha</td>
-<td>402.356</td>
-<td>13.079</td>
-<td>377.577</td>
-<td>426.508</td>
-<td>0.166</td>
-<td>0.117</td>
-<td>6454.0</td>
-<td>4831.0</td>
+<td>1.126</td>
+<td>1.071</td>
+<td>-0.895</td>
+<td>3.084</td>
+<td>0.020</td>
+<td>0.014</td>
+<td>2803.0</td>
+<td>3269.0</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">beta</td>
-<td>30.093</td>
-<td>3.398</td>
-<td>23.867</td>
-<td>36.725</td>
-<td>0.047</td>
-<td>0.033</td>
-<td>5538.0</td>
-<td>4353.0</td>
+<td>0.277</td>
+<td>0.025</td>
+<td>0.230</td>
+<td>0.325</td>
+<td>0.000</td>
+<td>0.000</td>
+<td>2792.0</td>
+<td>3204.0</td>
 <td>1.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">sigma</td>
-<td>43.766</td>
-<td>11.651</td>
-<td>26.153</td>
-<td>66.129</td>
-<td>0.180</td>
-<td>0.128</td>
-<td>4437.0</td>
-<td>5027.0</td>
+<td>2.688</td>
+<td>0.223</td>
+<td>2.308</td>
+<td>3.129</td>
+<td>0.004</td>
+<td>0.003</td>
+<td>3466.0</td>
+<td>3325.0</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1734,36 +1575,308 @@ Name: icecream, dtype: int64}</code></pre>
 </div>
 </div>
 </div>
-<p>Notiamo che la media a posteriori di <span class="math inline">\(\beta\)</span> è rimasta invariata. Tuttavia, la media a posteriori di <span class="math inline">\(\alpha\)</span> è ora pari a 402,4 dollari. Questo rappresenta il valore atteso degli introiti del negozio di gelati quando la temperatura è al suo valore medio.</p>
+<p>Si noti che, utilizzando distribuzioni a priori debolmente informative, le stime a posteriori dei parametri sono rimaste praticamente invariate, indicando che la verosimiglianza ha prevalso sulle distribuzioni a priori.</p>
+<p>Costruiamo ora un grafico che rappresenta i valori osservati insieme alla linea di regressione stimata tramite il modello bayesiano. Al grafico aggiungeremo diverse linee di regressione, ciascuna orientata in base ai valori campionati casualmente dalla distribuzione a posteriori dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>.</p>
+<p>Poniamoci dunque il problema di recuperare le stime a posteriori dei parametri dall’oggetto <code>fit3</code>, creato dal metodo <code>sample()</code>. La <a href="https://mc-stan.org/cmdstanpy/users-guide/hello_world.html#accessing-the-results">User’s Guide</a> specifica quanto segue:</p>
+<blockquote class="blockquote">
+<p>The sampler outputs are the set of per-chain Stan CSV files, a non-standard CSV file format. Each data row of the Stan CSV file contains the per-iteration estimate of the Stan model parameters, transformed parameters, and generated quantities variables.</p>
+</blockquote>
+<p>Utilizzando il metodo <code>stan_variable()</code>, possiamo ottenere un <code>numpy.ndarray</code> la cui struttura corrisponde a quella delle variabili del programma Stan, ossia i valori della distribuzione a posteriori di ciascun parametro. In questo caso, otteniamo i valori della distribuzione a posteriori di <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span>:</p>
+<div id="cell-39" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:03.783546Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:03.776749Z&quot;}" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract posterior samples</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>alpha_samples <span class="op">=</span> fit3.stan_variable(<span class="st">"alpha"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>beta_samples <span class="op">=</span> fit3.stan_variable(<span class="st">"beta"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per esempio, stampiamo i primi 20 valori di <code>alpha_samples</code>:</p>
+<div id="cell-41" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(alpha_samples[<span class="dv">0</span>:<span class="dv">20</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1.84977   1.95471   3.53495   0.0202381 2.37552   1.73716   2.02379
+ 0.498677  1.16321   0.997901  1.1977    0.90099   1.62343   0.994237
+ 0.102088  0.648134  2.29379   0.833032  0.98      1.27316  ]</code></pre>
+</div>
+</div>
+<div id="cell-42" class="cell" data-execution_count="100">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(alpha_samples)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="100">
+<pre><code>8000</code></pre>
+</div>
+</div>
+<p>Avendo ottenuto 8.000 stime della distribuzione a posteriori dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> (2,000 valori per ciascuna delle 4 catene), possiamo calcolare la stima puntuale a posteriori dei parametri nel seguente modo:</p>
+<div id="cell-44" class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>mean_alpha <span class="op">=</span> np.mean(alpha_samples)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>mean_beta <span class="op">=</span> np.mean(beta_samples)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mean_alpha, mean_beta)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.125774793247875 0.276703434375</code></pre>
+</div>
+</div>
+<p>Possiamo sovrapporre la retta di regressione al grafico a dispersione utilizzando le stime a posteriori dei parametri.</p>
+<div id="cell-46" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:08.662836Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:07.723497Z&quot;}" data-execution_count="96">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot y vs x</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df[<span class="st">"state1"</span>] </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    x, df[<span class="st">"TA1"</span>], color<span class="op">=</span>color_fill, label<span class="op">=</span><span class="st">"Data"</span>, s<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># s is the size of the point</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw lines from posterior samples</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">300</span>):  <span class="co"># assuming you have at least 300 samples</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    plt.plot(</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        x,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        alpha_samples[i] <span class="op">+</span> beta_samples[i] <span class="op">*</span> x,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>        linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.05</span>,</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Line using the mean of posterior estimates</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>mean_alpha <span class="op">=</span> np.mean(alpha_samples)</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>mean_beta <span class="op">=</span> np.mean(beta_samples)</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>color_edge <span class="op">=</span> <span class="st">"#8f2727"</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    x,</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    mean_alpha <span class="op">+</span> mean_beta <span class="op">*</span> x,</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>color_edge,</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Mean Posterior Prediction"</span>,</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Additional plot formatting</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Regression with Posterior Samples"</span>)</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_03_reglin_bayesian_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Le numerose linee di regressione presenti nel grafico visualizzano la nostra incertezza riguardo l’inclinazione esatta della linea di regressione principale. Tuttavia, il grafico mostra chiaramente che questa incertezza è minima.</p>
+<p>Possiamo procedere in un altro modo per descrivere l’incertezza della stima. Anziché utilizzare le distribuzioni a posteriori di <code>alpha</code> e <code>beta</code>, possiamo utilizzare la distribuzione a posteriori di <code>y_rep</code>. Procedendo in questo modo otteniamo il grafico mostrato qui sotto.</p>
+<p>In questo plot, la linea rossa rappresenta la media delle predizioni a posteriori, mentre l’area grigia rappresenta l’intervallo di credibilità al 95%, mostrando l’incertezza delle predizioni del modello. Questo approccio fornisce una visione più completa e realistica dell’incertezza nelle predizioni rispetto all’approccio che utilizza solo <code>alpha</code> e <code>beta</code>.</p>
+<div id="cell-49" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:19.269136Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:18.848625Z&quot;}" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrai i campioni posteriori di y_rep</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>y_rep_samples <span class="op">=</span> fit3.stan_variable(<span class="st">"y_rep"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola la media e l'intervallo di credibilità (ad esempio, 95%) per y_rep</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>y_rep_mean <span class="op">=</span> np.mean(y_rep_samples, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>y_rep_lower <span class="op">=</span> np.percentile(y_rep_samples, <span class="fl">2.5</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>y_rep_upper <span class="op">=</span> np.percentile(y_rep_samples, <span class="fl">97.5</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot y vs x</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df[<span class="st">"state1"</span>]</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">"TA1"</span>]</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, y, color<span class="op">=</span>color_fill, label<span class="op">=</span><span class="st">"Dati"</span>, s<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della media delle predizioni a posteriori</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y_rep_mean, color<span class="op">=</span>color_edge, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Media delle predizioni"</span>)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot dell'intervallo di credibilità</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>plt.fill_between(</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    x,</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    y_rep_lower,</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    y_rep_upper,</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.3</span>,</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Intervallo di credibilità 95%"</span>,</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Formattazione del plot</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"State Anxiety"</span>)</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Tense Arousal"</span>)</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Incertezza delle predizioni del modello"</span>)</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_03_reglin_bayesian_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nel primo approccio, calcoliamo l’incertezza delle predizioni utilizzando le distribuzioni a posteriori di <code>alpha</code> e <code>beta</code>. Questo metodo consiste nel generare predizioni lineari per ciascun campione a posteriori di <code>alpha</code> e <code>beta</code>, tracciando quindi le linee di regressione risultanti. Questo ci permette di vedere come varia la linea di regressione in base alle incertezze nei parametri <code>alpha</code> e <code>beta</code>. Questo metodo visualizza come l’incertezza nei parametri del modello si traduce in incertezza nelle predizioni.</p>
+<p>Nel secondo approccio, descriviamo l’incertezza delle predizioni utilizzando direttamente la distribuzione a posteriori di <code>y_rep</code>. In questo caso, generiamo predizioni per ciascun valore osservato di <code>x</code> nel modello Stan, tenendo conto delle distribuzioni a posteriori dei parametri del modello. Questo metodo visualizza direttamente l’incertezza nelle predizioni, tenendo conto delle variazioni nei dati osservati e delle distribuzioni a posteriori dei parametri.</p>
+<p>Le due descrizioni dell’incertezza delle predizioni del modello sono diverse perché riflettono aspetti differenti della distribuzione a posteriori:</p>
+<ol type="1">
+<li><p><strong>Distribuzione a posteriori di <code>alpha</code> e <code>beta</code></strong>: Questo approccio considera solo l’incertezza nei parametri del modello (<code>alpha</code> e <code>beta</code>). Le linee di regressione tracciate variano in base a questi parametri, ma non tengono conto dell’incertezza residua (<code>sigma</code>).</p></li>
+<li><p><strong>Distribuzione a posteriori di <code>y_rep</code></strong>: Questo approccio include non solo l’incertezza nei parametri <code>alpha</code> e <code>beta</code>, ma anche l’incertezza residua (<code>sigma</code>). La distribuzione di <code>y_rep</code> riflette la variabilità totale nel modello, inclusa la variabilità nei dati osservati. Pertanto, l’incertezza nelle predizioni è maggiore perché tiene conto di tutte le fonti di variabilità.</p></li>
+</ol>
+<p>Certamente, ecco una versione migliorata del testo:</p>
 </section>
+</section>
+<section id="ricodifica-dei-dati" class="level2" data-number="52.5">
+<h2 data-number="52.5" class="anchored" data-anchor-id="ricodifica-dei-dati"><span class="header-section-number">52.5</span> Ricodifica dei dati</h2>
+<p>L’intercetta (<span class="math inline">\(\alpha\)</span>) rappresenta il valore atteso di Tense Arousal quando l’ansia di stato è pari a 0. Tuttavia, poiché l’ansia di stato è misurata su una scala ad intervalli, l’origine è arbitraria e non rappresenta l’assenza della proprietà. Lo stesso vale per la variabile Tense Arousal. Per entrambe le variabili, inoltre, anche l’unità di misura è arbitraria.</p>
+<p>In queste circostanze, una trasformazione utile è la standardizzazione. La standardizzazione fa sì che il valore 0 corrisponda alla media campionaria e che l’unità di misura sia una deviazione standard.</p>
+<p>Quando standardizziamo l’ansia di stato, il valore 0 della variabile standardizzata corrisponde alla media della variabile originale. Dato che la retta di regressione passa per il punto <span class="math inline">\((\bar{x}, \bar{y})\)</span>, utilizzando i valori standardizzati di <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>, la nuova intercetta (<span class="math inline">\(\alpha\)</span>) sarà 0. La pendenza (<span class="math inline">\(\beta\)</span>) avrà un’interpretazione utile: nel caso di dati standardizzati, la pendenza stima l’incremento (o decremento) atteso di <span class="math inline">\(y\)</span> quando <span class="math inline">\(x\)</span> aumenta di una deviazione standard.</p>
+<div id="cell-52" class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della media e della deviazione standard di state1</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>mean_state1 <span class="op">=</span> np.mean(df[<span class="st">"state1"</span>])</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>std_state1 <span class="op">=</span> np.std(df[<span class="st">"state1"</span>])</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardizzazione </span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"state1_z"</span>] <span class="op">=</span> (df[<span class="st">"state1"</span>] <span class="op">-</span> mean_state1) <span class="op">/</span> std_state1</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della media e della deviazione standard di TA1</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>mean_ta1 <span class="op">=</span> np.mean(df[<span class="st">"TA1"</span>])</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>std_ta1 <span class="op">=</span> np.std(df[<span class="st">"TA1"</span>])</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardizzazione </span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"ta1_z"</span>] <span class="op">=</span> (df[<span class="st">"TA1"</span>] <span class="op">-</span> mean_ta1) <span class="op">/</span> std_ta1</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_11934/3940630615.py:5: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df["state1_z"] = (df["state1"] - mean_state1) / std_state1
+/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_11934/3940630615.py:11: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  df["ta1_z"] = (df["TA1"] - mean_ta1) / std_ta1</code></pre>
+</div>
+</div>
+<div id="cell-53" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:28.616378Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:28.608697Z&quot;}" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>stan_data2 <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(df[<span class="st">"state1_z"</span>]), <span class="st">"x"</span>: df[<span class="st">"state1_z"</span>], <span class="st">"y"</span>: df[<span class="st">"ta1_z"</span>]}</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'N': 78, 'x': 0    -0.042127
+1    -1.491782
+2    -1.008563
+3    -1.298494
+4     0.537735
+        ...   
+73   -0.138770
+74    1.794103
+75   -1.685069
+76   -0.815276
+77   -0.815276
+Name: state1_z, Length: 78, dtype: float64, 'y': 0    -0.424575
+1    -1.995334
+2    -1.209955
+3    -1.209955
+4    -0.162782
+        ...   
+73    0.099012
+74    1.931564
+75   -0.686368
+76   -0.686368
+77   -1.733541
+Name: ta1_z, Length: 78, dtype: float64}</code></pre>
+</div>
+</div>
+<div id="cell-54" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:32.624353Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:32.337744Z&quot;}" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fit4 <span class="op">=</span> model.sample(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data2,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-55" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:35.265226Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:35.213028Z&quot;}" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit4, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="87">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">alpha</td>
+<td>-0.001</td>
+<td>0.079</td>
+<td>-0.149</td>
+<td>0.152</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>8039.0</td>
+<td>5594.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">beta</td>
+<td>0.722</td>
+<td>0.081</td>
+<td>0.564</td>
+<td>0.868</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>7720.0</td>
+<td>5935.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>0.710</td>
+<td>0.058</td>
+<td>0.604</td>
+<td>0.821</td>
+<td>0.001</td>
+<td>0.000</td>
+<td>7766.0</td>
+<td>5919.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Quando l’ansia di stato aumenta di una deviazione standard Tense Arousal aumenta, in media, di 0.725 deviazioni standard.</p>
 </section>
 <section id="distribizioni-a-priori-sui-parametri" class="level2" data-number="52.6">
 <h2 data-number="52.6" class="anchored" data-anchor-id="distribizioni-a-priori-sui-parametri"><span class="header-section-number">52.6</span> Distribizioni a priori sui parametri</h2>
 <p>Spefichiamo ora le seguenti distribuzioni a priori debolmente informative sui parametri del modello.</p>
 <ol type="1">
-<li><strong>Intercetta (<span class="math inline">\(\alpha\)</span>)</strong>:
+<li><p><strong>Intercetta (<span class="math inline">\(\alpha\)</span>)</strong>:</p>
 <ul>
-<li><span class="math inline">\(\alpha \sim \text{Normale}(0, 100)\)</span></li>
-<li>La scelta di una deviazione standard ampia (100) riflette l’incertezza riguardo al valore iniziale dell’intercetta. Si crede che l’intercetta possa essere qualsiasi valore vicino a 0, ma con una variazione significativa.</li>
+<li><span class="math inline">\(\alpha \sim \text{Normale}(0, 1)\)</span></li>
+<li>La scelta di una deviazione standard ampia (2) riflette l’incertezza riguardo al valore iniziale dell’intercetta. Si crede che l’intercetta possa essere qualsiasi valore vicino a 0, ma con una variazione significativa.</li>
 </ul></li>
-<li><strong>Coefficiente Angolare (<span class="math inline">\(\beta\)</span>)</strong>:
+<li><p><strong>Coefficiente Angolare (<span class="math inline">\(\beta\)</span>)</strong>:</p>
 <ul>
-<li><span class="math inline">\(\beta \sim \text{Normale}(0, 50)\)</span></li>
-<li>Un’ampia deviazione standard (50) per <span class="math inline">\(\beta\)</span> permette di incorporare l’incertezza riguardo all’influenza della temperatura sui ricavi del gelato. Questo prior permette che <span class="math inline">\(\beta\)</span> possa essere sia positivo che negativo con una vasta gamma di valori.</li>
+<li><span class="math inline">\(\beta \sim \text{Normale}(0, 2)\)</span></li>
+<li>Un’ampia deviazione standard (2) per <span class="math inline">\(\beta\)</span> permette di incorporare l’incertezza riguardo all’influenza della temperatura sui ricavi del gelato. Questo prior permette che <span class="math inline">\(\beta\)</span> possa essere sia positivo che negativo con una vasta gamma di valori.</li>
 </ul></li>
-<li><strong>Deviazione Standard Residua (<span class="math inline">\(\sigma\)</span>)</strong>:
+<li><p><strong>Deviazione Standard Residua (<span class="math inline">\(\sigma\)</span>)</strong>:</p>
 <ul>
-<li><span class="math inline">\(\sigma \sim \text{Cauchy}^+(0, 5)\)</span></li>
-<li>La distribuzione Half-Cauchy è scelta perché è debolmente informativa e adatta per i parametri di scala come la deviazione standard residua. La scala di 5 consente a <span class="math inline">\(\sigma\)</span> di assumere una vasta gamma di valori positivi, riflettendo l’incertezza riguardo alla variabilità residua.</li>
+<li><span class="math inline">\(\sigma \sim \text{Cauchy}^+(0, 2)\)</span></li>
+<li>La distribuzione Half-Cauchy è scelta perché è debolmente informativa e adatta per i parametri di scala come la deviazione standard residua. La scala di 2 consente a <span class="math inline">\(\sigma\)</span> di assumere una vasta gamma di valori positivi, riflettendo l’incertezza riguardo alla variabilità residua.</li>
 </ul></li>
 </ol>
 <section id="interpretazione-delle-distribuzioni-a-priori" class="level3" data-number="52.6.1">
 <h3 data-number="52.6.1" class="anchored" data-anchor-id="interpretazione-delle-distribuzioni-a-priori"><span class="header-section-number">52.6.1</span> Interpretazione delle Distribuzioni a Priori</h3>
 <p>Queste distribuzioni a priori rappresentano le credenze iniziali riguardanti i parametri del modello prima di osservare i dati. Le distribuzioni normali per <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> con deviazioni standard ampie permettono una grande flessibilità, mentre la distribuzione Half-Cauchy per <span class="math inline">\(\sigma\)</span> è scelta per la sua capacità di gestire bene i parametri di scala. Queste scelte garantiscono che il modello sia debolmente informativo, permettendo ai dati osservati di avere un’influenza significativa sulle stime posteriori dei parametri.</p>
-<div id="cell-51" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:39.597858Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:39.459995Z&quot;}" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"icecream_model_prior.stan"</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-58" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:39.597858Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:39.459995Z&quot;}" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"arousal_model_prior.stan"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>data {
   int&lt;lower=1&gt; N; // numero totale di osservazioni 
@@ -1777,9 +1890,9 @@ parameters {
 }
 model {
   // distribuzioni a priori
-  alpha ~ normal(0, 100);
-  beta ~ normal(0, 50);
-  sigma ~ cauchy(0, 5);
+  alpha ~ normal(0, 2);
+  beta ~ normal(0, 2);
+  sigma ~ cauchy(0, 2);
   // verosimiglianza
   y ~ normal(alpha + beta * x, sigma);
 }
@@ -1787,20 +1900,20 @@ model {
 </div>
 </div>
 <p>Adattiamo il nuovo modello ai dati.</p>
-<div id="cell-53" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:42.838670Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:42.566294Z&quot;}" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fit5 <span class="op">=</span> model.sample(</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data2,</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-60" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:42.838670Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:42.566294Z&quot;}" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fit5 <span class="op">=</span> model.sample(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data2,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esaminiamo le distribuzioni a posteriori dei parametri.</p>
-<div id="cell-55" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:45.375219Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:45.327353Z&quot;}" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit5, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="26">
+<div id="cell-62" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:45.375219Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:45.327353Z&quot;}" data-execution_count="90">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit5, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="90">
 <div>
 <div>
 
@@ -1823,38 +1936,38 @@ model {
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">alpha</td>
-<td>396.790</td>
-<td>12.114</td>
-<td>373.733</td>
-<td>419.045</td>
-<td>0.187</td>
-<td>0.132</td>
-<td>4518.0</td>
-<td>3481.0</td>
+<td>-0.000</td>
+<td>0.081</td>
+<td>-0.152</td>
+<td>0.151</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>8115.0</td>
+<td>5652.0</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">beta</td>
-<td>30.015</td>
-<td>2.996</td>
-<td>24.402</td>
-<td>35.673</td>
-<td>0.039</td>
-<td>0.028</td>
-<td>6018.0</td>
-<td>4754.0</td>
+<td>0.723</td>
+<td>0.079</td>
+<td>0.576</td>
+<td>0.876</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>7440.0</td>
+<td>6078.0</td>
 <td>1.0</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">sigma</td>
-<td>39.558</td>
-<td>9.771</td>
-<td>24.252</td>
-<td>57.630</td>
-<td>0.164</td>
-<td>0.120</td>
-<td>4130.0</td>
-<td>3957.0</td>
+<td>0.709</td>
+<td>0.059</td>
+<td>0.603</td>
+<td>0.822</td>
+<td>0.001</td>
+<td>0.000</td>
+<td>8278.0</td>
+<td>5413.0</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1869,39 +1982,35 @@ model {
 <section id="posterior-predictive-check" class="level3" data-number="52.6.2">
 <h3 data-number="52.6.2" class="anchored" data-anchor-id="posterior-predictive-check"><span class="header-section-number">52.6.2</span> Posterior-predictive check</h3>
 <p>Generiamo ora un PPC plot per confrontare le predizioni del modello con i dati osservati.</p>
-<div id="cell-58" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:49.537296Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:49.418999Z&quot;}" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"icecream_model_3.stan"</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-65" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:49.537296Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:49.418999Z&quot;}" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"arousal_model_3.stan"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-59" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:52.260364Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:51.992849Z&quot;}" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fit6 <span class="op">=</span> model.sample(</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data2,</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-66" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:52.260364Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:51.992849Z&quot;}" data-execution_count="92">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fit6 <span class="op">=</span> model.sample(</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data2,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Per creare un PPC plot dobbiamo creare un oggetto InferenceData nel quale i dati sono strutturati come si aspetta ArviZ:</p>
-<div id="cell-61" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:54.820683Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:54.778882Z&quot;}" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> az.from_cmdstanpy(</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    posterior<span class="op">=</span>fit6,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    posterior_predictive<span class="op">=</span><span class="st">"y_rep"</span>,</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: df[<span class="st">"icecream"</span>]},</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-68" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:02:54.820683Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:54.778882Z&quot;}" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> az.from_cmdstanpy(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    posterior<span class="op">=</span>fit6,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    posterior_predictive<span class="op">=</span><span class="st">"y_rep"</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: df[<span class="st">"ta1_z"</span>]},</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Avendo generato l’oggetto <code>idata</code>, possiamo ora creare il pp-check plot.</p>
-<div id="cell-63" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:11.153974Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:58.078264Z&quot;}" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(idata, data_pairs<span class="op">=</span>{<span class="st">"y"</span>: <span class="st">"y_rep"</span>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/opt/anaconda3/envs/cmdstan_env/lib/python3.12/site-packages/IPython/core/events.py:82: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
-  func(*args, **kwargs)</code></pre>
-</div>
+<div id="cell-70" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:11.153974Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:02:58.078264Z&quot;}" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(idata, data_pairs<span class="op">=</span>{<span class="st">"y"</span>: <span class="st">"y_rep"</span>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="05_03_reglin_bayesian_files/figure-html/cell-30-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="05_03_reglin_bayesian_files/figure-html/cell-34-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1915,13 +2024,11 @@ model {
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-66" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:16.259171Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:03:16.203222Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>m  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-73" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:16.259171Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:03:16.203222Z&quot;}" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>m  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The watermark extension is already loaded. To reload it, use:
-  %reload_ext watermark
-Last updated: Mon Jul 22 2024
+<pre><code>Last updated: Tue Jul 30 2024
 
 Python implementation: CPython
 Python version       : 3.12.4
@@ -1929,19 +2036,20 @@ IPython version      : 8.26.0
 
 Compiler    : Clang 16.0.6 
 OS          : Darwin
-Release     : 23.5.0
+Release     : 23.6.0
 Machine     : arm64
 Processor   : arm
 CPU cores   : 8
 Architecture: 64bit
 
+matplotlib: 3.9.1
+arviz     : 0.18.0
+cmdstanpy : 1.2.4
 pandas    : 2.2.2
 logging   : 0.5.1.2
-numpy     : 1.26.4
-matplotlib: 3.9.1
-cmdstanpy : 1.2.4
-arviz     : 0.18.0
 pingouin  : 0.5.4
+seaborn   : 0.13.2
+numpy     : 1.26.4
 </code></pre>
 </div>
 </div>
@@ -1962,6 +2070,9 @@ Ioannidis, John PA. 2005. <span>«Why most published research findings are false
 </div>
 <div id="ref-McElreath_rethinking" class="csl-entry" role="listitem">
 McElreath, Richard. 2020. <em>Statistical rethinking: <span>A</span> <span>Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. 2nd Edition. Boca Raton, Florida: CRC Press.
+</div>
+<div id="ref-rafaeli2006premature" class="csl-entry" role="listitem">
+Rafaeli, Eshkol, e William Revelle. 2006. <span>«A premature consensus: are happiness and sadness truly opposite affects?»</span> <em>Motivation and Emotion</em> 30: 1–12.
 </div>
 <div id="ref-stigler1986" class="csl-entry" role="listitem">
 Stigler, Stephen. 1986. <em>The History of Statistics</em>. Massachusetts: Belknap Harvard.

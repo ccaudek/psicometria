@@ -675,6 +675,18 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">La Crisi della Replicabilità dei Risultati della Ricerca</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -882,14 +894,15 @@ window.Quarto = {
 <p><strong>Prerequisiti</strong></p>
 <p><strong>Concetti e competenze chiave</strong></p>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="5f5edec7-e155-4ae9-b434-c06e04b45282" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:11:19.579451Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:11:19.575505Z&quot;}" data-execution_count="1">
+<div id="5f5edec7-e155-4ae9-b434-c06e04b45282" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:11:19.579451Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:11:19.575505Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.integrate <span class="im">import</span> trapezoid</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.integrate <span class="im">import</span> trapezoid</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fa235fdb-5113-48a8-89c5-a2038f1120a5" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:11:22.317075Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:11:22.308111Z&quot;}" data-execution_count="2">
+<div id="fa235fdb-5113-48a8-89c5-a2038f1120a5" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:11:22.317075Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:11:22.308111Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"distribuzioni_coniugate_1"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
@@ -986,7 +999,7 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 <p>In altre parole, ai partecipanti allo studio veniva dato il compito di testare un altro partecipante (che in realtà era un attore addestrato) sulla loro capacità di memorizzare una serie di item. Se l’attore non ricordava un item, al partecipante veniva ordinato di somministrare una scossa all’attore e di aumentare il livello della scossa con ogni fallimento successivo. I partecipanti non erano consapevoli del fatto che le scosse fossero finte e che l’attore stesse solo fingendo di provare dolore dalla scossa.</p>
 <p>Nello studio di Milgram, 26 partecipanti su 40 hanno somministrato scosse al livello “Pericolo: Scossa Grave”. Il problema richiede di costruire la distribuzione a posteriori della probabilità <span class="math inline">\(\theta\)</span> di infliggere una scossa a l livello “Pericolo: Scossa Grave”, ipotizzando che uno studio precedente aveva stabilito che <span class="math inline">\(\theta\)</span> segue una distribuzione Beta(1, 10).</p>
 <p>Iniziamo a fornire una rappresentazione grafica della distribuzione a priori.</p>
-<div id="0added47-e06c-4448-8011-ed3883e812cd" class="cell" data-execution_count="4">
+<div id="0added47-e06c-4448-8011-ed3883e812cd" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Impostazione dei parametri della distribuzione Beta</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>beta_val <span class="op">=</span> <span class="dv">10</span></span>
@@ -998,12 +1011,13 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>beta_pdf <span class="op">=</span> stats.beta.pdf(x_values, alpha, beta_val)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della densità di probabilità</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plt.plot(x_values, beta_pdf, label<span class="op">=</span><span class="st">'Beta(1, 10)'</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione Beta(1, 10)'</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità di probabilità'</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#b97c7c"</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.plot(x_values, beta_pdf, label<span class="op">=</span><span class="st">'Beta(1, 10)'</span>, color<span class="op">=</span>color_fill)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione Beta(1, 10)'</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità di probabilità'</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1013,7 +1027,7 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 </div>
 </div>
 <p>La distribuzione a posteriori è una Beta di parametri aggiornati</p>
-<div id="10cc6781-4718-4358-b9f6-be24ce10708e" class="cell" data-execution_count="5">
+<div id="10cc6781-4718-4358-b9f6-be24ce10708e" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">26</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">40</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1024,11 +1038,11 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>beta_post <span class="op">=</span> beta_prior <span class="op">+</span> n <span class="op">-</span> y</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>alpha_post, beta_post</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>(27, 24)</code></pre>
 </div>
 </div>
-<div id="2becca35-d790-445f-9128-95fa06553edd" class="cell" data-execution_count="6">
+<div id="2becca35-d790-445f-9128-95fa06553edd" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione di valori x per il plot</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x_values <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1036,7 +1050,7 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>beta_pdf <span class="op">=</span> stats.beta.pdf(x_values, alpha_post, beta_post)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della densità di probabilità</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.plot(x_values, beta_pdf, label<span class="op">=</span><span class="st">'Beta(27, 24)'</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.plot(x_values, beta_pdf, label<span class="op">=</span><span class="st">'Beta(27, 24)'</span>, color<span class="op">=</span>color_fill)</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione Beta(1, 10)'</span>)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>)</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Densità di probabilità'</span>)</span>
@@ -1079,17 +1093,17 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 </div>
 </div>
 <p>Svolgiamo ora il problema usando il metodo basato su griglia. Definiamo la griglia di interesse:</p>
-<div id="eca744eb-7f53-4d85-95ae-6dfc27f09056" class="cell" data-execution_count="11">
+<div id="eca744eb-7f53-4d85-95ae-6dfc27f09056" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7c2345ed-db85-48c6-b81a-5a9ac566dbff" class="cell" data-execution_count="12">
+<div id="7c2345ed-db85-48c6-b81a-5a9ac566dbff" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>alpha_prior <span class="op">=</span> <span class="dv">1</span>  </span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>beta_prior <span class="op">=</span> <span class="dv">10</span>   </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della PDF della distribuzione Beta per i valori x</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>prior <span class="op">=</span> stats.beta.pdf(theta, alpha_prior, beta_prior)</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.vlines(theta, <span class="dv">0</span>, prior <span class="op">/</span> np.<span class="bu">sum</span>(prior), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.vlines(theta, <span class="dv">0</span>, prior <span class="op">/</span> np.<span class="bu">sum</span>(prior), color<span class="op">=</span>color_fill, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>)</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a priori'</span>)</span>
@@ -1104,10 +1118,10 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 </div>
 </div>
 <p>Creiamo la verosimiglianza.</p>
-<div id="99d03c84-393a-4d70-a3cb-0899aa8bb7e6" class="cell" data-execution_count="13">
+<div id="99d03c84-393a-4d70-a3cb-0899aa8bb7e6" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>lk <span class="op">=</span> stats.binom.pmf(y, n, theta)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>plt.vlines(theta, <span class="dv">0</span>, lk <span class="op">/</span> np.<span class="bu">sum</span>(lk), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>plt.vlines(theta, <span class="dv">0</span>, lk <span class="op">/</span> np.<span class="bu">sum</span>(lk), color<span class="op">=</span>color_fill, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>)</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>)</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Verosimiglianza'</span>)</span>
@@ -1121,10 +1135,10 @@ B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)}.
 </div>
 </div>
 </div>
-<div id="ff23eedf-f72d-41fb-bcd6-62cda2aab1d3" class="cell" data-execution_count="14">
+<div id="ff23eedf-f72d-41fb-bcd6-62cda2aab1d3" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>post <span class="op">=</span> (prior <span class="op">*</span> lk) <span class="op">/</span> np.<span class="bu">sum</span>(prior <span class="op">*</span> lk)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>plt.vlines(theta, <span class="dv">0</span>, post, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>plt.vlines(theta, <span class="dv">0</span>, post, color<span class="op">=</span>color_fill, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'theta'</span>)</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>)</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuzione a posteriori'</span>)</span>
