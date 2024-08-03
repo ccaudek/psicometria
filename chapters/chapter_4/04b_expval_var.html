@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analisi dei dati per psicologi - 27&nbsp; Proprietà delle variabili casuali</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/chapter_4/04c_sampling_distr.html" rel="next">
+<link href="../../chapters/chapter_4/04a_random_var.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_4/introduction_chapter_3.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_4/04b_expval_var.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi dei dati per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/introduction_chapter_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/introduction_chapter_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/03_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">L’analisi dei dati psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Le fasi del progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/02_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/06_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/introduction_chapter_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01a_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01b_prob_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01c_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Distribuzioni di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/02_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/03_bayes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04a_random_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04b_expval_var.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04c_sampling_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/05_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/06_density_func.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/07_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/08_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/09_likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/10_grid_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Inferenza bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/introduction_chapter_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/02_subj_prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/03_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/04_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/06_balance_prior_post.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/10_metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/15_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/16_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/17_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/18_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/19_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/22_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/23_stan_two_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/24_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/25_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/introduction_chapter_5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_05a_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_06_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_07_robust_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_08_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_09_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_21_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_22_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_23_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_24_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_25_stan_rct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_30_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_31_kl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_32_stan_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_35_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_40_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Inferenza frequentista</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/introduction_chapter_6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/02_conf_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/05_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">La Crisi della Replicabilità dei Risultati della Ricerca</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/06_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/07_effect_size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/09_s_m_errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Crisi della replicabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/10_integrity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a12_sum_notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a20_kde_plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Kernel Density Estimation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a30_prob_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Esercizi di probabilità discreta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a40_rng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Generazione di numeri casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a45_mcmc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a46_stan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a51_reglin_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a100_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Soluzioni degli Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#valore-atteso" id="toc-valore-atteso" class="nav-link" data-scroll-target="#valore-atteso"><span class="header-section-number">27.1</span> Valore atteso</a>
+  <ul class="collapse">
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">27.1.1</span> Interpretazione</a></li>
+  <li><a href="#proprietà-del-valore-atteso" id="toc-proprietà-del-valore-atteso" class="nav-link" data-scroll-target="#proprietà-del-valore-atteso"><span class="header-section-number">27.1.2</span> Proprietà del valore atteso</a></li>
+  <li><a href="#variabili-casuali-continue" id="toc-variabili-casuali-continue" class="nav-link" data-scroll-target="#variabili-casuali-continue"><span class="header-section-number">27.1.3</span> Variabili casuali continue</a></li>
+  </ul></li>
+  <li><a href="#varianza" id="toc-varianza" class="nav-link" data-scroll-target="#varianza"><span class="header-section-number">27.2</span> Varianza</a>
+  <ul class="collapse">
+  <li><a href="#formula-alternativa-per-la-varianza" id="toc-formula-alternativa-per-la-varianza" class="nav-link" data-scroll-target="#formula-alternativa-per-la-varianza"><span class="header-section-number">27.2.1</span> Formula alternativa per la varianza</a></li>
+  <li><a href="#proprietà" id="toc-proprietà" class="nav-link" data-scroll-target="#proprietà"><span class="header-section-number">27.2.2</span> Proprietà</a></li>
+  <li><a href="#variabili-casuali-continue-1" id="toc-variabili-casuali-continue-1" class="nav-link" data-scroll-target="#variabili-casuali-continue-1"><span class="header-section-number">27.2.3</span> Variabili casuali continue</a></li>
+  </ul></li>
+  <li><a href="#deviazione-standard" id="toc-deviazione-standard" class="nav-link" data-scroll-target="#deviazione-standard"><span class="header-section-number">27.3</span> Deviazione standard</a></li>
+  <li><a href="#standardizzazione" id="toc-standardizzazione" class="nav-link" data-scroll-target="#standardizzazione"><span class="header-section-number">27.4</span> Standardizzazione</a></li>
+  <li><a href="#momenti-di-variabili-casuali" id="toc-momenti-di-variabili-casuali" class="nav-link" data-scroll-target="#momenti-di-variabili-casuali"><span class="header-section-number">27.5</span> Momenti di variabili casuali</a></li>
+  <li><a href="#alcuni-esempi-in-python" id="toc-alcuni-esempi-in-python" class="nav-link" data-scroll-target="#alcuni-esempi-in-python"><span class="header-section-number">27.6</span> Alcuni esempi in Python</a></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">27.7</span> Commenti e considerazioni finali</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">27.8</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_4/04b_expval_var.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_4/introduction_chapter_3.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_4/04b_expval_var.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-random-variables" class="quarto-section-identifier"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p>Prima di affrontare il presente capitolo, è essenziale leggere la sezione <a href="../chapter_8/a15_calculus.html" class="quarto-xref"><span>Appendice K</span></a>.</p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<ul>
+<li>Approfondire i concetti di valore atteso e varianza per variabili casuali discrete.</li>
+<li>Acquisire familiarità con le principali proprietà associate al valore atteso e alla varianza.</li>
+<li>Estendere la comprensione di valore atteso e varianza alle variabili casuali continue.</li>
+<li>Utilizzare Python per calcolare effettivamente queste metriche.</li>
+<li>Interpretare criticamente i risultati ottenuti dalle analisi.</li>
+</ul>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="05f4ac5e-c9b1-4717-be42-f8981db9788e" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats <span class="im">as</span> stats</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9513e544-b773-46cb-808c-94d1f00a3df7" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"expval_var"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Una variabile casuale rappresenta un elemento centrale nella teoria della probabilità e nelle sue applicazioni statistiche. Dal punto di vista formale, una variabile casuale è definita come una funzione che associa elementi di uno spazio campionario <span class="math inline">\(S\)</span> a valori in un sottoinsieme dei numeri reali <span class="math inline">\(\mathbb{R}\)</span>. Questa definizione consente di quantificare numericamente gli esiti di un fenomeno aleatorio, attribuendo un valore specifico ad ogni possibile risultato.</p>
+<p>Le variabili casuali possono essere classificate in due categorie principali: le variabili casuali discrete e quelle continue. Le variabili casuali discrete sono caratterizzate dal fatto di assumere valori in un insieme finito o al più numerabile, mentre le variabili casuali continue si distinguono per la loro capacità di assumere un’infinità di valori all’interno di un intervallo continuo.</p>
+<p>Con il concetto di variabile casuale ben definito, emergono questioni relative alla descrizione dell’insieme completo dei possibili esiti e delle probabilità associate a ciascun esito. Queste considerazioni portano alla nozione di “distribuzione” di una variabile casuale. Per le variabili casuali discrete, la distribuzione è una funzione che elenca tutti i possibili valori che la variabile può assumere, insieme alle probabilità corrispondenti a ciascun valore. In questo modo, la distribuzione di una variabile casuale fornisce un quadro completo delle sue caratteristiche probabilistiche, consentendo analisi e inferenze statistiche.</p>
+</section>
+<section id="valore-atteso" class="level2" data-number="27.1">
+<h2 data-number="27.1" class="anchored" data-anchor-id="valore-atteso"><span class="header-section-number">27.1</span> Valore atteso</h2>
+<p>Spesso è utile sintetizzare la distribuzione di una variabile casuale tramite indicatori caratteristici. Questi indicatori permettono di cogliere le caratteristiche principali della distribuzione, come la posizione (cioè il baricentro) e la variabilità (cioè la dispersione attorno ad un centro). In questo modo, si può avere una descrizione sintetica della distribuzione di probabilità della variabile casuale. In questo capitolo introdurremo i concetti di valore atteso e di varianza di una variabile casule.</p>
+<p>Quando vogliamo conoscere il comportamento tipico di una variabile casuale spesso vogliamo sapere qual è il suo “valore tipico”. La nozione di “valore tipico”, tuttavia, è ambigua. Infatti, essa può essere definita in almeno tre modi diversi:</p>
+<ul>
+<li>la <em>media</em> (somma dei valori divisa per il numero dei valori),</li>
+<li>la <em>mediana</em> (il valore centrale della distribuzione, quando la variabile è ordinata in senso crescente o decrescente),</li>
+<li>la <em>moda</em> (il valore che ricorre più spesso).</li>
+</ul>
+<p>Per esempio, la media di <span class="math inline">\(\{3, 1, 4, 1, 5\}\)</span> è <span class="math inline">\(\frac{3+1+4+1+5}{5} = 2.8\)</span>, la mediana è <span class="math inline">\(3\)</span> e la moda è <span class="math inline">\(1\)</span>. Tuttavia, la teoria delle probabilità si occupa di variabili casuali piuttosto che di sequenze di numeri. Diventa dunque necessario precisare che cosa intendiamo per “valore tipico” quando facciamo riferimento alle variabili casuali. Giungiamo così alla seguente definizione.</p>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 27.1</strong></span> Sia <span class="math inline">\(Y\)</span> è una variabile casuale discreta che assume i valori <span class="math inline">\(y_1, \dots, y_n\)</span> con distribuzione <span class="math inline">\(P(Y = y_i) = p(y_i)\)</span>. Per definizione il <em>valore atteso</em> di <span class="math inline">\(Y\)</span>, <span class="math inline">\(\mathbb{E}(Y)\)</span>, è</p>
+<p><span id="eq-expval-discr"><span class="math display">\[
+\mathbb{E}(Y) = \sum_{i=1}^n y_i \cdot p(y_i).
+\tag{27.1}\]</span></span></p>
+</div>
+<p>A parole: il valore atteso (o speranza matematica, o aspettazione, o valor medio) di una variabile casuale è definito come la somma di tutti i valori che la variabile casuale può prendere, ciascuno pesato dalla probabilità con cui il valore è preso.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 27.1</strong></span> Calcoliamo il valore atteso della variabile casuale <span class="math inline">\(Y\)</span> corrispondente al lancio di una moneta equilibrata (testa: <em>Y</em> = 1; croce: <em>Y</em> = 0).</p>
+<p><span class="math display">\[
+\mathbb{E}(Y) = \sum_{i=1}^{2} y_i \cdot P(y_i) = 0 \cdot \frac{1}{5} + 1 \cdot \frac{1}{5} = 0.5.
+\]</span></p>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 27.2</strong></span> Calcoliamo il valore atteso della variabile casuale <span class="math inline">\(X\)</span> corrispondente alla somma dei punti ottenuti dal lancio di due dadi equilibrati a sei facce.</p>
+<p>Abbiamo visto nel <a href="01a_intro_prob.html" class="quarto-xref"><span>Capitolo 21</span></a> che <span class="math inline">\(X\)</span> può assumere i valori [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] con distribuzione di massa di probabilità pari a [1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 3/36, 2/36, 1/36]. Applicando l’<a href="#eq-expval-discr" class="quarto-xref">Equazione&nbsp;<span>27.1</span></a> otteniamo:</p>
+<p><span class="math display">\[
+\mathbb{E}(X) = \sum_{i=1}^{11} x_i \cdot P(x_i) = 2 \cdot \frac{1}{36} + 3 \cdot \frac{2}{36} + \dots + 12 \cdot \frac{1}{36} = 7.0.
+\]</span></p>
+<p>Svolgiamo ora l’esercizio in Python.</p>
+<p>Definisco i valori della variabile casuale <span class="math inline">\(X\)</span> e li trasformiamo in un array NumPy:</p>
+<div id="c57c3730-64d8-484c-a74c-2bb40ddddd56" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array(<span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">13</span>)))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>array([ 2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12])</code></pre>
+</div>
+</div>
+<p>Per trovare la distribuzione di massa della variabile <span class="math inline">\(X\)</span> ripeto qui il codice che abbiamo usato nel <a href="01a_intro_prob.html" class="quarto-xref"><span>Capitolo 21</span></a>.</p>
+<div id="897ac085-ad88-471e-aa1a-3640d93b7d63" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> r <span class="cf">for</span> j <span class="kw">in</span> r]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>px <span class="op">=</span> []</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">13</span>):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    event <span class="op">=</span> [roll <span class="cf">for</span> roll <span class="kw">in</span> sample <span class="cf">if</span> <span class="bu">sum</span>(roll) <span class="op">==</span> i]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    px.append(<span class="bu">len</span>(event) <span class="op">/</span> <span class="bu">len</span>(sample))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>px <span class="op">=</span> np.array(px)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>px</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>array([0.02777778, 0.05555556, 0.08333333, 0.11111111, 0.13888889,
+       0.16666667, 0.13888889, 0.11111111, 0.08333333, 0.05555556,
+       0.02777778])</code></pre>
+</div>
+</div>
+<p>Calcolo ora il valore atteso della <span class="math inline">\(X\)</span> usando l’eq. {eq}<code>eq-expval-discr</code>:</p>
+<div id="bfa473a9-766a-4673-9b99-c8687c075ebd" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ex <span class="op">=</span> np.<span class="bu">sum</span>(x <span class="op">*</span> px)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ex.<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>7.0</code></pre>
+</div>
+</div>
+<p>In alternativa, posso usare le funzioni del modulo <code>rv_discrete</code> della libreria <code>stats</code>:</p>
+<div id="383ac5f2-a633-4f4f-afea-4be83bb8ecc7" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">2</span>, <span class="dv">13</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>px <span class="op">=</span> np.array([<span class="dv">1</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">3</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">4</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">5</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">6</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">5</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">4</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">3</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">36</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">36</span>])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> stats.rv_discrete(values<span class="op">=</span>(x, px))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Una volta definito l’oggetto <span class="math inline">\(X\)</span> con <code>rv_discrete()</code>, il valore atteso viene ritornato dalla funzione <code>expect()</code>:</p>
+<div id="aee82d07-b562-43da-b653-91b8ede0f41a" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>x_ev <span class="op">=</span> X.expect()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(x_ev, <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>7.0</code></pre>
+</div>
+</div>
+</div>
+<section id="interpretazione" class="level3" data-number="27.1.1">
+<h3 data-number="27.1.1" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">27.1.1</span> Interpretazione</h3>
+<p>Il valore atteso corrisponde alla media aritmetica di un grande numero di realizzazioni indipendenti della variabile casuale.</p>
+<p>Per fare un esempio, ritorniamo all’esempio precedente relativo al lancio di due dadi bilanciati a sei facce nel quale <span class="math inline">\(X\)</span> rappresenta la “somma dei due dadi”. Per interpretare il valore atteso, simuliamo un grande numero di realizzazioni indipendenti della <span class="math inline">\(X\)</span> mediante la funzione <code>random.choice()</code> della libreria NumPy. Tale funzione prende come argomenti i valori della variabile casuale, il numero di ripetizioni indipedenti (qui 1,000,000) e la distribuzione di massa di probabilità:</p>
+<div id="342d4516-9fc7-4452-92f5-ce14f536dba3" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x_samples <span class="op">=</span> np.random.choice(x, size<span class="op">=</span><span class="dv">1000000</span>, p<span class="op">=</span>px)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>L’istruzione <code>np.random.choice(x, size=1000000, p=px)</code> utilizza la libreria NumPy per generare un array di 1.000.000 di elementi (parametro <code>size</code>), scelti casualmente dall’array <code>x</code> con le probabilità specificate nell’array <code>px</code>. In particolare, <code>x</code> è l’array di cui si vuole effettuare una scelta casuale e <code>px</code> è un array che contiene le probabilità associate ad ogni elemento di <code>x</code>.</p>
+<p>Come ci aspettavamo, per un grande numero di realizzazioni indipendenti della <span class="math inline">\(X\)</span>, la media aritmetica approssima il valore atteso:</p>
+<div id="d6e8c811-e9a1-476b-a85c-7d4a94465547" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>np.mean(x_samples).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>7.002</code></pre>
+</div>
+</div>
+</section>
+<section id="proprietà-del-valore-atteso" class="level3" data-number="27.1.2">
+<h3 data-number="27.1.2" class="anchored" data-anchor-id="proprietà-del-valore-atteso"><span class="header-section-number">27.1.2</span> Proprietà del valore atteso</h3>
+<p>La proprietà più importante del valore atteso è la linearità: il valore atteso di una somma di variabili casuali è uguale alla somma dei lori rispettivi valori attesi:</p>
+<p><span id="eq-prop-expval-linearity"><span class="math display">\[
+\mathbb{E}(X + Y) = \mathbb{E}(X) + \mathbb{E}(Y).
+\tag{27.2}\]</span></span></p>
+<p>L’<a href="#eq-prop-expval-linearity" class="quarto-xref">Equazione&nbsp;<span>27.2</span></a> sembra ragionevole quando <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono indipendenti, ma è anche vera quando <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono associati. Abbiamo anche che</p>
+<p><span id="eq-prop-expval-const"><span class="math display">\[
+\mathbb{E}(cY) = c \mathbb{E}(Y).
+\tag{27.3}\]</span></span></p>
+<p>L’<a href="#eq-prop-expval-const" class="quarto-xref">Equazione&nbsp;<span>27.3</span></a> ci dice che possiamo estrarre una costante dall’operatore di valore atteso. Tale proprietà si estende a qualunque numero di variabili casuali. Infine, se due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono indipendenti, abbiamo che</p>
+<p><span id="eq-expval-prod-ind-rv"><span class="math display">\[
+\mathbb{E}(X Y) = \mathbb{E}(X) \mathbb{E}(Y).
+\tag{27.4}\]</span></span></p>
+<p>La media aritmetica <span class="math inline">\(\textstyle {\bar  {X}}={\frac  {X_{1}+\ldots +X_{n}}{n}}\)</span> di <span class="math inline">\(n\)</span> variabili casuali indipendenti aventi la medesima distribuzione di media <span class="math inline">\(\mu\)</span> ha valore atteso</p>
+<p><span class="math display">\[
+\mathbb{E}(\bar{X}) = \frac{1}{n} \mathbb{E}(X_1)+ \dots \mathbb{E}(X_n) = \frac{1}{n} n \mathbb{E}(X) = \mu.
+\]</span></p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 27.3</strong></span> Consideriamo il seguente esperimento casuale. Sia <span class="math inline">\(Y\)</span> il numero che si ottiene dal lancio di un dado equilibrato a sei facce e <span class="math inline">\(Y\)</span> il numero di teste prodotto dal lancio di una moneta equilibrata (0 oppure 1). Troviamo il valore atteso di <span class="math inline">\(X+Y\)</span>.</p>
+<p>Per risolvere il problema iniziamo a costruire lo spazio campione dell’esperimento casuale.</p>
+<table class="table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(x /\ y\)</span></th>
+<th style="text-align: center;">1</th>
+<th style="text-align: center;">2</th>
+<th style="text-align: center;">3</th>
+<th style="text-align: center;">4</th>
+<th style="text-align: center;">5</th>
+<th style="text-align: center;">6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">(0, 1)</td>
+<td style="text-align: center;">(0, 2)</td>
+<td style="text-align: center;">(0, 3)</td>
+<td style="text-align: center;">(0, 4)</td>
+<td style="text-align: center;">(0, 5)</td>
+<td style="text-align: center;">(0, 6)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">(1, 1)</td>
+<td style="text-align: center;">(1, 2)</td>
+<td style="text-align: center;">(1, 3)</td>
+<td style="text-align: center;">(1, 4)</td>
+<td style="text-align: center;">(1, 5)</td>
+<td style="text-align: center;">(1, 6)</td>
+</tr>
+</tbody>
+</table>
+<p>ovvero</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(x /\ y\)</span></th>
+<th style="text-align: center;">1</th>
+<th style="text-align: center;">2</th>
+<th style="text-align: center;">3</th>
+<th style="text-align: center;">4</th>
+<th style="text-align: center;">5</th>
+<th style="text-align: center;">6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
+</tr>
+</tbody>
+</table>
+<p>Il risultato del lancio del dado è indipendente dal risultato del lancio della moneta. Pertanto, ciascun evento elementare dello spazio campione avrà la stessa probabilità di verificarsi, ovvero <span class="math inline">\(P(\omega) = \frac{1}{12}\)</span>. Il valore atteso di <span class="math inline">\(X+Y\)</span> è dunque uguale a:</p>
+<p><span class="math display">\[
+\mathbb{E}(X+Y) = 1 \cdot \frac{1}{12} + 2 \cdot \frac{1}{12} + \dots + 7 \cdot \frac{1}{12} = 4.0.
+\]</span></p>
+<p>Si ottiene lo stesso risultato usando l’<a href="#eq-prop-expval-linearity" class="quarto-xref">Equazione&nbsp;<span>27.2</span></a>:</p>
+<p><span class="math display">\[
+\mathbb{E}(X+Y) = \mathbb{E}(X) + E(Y) = 3.5 + 0.5 = 4.0.
+\]</span></p>
+<p>Svolgiamo ora l’esercizio in Python.</p>
+<div id="2fc42fa6-cb22-4200-aacc-7fed6b186f3e" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>coin <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>die <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(c, d) <span class="cf">for</span> c <span class="kw">in</span> coin <span class="cf">for</span> d <span class="kw">in</span> die]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(sample)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>[(0, 1),
+ (0, 2),
+ (0, 3),
+ (0, 4),
+ (0, 5),
+ (0, 6),
+ (1, 1),
+ (1, 2),
+ (1, 3),
+ (1, 4),
+ (1, 5),
+ (1, 6)]</code></pre>
+</div>
+</div>
+<div id="1b74a8f3-d5dd-4d7b-96e8-a952274b76f3" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>px <span class="op">=</span> []</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">8</span>):</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    event <span class="op">=</span> [roll <span class="cf">for</span> roll <span class="kw">in</span> sample <span class="cf">if</span> <span class="bu">sum</span>(roll) <span class="op">==</span> i]</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    px.append(<span class="bu">len</span>(event) <span class="op">/</span> <span class="bu">len</span>(sample))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"P(X + Y = </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">) = </span><span class="sc">{</span><span class="bu">len</span>(event)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(X + Y = 1) = 1 / 12
+P(X + Y = 2) = 2 / 12
+P(X + Y = 3) = 2 / 12
+P(X + Y = 4) = 2 / 12
+P(X + Y = 5) = 2 / 12
+P(X + Y = 6) = 2 / 12
+P(X + Y = 7) = 1 / 12</code></pre>
+</div>
+</div>
+<div id="628af16b-7847-414d-b183-dcd2dc8ed509" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">8</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(x <span class="op">*</span> px)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>4.0</code></pre>
+</div>
+</div>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 27.4</strong></span> Consideriamo le variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> definite nel caso del lancio di tre monete equilibrate, dove <span class="math inline">\(X\)</span> conta il numero delle teste nei tre lanci e <span class="math inline">\(Y\)</span> conta il numero delle teste al primo lancio. Si calcoli il valore atteso di <span class="math inline">\(Z = X \cdot Y\)</span>.</p>
+<p>La distribuzione di probabilità congiunta <span class="math inline">\(P(X, Y)\)</span> è fornita nella tabella seguente.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(x /\ y\)</span></th>
+<th style="text-align: center;">0</th>
+<th style="text-align: center;">1</th>
+<th style="text-align: center;"><span class="math inline">\(p(Y)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1/8</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1/8</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2/8</td>
+<td style="text-align: center;">1/8</td>
+<td style="text-align: center;">3/8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1/8</td>
+<td style="text-align: center;">2/8</td>
+<td style="text-align: center;">3/8</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1/8</td>
+<td style="text-align: center;">1/8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(p(y)\)</span></td>
+<td style="text-align: center;">4/8</td>
+<td style="text-align: center;">4/8</td>
+<td style="text-align: center;">1.0</td>
+</tr>
+</tbody>
+</table>
+<p>Il calcolo del valore atteso di <span class="math inline">\(XY\)</span> si riduce a</p>
+<p><span class="math display">\[
+\mathbb{E}(Z) = 1 \cdot \frac{1}{8} + 2 \cdot \frac{2}{8} + 3 \cdot \frac{1}{8} = 1.0.
+\]</span></p>
+<p>Si noti che le variabili casuali <span class="math inline">\(Y\)</span> e <span class="math inline">\(Y\)</span> non sono indipendenti. Dunque non possiamo usare l’<a href="#eq-expval-prod-ind-rv" class="quarto-xref">Equazione&nbsp;<span>27.4</span></a>. Infatti, il valore atteso di <span class="math inline">\(X\)</span> è</p>
+<p><span class="math display">\[
+\mathbb{E}(X) = 1 \cdot \frac{3}{8} + 2 \cdot \frac{3}{8} + 3 \cdot \frac{1}{8} = 1.5
+\]</span></p>
+<p>e il valore atteso di <span class="math inline">\(Y\)</span> è</p>
+<p><span class="math display">\[
+\mathbb{E}(Y) = 0 \cdot \frac{4}{8} + 1 \cdot \frac{4}{8} = 0.5.
+\]</span></p>
+<p>Perciò</p>
+<p><span class="math display">\[
+1.5 \cdot 0.5 \neq 1.0.
+\]</span></p>
+<p>Svolgiamo l’esercizio in Python.</p>
+<div id="d09955b0-ebeb-40b9-9ae4-f1f8001692cd" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(i, j, w) <span class="cf">for</span> i <span class="kw">in</span> r <span class="cf">for</span> j <span class="kw">in</span> r <span class="cf">for</span> w <span class="kw">in</span> r]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">4</span>):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    event <span class="op">=</span> [toss <span class="cf">for</span> toss <span class="kw">in</span> sample <span class="cf">if</span> <span class="bu">sum</span>(toss) <span class="op">*</span> toss[<span class="dv">0</span>] <span class="op">==</span> i]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"P(Z = </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">) : </span><span class="sc">{</span><span class="bu">len</span>(event)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P(Z = 0) : 4 / 8
+P(Z = 1) : 1 / 8
+P(Z = 2) : 2 / 8
+P(Z = 3) : 1 / 8</code></pre>
+</div>
+</div>
+<div id="83108b70-2cc7-4a36-8cde-03fe02e9349f" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>pz <span class="op">=</span> np.array([<span class="dv">4</span><span class="op">/</span><span class="dv">8</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">8</span>, <span class="dv">2</span><span class="op">/</span><span class="dv">8</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">8</span>])</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(z <span class="op">*</span> pz)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>1.0</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="variabili-casuali-continue" class="level3" data-number="27.1.3">
+<h3 data-number="27.1.3" class="anchored" data-anchor-id="variabili-casuali-continue"><span class="header-section-number">27.1.3</span> Variabili casuali continue</h3>
+<p>Nel caso di una variabile casuale continua <span class="math inline">\(Y\)</span> il valore atteso diventa:</p>
+<p><span id="eq-def-ev-rv-cont"><span class="math display">\[
+\mathbb{E}(Y) = \int_{-\infty}^{+\infty} y p(y) \,\operatorname{d}\!y.
+\tag{27.5}\]</span></span></p>
+<p>Anche in questo caso il valore atteso è una media ponderata della <span class="math inline">\(y\)</span>, nella quale ciascun possibile valore <span class="math inline">\(y\)</span> è ponderato per il corrispondente valore della densità <span class="math inline">\(p(y)\)</span>. Possiamo leggere l’integrale pensando che <span class="math inline">\(y\)</span> rappresenti l’ampiezza delle barre infinitamente strette di un istogramma, con la densità <span class="math inline">\(p(y)\)</span> che corrisponde all’altezza di tali barre e la notazione <span class="math inline">\(\int_{-\infty}^{+\infty}\)</span> che corrisponde ad una somma.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<section id="moda" class="level4" data-number="27.1.3.1">
+<h4 data-number="27.1.3.1" class="anchored" data-anchor-id="moda"><span class="header-section-number">27.1.3.1</span> Moda</h4>
+<p>Un’altra misura di tendenza centrale delle variabili casuali continue è la moda. La moda di <span class="math inline">\(Y\)</span> individua il valore <span class="math inline">\(y\)</span> più plausibile, ovvero il valore <span class="math inline">\(y\)</span> che massimizza la funzione di densità <span class="math inline">\(p(y)\)</span>:</p>
+<p><span id="eq-def-mode"><span class="math display">\[
+Mo(Y) = \text{argmax}_y p(y).
+\tag{27.6}\]</span></span></p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>La notazione <span class="math inline">\(\text{argmax}_y p(y)\)</span> significa: il valore <span class="math inline">\(y\)</span> tale per cui la funzione <span class="math inline">\(p(y)\)</span> assume il suo valore massimo.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="varianza" class="level2" data-number="27.2">
+<h2 data-number="27.2" class="anchored" data-anchor-id="varianza"><span class="header-section-number">27.2</span> Varianza</h2>
+<p>La seconda più importante proprietà di una variabile casuale, dopo che conosciamo il suo valore atteso, è la <em>varianza</em>.</p>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 27.2</strong></span> Se <span class="math inline">\(Y\)</span> è una variabile casuale discreta con distribuzione <span class="math inline">\(p(y)\)</span>, per definizione la varianza di <span class="math inline">\(Y\)</span>, <span class="math inline">\(\mathbb{V}(Y)\)</span>, è</p>
+<p><span id="eq-def-var-rv"><span class="math display">\[
+\mathbb{V}(Y) = \mathbb{E}\Big[\big(Y - \mathbb{E}(Y)\big)^2\Big].
+\tag{27.7}\]</span></span></p>
+</div>
+<p>A parole: la varianza è la deviazione media quadratica della variabile dalla sua media.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Se denotiamo <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span>, la varianza <span class="math inline">\(\mathbb{V}(Y)\)</span> diventa il valore atteso di <span class="math inline">\((Y - \mu)^2\)</span>.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 27.5</strong></span> Posta <span class="math inline">\(S\)</span> uguale alla somma dei punti ottenuti nel lancio di due dadi equilibrati, si calcoli la varianza di <span class="math inline">\(S\)</span>.</p>
+<p>La variabile casuale <span class="math inline">\(S\)</span> ha la seguente distribuzione di probabilità:</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(s\)</span></th>
+<th style="text-align: center;">2</th>
+<th style="text-align: center;">3</th>
+<th style="text-align: center;">4</th>
+<th style="text-align: center;">5</th>
+<th style="text-align: center;">6</th>
+<th style="text-align: center;">7</th>
+<th style="text-align: center;">8</th>
+<th style="text-align: center;">9</th>
+<th style="text-align: center;">10</th>
+<th style="text-align: center;">11</th>
+<th style="text-align: center;">12</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(P(S = s)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{2}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{3}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{4}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{5}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{6}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{5}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{4}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{3}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{2}{36}\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\frac{1}{36}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Essendo <span class="math inline">\(\mathbb{E}(S) = 7\)</span>, la varianza diventa</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{V}(S) &amp;= \sum \left(s - \mathbb{E}(S)\right)^2 \cdot P(s) \notag\\
+&amp;= (2 - 7)^2 \cdot \frac{1}{36} + (3-7)^2 \cdot \frac{3}{36} + \dots + (12 - 7)^2 \cdot \frac{1}{36} \notag\\
+&amp;= 5.8333.\notag
+\end{align}
+\]</span></p>
+<p>Svolgiamo l’esercizio in Python.</p>
+<div id="59ce11c9-0eca-403a-9b37-b53ffba76c2c" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">2</span>, <span class="dv">13</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>px <span class="op">=</span> np.array(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="dv">4</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="dv">5</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="dv">6</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="dv">5</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        <span class="dv">4</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span> <span class="op">/</span> <span class="dv">36</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> stats.rv_discrete(values<span class="op">=</span>(x, px))</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>ex <span class="op">=</span> X.expect()</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>ex</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>6.999999999999998</code></pre>
+</div>
+</div>
+<p>Applichiamo l’<a href="#eq-def-var-rv" class="quarto-xref">Equazione&nbsp;<span>27.7</span></a>:</p>
+<div id="5721fb4b-9f37-4a64-8fcb-1aa466c493db" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>((x <span class="op">-</span> ex) <span class="op">**</span> <span class="dv">2</span> <span class="op">*</span> px).<span class="bu">sum</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>5.833333333333333</code></pre>
+</div>
+</div>
+<p>Usiamo la funzione <code>var()</code> di <code>rv_discrete</code>:</p>
+<div id="1b523332-b0ff-434f-aedb-146b90b2e84e" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>X.var()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>5.833333333333364</code></pre>
+</div>
+</div>
+</div>
+<section id="formula-alternativa-per-la-varianza" class="level3" data-number="27.2.1">
+<h3 data-number="27.2.1" class="anchored" data-anchor-id="formula-alternativa-per-la-varianza"><span class="header-section-number">27.2.1</span> Formula alternativa per la varianza</h3>
+<p>C’è un modo più semplice per calcolare la varianza:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{E}\Big[\big(Y - \mathbb{E}(Y)\big)^2\Big] &amp;= \mathbb{E}\big(Y^2 - 2Y\mathbb{E}(Y) + \mathbb{E}(Y)^2\big)\notag\\
+&amp;= \mathbb{E}(Y^2) - 2\mathbb{E}(Y)\mathbb{E}(Y) + \mathbb{E}(Y)^2,
+\end{align}
+\]</span></p>
+<p>dato che <span class="math inline">\(\mathbb{E}(Y)\)</span> è una costante. Pertanto</p>
+<p><span id="eq-def-alt-var-rv"><span class="math display">\[
+\mathbb{V}(Y) = \mathbb{E}(Y^2) - \big(\mathbb{E}(Y) \big)^2.
+\tag{27.8}\]</span></span></p>
+<p>A parole: la varianza è la media dei quadrati meno il quadrato della media della variabile.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 27.6</strong></span> Consideriamo la variabile casuale <span class="math inline">\(Y\)</span> che corrisponde al numero di teste che si osservano nel lancio di una moneta truccata con probabilità di testa uguale a 0.8. Si trovi la varianza di <span class="math inline">\(Y\)</span>.</p>
+<p>Il valore atteso di <span class="math inline">\(Y\)</span> è</p>
+<p><span class="math display">\[
+\mathbb{E}(Y) = 0 \cdot 0.2 + 1 \cdot 0.8 = 0.8.
+\]</span></p>
+<p>Usando la formula tradizionale della varianza otteniamo:</p>
+<p><span class="math display">\[
+\mathbb{V}(Y) = (0 - 0.8)^2 \cdot 0.2 + (1 - 0.8)^2 \cdot 0.8 = 0.16.
+\]</span></p>
+<p>Lo stesso risultato si trova con la formula alternativa della varianza. Il valore atteso di <span class="math inline">\(Y^2\)</span> è</p>
+<p><span class="math display">\[
+\mathbb{E}(Y^2) = 0^2 \cdot 0.2 + 1^2 \cdot 0.8 = 0.8.
+\]</span></p>
+<p>e la varianza diventa</p>
+<p><span class="math display">\[
+\mathbb{V}(Y) = \mathbb{E}(Y^2) - \big(\mathbb{E}(Y) \big)^2 = 0.8 - 0.8^2 = 0.16.
+\]</span></p>
+<p>Svolgiamo l’esercizio in Python:</p>
+<div id="cea35fa4-7f22-47d8-9fbd-4ac1f9ad0528" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>py <span class="op">=</span> np.array([<span class="fl">0.2</span>, <span class="fl">0.8</span>])</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(y<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> py) <span class="op">-</span> (<span class="bu">sum</span>(y <span class="op">*</span> py)) <span class="op">**</span> <span class="dv">2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>0.15999999999999992</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="proprietà" class="level3" data-number="27.2.2">
+<h3 data-number="27.2.2" class="anchored" data-anchor-id="proprietà"><span class="header-section-number">27.2.2</span> Proprietà</h3>
+<p><strong>Segno della varianza.</strong> La varianza di una variabile aleatoria non è mai negativa, ed è zero solamente quando la variabile assume un solo valore.</p>
+<p><strong>Invarianza per traslazione.</strong> La varianza è invariante per traslazione, che lascia fisse le distanze dalla media, e cambia quadraticamente per riscalamento:</p>
+<p><span class="math display">\[
+\mathbb{V}(a + bX) = b^2\mathbb{V}(X).
+\]</span></p>
+<p><em>Dimostrazione.</em> Iniziamo a scrivere</p>
+<p><span class="math display">\[
+(aX+b)-{\mathbb{E}}[aX+b]=aX+b-a{\mathbb{E}}[X]-b=a(X-{\mathbb  {E}}[X]).
+\]</span></p>
+<p>Quindi</p>
+<p><span class="math display">\[
+\sigma _{{aX+b}}^{2}={\mathbb{E}}[a^{2}(X-{\mathbb  {E}}[X])^{2}]=a^{2}\sigma _{X}^{2}.
+\]</span></p>
+<p>Esaminiamo una dimostrazione numerica.</p>
+<div id="952f5f2e-15f3-420a-9385-2b1a194cfb93" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>])</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">100</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>np.var(y) <span class="op">==</span> <span class="dv">2</span><span class="op">**</span><span class="dv">2</span> <span class="op">*</span> np.var(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>True</code></pre>
+</div>
+</div>
+<p><strong>Varianza della somma di due variabili indipendenti.</strong> La varianza della somma di due variabili indipendenti o anche solo incorrelate è pari alla somma delle loro varianze:</p>
+<p><span class="math display">\[
+\mathbb{V}(X+Y) = \mathbb{V}(X) + \mathbb{V}(Y).
+\]</span></p>
+<p><em>Dimostrazione.</em> Se <span class="math inline">\(\mathbb{E}(X) = \mathbb{E}(Y) = 0\)</span>, allora <span class="math inline">\(\mathbb{E}(X+Y) = 0\)</span> e</p>
+<p><span class="math display">\[\mathbb{V}(X+Y) = \mathbb{E}((X+Y)^2) = \mathbb{E}(X^2) + 2 \mathbb{E}(XY) + \mathbb{E}(Y^2).\]</span></p>
+<p>Siccome le variabili sono indipendenti risulta <span class="math inline">\(\mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y) = 0\)</span>.</p>
+<p><strong>Varianza della differenza di due variabili indipendenti.</strong> La varianza della differenza di due variabili indipendenti è pari alla somma delle loro varianze:</p>
+<p><span class="math display">\[
+\mathbb{V}(X-Y) = \mathbb{V}(X) + \mathbb{V}(Y).
+\]</span></p>
+<p><em>Dimostrazione.</em></p>
+<p><span class="math display">\[
+\mathbb{V}(X-Y) = \mathbb{V}(X +(-Y)) = \mathbb{V}(X) + \mathbb{V}(-Y) = \mathbb{V}(X) + \mathbb{V}(Y).
+\]</span></p>
+<p><strong>Varianza della somma di due variabili non indipendenti.</strong> Se <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non sono indipendenti, la formula viene corretta dalla loro covarianza:</p>
+<p><span class="math display">\[
+\mathbb{V}(X+Y) = \mathbb{V}(X) + \mathbb{V}(Y) + 2 Cov(X,Y),
+\]</span></p>
+<p>dove <span class="math inline">\(Cov(X,Y) = \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y)\)</span>.</p>
+<p>Una dimostrazione numerica di questo principio è fornita sotto.</p>
+<div id="f96ed007-d0d5-45ba-8997-c726f3946551" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>])</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">11</span>])</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>np.var(x <span class="op">+</span> y, ddof<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>35.25</code></pre>
+</div>
+</div>
+<div id="4dd94309-6591-45ff-849f-849707a10b1d" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>np.var(x, ddof<span class="op">=</span><span class="dv">0</span>) <span class="op">+</span> np.var(y, ddof<span class="op">=</span><span class="dv">0</span>) <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> np.cov(x, y, ddof<span class="op">=</span><span class="dv">0</span>)[<span class="dv">0</span>, <span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>35.25</code></pre>
+</div>
+</div>
+<p><strong>Varianza della media di variabili indipendenti.</strong> La media aritmetica <span class="math inline">\(\textstyle {\bar  {X}}={\frac  {X_{1}+\ldots +X_{n}}{n}}\)</span> di <span class="math inline">\(n\)</span> variabili casuali indipendenti aventi la medesima distribuzione, ha varianza</p>
+<p><span class="math display">\[
+\mathbb{V}(\bar{X}) = \frac{1}{n^2} \mathbb{V}(X_1)+ \dots \mathbb{V}(X_n) = \frac{1}{n^2} n \mathbb{V}(X) = \frac{1}{n} \mathbb{V}(X).
+\]</span></p>
+<p>Il principio precedente è illustrato dalla seguente simulazione.</p>
+<div id="fcfcb107-5de7-43e4-a757-4b531565590a" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the population distribution</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> np.random.normal(loc<span class="op">=</span><span class="dv">50</span>, scale<span class="op">=</span><span class="dv">10</span>, size<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the sample size and number of samples</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>sample_size <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">100000</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an array to hold the sample means</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>sample_means <span class="op">=</span> np.zeros(num_samples)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the samples and compute their means</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_samples):</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    sample <span class="op">=</span> np.random.choice(population, size<span class="op">=</span>sample_size)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    sample_means[i] <span class="op">=</span> np.mean(sample)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the variance of the sample means</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>sampling_dist_mean_var <span class="op">=</span> np.var(sample_means)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>sampling_dist_mean_var</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>3.4103710835201433</code></pre>
+</div>
+</div>
+<p>Il valore teorico della varianza della distribuzione campionaria della media è</p>
+<div id="2c66745e-752e-4274-b70b-1005cfc6b962" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span><span class="op">**</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">30</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>3.3333333333333335</code></pre>
+</div>
+</div>
+</section>
+<section id="variabili-casuali-continue-1" class="level3" data-number="27.2.3">
+<h3 data-number="27.2.3" class="anchored" data-anchor-id="variabili-casuali-continue-1"><span class="header-section-number">27.2.3</span> Variabili casuali continue</h3>
+<p>Nel caso di una variabile casuale continua <span class="math inline">\(Y\)</span>, la varianza diventa:</p>
+<p><span id="eq-def-var-rv-cont"><span class="math display">\[
+\mathbb{V}(Y) = \int_{-\infty}^{+\infty} \large[y - \mathbb{E}(Y)\large]^2 p(y) \,\operatorname {d}\!y.
+\tag{27.9}\]</span></span></p>
+<p>Come nel caso discreto, la varianza di una v.c. continua <span class="math inline">\(Y\)</span> misura approssimativamente la distanza al quadrato tipica o prevista dei possibili valori <span class="math inline">\(y\)</span> dalla loro media.</p>
+</section>
+</section>
+<section id="deviazione-standard" class="level2" data-number="27.3">
+<h2 data-number="27.3" class="anchored" data-anchor-id="deviazione-standard"><span class="header-section-number">27.3</span> Deviazione standard</h2>
+<p>Quando lavoriamo con le varianze, i termini sono innalzati al quadrato e quindi i numeri possono diventare molto grandi (o molto piccoli). Per trasformare nuovamente i valori nell’unità di misura della scala originaria si prende la radice quadrata. Il valore risultante viene chiamato <em>deviazione standard</em> e solitamente è denotato dalla lettera greca <span class="math inline">\(\sigma\)</span>.</p>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 27.3</strong></span> Si definisce scarto quadratico medio (o deviazione standard o scarto tipo) la radice quadrata della varianza:</p>
+<p><span id="eq-def-sd"><span class="math display">\[
+\sigma_Y = \sqrt{\mathbb{V}(Y)}.
+\tag{27.10}\]</span></span></p>
+</div>
+<p>Come nella statistica descrittiva, la deviazione standard di una variabile casuale misura approssimativamente la distanza tipica o prevista dei possibili valori <span class="math inline">\(y\)</span> dalla loro media.</p>
+<p>Per i dadi equilibrati dell’esemio precedebte, la deviazione standard della variabile casuale <span class="math inline">\(S\)</span> è uguale a <span class="math inline">\(\sqrt{5.833} = 2.415\)</span>.</p>
+</section>
+<section id="standardizzazione" class="level2" data-number="27.4">
+<h2 data-number="27.4" class="anchored" data-anchor-id="standardizzazione"><span class="header-section-number">27.4</span> Standardizzazione</h2>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 27.4</strong></span> Data una variabile casuale <span class="math inline">\(Y\)</span>, si dice <em>variabile standardizzata</em> di <span class="math inline">\(Y\)</span> l’espressione</p>
+<p><span id="eq-standardization"><span class="math display">\[
+Z = \frac{Y - \mathbb{E}(Y)}{\sigma_Y}.
+\tag{27.11}\]</span></span></p>
+</div>
+<p>Solitamente, una variabile standardizzata viene denotata con la lettera <span class="math inline">\(Z\)</span>.</p>
+</section>
+<section id="momenti-di-variabili-casuali" class="level2" data-number="27.5">
+<h2 data-number="27.5" class="anchored" data-anchor-id="momenti-di-variabili-casuali"><span class="header-section-number">27.5</span> Momenti di variabili casuali</h2>
+<div id="def-" class="theorem definition">
+<p><span class="theorem-title"><strong>Definizione 27.5</strong></span> Si chiama <em>momento</em> di ordine <span class="math inline">\(q\)</span> di una v.c. <span class="math inline">\(X\)</span>, dotata di densità <span class="math inline">\(p(x)\)</span>, la quantità</p>
+<p><span id="eq-moments-cont"><span class="math display">\[
+\mathbb{E}(X^q) = \int_{-\infty}^{+\infty} x^q p(x) \; dx.
+\tag{27.12}\]</span></span></p>
+<p>Se <span class="math inline">\(X\)</span> è una v.c. discreta, i suoi momenti valgono:</p>
+<p><span id="eq-moments-discr"><span class="math display">\[
+\mathbb{E}(X^q) = \sum_i x_i^q P(x_i).
+\tag{27.13}\]</span></span></p>
+</div>
+<p>I momenti sono importanti parametri indicatori di certe proprietà di <span class="math inline">\(X\)</span>. I più noti sono senza dubbio quelli per <span class="math inline">\(q = 1\)</span> e <span class="math inline">\(q = 2\)</span>. Il momento del primo ordine corrisponde al valore atteso di <span class="math inline">\(X\)</span>. Spesso i momenti di ordine superiore al primo vengono calcolati rispetto al valor medio di <span class="math inline">\(X\)</span>, operando una traslazione <span class="math inline">\(x_0 = x − \mathbb{E}(X)\)</span> che individua lo scarto dalla media. Ne deriva che il momento centrale di ordine 2 corrisponde alla varianza.</p>
+</section>
+<section id="alcuni-esempi-in-python" class="level2" data-number="27.6">
+<h2 data-number="27.6" class="anchored" data-anchor-id="alcuni-esempi-in-python"><span class="header-section-number">27.6</span> Alcuni esempi in Python</h2>
+<p>Utilizzando il modulo <code>stats</code> di <code>scipy</code>, è possibile semplificare i calcoli del valore atteso e della varianza di variabili casuali discrete.</p>
+<p>Consideriamo ad esempio una variabile casuale <span class="math inline">\(X\)</span> che rappresenta i valori ottenuti dal lancio di un dado non equilibrato, con valori possibili da 0 a 6, e con la seguente distribuzione di massa di probabilità: 0.1, 0.2, 0.3, 0.1, 0.1, 0.0, 0.2.</p>
+<p>Iniziamo a definire un vettore che contiene i valori della v.c.:</p>
+<div id="8ac273d8-cb18-4873-9f3d-f8378081789e" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">7</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0 1 2 3 4 5 6]</code></pre>
+</div>
+</div>
+<p>Il vettore <code>px</code> conterrà le probabilità associate ai valori <code>x</code>:</p>
+<div id="61b68e42-449e-491f-b84a-a1ef6cd7d76c" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>px <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.0</span>, <span class="fl">0.2</span>]</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(px)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.1, 0.2, 0.3, 0.1, 0.1, 0.0, 0.2]</code></pre>
+</div>
+</div>
+<p>Controlliamo che la somma sia 1:</p>
+<div id="6fb5af7a-98f7-4657-8248-7989742ef6f6" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(px)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>1.0</code></pre>
+</div>
+</div>
+<p>Usiamo ora la funzione <code>rv_discrete()</code> che è una funzione della libreria <code>stats</code> di Python. Tale funzione viene utilizzata per creare una distribuzione discreta personalizzata. La funzione richiede che vengano forniti dei valori discreti (ossia interi) e le rispettive probabilità di occorrenza.</p>
+<p>Una volta definita la distribuzione discreta, <code>rv_discrete()</code> permette di eseguire operazioni come la generazione di numeri casuali dalla distribuzione, il calcolo della funzione di probabilità cumulativa (CDF) e della funzione di densità di probabilità (PDF), e la valutazione della media, della varianza e di altre statistiche della distribuzione.</p>
+<p>La sintassi di base della funzione <code>rv_discrete()</code> è la seguente:</p>
+<pre><code>rv = stats.rv_discrete(name='rv', values=(xk, pk))</code></pre>
+<p>dove <code>name</code> è il nome della distribuzione discreta, <code>xk</code> sono i valori discreti e <code>pk</code> sono le rispettive probabilità di occorrenza. Ad esempio, creiamo la variabile casuale <code>X</code>:</p>
+<div id="851ee0b5-72c8-4d4b-a2d7-457a6f4611cf" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> stats.rv_discrete(name<span class="op">=</span><span class="st">'rv'</span>, values<span class="op">=</span>(x, px))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="316a4af3-b417-4ae4-8c0c-d9b1378cf5a3" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribuzione di massa di probabilità di X.</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.pmf(x))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.1 0.2 0.3 0.1 0.1 0.  0.2]</code></pre>
+</div>
+</div>
+<div id="09c687d6-c03c-40f4-80e6-95d382a676ea" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribuzione comulativa di probabilità di X.</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.cdf(x))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.1 0.3 0.6 0.7 0.8 0.8 1. ]</code></pre>
+</div>
+</div>
+<p>Generiamo un grafico che rappresenta la distribuzione di massa con Matplotlib.</p>
+<div id="cell-70" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#B17F7D"</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>color_edge <span class="op">=</span> <span class="st">"#832F2B"</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>plt.plot(x, X.pmf(x), <span class="st">"o"</span>, ms<span class="op">=</span><span class="dv">6</span>, color<span class="op">=</span>color_fill, markeredgecolor<span class="op">=</span>color_edge)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>plt.vlines(x, <span class="dv">0</span>, X.pmf(x), lw<span class="op">=</span><span class="dv">2</span>, colors<span class="op">=</span>color_edge)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04b_expval_var_files/figure-html/cell-31-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Calcoliamo il valore atteso di <span class="math inline">\(X\)</span> implementando la formula del valore atteso, ovvero utilizzando i vettori <code>x</code> e <code>px</code>.</p>
+<div id="fb5d13ed-8342-436c-9dc1-cde0e763c0a6" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>x_ev <span class="op">=</span> (x <span class="op">*</span> px).<span class="bu">sum</span>()</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>x_ev</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>2.7</code></pre>
+</div>
+</div>
+<p>Lo stesso risultato si ottience applicando il metodo <code>.expect()</code> all’oggetto <code>X</code>.</p>
+<div id="8920f3e6-7e94-4dba-bc60-56286ed82dea" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>x_ev <span class="op">=</span> X.expect()</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>x_ev</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>2.7</code></pre>
+</div>
+</div>
+<p>Calcoliamo la varianza di <span class="math inline">\(X\)</span> usando i vettori <code>x</code> e <code>px</code>.</p>
+<div id="86998f09-4f4b-456c-ad20-889d66b4859f" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>x_var <span class="op">=</span> ((x <span class="op">-</span> x_ev)<span class="op">**</span><span class="dv">2</span> <span class="op">*</span> X.pmf(x)).<span class="bu">sum</span>()</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>x_var</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>3.8100000000000005</code></pre>
+</div>
+</div>
+<p>Otteniamo lo stesso risultato applicando il metodo <code>.var()</code> all’oggetto <code>X</code>.</p>
+<div id="3579c89a-af9c-45e3-9081-2b6116f40dd5" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>X.var()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>3.8099999999999987</code></pre>
+</div>
+</div>
+<p>Calcoliamo la deviazione standard di <span class="math inline">\(X\)</span> prendento la radice quadrata della varianza.</p>
+<div id="f26009d1-a514-43f5-a779-36a18ebcf81e" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>np.sqrt(x_var)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>1.9519221295943137</code></pre>
+</div>
+</div>
+<p>Oppure, in maniera equivalente, applicando il metodo <code>.std()</code> all’oggetto <code>X</code>.</p>
+<div id="282e5590-6767-4279-a482-5285d9c2557c" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>X.std()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>1.9519221295943132</code></pre>
+</div>
+</div>
+</section>
+<section id="commenti-e-considerazioni-finali" class="level2" data-number="27.7">
+<h2 data-number="27.7" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">27.7</span> Commenti e considerazioni finali</h2>
+<p>L’inferenza bayesiana mira a descrivere la distribuzione a posteriori di variabili casuali che rappresentano i parametri di un modello statistico. Nel capitolo precedente, abbiamo esaminato le caratteristiche principali delle variabili casuali, concentrandoci sul caso discreto. In questo capitolo, abbiamo approfondito le proprietà di una singola variabile casuale. Nel prossimo capitolo, invece, esploreremo il problema di descrivere il verificarsi congiunto di due o più variabili casuali.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="27.8">
+<h2 data-number="27.8" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">27.8</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="21a0d211-0c0c-40ef-ba5d-d30314f331ec" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Fri Aug 02 2024
+
+Python implementation: CPython
+Python version       : 3.12.4
+IPython version      : 8.26.0
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.6.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+seaborn   : 0.13.2
+arviz     : 0.18.0
+matplotlib: 3.9.1
+scipy     : 1.14.0
+numpy     : 1.26.4
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Per il significato della notazione di integrale, si veda l’<a href="../chapter_8/a15_calculus.html" class="quarto-xref"><span>Appendice K</span></a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Data una variabile casuale <span class="math inline">\(Y\)</span> con valore atteso <span class="math inline">\(\mathbb{E}(Y)\)</span>, le “distanze” tra i valori di <span class="math inline">\(Y\)</span> e il valore atteso <span class="math inline">\(\mathbb{E}(Y)\)</span> definiscono la variabile casuale <span class="math inline">\(Y - \mathbb{E}(Y)\)</span> chiamata <em>scarto</em>, oppure <em>deviazione</em> oppure <em>variabile casuale centrata</em>. La variabile <span class="math inline">\(Y - \mathbb{E}(Y)\)</span> equivale ad una traslazione di sistema di riferimento che porta il valore atteso nell’origine degli assi. Si può dimostrare facilmente che il valore atteso della variabile scarto <span class="math inline">\(Y - \mathbb{E}(Y)\)</span> vale zero, dunque la media di tale variabile non può essere usata per quantificare la “dispersione” dei valori di <span class="math inline">\(Y\)</span> relativamente al suo valore medio. Occorre rendere sempre positivi i valori di <span class="math inline">\(Y - \mathbb{E}(Y)\)</span> e tale risultato viene ottenuto considerando la variabile casuale <span class="math inline">\(\left(Y - \mathbb{E}(Y)\right)^2\)</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/chapter_4/04a_random_var.html" class="pagination-link" aria-label="Variabili casuali">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/chapter_4/04c_sampling_distr.html" class="pagination-link" aria-label="Stime, stimatori e parametri">
+        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_4/04b_expval_var.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>

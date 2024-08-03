@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Analisi dei dati per psicologi - 19&nbsp; Causalità dai dati osservazionali</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/chapter_4/introduction_chapter_3.html" rel="next">
+<link href="../../chapters/chapter_3/05_correlation.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_3/01_project_structure.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_3/06_causality.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi dei dati per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/introduction_chapter_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/introduction_chapter_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/03_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">L’analisi dei dati psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Le fasi del progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/02_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/06_causality.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/introduction_chapter_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01a_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01b_prob_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01c_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Distribuzioni di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/02_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/03_bayes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04a_random_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04b_expval_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04c_sampling_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/05_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/06_density_func.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/07_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/08_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/09_likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/10_grid_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Inferenza bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/introduction_chapter_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/02_subj_prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/03_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/04_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/06_balance_prior_post.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/10_metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/15_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/16_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/17_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/18_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/19_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/22_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/23_stan_two_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/24_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/25_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/introduction_chapter_5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_05a_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_06_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_07_robust_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_08_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_09_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_21_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_22_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_23_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_24_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_25_stan_rct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_30_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_31_kl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_32_stan_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_35_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_40_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Inferenza frequentista</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/introduction_chapter_6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/02_conf_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/05_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">La Crisi della Replicabilità dei Risultati della Ricerca</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/06_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/07_effect_size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/09_s_m_errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Crisi della replicabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/10_integrity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a12_sum_notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a20_kde_plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Kernel Density Estimation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a30_prob_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Esercizi di probabilità discreta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a40_rng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Generazione di numeri casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a45_mcmc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a46_stan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a51_reglin_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a100_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Soluzioni degli Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">19.1</span> Introduzione</a></li>
+  <li><a href="#cosa-significa-causalità" id="toc-cosa-significa-causalità" class="nav-link" data-scroll-target="#cosa-significa-causalità"><span class="header-section-number">19.2</span> Cosa significa “causalità”?</a></li>
+  <li><a href="#inferenza-causale" id="toc-inferenza-causale" class="nav-link" data-scroll-target="#inferenza-causale"><span class="header-section-number">19.3</span> Inferenza Causale</a>
+  <ul class="collapse">
+  <li><a href="#passaggi-chiave-per-unanalisi-causale" id="toc-passaggi-chiave-per-unanalisi-causale" class="nav-link" data-scroll-target="#passaggi-chiave-per-unanalisi-causale"><span class="header-section-number">19.3.1</span> Passaggi Chiave per un’Analisi Causale</a></li>
+  <li><a href="#grafi-aciclici-direzionati-dag" id="toc-grafi-aciclici-direzionati-dag" class="nav-link" data-scroll-target="#grafi-aciclici-direzionati-dag"><span class="header-section-number">19.3.2</span> Grafi Aciclici Direzionati (DAG)</a></li>
+  </ul></li>
+  <li><a href="#due-paradossi-comuni" id="toc-due-paradossi-comuni" class="nav-link" data-scroll-target="#due-paradossi-comuni"><span class="header-section-number">19.4</span> Due Paradossi Comuni</a>
+  <ul class="collapse">
+  <li><a href="#paradosso-di-simpson" id="toc-paradosso-di-simpson" class="nav-link" data-scroll-target="#paradosso-di-simpson"><span class="header-section-number">19.4.1</span> Paradosso di Simpson</a></li>
+  <li><a href="#paradosso-di-berkson" id="toc-paradosso-di-berkson" class="nav-link" data-scroll-target="#paradosso-di-berkson"><span class="header-section-number">19.4.2</span> Paradosso di Berkson</a></li>
+  <li><a href="#i-disegni-di-ricerca-e-la-causalità" id="toc-i-disegni-di-ricerca-e-la-causalità" class="nav-link" data-scroll-target="#i-disegni-di-ricerca-e-la-causalità"><span class="header-section-number">19.4.3</span> I Disegni di Ricerca e la Causalità</a></li>
+  </ul></li>
+  <li><a href="#modelli-causali-grafici" id="toc-modelli-causali-grafici" class="nav-link" data-scroll-target="#modelli-causali-grafici"><span class="header-section-number">19.5</span> Modelli Causali Grafici</a>
+  <ul class="collapse">
+  <li><a href="#importanza-delle-assunzioni" id="toc-importanza-delle-assunzioni" class="nav-link" data-scroll-target="#importanza-delle-assunzioni"><span class="header-section-number">19.5.1</span> Importanza delle Assunzioni</a></li>
+  </ul></li>
+  <li><a href="#introduzione-ai-dag" id="toc-introduzione-ai-dag" class="nav-link" data-scroll-target="#introduzione-ai-dag"><span class="header-section-number">19.6</span> Introduzione ai DAG</a></li>
+  <li><a href="#concetto-di-d-separazione" id="toc-concetto-di-d-separazione" class="nav-link" data-scroll-target="#concetto-di-d-separazione"><span class="header-section-number">19.7</span> Concetto di d-separazione</a>
+  <ul class="collapse">
+  <li><a href="#definizione-di-d-separazione" id="toc-definizione-di-d-separazione" class="nav-link" data-scroll-target="#definizione-di-d-separazione"><span class="header-section-number">19.7.1</span> Definizione di d-separazione</a></li>
+  </ul></li>
+  <li><a href="#il-criterio-del-back-door" id="toc-il-criterio-del-back-door" class="nav-link" data-scroll-target="#il-criterio-del-back-door"><span class="header-section-number">19.8</span> Il criterio del back-door</a>
+  <ul class="collapse">
+  <li><a href="#esempi-di-applicazione-del-criterio-del-back-door" id="toc-esempi-di-applicazione-del-criterio-del-back-door" class="nav-link" data-scroll-target="#esempi-di-applicazione-del-criterio-del-back-door"><span class="header-section-number">19.8.1</span> Esempi di applicazione del criterio del back-door</a></li>
+  <li><a href="#procedura-per-determinare-linsieme-sufficiente-di-variabili" id="toc-procedura-per-determinare-linsieme-sufficiente-di-variabili" class="nav-link" data-scroll-target="#procedura-per-determinare-linsieme-sufficiente-di-variabili"><span class="header-section-number">19.8.2</span> Procedura per determinare l’insieme sufficiente di variabili</a></li>
+  </ul></li>
+  <li><a href="#strutture-causali-elementari" id="toc-strutture-causali-elementari" class="nav-link" data-scroll-target="#strutture-causali-elementari"><span class="header-section-number">19.9</span> Strutture Causali Elementari</a>
+  <ul class="collapse">
+  <li><a href="#catena" id="toc-catena" class="nav-link" data-scroll-target="#catena"><span class="header-section-number">19.9.1</span> Catena</a></li>
+  <li><a href="#confondente" id="toc-confondente" class="nav-link" data-scroll-target="#confondente"><span class="header-section-number">19.9.2</span> Confondente</a></li>
+  <li><a href="#collider" id="toc-collider" class="nav-link" data-scroll-target="#collider"><span class="header-section-number">19.9.3</span> Collider</a></li>
+  <li><a href="#il-discendente" id="toc-il-discendente" class="nav-link" data-scroll-target="#il-discendente"><span class="header-section-number">19.9.4</span> Il Discendente</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">19.10</span> Considerazioni Conclusive</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">19.11</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_3/06_causality.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_3/01_project_structure.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_3/06_causality.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-causality-from-observational-data" class="quarto-section-identifier"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<ul>
+<li>Leggi <em>Causal design patterns for data analysts</em> <span class="citation" data-cites="riedererdesignpatterns">(<a href="../../99-references.html#ref-riedererdesignpatterns" role="doc-biblioref">Riederer 2021</a>)</span>. Questo post sul blog fornisce una panoramica di diversi approcci per fare affermazioni causali dai dati osservazionali.</li>
+<li>Leggi <a href="https://theeffectbook.net">The Effect: An Introduction to Research Design and Causality</a>. Focalizzati sul capitolo 10 <em>Treatment Effects</em>.</li>
+<li>Leggere <em>BNT162b2 mRNA Covid-19 Vaccine in a Nationwide Mass Vaccination Setting</em> <span class="citation" data-cites="dagan2021bnt162b2">(<a href="../../99-references.html#ref-dagan2021bnt162b2" role="doc-biblioref">Dagan et al. 2021</a>)</span>. Questo articolo confronta le conclusioni causali tratte dai dati osservazionali con quelle di un trial randomizzato.</li>
+<li>Leggi <em>Telling Stories with Data</em> <span class="citation" data-cites="alexander2023telling">(<a href="../../99-references.html#ref-alexander2023telling" role="doc-biblioref">Alexander 2023</a>)</span>. Concentrati sul capitolo 15 “Causality from observational data”.</li>
+</ul>
+<p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Non è sempre possibile condurre un esperimento, ma possiamo utilizzare vari approcci per parlare comunque di causalità in una certa misura.</li>
+<li>Dobbiamo fare attenzione ai paradossi comuni, tra cui il paradosso di Simpson e il paradosso di Berkson, ed essere consapevoli sia delle potenzialità che dei limiti del matching.</li>
+<li>Dobbiamo anche essere consapevoli dei quattro confondenti di base: la catena, la biforcazione, il collider e il discendente.</li>
+<li>In generale, le inferenze derivanti dai dati osservazionali devono essere utilizzate con umiltà e attenzione per le debolezze e le assunzioni, sia quelle che possiamo testare sia quelle che non possiamo.</li>
+</ul>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="7d7bb935-16a3-409f-a11a-6d5a9536182f" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> graphviz</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c721e588-627b-4fcb-afa5-ad809812f718" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>RANDOM_SEED <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(RANDOM_SEED)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">'retina'</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">19.1</span> Introduzione</h2>
+<p>Per assicurare l’integrità e la validità scientifica dei modelli statistici, è essenziale abbinarli a un’analisi causale. La pura osservazione dei dati può rivelare correlazioni e pattern nei dati, ma senza un’indagine sulle cause che stanno dietro a queste correlazioni, le conclusioni tratte possono essere fuorvianti o incomplete.</p>
+<p>Anche nell’ambito di una discussione sull’<em>analisi descrittiva</em> dei dati (e, forse, soprattutto in un tale contesto), è importante sottolineare le limitazioni di un tale approccio. L’aspetto cruciale da tenere a mente è che le cause dei fenomeni non possono essere inferite <em>solamente</em> dall’analisi dei dati. Né dall’analisi descrittiva dei dati che stiamo discutendo adesso, né dall’analisi inferenziale dei dati che discuteremo in seguito. Pertanto, per giungere ad una comprensione dei fenomeni è necessario integrare il processo di modellazione statistica con una comprensione delle cause sottostanti del fenomeno oggetto d’esame. In altre parole, per una comprensione scientificamente valida, è necessario combinare la modellazione statistica con l’analisi causale.</p>
+<p>In questo capitolo, ci concentreremo sull’introduzione dei concetti fondamentali dell’analisi causale, i quali costituiscono una base cruciale per l’interpretazione dei dati. Cominceremo con la distinzione tra correlazione e causalità. La correlazione indica una relazione tra due variabili, mettendo in evidenza la loro forza e direzione, mentre la causalità implica un legame di causa ed effetto tra le variabili. È di importanza cruciale comprendere che il fatto che due variabili siano correlate non implica automaticamente l’esistenza di un rapporto causale tra di esse. Il noto principio “correlazione non implica causalità” sottolinea questa distinzione critica. Numerosi esempi di correlazioni che non sono basate su una relazione causale diretta possono essere esaminati sul sito <a href="https://tylervigen.com/spurious-correlations">spurious correlations</a>.</p>
+<p>Oltre a questo concetto fondamentale, procederemo ad esplorare una serie di concetti introdotti da Judea Pearl nel suo testo “Causality” <span class="citation" data-cites="pearl2009causality">(<a href="../../99-references.html#ref-pearl2009causality" role="doc-biblioref">Pearl 2009</a>)</span>. Questi concetti sono essenziali per descrivere le relazioni tra variabili. Essi includono strutture di relazione come biforcazioni, catene, collider e strutture discendenti. Questa cornice concettuale ci permetterà di distinguere tra i diversi tipi di legami causali tra le variabili, ponendo così le basi per condurre un’analisi dei dati più completa e accurata.</p>
+<p>Mediante esempi numerici, dimostreremo l’importanza dei <em>fattori confondenti</em> nell’analisi della correlazione e della covarianza. Questo passo ci condurrà oltre l’analisi delle relazioni bivariate di base, introducendoci alle dinamiche più complesse che regolano le relazioni tra le variabili.</p>
+</section>
+<section id="cosa-significa-causalità" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="cosa-significa-causalità"><span class="header-section-number">19.2</span> Cosa significa “causalità”?</h2>
+<p>Cosa intendiamo esattamente quando diciamo che qualcosa è “causale”? Perché è importante capire la causalità?</p>
+<p>Perché molte delle domande di ricerca che ci interessano sono di natura causale. Ad esempio, non vogliamo solo sapere se le persone che fanno attività fisica regolarmente hanno meno ansia; vogliamo sapere se fare attività fisica riduce effettivamente i livelli di ansia. Non ci basta sapere se chi segue una terapia cognitivo-comportamentale (CBT) ha meno sintomi di depressione; vogliamo sapere se la terapia CBT ha realmente ridotto i sintomi depressivi. Non ci accontentiamo di sapere se l’uso frequente dei social media è seguito da un calo del benessere mentale; vogliamo sapere se l’uso frequente dei social media causa un calo del benessere mentale.</p>
+<p>Certo, anche queste altre informazioni possono essere utili, ma in tal caso si tratta di domande di ricerca descrittive. Spesso, anche analisi e domande di ricerca non causali nascondono una domanda causale. Quante volte avete letto un titolo come “Dormire meno di otto ore a notte è collegato a una maggiore probabilità di sviluppare disturbi d’ansia!”? Lo studio potrebbe non fare affermazioni causali, e “collegato a” non implica necessariamente causalità. Tuttavia, poiché “la mancanza di sonno provoca ansia?” (causale) è una domanda molto più intrigante di “le persone che soffrono d’ansia tendono a dormire meno?” (non causale), i lettori spesso interpretano erroneamente il risultato come causale.</p>
+<p>Ci sono molte parole che generalmente implicano causalità e altre che descrivono relazioni senza implicare causalità. Ci sono anche alcuni termini ambigui che, pur non dicendo nulla sulla causalità, lasciano intendere tale relazione.</p>
+<p>Quali sono alcune di queste parole?</p>
+<p>Possiamo dire che A causa B usando espressioni come: A causa, influisce, l’effetto di A su B, aumenta/diminuisce, cambia, porta a, determina, innesca, migliora, è responsabile di, e così via…</p>
+<p>Possiamo dire che A e B sono correlati senza implicare causalità usando espressioni come: sono associati, sono correlati, sono legati, tendono a verificarsi insieme, tendono a non verificarsi insieme, vanno insieme, e così via…</p>
+<p>Se uno scrittore vuole suggerire la causalità senza affermarla esplicitamente, potrebbe usare termini come: è collegato a, è seguito da, ha conseguenze su, predice, le persone che sono più propense a, accade mentre accade, e così via.</p>
+<p>Conoscere questi termini può aiutarci a interpretare correttamente gli studi scientifici e a riconoscere quando qualcuno potrebbe cercare di ingannarci.</p>
+<p>Analizzando questi termini possiamo anche comprendere meglio il concetto di causalità. I termini causali indicano una direzione: dicono che A influisce su B. I termini non causali, invece, non specificano quale dei due viene prima, ma descrivono solo come le due variabili sono correlate. I termini ambigui sono scritti in modo da suggerire una direzione da A a B, pur senza affermarlo esplicitamente.</p>
+<p>Questa idea, che A influisce su B, ci aiuta a comprendere cos’è la causalità.</p>
+<p>Non esiste una singola definizione di causalità, ma un buon modo di pensarci è questo: possiamo dire che A causa B se, intervenendo e cambiando il valore di A, anche la distribuzione di B cambia di conseguenza.</p>
+<p>Facciamo un esempio. Diciamo che la terapia cognitivo-comportamentale (CBT) riduce l’ansia. Se un gruppo di persone con ansia non segue alcuna terapia, i livelli di ansia rimangono invariati. Se interveniamo e iniziamo la CBT (cambiando il valore di A), i livelli di ansia nel gruppo diminuiscono (cambiando il valore di B di conseguenza). Questa definizione ci permette di distinguere tra correlazione e causalità.</p>
+<p>Possiamo anche usare questa definizione per collegare variabili lontane. Per esempio, l’autoefficacia di per sé potrebbe non avere un effetto causale diretto sulle prestazioni accademiche. Tuttavia, se aumentiamo l’autoefficacia attraverso interventi mirati, probabilmente si osserverà un miglioramento dell’impegno nello studio. Quindi, l’aumento dell’autoefficacia causa un miglioramento dell’impegno nello studio. E se aumentiamo l’impegno nello studio, questo migliorerà le prestazioni accademiche. Quindi, indirettamente, l’autoefficacia influisce sulle prestazioni accademiche. Tuttavia, dire che qualcosa causa qualcos’altro non implica necessariamente in quale direzione. Se vogliamo essere più specifici, dobbiamo dirlo chiaramente.</p>
+<p>Un’ulteriore precisazione è che diremo che A causa B anche se cambiare A non sempre cambia B, ma cambia solo la probabilità che B si verifichi. Cambia la distribuzione di B. Un’altra precisazione è che la definizione implica una questione su se le variabili che non possono essere effettivamente manipolate - come il tratto di personalità - possano causare qualcosa. Si può comunque chiedere cosa sarebbe successo se il tratto di personalità di una persona fosse stato diverso, una sorta di manipolazione teorica.</p>
+<p>In conclusione, la causalità implica che un cambiamento in A provoca un cambiamento in B, anche se non sempre in modo diretto e certo, ma cambiando la probabilità che B si verifichi.</p>
+</section>
+<section id="inferenza-causale" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="inferenza-causale"><span class="header-section-number">19.3</span> Inferenza Causale</h2>
+<p>L’inferenza causale si pone l’obiettivo di rappresentare il processo sottostante a un fenomeno, permettendo di prevedere gli effetti di un intervento. Oltre a prevedere le conseguenze di una causa, consente di esplorare scenari controfattuali, immaginando gli esiti alternativi che si sarebbero verificati con decisioni diverse. Questo tipo di ragionamento è cruciale sia in contesti descrittivi che inferenziali.</p>
+<p><span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span> utilizza l’analogia dei Golem, potenti ma privi di saggezza e previsione, per descrivere un approccio limitato che è stato a lungo lo standard in psicologia. Questo approccio si concentra sul semplice test delle ipotesi nulle e non stabilisce una relazione chiara tra le problematiche causali della ricerca e i test statistici. Tale limitazione è stata identificata come una delle principali cause della crisi di replicabilità dei risultati nella ricerca psicologica (si veda il capitolo {ref}<code>generalizability-crisis-notebook</code>) e, di conseguenza, della crisi della psicologia stessa.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../figures/mcelreath_golem.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption>Esempio di albero decisionale per la selezione di una procedura statistica appropriata. Iniziando dall’alto, l’utente risponde a una serie di domande riguardanti la misurazione e l’intento, arrivando infine al nome di una procedura. Sono possibili molti alberi decisionali simili. (Figura tratta da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>).</figcaption>
+</figure>
+</div>
+<p>Un problema evidenziato da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span> è che processi causali completamente distinti possono generare la stessa distribuzione di risultati osservati. Pertanto, un approccio focalizzato esclusivamente sul test dell’ipotesi nulla non è in grado di distinguere tra questi diversi scenari. Questa limitazione è dimostrata numericamente nel capitolo {ref}<code>causal-inference-notebook</code>.</p>
+<p>Il test dell’ipotesi nulla, ovvero l’approccio frequentista, nonostante sia stato ampiamente utilizzato in psicologia per decenni, ha mostrato una bassa sensibilità nel rilevare le caratteristiche cruciali dei fenomeni studiati e un alto tasso di falsi positivi <span class="citation" data-cites="van2023new">(<a href="../../99-references.html#ref-van2023new" role="doc-biblioref">Zwet et al. 2023</a>)</span>.</p>
+<p>La ricerca scientifica richiede una metodologia più sofisticata rispetto all’approccio che si limita a confutare ipotesi nulle. È essenziale sviluppare modelli causali che rispondano direttamente alle domande di ricerca. Inoltre, è fondamentale avere una strategia razionale per l’estrazione delle stime dei modelli e per la quantificazione dell’incertezza associata ad esse. In questo contesto, l’analisi bayesiana dei dati emerge come un approccio altamente efficace. Anche se in analisi semplici le differenze rispetto all’approccio frequentista potrebbero sembrare minime o addirittura introdurre alcune complicazioni, quando ci si trova ad affrontare analisi più realistiche e complesse, la differenza diventa sostanziale.</p>
+<section id="passaggi-chiave-per-unanalisi-causale" class="level3" data-number="19.3.1">
+<h3 data-number="19.3.1" class="anchored" data-anchor-id="passaggi-chiave-per-unanalisi-causale"><span class="header-section-number">19.3.1</span> Passaggi Chiave per un’Analisi Causale</h3>
+<p>Per condurre un’analisi scientifica dei dati che superi l’approccio “amatoriale” frequentista, <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span> suggerisce di seguire una serie di passaggi chiave:</p>
+<ol type="1">
+<li><strong>Comprendere il concetto teorico del fenomeno oggetto dell’analisi.</strong></li>
+<li><strong>Sviluppare modelli causali</strong> che descrivano accuratamente le relazioni tra le variabili coinvolte nel problema di ricerca, basandosi sulla teoria sottostante.</li>
+<li><strong>Formulare modelli statistici appropriati</strong> che riflettano fedelmente il contesto scientifico e le relazioni causali identificate.</li>
+<li><strong>Eseguire simulazioni</strong> basate sui modelli causali per verificare se i modelli statistici sviluppati siano in grado di stimare correttamente ciò che è teoricamente atteso. Questa fase di verifica è cruciale per garantire la validità dei modelli.</li>
+<li><strong>Condurre l’analisi dei dati effettivi</strong> utilizzando i modelli statistici sviluppati, avendo la fiducia che riflettano accuratamente le teorie sottostanti e le relazioni causali.</li>
+</ol>
+</section>
+<section id="grafi-aciclici-direzionati-dag" class="level3" data-number="19.3.2">
+<h3 data-number="19.3.2" class="anchored" data-anchor-id="grafi-aciclici-direzionati-dag"><span class="header-section-number">19.3.2</span> Grafi Aciclici Direzionati (DAG)</h3>
+<p>Un elemento chiave sottolineato da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span> nel processo di analisi è l’utilizzo dei Grafi Aciclici Direzionati (DAG), che rappresentano uno strumento essenziale per realizzare il flusso di lavoro descritto. I DAG forniscono una rappresentazione grafica dei modelli causali, consentendo una visualizzazione chiara delle relazioni tra le variabili coinvolte. Questi grafici rendono trasparenti le assunzioni alla base dell’analisi, creando una connessione evidente tra le teorie sottostanti e l’analisi statistica. In contrasto, l’approccio frequentista è caratterizzato dall’assenza di ipotesi sulle relazioni sottostanti tra le variabili, rendendo difficile comprendere e interpretare le implicazioni scientifiche dei risultati ottenuti.</p>
+<p>Per un approfondimento di questi temi, consiglio fortemente la lettura del primo capitolo di <a href="https://xcelab.net/rm/statistical-rethinking/">Statistical Rethinking</a>.</p>
+</section>
+</section>
+<section id="due-paradossi-comuni" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="due-paradossi-comuni"><span class="header-section-number">19.4</span> Due Paradossi Comuni</h2>
+<p>Esistono due situazioni comuni in cui i dati possono ingannarci, e che vale la pena esaminare esplicitamente. Questi sono:</p>
+<ul>
+<li>Il paradosso di Simpson</li>
+<li>Il paradosso di Berkson</li>
+</ul>
+<section id="paradosso-di-simpson" class="level3" data-number="19.4.1">
+<h3 data-number="19.4.1" class="anchored" data-anchor-id="paradosso-di-simpson"><span class="header-section-number">19.4.1</span> Paradosso di Simpson</h3>
+<p>Il paradosso di Simpson si verifica quando stimiamo una relazione per sottoinsiemi dei nostri dati, ma otteniamo una relazione diversa considerando l’intero dataset (Simpson 1951). È un caso particolare della fallacia ecologica, che si verifica quando cerchiamo di fare affermazioni sugli individui basandoci sui loro gruppi. Ad esempio, potrebbe esserci una relazione positiva tra i voti universitari e la performance alla scuola di specializzazione in due dipartimenti considerati individualmente. Tuttavia, se i voti universitari tendono a essere più alti in un dipartimento rispetto all’altro, mentre la performance alla scuola di specializzazione tende a essere opposta, potremmo trovare una relazione negativa tra i voti universitari e la performance alla scuola di specializzazione.</p>
+</section>
+<section id="paradosso-di-berkson" class="level3" data-number="19.4.2">
+<h3 data-number="19.4.2" class="anchored" data-anchor-id="paradosso-di-berkson"><span class="header-section-number">19.4.2</span> Paradosso di Berkson</h3>
+<p>Il paradosso di Berkson si verifica quando stimiamo una relazione basandoci sul dataset che abbiamo, ma a causa della selezione del dataset, la relazione risulta diversa in un dataset più generale (Berkson 1946). Ad esempio, se abbiamo un dataset di ciclisti professionisti, potremmo non trovare una relazione tra il loro VO2 max e la possibilità di vincere una gara di ciclismo (Coyle et al.&nbsp;1988; Podlogar, Leo, and Spragg 2022). Tuttavia, se avessimo un dataset della popolazione generale, potremmo trovare una relazione tra queste due variabili. Il dataset professionale è così selezionato che la relazione scompare; non si può diventare ciclisti professionisti senza avere un VO2 max adeguato, ma tra i ciclisti professionisti, tutti hanno un VO2 max sufficiente.</p>
+</section>
+<section id="i-disegni-di-ricerca-e-la-causalità" class="level3" data-number="19.4.3">
+<h3 data-number="19.4.3" class="anchored" data-anchor-id="i-disegni-di-ricerca-e-la-causalità"><span class="header-section-number">19.4.3</span> I Disegni di Ricerca e la Causalità</h3>
+<p>Per comprendere meglio l’uso dei DAG nell’inferenza causale, è necessario distinguere tra ricerche basate su disegni osservazionali e sperimentali <span class="citation" data-cites="rohrer2018thinking">(<a href="../../99-references.html#ref-rohrer2018thinking" role="doc-biblioref">Rohrer 2018</a>)</span>.</p>
+<p>Nei <em>disegni osservazionali</em> i ricercatori osservano e registrano gli eventi senza intervenire direttamente. A differenza degli esperimenti controllati, qui non si manipolano le variabili studiate, ma si osservano le relazioni naturali che emergono. Questi studi sono preziosi quando gli esperimenti non sono fattibili per motivi etici o pratici. Tuttavia, sebbene siano efficaci nell’identificare correlazioni e tendenze, i disegni osservazionali spesso mancano della capacità di stabilire con certezza relazioni causali, a causa di variabili confondenti e bias di selezione. Esempi comuni di disegni osservazionali includono studi trasversali e longitudinali.</p>
+<p>I <em>disegni sperimentali</em>, d’altra parte, si basano sulla manipolazione controllata delle variabili e sulla randomizzazione. Quest’ultima, ovvero l’assegnazione casuale dei partecipanti ai gruppi, è fondamentale per ridurre i bias e garantire la validità delle conclusioni causali. Gli esperimenti randomizzati sono considerati il gold standard per indagare le relazioni causali, poiché la randomizzazione consente di bilanciare gli effetti delle variabili osservate e non osservate tra i diversi gruppi di trattamento.</p>
+<p>Nonostante gli esperimenti offrano un elevato grado di certezza nella determinazione delle relazioni causali, i disegni osservazionali presentano vantaggi in termini di flessibilità e applicabilità in situazioni in cui gli esperimenti non possono essere condotti per ragioni etiche o pratiche. <span class="citation" data-cites="rohrer2018thinking">Rohrer (<a href="../../99-references.html#ref-rohrer2018thinking" role="doc-biblioref">2018</a>)</span> nota che, mentre i disegni osservazionali spesso si basano su relazioni associative piuttosto che causali, gli esperimenti potrebbero non consentire una generalizzazione al di là delle condizioni artificiali del laboratorio.</p>
+<p>Nel contesto della ricerca, il concetto di causalità si riferisce alla relazione tra una variabile (X) e un’altra (Y), in cui X può influenzare Y. Il linguaggio causale utilizza termini come “causa”, “influenza” e “determina”, a differenza di termini descrittivi come “associato” o “correlato”, che indicano semplicemente relazioni senza implicare un legame causale diretto. È importante ribadire che la causalità è concepita come un concetto probabilistico, il che significa che una variazione in X aumenta la probabilità di un certo risultato in Y, piuttosto che determinarlo in modo assoluto.</p>
+<p>Nel campo della ricerca psicologica, spesso è necessario inferire relazioni causali da dati osservazionali poiché gli esperimenti randomizzati non sono sempre praticabili o eticamente accettabili. Tuttavia, questo approccio presenta diverse sfide che possono influenzare l’integrità e l’accuratezza delle inferenze tratte dagli studi. Per affrontare tali sfide e migliorare la solidità delle loro analisi, i ricercatori impiegano una serie di strategie metodologiche.</p>
+<ol type="1">
+<li><p><strong>Utilizzo di interventi surrogati</strong>: questa tecnica è preziosa in situazioni in cui la manipolazione diretta di una variabile di interesse è impraticabile o eticamente inaccettabile. Piuttosto che intervenire direttamente, i ricercatori si avvalgono di variabili surrogate (o proxy) che presumibilmente sono associate alla variabile di interesse principale. L’obiettivo è esplorare e dedurre gli effetti indiretti di una variabile su un’altra, stabilendo associazioni che, sebbene non dirette, possono fornire importanti informazioni sul fenomeno in esame. Tuttavia, questa strategia presenta delle sfide intrinseche, come la difficoltà nel garantire una relazione diretta tra la variabile surrogata e quella di interesse principale.</p></li>
+<li><p><strong>Linguaggio cauto nell’interpretazione dei dati</strong>: i ricercatori adottano un linguaggio prudente quando interpretano dati osservazionali, evitando di fare affermazioni causali dirette quando i dati mostrano solo correlazioni.</p></li>
+<li><p><strong>Utilizzo di metodi statistici avanzati per controllare variabili confondenti</strong>: Le variabili confondenti sono fattori esterni che possono influenzare la relazione tra le variabili studiate. L’utilizzo di tecniche statistiche avanzate, come la regressione multipla o l’analisi di matching, aiuta a controllare l’effetto di queste variabili confondenti, consentendo una stima più accurata della relazione tra le variabili di interesse. Tuttavia, questi metodi hanno limitazioni (si veda <span class="quarto-unresolved-ref">?sec-causal-inference</span>) e potrebbero non riuscire a controllare completamente tutte le variabili confondenti, specialmente in situazioni complesse.</p></li>
+</ol>
+<p><span class="citation" data-cites="rohrer2018thinking">Rohrer (<a href="../../99-references.html#ref-rohrer2018thinking" role="doc-biblioref">2018</a>)</span> sottolinea che, nonostante l’adozione di queste strategie, persistono sfide in termini di validità esterna (cioè la generalizzabilità dei risultati) e interpretazione dei dati. La validità esterna potrebbe essere limitata poiché le condizioni specifiche dello studio potrebbero non rappresentare situazioni più ampie o diverse, mentre l’interpretazione dei risultati può essere complicata dalla natura indiretta o surrogata delle evidenze raccolte.</p>
+</section>
+</section>
+<section id="modelli-causali-grafici" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="modelli-causali-grafici"><span class="header-section-number">19.5</span> Modelli Causali Grafici</h2>
+<p>L’analisi dei dati osservazionali per trarre inferenze causali è intrinsecamente complessa, ma con precauzioni adeguate e approcci metodologici appropriati, è possibile estrarre preziosi insight causali anche da questo tipo di dati. In questo contesto, <span class="citation" data-cites="rohrer2018thinking">Rohrer (<a href="../../99-references.html#ref-rohrer2018thinking" role="doc-biblioref">2018</a>)</span> sottolinea l’importanza dei DAG come strumento fondamentale per la rappresentazione visiva delle ipotesi causali. Questi diagrammi non solo agevolano la comprensione delle relazioni causali tra le variabili, ma forniscono anche una guida per l’identificazione e il trattamento corretto delle variabili esterne, comunemente note come “variabili di confondimento”.</p>
+<p>Una delle funzioni più cruciali dei DAG è la loro capacità di individuare quali variabili di confondimento debbano essere considerate nell’analisi e quali possano essere trascurate senza compromettere l’integrità dell’inferenza causale. Questa caratteristica è essenziale poiché sia il controllo insufficiente sia quello eccessivo delle variabili di confondimento possono condurre a conclusioni erronee. In particolare, i DAG aiutano a determinare quando l’aggiustamento per determinate variabili di confondimento può migliorare l’accuratezza delle inferenze causali e quando, al contrario, tale aggiustamento potrebbe introdurre distorsioni (questo punto verrà approfondito nel capitolo sec-causal-inference).</p>
+<p>Grazie ai DAG, i ricercatori possono esplicitare le loro ipotesi sulle relazioni causali tra le variabili, riducendo così il rischio di interpretare erroneamente i dati osservazionali. Questo approccio consente di sviluppare strategie di analisi più informate e metodologicamente solide, mirate a comprendere al meglio le dinamiche causali sottostanti.</p>
+<section id="importanza-delle-assunzioni" class="level3" data-number="19.5.1">
+<h3 data-number="19.5.1" class="anchored" data-anchor-id="importanza-delle-assunzioni"><span class="header-section-number">19.5.1</span> Importanza delle Assunzioni</h3>
+<p>È cruciale comprendere che l’estrazione di conclusioni causali da dati correlazionali non può essere basata esclusivamente sui dati stessi. È invece necessario possedere delle conoscenze sulle dinamiche causali del fenomeno esaminato. Questo principio deriva dalla consapevolezza che una correlazione osservata può essere attribuita a una vasta gamma di fattori, inclusa l’influenza potenziale di variabili terze non considerate nell’analisi. Di conseguenza, qualsiasi tentativo di inferenza causale privo di una comprensione preliminare delle possibili relazioni causali rischia di essere fallace.</p>
+<p>Nonostante queste sfide, è fondamentale non rinunciare davanti alla complessità intrinseca della ricerca osservazionale. Pur non potendo dimostrare inequivocabilmente la causalità, per via della loro incapacità di manipolare direttamente le variabili di interesse, gli studi osservazionali svolgono un ruolo irrinunciabile nel contesto scientifico. Questi studi sono fondamentali per la generazione di ipotesi e per guidare la ricerca futura verso domande scientifiche rilevanti. Allo stesso modo, gli studi sperimentali, benché considerati il gold standard per la determinazione delle relazioni causali, non sono esenti da limitazioni. Gli esperimenti, soprattutto quelli condotti in ambienti altamente controllati come i laboratori, presuppongono la generalizzabilità dei risultati al di là dei confini dello studio, un’assunzione che può non sempre trovare riscontro nella realtà.</p>
+<p>In questo contesto, ciò che rende un’indagine rigorosa, sia essa osservazionale che sperimentale, è la capacità di riconoscere, articolare e comunicare chiaramente le premesse su cui si basa. Questo approccio non solo facilita una valutazione critica delle conclusioni causali da parte della comunità scientifica, ma promuove anche un dialogo costruttivo e produttivo all’interno della stessa, fondamentale per il progresso della conoscenza. La trasparenza nell’esposizione delle premesse rappresenta un prerequisito essenziale per un avanzamento scientifico informato, consapevole e, soprattutto, veritiero.</p>
+</section>
+</section>
+<section id="introduzione-ai-dag" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="introduzione-ai-dag"><span class="header-section-number">19.6</span> Introduzione ai DAG</h2>
+<p>I Grafi Aciclici Diretti (DAG) offrono una rappresentazione grafica delle relazioni causali ipotizzate tra le variabili. In un DAG, le frecce vengono utilizzate per indicare le relazioni causali tra diverse variabili.</p>
+<p>Sono chiamati così perché:</p>
+<ul>
+<li>Le variabili presenti nel diagramma (nodi) possono essere collegate tra loro solo attraverso frecce, anziché semplici linee di collegamento, da cui il termine “diretti”.</li>
+<li>Partendo da un nodo, non è possibile ritornare allo stesso nodo seguendo il percorso delle frecce, da cui il termine “aciclici”.</li>
+</ul>
+<p>Le variabili sono chiamate nodi del DAG. Un cammino tra due nodi è una sequenza di frecce che collegano i due nodi, indipendentemente dalla direzione delle frecce.</p>
+<p>All’interno di un DAG, la freccia che va dal nodo <span class="math inline">\(X\)</span> al nodo <span class="math inline">\(Y\)</span> evidenzia una relazione causale, implicando che <span class="math inline">\(X\)</span> abbia un’influenza su <span class="math inline">\(Y\)</span>. Tuttavia, questa relazione non è deterministica; piuttosto, le variazioni nel livello di <span class="math inline">\(X\)</span> sono associate a cambiamenti in <span class="math inline">\(Y\)</span> su base probabilistica. Pertanto, la presenza della freccia nel DAG causale indica che un aumento di <span class="math inline">\(X\)</span> aumenta la probabilità che <span class="math inline">\(Y\)</span> aumenti, ma non lo garantisce.</p>
+<p>Se tra due nodi c’è una sola freccia, il nodo dal quale parte la freccia è detto “genitore”, mentre quello di arrivo è detto “figlio”. Se, partendo da un nodo A, si arriva a un nodo B seguendo il verso di una successione di frecce, allora il nodo A è detto “antenato”, mentre B è detto “discendente”.</p>
+<p>I DAG permettono di identificare quali variabili agiscono come confondenti e quali no, basandosi sulla teoria sviluppata da Judea Pearl <span class="citation" data-cites="pearl2009causality">(<a href="../../99-references.html#ref-pearl2009causality" role="doc-biblioref">Pearl 2009</a>)</span>. È importante rappresentare tutte le possibili relazioni nel DAG, poiché l’assenza di una freccia tra due variabili implica una certezza dell’assenza di relazione tra di esse.</p>
+<p>Due dei concetti fondamentali della teoria dei DAG sono la d-separazione e il back-door path.</p>
+</section>
+<section id="concetto-di-d-separazione" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="concetto-di-d-separazione"><span class="header-section-number">19.7</span> Concetto di d-separazione</h2>
+<p>La d-separazione è un concetto fondamentale per comprendere come le variabili all’interno di un DAG possano influenzarsi reciprocamente. Essa definisce se un insieme di variabili può bloccare l’influenza di una variabile su un’altra. In altre parole, la d-separazione ci aiuta a capire se un percorso che collega due variabili è attivo o inattivo, considerando un insieme di nodi specifico.</p>
+<section id="definizione-di-d-separazione" class="level3" data-number="19.7.1">
+<h3 data-number="19.7.1" class="anchored" data-anchor-id="definizione-di-d-separazione"><span class="header-section-number">19.7.1</span> Definizione di d-separazione</h3>
+<p>Un cammino tra due nodi è d-separato (o bloccato) da un insieme Λ di nodi se e solo se si verificano le seguenti condizioni:</p>
+<ol type="1">
+<li><p><strong>Catena (Sequenza di frecce):</strong> Se il cammino è costituito da una sequenza di frecce nella stessa direzione (ad esempio, <span class="math inline">\(X \rightarrow Z \rightarrow Y\)</span>), il nodo intermedio (<span class="math inline">\(Z\)</span>) deve appartenere all’insieme Λ affinché il cammino sia bloccato. Questo significa che la variabile <span class="math inline">\(Z\)</span> deve essere inclusa nell’analisi per bloccare l’influenza di <span class="math inline">\(X\)</span> su <span class="math inline">\(Y\)</span>.</p></li>
+<li><p><strong>Fork (Nodo con due frecce in uscita):</strong> Se nel cammino c’è un nodo da cui partono due frecce (ad esempio, <span class="math inline">\(X \leftarrow Z \rightarrow Y\)</span>), il nodo di partenza delle frecce (<span class="math inline">\(Z\)</span>) deve appartenere all’insieme Λ affinché il cammino sia bloccato. In questo caso, <span class="math inline">\(Z\)</span> agisce come una variabile confondente, e includerla nell’analisi blocca il percorso.</p></li>
+<li><p><strong>Collider (Nodo con due frecce in entrata):</strong> Se nel cammino c’è un nodo in cui convergono due frecce (ad esempio, <span class="math inline">\(X \rightarrow Z \leftarrow Y\)</span>), né il nodo di convergenza (<span class="math inline">\(Z\)</span>) né i suoi discendenti devono appartenere all’insieme Λ affinché il cammino sia bloccato. Un collider introduce un’associazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> solo se <span class="math inline">\(Z\)</span> o i suoi discendenti sono inclusi nell’analisi.</p></li>
+</ol>
+<p>La d-separazione è uno strumento potente per identificare i percorsi di confondimento e determinare quali variabili devono essere considerate nel modello statistico per ottenere inferenze causali accurate.</p>
+</section>
+</section>
+<section id="il-criterio-del-back-door" class="level2" data-number="19.8">
+<h2 data-number="19.8" class="anchored" data-anchor-id="il-criterio-del-back-door"><span class="header-section-number">19.8</span> Il criterio del back-door</h2>
+<p>Il criterio del back-door è uno strumento grafico utile per individuare le variabili confondenti che devono essere considerate per ottenere stime causali corrette. Questo criterio si basa sulla verifica dei percorsi non causali, detti “back-door paths”, che collegano l’esposizione all’outcome.</p>
+<p>Il criterio del back-door può essere applicato mediante i seguenti passaggi:</p>
+<ol type="1">
+<li><strong>Eliminare le frecce dirette:</strong> Rimuovere tutte le frecce che vanno dall’esposizione all’outcome nel grafo.</li>
+<li><strong>Verificare i percorsi non bloccati:</strong> Controllare se esistono percorsi non bloccati tra l’esposizione e l’outcome nel grafo modificato.</li>
+</ol>
+<p>Se tutti i percorsi sono bloccati, significa che non c’è confondimento, e quindi l’esposizione e l’outcome sono indipendenti. Se invece esistono percorsi non bloccati, è necessario individuare e aggiustare per le variabili che possono bloccarli.</p>
+<section id="esempi-di-applicazione-del-criterio-del-back-door" class="level3" data-number="19.8.1">
+<h3 data-number="19.8.1" class="anchored" data-anchor-id="esempi-di-applicazione-del-criterio-del-back-door"><span class="header-section-number">19.8.1</span> Esempi di applicazione del criterio del back-door</h3>
+<p>Consideriamo un DAG che rappresenta la relazione tra autostima (A) e performance accademica (P), tenendo conto di variabili come il supporto familiare (S) e il livello di stress (L). Il DAG è strutturato come segue:</p>
+<ul>
+<li>A → P</li>
+<li>S → A</li>
+<li>S → P</li>
+<li>L ← S</li>
+</ul>
+<p>Rimuovendo la freccia diretta A → P, rimangono i percorsi:</p>
+<ul>
+<li>A ← S → P</li>
+<li>A ← S → L → P</li>
+</ul>
+<p>Per bloccare questi percorsi, è necessario condizionare su S, che blocca entrambi i percorsi. Pertanto, per ottenere una stima non distorta della relazione tra autostima e performance accademica, è sufficiente aggiustare per il supporto familiare (S).</p>
+<section id="esempio-2-relazione-tra-attività-fisica-e-benessere-psicologico" class="level4" data-number="19.8.1.1">
+<h4 data-number="19.8.1.1" class="anchored" data-anchor-id="esempio-2-relazione-tra-attività-fisica-e-benessere-psicologico"><span class="header-section-number">19.8.1.1</span> Esempio 2: Relazione tra attività fisica e benessere psicologico</h4>
+<p>Consideriamo un DAG con le seguenti relazioni:</p>
+<ul>
+<li>Attività fisica (F) → Benessere psicologico (B)</li>
+<li>Genere (G) → F</li>
+<li>Genere (G) → B</li>
+<li>Età (E) → F</li>
+<li>Età (E) → B</li>
+</ul>
+<p>In questo caso, abbiamo i percorsi:</p>
+<ul>
+<li>F ← G → B</li>
+<li>F ← E → B</li>
+</ul>
+<p>Rimuovendo la freccia diretta F → B, rimangono i percorsi non bloccati:</p>
+<ul>
+<li>F ← G → B</li>
+<li>F ← E → B</li>
+</ul>
+<p>Per bloccare questi percorsi, è necessario condizionare sia su G (genere) che su E (età). Pertanto, per ottenere una stima non distorta della relazione tra attività fisica e benessere psicologico, è necessario aggiustare per le variabili genere ed età.</p>
+</section>
+</section>
+<section id="procedura-per-determinare-linsieme-sufficiente-di-variabili" class="level3" data-number="19.8.2">
+<h3 data-number="19.8.2" class="anchored" data-anchor-id="procedura-per-determinare-linsieme-sufficiente-di-variabili"><span class="header-section-number">19.8.2</span> Procedura per determinare l’insieme sufficiente di variabili</h3>
+<p>Per decidere se un insieme di variabili è sufficiente per l’aggiustamento, è possibile seguire questi passaggi:</p>
+<ol type="1">
+<li><strong>Eliminare le frecce dell’esposizione:</strong> Rimuovere tutte le frecce che partono dalla variabile di esposizione.</li>
+<li><strong>Aggiungere archi di controllo:</strong> Aggiungere tutti gli archi necessari generati dal controllo sulle variabili dell’insieme considerato.</li>
+<li><strong>Verificare i percorsi non bloccati:</strong> Se tutti i percorsi non bloccati tra l’esposizione e l’outcome contengono almeno una variabile dell’insieme considerato, allora l’insieme è sufficiente per il controllo.</li>
+</ol>
+<p>L’insieme può anche essere vuoto se non è necessario aggiustare per alcuna variabile.</p>
+<p>In sintesi, il criterio del back-door consente di ridurre il numero di variabili da considerare per l’aggiustamento, risolvendo un importante problema pratico. Identificare l’insieme sufficiente minimale di variabili aiuta a mantenere l’analisi gestibile e precisa, migliorando la validità delle inferenze causali. Questo è particolarmente utile in psicologia, dove le variabili confondenti sono spesso numerose e complesse.</p>
+</section>
+</section>
+<section id="strutture-causali-elementari" class="level2" data-number="19.9">
+<h2 data-number="19.9" class="anchored" data-anchor-id="strutture-causali-elementari"><span class="header-section-number">19.9</span> Strutture Causali Elementari</h2>
+<p>All’interno dei DAG causali, si possono riconoscere quattro tipologie fondamentali di strutture causali: confondente, catena, collider e discendenti. La comprensione di queste strutture causali di base è fondamentale per analizzare i percorsi causali più complessi.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../figures/four_confounders.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>I quattro confondenti di base. (Figura tratta da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>).</figcaption>
+</figure>
+</div>
+<section id="catena" class="level3" data-number="19.9.1">
+<h3 data-number="19.9.1" class="anchored" data-anchor-id="catena"><span class="header-section-number">19.9.1</span> Catena</h3>
+<p>Il concetto di catena (<em>pipe</em>) in un DAG descrive una sequenza in cui una variabile <span class="math inline">\(X\)</span> influisce su una variabile <span class="math inline">\(Y\)</span> attraverso una variabile intermedia <span class="math inline">\(Z\)</span>, formando una catena causale del tipo <span class="math inline">\(X \rightarrow Z \rightarrow Y\)</span>. In questo scenario, <span class="math inline">\(Z\)</span> agisce come mediatore della relazione causale tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. Controllando per <span class="math inline">\(Z\)</span>, la relazione diretta osservata tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> scompare perché <span class="math inline">\(X\)</span> influisce su <span class="math inline">\(Y\)</span> esclusivamente attraverso <span class="math inline">\(Z\)</span>.</p>
+<p>In sintesi,</p>
+<ul>
+<li><span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono associati: <span class="math inline">\(X \not\perp Y\)</span>.</li>
+<li>L’influenza di <span class="math inline">\(X\)</span> su <span class="math inline">\(Y\)</span> viene trasmessa tramite <span class="math inline">\(Z\)</span>.</li>
+<li>Stratificando i dati in base a <span class="math inline">\(Z\)</span>, l’associazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> scompare: <span class="math inline">\(X \perp Y \mid Z\)</span>.</li>
+</ul>
+<p><strong>Esempio.</strong> Consideriamo l’effetto dell’educazione sull’occupabilità attraverso l’acquisizione di competenze specifiche.</p>
+<p><strong>Variabili:</strong> - <span class="math inline">\(X\)</span>: Livello di Educazione (ad es., nessun diploma, diploma di scuola superiore, laurea) - <span class="math inline">\(Z\)</span>: Competenze Specifiche Acquisite (ad es., competenze informatiche, competenze linguistiche, competenze professionali specifiche) - <span class="math inline">\(Y\)</span>: Occupabilità (misurata come probabilità di ottenere un lavoro nel proprio campo di studio entro un certo periodo dopo il completamento degli studi)</p>
+<p><strong>Relazione Causale:</strong> Il livello di educazione (<span class="math inline">\(X\)</span>) influisce sull’occupabilità (<span class="math inline">\(Y\)</span>) attraverso l’acquisizione di competenze specifiche (<span class="math inline">\(Z\)</span>). In altre parole, non è tanto il titolo di studio in sé a determinare direttamente l’occupabilità, quanto le competenze specifiche acquisite durante il percorso educativo. Questo è un classico esempio di relazione di tipo “pipe”.</p>
+<p><strong>Scenario senza Stratificazione:</strong> Senza stratificare per <span class="math inline">\(Z\)</span>, si potrebbe osservare una correlazione positiva tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, suggerendo che un maggiore livello di educazione è associato a una maggiore occupabilità. Tuttavia, questa osservazione non chiarisce se il titolo di studio in sé sia il fattore determinante o se ciò dipenda dalle competenze acquisite.</p>
+<p><strong>Scenario con Stratificazione per <span class="math inline">\(Z\)</span>:</strong> Quando si stratifica per le competenze specifiche acquisite (<span class="math inline">\(Z\)</span>), controllando quindi per il tipo e il livello di competenze ottenute, la relazione diretta tra il livello di educazione e l’occupabilità potrebbe scomparire o indebolirsi fortemente. Questo indica che, una volta considerate le competenze acquisite, il livello di educazione in sé non ha un impatto diretto sull’occupabilità. L’effetto osservato del livello di educazione sull’occupabilità è quindi mediato completamente dalle competenze specifiche acquisite.</p>
+<p>Questo esempio mostra come, in una relazione a catena, la variabile mediatrice (<span class="math inline">\(Z\)</span>) spiega completamente la relazione tra la variabile indipendente (<span class="math inline">\(X\)</span>) e la variabile dipendente (<span class="math inline">\(Y\)</span>).</p>
+</section>
+<section id="confondente" class="level3" data-number="19.9.2">
+<h3 data-number="19.9.2" class="anchored" data-anchor-id="confondente"><span class="header-section-number">19.9.2</span> Confondente</h3>
+<p>Il concetto di confondente (<em>fork</em>) si riferisce a una struttura in cui una variabile comune <span class="math inline">\(Z\)</span> causa due variabili <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, formando una relazione del tipo <span class="math inline">\(X \leftarrow Z \rightarrow Y\)</span>. In questo scenario, <span class="math inline">\(Z\)</span> è una variabile confondente che può generare una correlazione apparente tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, anche se non esiste una relazione causale diretta tra di loro. Analizzare adeguatamente il ruolo di <span class="math inline">\(Z\)</span> è fondamentale per comprendere le vere relazioni causali tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>.</p>
+<p><strong>Esempio.</strong> Consideriamo l’influenza dell’età sul numero di scarpe e abilità matematiche.</p>
+<p><strong>Variabili:</strong> - <span class="math inline">\(Z\)</span>: Età (variabile confondente) - <span class="math inline">\(X\)</span>: Numero di Scarpe - <span class="math inline">\(Y\)</span>: Abilità Matematiche</p>
+<p><strong>Relazione Causale:</strong> In questo esempio, l’età (<span class="math inline">\(Z\)</span>) è la variabile confondente che influisce sia sul numero di scarpe (<span class="math inline">\(X\)</span>) che sulle abilità matematiche (<span class="math inline">\(Y\)</span>). Con l’aumentare dell’età, generalmente aumenta il numero di scarpe a causa della crescita fisica e migliorano le abilità matematiche grazie all’apprendimento scolastico e allo sviluppo cognitivo.</p>
+<p><strong>Senza Considerare l’Età:</strong> Se non consideriamo l’età (<span class="math inline">\(Z\)</span>) nell’analisi, potremmo erroneamente concludere che esiste una relazione diretta tra il numero di scarpe (<span class="math inline">\(X\)</span>) e le abilità matematiche (<span class="math inline">\(Y\)</span>), dato che entrambi aumentano nel tempo. Tuttavia, questa correlazione non implica una relazione causale diretta tra il numero di scarpe e le abilità matematiche, ma è piuttosto il risultato dell’influenza dell’età.</p>
+<p><strong>Considerando l’Età:</strong> Una volta che l’età viene inclusa nell’analisi come variabile confondente, diventa chiaro che qualsiasi correlazione osservata tra il numero di scarpe e le abilità matematiche è spiegata dalla loro relazione comune con l’età. Stratificando per età o utilizzando metodi statistici per controllare l’effetto dell’età, possiamo correttamente interpretare che non esiste una relazione causale diretta tra il numero di scarpe e le abilità matematiche.</p>
+<p>Questo esempio illustra l’importanza di identificare e controllare le variabili confondenti nelle analisi causali.</p>
+</section>
+<section id="collider" class="level3" data-number="19.9.3">
+<h3 data-number="19.9.3" class="anchored" data-anchor-id="collider"><span class="header-section-number">19.9.3</span> Collider</h3>
+<p>La struttura causale nota come <em>collider</em> si verifica quando due variabili, <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, convergono influenzando una terza variabile, <span class="math inline">\(Z\)</span>, formando una configurazione del tipo <span class="math inline">\(X \rightarrow Z \leftarrow Y\)</span>. In questo schema, <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono indipendenti, il che significa che non esiste una relazione causale diretta o un’influenza reciproca evidente tra di loro. Sebbene entrambe influenzino <span class="math inline">\(Z\)</span>, non si può dedurre l’esistenza di un legame causale diretto tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> basandosi esclusivamente sulla loro comune influenza su <span class="math inline">\(Z\)</span>.</p>
+<p><strong>Esempio.</strong> Consideriamo quali variabili, il talento musicale, il supporto familiare e il successo in una carriera musicale.</p>
+<p><strong>Variabili:</strong> - <span class="math inline">\(X\)</span>: Talento Musicale - <span class="math inline">\(Y\)</span>: Supporto Familiare - <span class="math inline">\(Z\)</span>: Successo nella Carriera Musicale</p>
+<p><strong>Relazione Causale:</strong> In questo esempio, sia il talento musicale (<span class="math inline">\(X\)</span>) che il supporto familiare (<span class="math inline">\(Y\)</span>) influenzano il successo nella carriera musicale (<span class="math inline">\(Z\)</span>). Tuttavia, il talento musicale e il supporto familiare sono indipendenti l’uno dall’altro. Non esiste una relazione causale diretta tra il talento musicale e il supporto familiare.</p>
+<p><strong>Senza Considerare <span class="math inline">\(Z\)</span>:</strong> <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono indipendenti (<span class="math inline">\(X \perp Y\)</span>). Il talento musicale e il supporto familiare non hanno alcuna influenza reciproca diretta.</p>
+<p><strong>Considerando <span class="math inline">\(Z\)</span>:</strong> Quando ci si concentra esclusivamente sulle persone che hanno raggiunto il successo musicale (<span class="math inline">\(Z\)</span>), si potrebbe erroneamente percepire un’associazione tra talento musicale e supporto familiare. Questo è conosciuto come <em>bias del collider</em>. Questa associazione artificiale emerge perché stiamo selezionando un sottogruppo basato su <span class="math inline">\(Z\)</span>, che è influenzato sia da <span class="math inline">\(X\)</span> che da <span class="math inline">\(Y\)</span>. Pertanto, quando si stratifica per <span class="math inline">\(Z\)</span>, <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> appaiono associati (<span class="math inline">\(X \not\perp Y \mid Z\)</span>).</p>
+<p>In sintesi,</p>
+<ul>
+<li><strong>Indipendenza:</strong> <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono indipendenti: <span class="math inline">\(X \perp Y\)</span>.</li>
+<li><strong>Influenza:</strong> Sia <span class="math inline">\(X\)</span> che <span class="math inline">\(Y\)</span> influenzano <span class="math inline">\(Z\)</span>.</li>
+<li><strong>Associazione Spuria:</strong> Stratificando i dati in base a <span class="math inline">\(Z\)</span>, emerge un’associazione spuria: <span class="math inline">\(X \not\perp Y \mid Z\)</span>.</li>
+</ul>
+<p>Il bias del collider si verifica quando la selezione di casi basata su <span class="math inline">\(Z\)</span> introduce un’associazione artificiale tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, che non riflette le relazioni presenti nell’intera popolazione. Questo può portare a interpretazioni errate e conclusioni fuorvianti.</p>
+</section>
+<section id="il-discendente" class="level3" data-number="19.9.4">
+<h3 data-number="19.9.4" class="anchored" data-anchor-id="il-discendente"><span class="header-section-number">19.9.4</span> Il Discendente</h3>
+<p>La configurazione del <em>discendente</em> è caratterizzata dalla presenza di una variabile, <span class="math inline">\(Z\)</span>, che riceve l’influenza da una variabile <span class="math inline">\(X\)</span> e trasmette tale effetto a una variabile <span class="math inline">\(Y\)</span>. Inoltre, <span class="math inline">\(Z\)</span> esercita un’influenza diretta su un’altra variabile, <span class="math inline">\(A\)</span>. Pertanto, <span class="math inline">\(Z\)</span> agisce sia come mediatore nella relazione causale tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, sia come collegamento causale diretto con <span class="math inline">\(A\)</span>. La struttura risultante può essere rappresentata come <span class="math inline">\(X \rightarrow Z \rightarrow Y\)</span>, con una ramificazione aggiuntiva da <span class="math inline">\(Z\)</span> ad <span class="math inline">\(A\)</span> (<span class="math inline">\(Z \rightarrow A\)</span>).</p>
+<p><strong>Esempio.</strong> Consideriamo l’effetto del supporto sociale sulla felicità attraverso l’autostima.</p>
+<p><strong>Variabili:</strong> - <span class="math inline">\(X\)</span>: Supporto Sociale - <span class="math inline">\(Z\)</span>: Autostima - <span class="math inline">\(Y\)</span>: Felicità - <span class="math inline">\(A\)</span>: Livello di Stress</p>
+<p><strong>Relazione Causale:</strong> Il supporto sociale (<span class="math inline">\(X\)</span>) migliora l’autostima (<span class="math inline">\(Z\)</span>), che a sua volta influisce sulla felicità (<span class="math inline">\(Y\)</span>) e sul livello di stress (<span class="math inline">\(A\)</span>). In questo caso, <span class="math inline">\(Z\)</span> agisce come mediatore tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> e ha un effetto diretto su <span class="math inline">\(A\)</span>.</p>
+<p><strong>Senza Considerare <span class="math inline">\(A\)</span></strong>: Concentrandosi sul percorso <span class="math inline">\(X \rightarrow Z \rightarrow Y\)</span>, si può isolare l’effetto del supporto sociale sulla felicità attraverso l’autostima, mantenendo chiara la relazione causale.</p>
+<p><strong>Considerando <span class="math inline">\(A\)</span></strong>: Quando si include <span class="math inline">\(A\)</span> nell’analisi, si introduce complessità poiché <span class="math inline">\(A\)</span> può aprire nuovi percorsi causali o introdurre bias, complicando l’interpretazione dell’effetto diretto di <span class="math inline">\(X\)</span> su <span class="math inline">\(Y\)</span>. Se <span class="math inline">\(A\)</span> ha un discendente <span class="math inline">\(D\)</span> che funge da collider, influenzato sia da <span class="math inline">\(A\)</span> che da una causa comune non osservata con <span class="math inline">\(Y\)</span> (<span class="math inline">\(U\)</span>), condizionare su <span class="math inline">\(D\)</span> può introdurre un bias aprendo un percorso non causale (<span class="math inline">\(A \rightarrow D \leftarrow U \rightarrow Y\)</span>). Questo esemplifica come l’inclusione di discendenti e colliders possa alterare l’interpretazione degli effetti causali.</p>
+<p>In sintesi,</p>
+<ul>
+<li><span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono associati causalmente attraverso <span class="math inline">\(Z\)</span>: <span class="math inline">\(X \not\perp Y\)</span>.</li>
+<li><span class="math inline">\(A\)</span> fornisce informazioni su <span class="math inline">\(Z\)</span>.</li>
+<li>Stratificando i dati in base ad <span class="math inline">\(A\)</span>, l’associazione tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> può indebolirsi o scomparire: <span class="math inline">\(X \perp Y \mid A\)</span>.</li>
+</ul>
+<p>Comprendere il ruolo dei discendenti e dei collider è cruciale per evitare interpretazioni errate dei dati e per fare inferenze causali accurate.</p>
+</section>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="19.10">
+<h2 data-number="19.10" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">19.10</span> Considerazioni Conclusive</h2>
+<p>Negli studi basati su dati osservazionali, districarsi tra le complesse maglie delle inferenze causali richiede un’acuta analisi e una particolare sensibilità verso vari aspetti critici del processo di ricerca. Ogni fase, dall’identificazione dei fattori confondenti all’analisi accurata dei percorsi causali, passando per la gestione dei mediatori e dei collider, fino alla valutazione della robustezza interna ed esterna degli studi, presenta sfide e opportunità.</p>
+<p>Il primo passo verso un’interpretazione corretta dei dati osservazionali consiste nel saper riconoscere e gestire le variabili confondenti. Queste variabili, agendo su entrambe le variabili indipendenti e dipendenti, possono generare correlazioni ingannevoli che mascherano la vera natura delle relazioni in esame.</p>
+<p>L’uso dei DAG (Grafi Aciclici Diretti) emerge come uno strumento molto utile in questo contesto, offrendo una rappresentazione visiva dei percorsi causali e fornendo indicazioni preziose su come evitare trappole analitiche quali il sovracontrollo o il controllo inappropriato di variabili post-trattamento.</p>
+<p>Quando si tratta di mediatori e collider, il terreno si fa ancora più insidioso. I mediatori, essendo ponti tra cause ed effetti, necessitano di una gestione oculata per non perdere di vista l’effetto causale che si intende esplorare. Allo stesso tempo, è fondamentale resistere alla tentazione di controllare indiscriminatamente i collider, poiché ciò può aprire la porta a correlazioni spurie che distorcono la realtà dei fenomeni studiati.</p>
+<p>La questione del bilanciamento tra validità interna ed esterna ricorda che, sebbene gli esperimenti randomizzati possano offrire garanzie solide di validità interna, la loro capacità di generalizzare i risultati al mondo esterno – la validità esterna – non è sempre garantita. Solo un approccio che valorizza la diversità metodologica, abbracciando tanto gli studi sperimentali quanto quelli osservazionali, può rispondere in modo completo alle domande di ricerca.</p>
+<p>In conclusione, per studiare con successo le dinamiche nascoste che regolano le relazioni tra le variabili, è essenziale non solo un’attenta valutazione dei dati disponibili ma anche una profonda riflessione sulle strutture causali in gioco. Integrare diversi approcci di ricerca arricchisce la nostra comprensione e ci avvicina a conclusioni causali solide e generalizzabili.</p>
+<p>Un sommario ironico di questi concetti è fornito nella vignetta di <a href="https://www.explainxkcd.com/wiki/index.php/2560:_Confounding_Variables">xkcd</a>.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="19.11">
+<h2 data-number="19.11" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">19.11</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="d99129b7-4eef-4219-bc89-77b7165e7b49" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Sat Feb 03 2024
+
+Python implementation: CPython
+Python version       : 3.11.7
+IPython version      : 8.19.0
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.3.0
+Machine     : x86_64
+Processor   : i386
+CPU cores   : 8
+Architecture: 64bit
+
+numpy     : 1.26.2
+seaborn   : 0.13.0
+scipy     : 1.11.4
+matplotlib: 3.8.2
+arviz     : 0.17.0
+graphviz  : 0.20.1
+pandas    : 2.1.4
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-alexander2023telling" class="csl-entry" role="listitem">
+Alexander, Rohan. 2023. <em>Telling Stories with Data: With Applications in R</em>. Chapman; Hall/CRC.
+</div>
+<div id="ref-dagan2021bnt162b2" class="csl-entry" role="listitem">
+Dagan, Noa, Noam Barda, Eldad Kepten, Oren Miron, Shay Perchik, Mark Katz, Miguel Hernán, Marc Lipsitch, Ben Reis, e Ran Balicer. 2021. <span>«BNT162b2 mRNA Covid-19 Vaccine in a Nationwide Mass Vaccination Setting»</span>. <em>New England Journal of Medicine</em> 384 (15): 1412–23. <a href="https://doi.org/10.1056/NEJMoa2101765">https://doi.org/10.1056/NEJMoa2101765</a>.
+</div>
+<div id="ref-McElreath_rethinking" class="csl-entry" role="listitem">
+McElreath, Richard. 2020. <em>Statistical rethinking: <span>A</span> <span>Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. 2nd Edition. Boca Raton, Florida: CRC Press.
+</div>
+<div id="ref-pearl2009causality" class="csl-entry" role="listitem">
+Pearl, Judea. 2009. <em>Causality</em>. Cambridge University Press.
+</div>
+<div id="ref-riedererdesignpatterns" class="csl-entry" role="listitem">
+Riederer, Emily. 2021. <span>«Causal design patterns for data analysts»</span>, gennaio. <a href="https://emilyriederer.netlify.app/post/causal-design-patterns/">https://emilyriederer.netlify.app/post/causal-design-patterns/</a>.
+</div>
+<div id="ref-rohrer2018thinking" class="csl-entry" role="listitem">
+Rohrer, Julia M. 2018. <span>«Thinking clearly about correlations and causation: Graphical causal models for observational data»</span>. <em>Advances in methods and practices in psychological science</em> 1 (1): 27–42.
+</div>
+<div id="ref-van2023new" class="csl-entry" role="listitem">
+Zwet, Erik van, Andrew Gelman, Sander Greenland, Guido Imbens, Simon Schwab, e Steven N Goodman. 2023. <span>«A New Look at P Values for Randomized Clinical Trials»</span>. <em>NEJM Evidence</em> 3 (1): EVIDoa2300003.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/chapter_3/05_correlation.html" class="pagination-link" aria-label="Le relazioni tra variabili">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/chapter_4/introduction_chapter_3.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_3/06_causality.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>

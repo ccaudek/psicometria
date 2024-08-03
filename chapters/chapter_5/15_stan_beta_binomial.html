@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>Analisi dei dati per psicologi - 43&nbsp; Linguaggio Stan</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/chapter_5/16_stan_summary_posterior.html" rel="next">
+<link href="../../chapters/chapter_5/10_metropolis.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/introduction_chapter_4.html">Inferenza bayesiana</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/15_stan_beta_binomial.html"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Analisi dei dati per psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/introduction_chapter_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_1/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/introduction_chapter_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_2/03_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">L’analisi dei dati psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Le fasi del progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/02_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_3/06_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/introduction_chapter_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01a_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01b_prob_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/01c_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Distribuzioni di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/02_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/03_bayes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04a_random_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04b_expval_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/04c_sampling_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/05_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/06_density_func.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/07_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/08_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/09_likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_4/10_grid_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Inferenza bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/introduction_chapter_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/02_subj_prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/03_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/04_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/06_balance_prior_post.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/10_metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/15_stan_beta_binomial.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/16_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/17_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/18_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/19_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/22_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/23_stan_two_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/24_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_5/25_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/introduction_chapter_5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_03_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_05a_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_06_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_07_robust_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_08_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_09_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_21_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_22_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_23_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_24_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_25_stan_rct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_30_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_31_kl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_32_stan_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_35_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_6/05_40_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">Inferenza frequentista</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/introduction_chapter_6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/02_conf_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/05_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/06_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/07_effect_size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/09_s_m_errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_7/10_integrity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a12_sum_notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a20_kde_plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Kernel Density Estimation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a30_prob_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Esercizi di probabilità discreta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a40_rng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Generazione di numeri casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a45_mcmc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a46_stan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a51_reglin_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/chapter_8/a100_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Soluzioni degli Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">43.1</span> Introduzione</a></li>
+  <li><a href="#inferenza-bayesiana-e-metodi-mcmc" id="toc-inferenza-bayesiana-e-metodi-mcmc" class="nav-link" data-scroll-target="#inferenza-bayesiana-e-metodi-mcmc"><span class="header-section-number">43.2</span> Inferenza Bayesiana e Metodi MCMC</a></li>
+  <li><a href="#stan-e-la-programmazione-probabilistica" id="toc-stan-e-la-programmazione-probabilistica" class="nav-link" data-scroll-target="#stan-e-la-programmazione-probabilistica"><span class="header-section-number">43.3</span> Stan e la Programmazione Probabilistica</a>
+  <ul class="collapse">
+  <li><a href="#struttura-di-un-programma-stan" id="toc-struttura-di-un-programma-stan" class="nav-link" data-scroll-target="#struttura-di-un-programma-stan"><span class="header-section-number">43.3.1</span> Struttura di un Programma Stan</a></li>
+  <li><a href="#esecuzione-di-un-programma-stan" id="toc-esecuzione-di-un-programma-stan" class="nav-link" data-scroll-target="#esecuzione-di-un-programma-stan"><span class="header-section-number">43.3.2</span> Esecuzione di un Programma Stan</a></li>
+  </ul></li>
+  <li><a href="#simulazione-in-avanti" id="toc-simulazione-in-avanti" class="nav-link" data-scroll-target="#simulazione-in-avanti"><span class="header-section-number">43.4</span> Simulazione in Avanti</a>
+  <ul class="collapse">
+  <li><a href="#un-primo-programma-in-stan-generazione-di-dati-casuali" id="toc-un-primo-programma-in-stan-generazione-di-dati-casuali" class="nav-link" data-scroll-target="#un-primo-programma-in-stan-generazione-di-dati-casuali"><span class="header-section-number">43.4.1</span> Un Primo Programma in Stan: Generazione di Dati Casuali</a></li>
+  <li><a href="#organizzazione-di-un-programma-stan" id="toc-organizzazione-di-un-programma-stan" class="nav-link" data-scroll-target="#organizzazione-di-un-programma-stan"><span class="header-section-number">43.4.2</span> Organizzazione di un Programma Stan</a></li>
+  <li><a href="#tipi-di-variabili-in-stan" id="toc-tipi-di-variabili-in-stan" class="nav-link" data-scroll-target="#tipi-di-variabili-in-stan"><span class="header-section-number">43.4.3</span> Tipi di Variabili in Stan</a></li>
+  <li><a href="#vincoli-sui-tipi" id="toc-vincoli-sui-tipi" class="nav-link" data-scroll-target="#vincoli-sui-tipi"><span class="header-section-number">43.4.4</span> Vincoli sui Tipi</a></li>
+  <li><a href="#esecuzione-del-programma-stan" id="toc-esecuzione-del-programma-stan" class="nav-link" data-scroll-target="#esecuzione-del-programma-stan"><span class="header-section-number">43.4.5</span> Esecuzione del Programma Stan</a></li>
+  <li><a href="#costruzione-del-modello" id="toc-costruzione-del-modello" class="nav-link" data-scroll-target="#costruzione-del-modello"><span class="header-section-number">43.4.6</span> Costruzione del Modello</a></li>
+  <li><a href="#interfaccia-python" id="toc-interfaccia-python" class="nav-link" data-scroll-target="#interfaccia-python"><span class="header-section-number">43.4.7</span> Interfaccia Python</a></li>
+  <li><a href="#estrazione-dei-risultati" id="toc-estrazione-dei-risultati" class="nav-link" data-scroll-target="#estrazione-dei-risultati"><span class="header-section-number">43.4.8</span> Estrazione dei Risultati</a></li>
+  </ul></li>
+  <li><a href="#integrazione-monte-carlo" id="toc-integrazione-monte-carlo" class="nav-link" data-scroll-target="#integrazione-monte-carlo"><span class="header-section-number">43.5</span> Integrazione Monte Carlo</a>
+  <ul class="collapse">
+  <li><a href="#metodi-monte-carlo-a-catena-di-markov" id="toc-metodi-monte-carlo-a-catena-di-markov" class="nav-link" data-scroll-target="#metodi-monte-carlo-a-catena-di-markov"><span class="header-section-number">43.5.1</span> Metodi Monte Carlo a Catena di Markov</a></li>
+  <li><a href="#catene-di-markov" id="toc-catene-di-markov" class="nav-link" data-scroll-target="#catene-di-markov"><span class="header-section-number">43.5.2</span> Catene di Markov</a></li>
+  </ul></li>
+  <li><a href="#il-problema-inverso" id="toc-il-problema-inverso" class="nav-link" data-scroll-target="#il-problema-inverso"><span class="header-section-number">43.6</span> Il Problema Inverso</a>
+  <ul class="collapse">
+  <li><a href="#storia-e-applicazione" id="toc-storia-e-applicazione" class="nav-link" data-scroll-target="#storia-e-applicazione"><span class="header-section-number">43.6.1</span> Storia e Applicazione</a></li>
+  <li><a href="#modello-di-laplace" id="toc-modello-di-laplace" class="nav-link" data-scroll-target="#modello-di-laplace"><span class="header-section-number">43.6.2</span> Modello di Laplace</a></li>
+  <li><a href="#distribuzione-a-priori" id="toc-distribuzione-a-priori" class="nav-link" data-scroll-target="#distribuzione-a-priori"><span class="header-section-number">43.6.3</span> Distribuzione a Priori</a></li>
+  <li><a href="#distribuzione-a-posteriori" id="toc-distribuzione-a-posteriori" class="nav-link" data-scroll-target="#distribuzione-a-posteriori"><span class="header-section-number">43.6.4</span> Distribuzione a Posteriori</a></li>
+  <li><a href="#implementazione-in-stan" id="toc-implementazione-in-stan" class="nav-link" data-scroll-target="#implementazione-in-stan"><span class="header-section-number">43.6.5</span> Implementazione in Stan</a></li>
+  <li><a href="#campionare-dalla-distribuzione-a-posteriori" id="toc-campionare-dalla-distribuzione-a-posteriori" class="nav-link" data-scroll-target="#campionare-dalla-distribuzione-a-posteriori"><span class="header-section-number">43.6.6</span> Campionare dalla Distribuzione a Posteriori</a></li>
+  <li><a href="#compilazione-del-codice-stan" id="toc-compilazione-del-codice-stan" class="nav-link" data-scroll-target="#compilazione-del-codice-stan"><span class="header-section-number">43.6.7</span> Compilazione del Codice Stan</a></li>
+  </ul></li>
+  <li><a href="#stime-puntuali-bayesiane" id="toc-stime-puntuali-bayesiane" class="nav-link" data-scroll-target="#stime-puntuali-bayesiane"><span class="header-section-number">43.7</span> Stime Puntuali Bayesiane</a>
+  <ul class="collapse">
+  <li><a href="#stimatore-della-media-posteriori" id="toc-stimatore-della-media-posteriori" class="nav-link" data-scroll-target="#stimatore-della-media-posteriori"><span class="header-section-number">43.7.1</span> Stimatore della Media Posteriori</a></li>
+  <li><a href="#stimatore-della-mediana-posteriori-quantili-e-intervalli" id="toc-stimatore-della-mediana-posteriori-quantili-e-intervalli" class="nav-link" data-scroll-target="#stimatore-della-mediana-posteriori-quantili-e-intervalli"><span class="header-section-number">43.7.2</span> Stimatore della Mediana Posteriori, Quantili e Intervalli</a></li>
+  <li><a href="#quantili-e-intervalli-di-credibilità" id="toc-quantili-e-intervalli-di-credibilità" class="nav-link" data-scroll-target="#quantili-e-intervalli-di-credibilità"><span class="header-section-number">43.7.3</span> Quantili e Intervalli di Credibilità</a></li>
+  <li><a href="#errore-di-stima-e-bias" id="toc-errore-di-stima-e-bias" class="nav-link" data-scroll-target="#errore-di-stima-e-bias"><span class="header-section-number">43.7.4</span> Errore di Stima e Bias</a></li>
+  <li><a href="#stimatore-della-moda-posteriori" id="toc-stimatore-della-moda-posteriori" class="nav-link" data-scroll-target="#stimatore-della-moda-posteriori"><span class="header-section-number">43.7.5</span> Stimatore della Moda Posteriori</a></li>
+  <li><a href="#caratteristiche-della-moda-posteriori" id="toc-caratteristiche-della-moda-posteriori" class="nav-link" data-scroll-target="#caratteristiche-della-moda-posteriori"><span class="header-section-number">43.7.6</span> Caratteristiche della Moda Posteriori</a></li>
+  <li><a href="#funzioni-di-perdita-e-proprietà-degli-stimatori" id="toc-funzioni-di-perdita-e-proprietà-degli-stimatori" class="nav-link" data-scroll-target="#funzioni-di-perdita-e-proprietà-degli-stimatori"><span class="header-section-number">43.7.7</span> Funzioni di Perdita e Proprietà degli Stimatori</a></li>
+  <li><a href="#proprietà-della-mediana-posteriori" id="toc-proprietà-della-mediana-posteriori" class="nav-link" data-scroll-target="#proprietà-della-mediana-posteriori"><span class="header-section-number">43.7.8</span> Proprietà della Mediana Posteriori</a></li>
+  <li><a href="#concentrazione-sulle-medie-a-posteriori" id="toc-concentrazione-sulle-medie-a-posteriori" class="nav-link" data-scroll-target="#concentrazione-sulle-medie-a-posteriori"><span class="header-section-number">43.7.9</span> Concentrazione sulle Medie a Posteriori</a></li>
+  <li><a href="#errore-markov-chain-monte-carlo-e-dimensione-del-campione-effettivo" id="toc-errore-markov-chain-monte-carlo-e-dimensione-del-campione-effettivo" class="nav-link" data-scroll-target="#errore-markov-chain-monte-carlo-e-dimensione-del-campione-effettivo"><span class="header-section-number">43.7.10</span> Errore (Markov Chain) Monte Carlo e Dimensione del Campione Effettivo</a></li>
+  </ul></li>
+  <li><a href="#stima-delle-probabilità-di-evento" id="toc-stima-delle-probabilità-di-evento" class="nav-link" data-scroll-target="#stima-delle-probabilità-di-evento"><span class="header-section-number">43.8</span> Stima delle Probabilità di Evento</a>
+  <ul class="collapse">
+  <li><a href="#probabilità-di-evento-tramite-indicatori" id="toc-probabilità-di-evento-tramite-indicatori" class="nav-link" data-scroll-target="#probabilità-di-evento-tramite-indicatori"><span class="header-section-number">43.8.1</span> Probabilità di Evento tramite Indicatori</a></li>
+  <li><a href="#eventi-come-indicatori-in-stan" id="toc-eventi-come-indicatori-in-stan" class="nav-link" data-scroll-target="#eventi-come-indicatori-in-stan"><span class="header-section-number">43.8.2</span> Eventi come Indicatori in Stan</a></li>
+  <li><a href="#la-risposta-alla-domanda-di-laplace" id="toc-la-risposta-alla-domanda-di-laplace" class="nav-link" data-scroll-target="#la-risposta-alla-domanda-di-laplace"><span class="header-section-number">43.8.3</span> La Risposta alla Domanda di Laplace</a></li>
+  <li><a href="#statistiche-di-riepilogo-mcmc-da-stan" id="toc-statistiche-di-riepilogo-mcmc-da-stan" class="nav-link" data-scroll-target="#statistiche-di-riepilogo-mcmc-da-stan"><span class="header-section-number">43.8.4</span> Statistiche di riepilogo MCMC da Stan</a></li>
+  </ul></li>
+  <li><a href="#riscaldamento-e-monitoraggio-della-convergenza" id="toc-riscaldamento-e-monitoraggio-della-convergenza" class="nav-link" data-scroll-target="#riscaldamento-e-monitoraggio-della-convergenza"><span class="header-section-number">44</span> Riscaldamento e monitoraggio della convergenza</a>
+  <ul class="collapse">
+  <li><a href="#riscaldamento" id="toc-riscaldamento" class="nav-link" data-scroll-target="#riscaldamento"><span class="header-section-number">44.1</span> Riscaldamento</a></li>
+  <li><a href="#riduzione-potenziale-della-scala-e-widehatr" id="toc-riduzione-potenziale-della-scala-e-widehatr" class="nav-link" data-scroll-target="#riduzione-potenziale-della-scala-e-widehatr"><span class="header-section-number">44.2</span> Riduzione potenziale della scala e <span class="math inline">\(\widehat{R}\)</span></a></li>
+  <li><a href="#quante-catene-per-quanto-tempo" id="toc-quante-catene-per-quanto-tempo" class="nav-link" data-scroll-target="#quante-catene-per-quanto-tempo"><span class="header-section-number">44.3</span> Quante catene per quanto tempo?</a></li>
+  <li><a href="#esecuzione-delle-catene-contemporaneamente" id="toc-esecuzione-delle-catene-contemporaneamente" class="nav-link" data-scroll-target="#esecuzione-delle-catene-contemporaneamente"><span class="header-section-number">44.4</span> Esecuzione delle catene contemporaneamente</a>
+  <ul class="collapse">
+  <li><a href="#matrici-vettori-o-array-in-stan" id="toc-matrici-vettori-o-array-in-stan" class="nav-link" data-scroll-target="#matrici-vettori-o-array-in-stan"><span class="header-section-number">44.4.1</span> Matrici, Vettori o Array in Stan</a></li>
+  </ul></li>
+  <li><a href="#modello-di-esecuzione-di-stan" id="toc-modello-di-esecuzione-di-stan" class="nav-link" data-scroll-target="#modello-di-esecuzione-di-stan"><span class="header-section-number">44.5</span> Modello di esecuzione di Stan</a>
+  <ul class="collapse">
+  <li><a href="#dati-e-dati-trasformati" id="toc-dati-e-dati-trasformati" class="nav-link" data-scroll-target="#dati-e-dati-trasformati"><span class="header-section-number">44.5.1</span> Dati e dati trasformati</a></li>
+  <li><a href="#parametri-e-parametri-trasformati" id="toc-parametri-e-parametri-trasformati" class="nav-link" data-scroll-target="#parametri-e-parametri-trasformati"><span class="header-section-number">44.5.2</span> Parametri e Parametri Trasformati</a></li>
+  <li><a href="#modello" id="toc-modello" class="nav-link" data-scroll-target="#modello"><span class="header-section-number">44.5.3</span> Modello</a></li>
+  <li><a href="#quantità-generate" id="toc-quantità-generate" class="nav-link" data-scroll-target="#quantità-generate"><span class="header-section-number">44.5.4</span> Quantità generate</a></li>
+  </ul></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">44.6</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_5/15_stan_beta_binomial.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/chapter_5/introduction_chapter_4.html">Inferenza bayesiana</a></li><li class="breadcrumb-item"><a href="../../chapters/chapter_5/15_stan_beta_binomial.html"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec_stan" class="quarto-section-identifier"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e competenze chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:42:44.487021Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:42:44.472635Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> stat</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-3" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"beta_binomial_model"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="43.1">
+<h2 data-number="43.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">43.1</span> Introduzione</h2>
+<p>Nel presente capitolo, presenteremo un linguaggio di programmazione probabilistica denominato <a href="http://mc-stan.org/">Stan</a>. Stan consente di estrarre campioni da distribuzioni di probabilità mediante la costruzione di una catena di Markov, la cui distribuzione di equilibrio (o stazionaria) coincide con la distribuzione desiderata. Il nome del linguaggio deriva da uno dei pionieri del metodo Monte Carlo, Stanislaw Ulam. Un’introduzione dettagliata al linguaggio Stan è fornita nell’<a href="../chapter_8/a46_stan.html" class="quarto-xref"><span>Appendice P</span></a>. In questo capitolo, utilizzeremo Stan per fare inferenza su una proporzione.</p>
+<p>Il linguaggio di programmazione probabilistica Stan è compatibile con diverse piattaforme e offre varie interfacce (R, Python, Julia). In questo corso, useremo CmdStanPy, un’interfaccia per Stan pensata per gli utenti di Python. CmdStanPy è un pacchetto puramente in Python3 che è un wrapper di CmdStan, l’interfaccia a riga di comando per Stan scritta in C++. Pertanto, oltre a Python3, CmdStanPy richiede un toolchain C++ per compilare ed eseguire i modelli Stan.</p>
+<p>La procedura per <a href="https://mc-stan.org/cmdstanpy/installation.html">installare</a> CmdStanPy e i componenti sottostanti di CmdStan dal repository conda-forge è descritta nel capitolo <a href="../chapter_8/a04_virtual_env.html" class="quarto-xref"><span>Appendice E</span></a>.</p>
+</section>
+<section id="inferenza-bayesiana-e-metodi-mcmc" class="level2" data-number="43.2">
+<h2 data-number="43.2" class="anchored" data-anchor-id="inferenza-bayesiana-e-metodi-mcmc"><span class="header-section-number">43.2</span> Inferenza Bayesiana e Metodi MCMC</h2>
+<p>L’inferenza bayesiana, impiegata per la stima dei parametri, la previsione e la valutazione della probabilità di eventi, si basa sulle aspettative a posteriori. Queste aspettative si configurano come integrali multidimensionali nello spazio dei parametri. Stan, un software all’avanguardia per l’analisi statistica, si avvale del metodo Monte Carlo per risolvere questi integrali complessi. I metodi Monte Carlo sfruttano il campionamento casuale per affrontare integrali ad alta dimensionalità.</p>
+<p>Tuttavia, per la maggior parte dei problemi bayesiani, non è possibile utilizzare i metodi Monte Carlo standard, poiché non è fattibile generare campioni indipendenti dalla densità a posteriori di interesse, fatta eccezione per modelli estremamente semplici con prior coniugati. Di conseguenza, è necessario ricorrere ai metodi Monte Carlo a Catena di Markov (MCMC), che producono campioni correlati tra loro. Stan implementa il Monte Carlo Hamiltoniano (HMC), il metodo MCMC più efficiente e scalabile per le densità target. Altri metodi, come il Metropolis-Hastings e il campionamento di Gibbs, risultano più semplici ma meno efficienti dell’HMC.</p>
+</section>
+<section id="stan-e-la-programmazione-probabilistica" class="level2" data-number="43.3">
+<h2 data-number="43.3" class="anchored" data-anchor-id="stan-e-la-programmazione-probabilistica"><span class="header-section-number">43.3</span> Stan e la Programmazione Probabilistica</h2>
+<p>Stan si configura come un linguaggio di programmazione probabilistica (PPL) concepito per definire modelli statistici complessi e effettuare inferenze su di essi. Un PPL consente di esprimere modelli probabilistici in modo conciso e di utilizzare algoritmi avanzati per l’inferenza. Ciò risulta particolarmente utile nell’inferenza bayesiana, dove si aggiornano le distribuzioni a priori con dati osservati per ottenere distribuzioni a posteriori.</p>
+<section id="struttura-di-un-programma-stan" class="level3" data-number="43.3.1">
+<h3 data-number="43.3.1" class="anchored" data-anchor-id="struttura-di-un-programma-stan"><span class="header-section-number">43.3.1</span> Struttura di un Programma Stan</h3>
+<p>Un programma Stan richiede la specificazione di variabili e parametri, definendo le distribuzioni a priori dei parametri del modello statistico e la funzione di verosimiglianza. In sostanza, un programma Stan descrive l’interazione tra dati e parametri e le distribuzioni probabilistiche che li governano. Questo consente di effettuare inferenze sulle distribuzioni a posteriori dei parametri del modello, dedotte dai dati osservati e dalle distribuzioni a priori.</p>
+</section>
+<section id="esecuzione-di-un-programma-stan" class="level3" data-number="43.3.2">
+<h3 data-number="43.3.2" class="anchored" data-anchor-id="esecuzione-di-un-programma-stan"><span class="header-section-number">43.3.2</span> Esecuzione di un Programma Stan</h3>
+<p>Un programma Stan utilizza metodi di inferenza avanzati:</p>
+<ul>
+<li><strong>Campionamento MCMC</strong>: Stan impiega metodi come il Monte Carlo a Catena di Markov per generare campioni dalle distribuzioni a posteriori.</li>
+<li><strong>Inferenza Variazionale</strong>: Un metodo approssimativo che fornisce stime delle distribuzioni a posteriori.</li>
+<li><strong>Approssimazione di Laplace</strong>: Un ulteriore metodo approssimativo per l’inferenza.</li>
+</ul>
+<p>Stan è accessibile attraverso vari linguaggi di programmazione e strumenti di analisi open-source, tra cui Python, R e Julia, ed è compatibile con gli strumenti di analisi bayesiana integrati in questi linguaggi. È inoltre disponibile in ambienti come Mathematica, Stata e MATLAB, sebbene queste interfacce siano meno complete.</p>
+<p>Stan genera dati attraverso procedure pseudo-casuali, applicabili sia per simulazioni in avanti che per risolvere il problema inverso.</p>
+</section>
+</section>
+<section id="simulazione-in-avanti" class="level2" data-number="43.4">
+<h2 data-number="43.4" class="anchored" data-anchor-id="simulazione-in-avanti"><span class="header-section-number">43.4</span> Simulazione in Avanti</h2>
+<p>La simulazione in avanti consiste nella generazione di dati simulati a partire da un insieme di parametri noti di un modello probabilistico. In altri termini, date determinate assunzioni sui parametri di un modello, si utilizza la simulazione in avanti per prevedere i possibili risultati.</p>
+<p>Ad esempio, consideriamo uno studio clinico con <span class="math inline">\(N\)</span> soggetti e una probabilità <span class="math inline">\(\theta\)</span> di esito positivo per ciascun soggetto. Conoscendo il valore di <span class="math inline">\(\theta\)</span> e il numero di soggetti <span class="math inline">\(N\)</span>, possiamo impiegare una distribuzione binomiale per simulare il numero di pazienti che avranno un esito positivo. Questo processo ci consente di generare dati che riflettono le nostre assunzioni sui parametri del modello.</p>
+<p>In notazione statistica, questo si esprime come:</p>
+<p><span class="math display">\[
+Y \sim \text{Binomiale}(N, \theta)
+\]</span></p>
+<p>dove <span class="math inline">\(Y\)</span> rappresenta il numero di esiti positivi su <span class="math inline">\(N\)</span> pazienti, con probabilità <span class="math inline">\(\theta\)</span> di esito positivo per ciascun paziente.</p>
+<section id="esempio-di-simulazione-in-avanti" class="level4" data-number="43.4.0.1">
+<h4 data-number="43.4.0.1" class="anchored" data-anchor-id="esempio-di-simulazione-in-avanti"><span class="header-section-number">43.4.0.1</span> Esempio di Simulazione in Avanti</h4>
+<p>Supponiamo di avere <span class="math inline">\(N = 100\)</span> soggetti in uno studio clinico e un tasso di successo <span class="math inline">\(\theta = 0.3\)</span>. Possiamo simulare un risultato <span class="math inline">\(Y\)</span> generando casualmente il numero di soggetti con esito positivo. Utilizzando una distribuzione binomiale, possiamo calcolare la probabilità di ottenere esattamente <span class="math inline">\(y\)</span> esiti positivi su <span class="math inline">\(N\)</span> tentativi:</p>
+<p><span class="math display">\[
+p(Y = y \mid N, \theta) = \binom{N}{y} \cdot \theta^y \cdot (1 - \theta)^{N - y}
+\]</span></p>
+<p>Questa espressione ci permette di calcolare la probabilità di ottenere un certo numero di successi, dato il numero di soggetti e la probabilità di successo.</p>
+</section>
+<section id="un-primo-programma-in-stan-generazione-di-dati-casuali" class="level3" data-number="43.4.1">
+<h3 data-number="43.4.1" class="anchored" data-anchor-id="un-primo-programma-in-stan-generazione-di-dati-casuali"><span class="header-section-number">43.4.1</span> Un Primo Programma in Stan: Generazione di Dati Casuali</h3>
+<p>Supponiamo di voler generare dei valori casuali <span class="math inline">\(Y\)</span> da una distribuzione binomiale con parametri <span class="math inline">\(N\)</span> e <span class="math inline">\(\theta\)</span>. Ad esempio, possiamo impostare <span class="math inline">\(\theta = 0.3\)</span>, per rappresentare una probabilità del 30% di un esito positivo (in statistica, il termine ‘successo’ indica un esito positivo), e possiamo impostare <span class="math inline">\(N = 100\)</span>. Il seguente programma Stan può essere utilizzato per generare valori di <span class="math inline">\(Y\)</span> compresi tra 0 e 100.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; N;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=N&gt; y;</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  y = binomial_rng(N, theta);</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="organizzazione-di-un-programma-stan" class="level3" data-number="43.4.2">
+<h3 data-number="43.4.2" class="anchored" data-anchor-id="organizzazione-di-un-programma-stan"><span class="header-section-number">43.4.2</span> Organizzazione di un Programma Stan</h3>
+<p>La prima cosa da notare è che un programma Stan è organizzato in blocchi. Qui abbiamo due blocchi: un <em>blocco dei dati</em> (<code>data</code>)contenente le dichiarazioni delle variabili che devono essere fornite come dati e un <em>blocco delle quantità generate</em> (<code>generated quantities</code>), che non solo dichiara variabili ma assegna loro un valore. In questo programma Stan, la variabile <code>y</code> viene assegnata come risultato di una singola estrazione da una distribuzione <span class="math inline">\(\textrm{binomiale}(N, \theta)\)</span>, che Stan fornisce attraverso la funzione <code>binomial_rng</code>.</p>
+</section>
+<section id="tipi-di-variabili-in-stan" class="level3" data-number="43.4.3">
+<h3 data-number="43.4.3" class="anchored" data-anchor-id="tipi-di-variabili-in-stan"><span class="header-section-number">43.4.3</span> Tipi di Variabili in Stan</h3>
+<p>La seconda cosa da notare è che tutte le variabili in un programma Stan sono dichiarate con tipi specifici. Stan utilizza la <em>tipizzazione statica</em>, il che significa che, a differenza di Python o R, il tipo di una variabile è dichiarato nel programma prima del suo utilizzo, piuttosto che essere determinato al momento dell’esecuzione in base al valore assegnato. Una volta dichiarato, il tipo di una variabile non cambia mai.</p>
+<p>Il programma in esame dichiara tre variabili: <code>N</code> e <code>y</code> di tipo <code>int</code> (interi) e <code>theta</code> di tipo <code>real</code> (numeri reali). Nei computer, gli interi hanno limiti precisi e i numeri reali possono avere errori di calcolo. Stan utilizza numeri reali con precisione doppia (64 bit) secondo lo standard IEEE 754, tranne in alcune operazioni ottimizzate che possono perdere un po’ di precisione.</p>
+</section>
+<section id="vincoli-sui-tipi" class="level3" data-number="43.4.4">
+<h3 data-number="43.4.4" class="anchored" data-anchor-id="vincoli-sui-tipi"><span class="header-section-number">43.4.4</span> Vincoli sui Tipi</h3>
+<p>Un tipo di variabile può avere dei vincoli. Poiché <code>N</code> è un conteggio, deve essere maggiore o uguale a zero, cosa che indichiamo con il vincolo <code>lower=0</code>. Allo stesso modo, la variabile <code>y</code>, che rappresenta il numero di esiti positivi su <code>N</code>, deve essere compresa tra 0 e <code>N</code> (inclusi); questo è indicato con il vincolo <code>lower=0, upper=N</code>. Infine, la variabile <code>theta</code> è un numero reale e deve essere compresa tra 0 e 1, cosa che indichiamo con il vincolo <code>lower=0, upper=1</code>. Anche se tecnicamente i limiti per i numeri reali sono aperti, in pratica possiamo ottenere valori di 0 o 1 a causa di errori di arrotondamento nei calcoli.</p>
+</section>
+<section id="esecuzione-del-programma-stan" class="level3" data-number="43.4.5">
+<h3 data-number="43.4.5" class="anchored" data-anchor-id="esecuzione-del-programma-stan"><span class="header-section-number">43.4.5</span> Esecuzione del Programma Stan</h3>
+<p>La funzione <code>cmdstan_model()</code> crea un nuovo oggetto <code>CmdStanModel</code> a partire da un file contenente un programma Stan. In background, CmdStan traduce un programma Stan in C++ e creare un eseguibile compilato.</p>
+<div id="cell-7" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:43:04.158437Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:43:03.531825Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">'../../stan/binomial-rng.stan'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Durante l’esecuzione, il programma Stan compilato richiede i valori di <code>N</code> e <code>theta</code>. Ad ogni iterazione, il programma campiona un valore di <code>y</code> utilizzando il suo generatore di numeri pseudocasuali integrato. I valori di <code>N</code> e <code>theta</code> devono essere forniti in un dizionario Python.</p>
+<div id="cell-9" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:43:07.547928Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:43:07.545420Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>: N, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'theta'</span>: theta</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Infine campioniamo dal modello utilizzando il metodo <code>sample</code> di <code>CmdStanModel</code>.</p>
+<div id="cell-11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:43:11.651674Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:43:11.418991Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> model.sample(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>data, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    chains<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">30</span>, </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="costruzione-del-modello" class="level3" data-number="43.4.6">
+<h3 data-number="43.4.6" class="anchored" data-anchor-id="costruzione-del-modello"><span class="header-section-number">43.4.6</span> Costruzione del Modello</h3>
+<p>Il costruttore di <code>CmdStanModel</code> viene utilizzato per creare un modello a partire da un programma Stan presente nel file specificato. Si consiglia vivamente di utilizzare un file separato per i programmi Stan. In pratica, il processo inizia con la traduzione del programma Stan in una classe C++ utilizzando un traduttore specifico. Successivamente, il programma C++ viene compilato.</p>
+</section>
+<section id="interfaccia-python" class="level3" data-number="43.4.7">
+<h3 data-number="43.4.7" class="anchored" data-anchor-id="interfaccia-python"><span class="header-section-number">43.4.7</span> Interfaccia Python</h3>
+<p>Nell’interfaccia Python, il metodo <code>sample()</code> accetta i seguenti argomenti:</p>
+<ul>
+<li><code>data</code>: i dati letti nel blocco dati del programma Stan,</li>
+<li><code>seed</code>: generatore di numeri pseudocasuali per la riproducibilità,</li>
+<li><code>chains</code>: il numero di simulazioni da eseguire (<code>parallel_chains</code> indica quante eseguire in parallelo),</li>
+<li><code>iter_sampling</code>: numero di estrazioni (cioè, dimensione del campione) da restituire,</li>
+<li><code>iter_warmup</code>: numero di iterazioni di riscaldamento per tarare i parametri dell’algoritmo di campionamento (non necessari qui, quindi impostato a 0),</li>
+<li><code>show_progress</code>: se <code>True</code>, stampa aggiornamenti di progresso,</li>
+<li><code>show_console</code>: apre un monitor di progresso GUI.</li>
+</ul>
+<p>Il risultato della chiamata a <code>sample()</code> sull’istanza del modello viene assegnato alla variabile <code>trace</code> e contiene le 10 estrazioni richieste con l’argomento <code>iter_sampling = 30</code>.</p>
+<p>Quando si chiama <code>model.sample(...)</code>, CmdStan esegue Stan come programma C++ autonomo in un processo in background. Questo programma inizia copiando i dati forniti nell’argomento <code>data</code> di Python in un file, quindi legge quel file di dati per costruire un oggetto C++ che rappresenta il modello statistico. Poiché il nostro programma Stan ha solo un blocco di quantità generate, l’unico compito rimanente della classe C++ è generare il numero richiesto di estrazioni. Per ciascuna delle estrazioni specificate da <code>iter_sampling</code>, Stan utilizza un generatore di numeri pseudocasuali per ottenere un valore dalla distribuzione binomiale specificata.</p>
+<p>La generazione di numeri casuali è determinata dal valore <code>seed</code> specificato nella chiamata.</p>
+</section>
+<section id="estrazione-dei-risultati" class="level3" data-number="43.4.8">
+<h3 data-number="43.4.8" class="anchored" data-anchor-id="estrazione-dei-risultati"><span class="header-section-number">43.4.8</span> Estrazione dei Risultati</h3>
+<p>Una volta completato il campionamento, possiamo estrarre il campione di 30 valori per la variabile scalare <code>y</code> sotto forma di array e quindi stampare i loro valori insieme ai valori delle variabili di input.</p>
+<div id="cell-13" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:43:17.861234Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:43:17.853236Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> trace.stan_variable(<span class="st">'y'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"N ="</span>, N, <span class="st">";  theta ="</span>, theta, <span class="st">";  y(0:30) ="</span>, <span class="op">*</span>y.astype(<span class="bu">int</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>N = 100 ;  theta = 0.3 ;  y(0:30) = 28 34 31 29 26 25 31 28 30 36 29 36 37 27 29 23 29 34 30 42 37 29 34 28 35 31 30 31 23 28</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="integrazione-monte-carlo" class="level2" data-number="43.5">
+<h2 data-number="43.5" class="anchored" data-anchor-id="integrazione-monte-carlo"><span class="header-section-number">43.5</span> Integrazione Monte Carlo</h2>
+<p>Il calcolo bayesiano si basa sulla media delle incertezze nella stima dei parametri. In generale, ciò implica il calcolo di aspettative, che sono medie ponderate con pesi dati dalle densità di probabilità. In questa sezione, introdurremo i metodi Monte Carlo per calcolare un semplice integrale che corrisponde all’aspettativa di una variabile indicatrice discreta. Utilizzeremo l’esempio classico del lancio di freccette su un bersaglio per stimare la costante matematica <span class="math inline">\(\pi\)</span> – si veda l’<span class="quarto-unresolved-ref">?sec-montecarlo</span>.</p>
+<section id="metodi-monte-carlo-a-catena-di-markov" class="level3" data-number="43.5.1">
+<h3 data-number="43.5.1" class="anchored" data-anchor-id="metodi-monte-carlo-a-catena-di-markov"><span class="header-section-number">43.5.1</span> Metodi Monte Carlo a Catena di Markov</h3>
+<p>Nelle sezioni precedenti, abbiamo visto come generare un campione eseguendo una serie di estrazioni indipendenti e calcolare la media dei risultati per ottenere stime delle aspettative.</p>
+<p>Nei moderni modelli bayesiani, raramente è possibile generare estrazioni indipendenti dalle distribuzioni di interesse. Questo rende i semplici metodi Monte Carlo non applicabili. Solo in rari casi, con modelli molto semplici, è possibile ottenere estrazioni indipendenti, ma questi casi sono limitati (Diaconis e Ylvisaker 1979). Prima della rivoluzione dei metodi Monte Carlo a catena di Markov (MCMC) negli anni ’90, l’inferenza bayesiana era per lo più limitata a questi modelli semplici.</p>
+<p>L’introduzione dei metodi MCMC ha rivoluzionato l’inferenza bayesiana. Questi metodi permettono di generare campioni da distribuzioni complesse dove non è possibile ottenere estrazioni indipendenti. Tra questi, il metodo Hamiltonian Monte Carlo (HMC) è particolarmente efficiente e scalabile, grazie all’uso della differenziazione automatica. HMC è implementato in Stan e ha ampliato notevolmente la gamma di modelli che possono essere analizzati in tempi ragionevoli.</p>
+</section>
+<section id="catene-di-markov" class="level3" data-number="43.5.2">
+<h3 data-number="43.5.2" class="anchored" data-anchor-id="catene-di-markov"><span class="header-section-number">43.5.2</span> Catene di Markov</h3>
+<p>Nei metodi Monte Carlo a catena di Markov, ogni estrazione dipende dall’estrazione precedente. Una sequenza di variabili casuali in cui ciascuna dipende solo dalla variabile precedente è chiamata catena di Markov. In altre parole, una catena di Markov è una sequenza di variabili casuali dove ogni variabile è condizionatamente indipendente dalle precedenti, dato il valore della variabile immediatamente precedente.</p>
+<p>In conclusione, i metodi Monte Carlo a catena di Markov, come l’Hamiltonian Monte Carlo, hanno ampliato notevolmente le capacità dell’inferenza bayesiana, permettendo di affrontare modelli complessi che non possono essere analizzati con semplici estrazioni indipendenti.</p>
+</section>
+</section>
+<section id="il-problema-inverso" class="level2" data-number="43.6">
+<h2 data-number="43.6" class="anchored" data-anchor-id="il-problema-inverso"><span class="header-section-number">43.6</span> Il Problema Inverso</h2>
+<p>Il problema inverso consiste nella stima dei parametri del modello, come la probabilità di successo <span class="math inline">\(\theta\)</span>, dato un insieme di dati osservati. Supponiamo di avere i seguenti dati: <span class="math inline">\(N = 100\)</span> soggetti e <span class="math inline">\(y = 32\)</span> esiti positivi. L’obiettivo è stimare <span class="math inline">\(\theta\)</span>, la probabilità di successo.</p>
+<p>Nell’approccio bayesiano, si inizia specificando una distribuzione a priori per <span class="math inline">\(\theta\)</span>. Supponiamo di utilizzare una distribuzione Beta(<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>) come prior per <span class="math inline">\(\theta\)</span>, dove <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\beta\)</span> sono parametri scelti in base alle conoscenze precedenti. La distribuzione a posteriori di <span class="math inline">\(\theta\)</span> data l’osservazione <span class="math inline">\(y\)</span> è ancora una distribuzione Beta, ma con parametri aggiornati:</p>
+<p><span class="math display">\[
+\theta \mid y \sim \text{Beta}(\alpha + y, \beta + N - y)
+\]</span></p>
+<p>Ad esempio, scegliendo una distribuzione a priori non informativa con <span class="math inline">\(\alpha = 1\)</span> e <span class="math inline">\(\beta = 1\)</span>, la distribuzione a posteriori diventa:</p>
+<p><span class="math display">\[
+\theta \mid y \sim \text{Beta}(1 + 32, 1 + 100 - 32) = \text{Beta}(33, 69)
+\]</span></p>
+<p>Questa distribuzione a posteriori fornisce una stima aggiornata della probabilità di successo <span class="math inline">\(\theta\)</span> considerando i dati osservati. Utilizzando Stan, è possibile ottenere campioni da questa distribuzione a posteriori per calcolare statistiche riassuntive e effettuare previsioni.</p>
+<p>In sintesi, la simulazione in avanti e il problema inverso rappresentano due approcci complementari: la simulazione in avanti genera dati simulati da parametri noti, mentre il problema inverso stima i parametri del modello dai dati osservati.</p>
+<p>Quando si dispone di un modello che genera dati a partire dai parametri, il problema inverso consiste nell’inferire i valori dei parametri dai dati osservati. Questo tipo di problema richiede di ragionare a ritroso dalle osservazioni, attraverso il modello di misurazione e il modello diretto, per stimare parametri come, ad esempio, la probabilità di successo. La risoluzione dei problemi inversi è uno degli ambiti in cui le statistiche bayesiane eccellono.</p>
+<section id="storia-e-applicazione" class="level3" data-number="43.6.1">
+<h3 data-number="43.6.1" class="anchored" data-anchor-id="storia-e-applicazione"><span class="header-section-number">43.6.1</span> Storia e Applicazione</h3>
+<p>Un decennio dopo la pubblicazione della regola di Bayes, Laplace utilizzò la funzione beta di Eulero per derivare formalmente la distribuzione a posteriori. In questa sezione, analizzeremo il problema di Laplace utilizzando Stan.</p>
+<p>Laplace raccolse dati sul sesso dei bambini nati vivi a Parigi tra il 1745 e il 1770:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Sesso</th>
+<th>Nascite vive</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Femmina</td>
+<td>105.287</td>
+</tr>
+<tr class="even">
+<td>Maschio</td>
+<td>110.312</td>
+</tr>
+</tbody>
+</table>
+<p>Laplace si chiese se, sulla base di questi dati, la probabilità di nascita dei maschi fosse superiore a quella delle femmine.</p>
+</section>
+<section id="modello-di-laplace" class="level3" data-number="43.6.2">
+<h3 data-number="43.6.2" class="anchored" data-anchor-id="modello-di-laplace"><span class="header-section-number">43.6.2</span> Modello di Laplace</h3>
+<p>Laplace adottò la seguente distribuzione campionaria per modellare il numero di maschi nati su un totale di <span class="math inline">\(N\)</span> nascite:</p>
+<p><span class="math display">\[
+y \sim \text{binomiale}(N, \theta),
+\]</span></p>
+<p>dove <span class="math inline">\(N\)</span> è il numero totale di nascite, <span class="math inline">\(\theta\)</span> è la probabilità di nascita di un maschio e <span class="math inline">\(y\)</span> è il numero di nascite maschili.</p>
+</section>
+<section id="distribuzione-a-priori" class="level3" data-number="43.6.3">
+<h3 data-number="43.6.3" class="anchored" data-anchor-id="distribuzione-a-priori"><span class="header-section-number">43.6.3</span> Distribuzione a Priori</h3>
+<p>Laplace utilizzò la seguente distribuzione a priori per <span class="math inline">\(\theta\)</span>:</p>
+<p><span class="math display">\[
+\theta \sim \text{beta}(1, 1),
+\]</span></p>
+<p>dove la distribuzione <span class="math inline">\(\text{beta}(1, 1)\)</span> è uniforme sull’intervallo <span class="math inline">\(\theta \in (0, 1)\)</span> poiché la densità è proporzionale a una costante:</p>
+<p><span class="math display">\[
+\text{beta}(\theta \mid 1, 1) \propto \theta^{1 - 1} \cdot (1 - \theta)^{1 - 1} = 1.
+\]</span></p>
+</section>
+<section id="distribuzione-a-posteriori" class="level3" data-number="43.6.4">
+<h3 data-number="43.6.4" class="anchored" data-anchor-id="distribuzione-a-posteriori"><span class="header-section-number">43.6.4</span> Distribuzione a Posteriori</h3>
+<p>Il modello di Laplace è abbastanza semplice da permettere una soluzione analitica della distribuzione a posteriori:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    p(\theta \mid y, N) &amp;\propto p(y \mid N, \theta) \cdot p(\theta) \\
+    &amp;= \text{binomiale}(y \mid N, \theta) \cdot \text{beta}(\theta \mid 1, 1) \\
+    &amp;\propto \theta^y \cdot (1 - \theta)^{N - y} \cdot \theta^{1 - 1} \cdot (1 - \theta)^{1 - 1} \\
+    &amp;= \theta^{y} \cdot (1 - \theta)^{N - y} \\
+    &amp;\propto \text{beta}(\theta \mid y + 1, N - y + 1).
+\end{aligned}
+\]</span></p>
+<p>Quindi, possiamo concludere che:</p>
+<p><span class="math display">\[
+p(\theta \mid y, N) = \text{beta}(\theta \mid y + 1, N - y + 1).
+\]</span></p>
+</section>
+<section id="implementazione-in-stan" class="level3" data-number="43.6.5">
+<h3 data-number="43.6.5" class="anchored" data-anchor-id="implementazione-in-stan"><span class="header-section-number">43.6.5</span> Implementazione in Stan</h3>
+<p>A differenza del primo modello Stan che abbiamo visto, che generava solo dati, il seguente programma Stan richiede che vengano forniti dati, specificamente il numero di nascite maschili (<span class="math inline">\(y\)</span>) e il numero totale di nascite (<span class="math inline">\(N\)</span>). Il modello ci permetterà di stimare la probabilità di nascita di un maschio (<span class="math inline">\(\theta\)</span>) e la probabilità che nascano più maschi che femmine (<span class="math inline">\(\theta &gt; 0.5\)</span>).</p>
+<p>Ecco come possiamo specificare il modello Stan:</p>
+<div id="cell-17" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:25.807379Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:25.792780Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">'stan'</span>, <span class="st">'sex-ratio.stan'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(stan_file, <span class="st">'r'</span>) <span class="im">as</span> f:</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(f.read())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower = 0&gt; N;
+  int&lt;lower = 0, upper = N&gt; y;
+  int&lt;lower = 0&gt; alpha_prior;
+  int&lt;lower = 0&gt; beta_prior;
+}
+parameters {
+  real&lt;lower=0, upper=1&gt; theta;
+}
+model {
+  theta ~ beta(alpha_prior, beta_prior);
+  y ~ binomial(N, theta);
+}
+generated quantities {
+  int&lt;lower=0, upper=1&gt; boys_gt_girls = theta &gt; 0.5;
+}
+</code></pre>
+</div>
+</div>
+<p>In questo programma Stan, vediamo che sia il numero totale di nascite (<span class="math inline">\(N\)</span>) sia il numero di nascite maschili (<span class="math inline">\(y\)</span>) sono forniti come dati. Poi ci sono due blocchi aggiuntivi: un <em>blocco dei parametri</em>, usato per dichiarare valori sconosciuti (qui, solo il tasso di nascite maschili <span class="math inline">\(\theta\)</span>), e un <em>blocco del modello</em>, dove specifichiamo la distribuzione a priori e la verosimiglianza. La distribuzione a posteriori viene calcolata da Stan combinando queste due componenti. Inoltre, c’è un <em>blocco delle quantità generate</em> dove viene calcolata una variabile booleana che indica se la probabilità di nascita dei maschi <span class="math inline">\(\theta\)</span> è maggiore di 0.5.</p>
+<p>Il modello di Laplace e la sua implementazione in Stan ci permettono di affrontare il problema inverso delle nascite, inferendo la probabilità di nascita di un maschio dai dati osservati. Utilizzando le tecniche bayesiane, possiamo stimare non solo la probabilità di nascita di un maschio, ma anche la probabilità che nascano più maschi che femmine.</p>
+</section>
+<section id="campionare-dalla-distribuzione-a-posteriori" class="level3" data-number="43.6.6">
+<h3 data-number="43.6.6" class="anchored" data-anchor-id="campionare-dalla-distribuzione-a-posteriori"><span class="header-section-number">43.6.6</span> Campionare dalla Distribuzione a Posteriori</h3>
+<p>Quando eseguiamo un programma Stan, esso genera una serie di campioni casuali che approssimano la distribuzione a posteriori. Con il proseguire delle estrazioni, questi campioni tendono a diventare sempre più simili a veri campioni della distribuzione a posteriori, fino a diventare numericamente indistinguibili da essa.</p>
+<p>Stan utilizza un algoritmo Markov Chain Monte Carlo (MCMC), che può introdurre autocorrelazione nei campioni della distribuzione a posteriori. In altre parole, i campioni non sono indipendenti tra loro, ma ogni campione è correlato (o anti-correlato) con il campione precedente.</p>
+<p>L’autocorrelazione non introduce bias nelle stime Monte Carlo, ma i campioni positivamente autocorrelati, che si osservano nei modelli più complessi, aumentano la varianza delle stime rispetto ai campioni indipendenti. Questo incremento della varianza aumenta l’errore quadratico medio atteso, che è una combinazione di errore dovuto al bias (qui nullo) e alla varianza. Al contrario, nei modelli molto semplici, l’autocorrelazione negativa riduce la varianza rispetto ai campioni indipendenti, riducendo quindi l’errore quadratico medio atteso.</p>
+<p>Per affrontare problemi ad alta dimensionalità, Duane et al.&nbsp;(1987) hanno introdotto l’algoritmo Hamiltonian Monte Carlo (HMC) che migliora l’efficienza del campionamento. Per Stan, Hoffman e Gelman (2014) hanno sviluppato una versione adattiva dell’HMC chiamata No-U-Turn Sampler (NUTS), successivamente migliorata da Betancourt (2017a). NUTS può essere estremamente efficiente, generando campioni anti-correlati che possono portare a stime Monte Carlo più precise rispetto ai campioni indipendenti.</p>
+</section>
+<section id="compilazione-del-codice-stan" class="level3" data-number="43.6.7">
+<h3 data-number="43.6.7" class="anchored" data-anchor-id="compilazione-del-codice-stan"><span class="header-section-number">43.6.7</span> Compilazione del Codice Stan</h3>
+<p>Per utilizzare Stan, dobbiamo compilare il codice del modello. Questo crea un file eseguibile che, nel nostro caso, abbiamo chiamato <code>model</code>.</p>
+<div id="cell-20" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:31.306498Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:31.042628Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Inseriamo i dati in un dizionario.</p>
+<div id="cell-22" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:34.351552Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:34.346224Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>boys <span class="op">=</span> <span class="dv">110312</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>girls <span class="op">=</span> <span class="dv">105287</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>: boys <span class="op">+</span> girls, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y'</span>: boys,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"alpha_prior"</span> : <span class="dv">1</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"beta_prior"</span> : <span class="dv">1</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'N': 215599, 'y': 110312, 'alpha_prior': 1, 'beta_prior': 1}</code></pre>
+</div>
+</div>
+<p>Eseguiamo il campionamento MCMC con la seguente chiamata.</p>
+<div id="cell-24" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:37.757595Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:37.350419Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> model.sample(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>data,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">1000</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling <span class="op">=</span> <span class="dv">10_000</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    seed <span class="op">=</span> <span class="dv">123</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    show_progress <span class="op">=</span> <span class="va">False</span>, </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    show_console <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il metodo <code>$sample()</code> viene applicato al file eseguibile del modello Stan che abbiamo compilato e nominato <code>model</code>.</p>
+<p>Avendo assunto una distribuzione a priori per il parametro <span class="math inline">\(\theta\)</span>, l’algoritmo procede in maniera ciclica, aggiornando la distribuzione a priori di <span class="math inline">\(\theta\)</span> condizionandola ai valori già generati. Dopo un certo numero di iterazioni, l’algoritmo raggiunge la convergenza, e i valori estratti possono essere considerati campioni dalla distribuzione a posteriori di <span class="math inline">\(\theta\)</span>.</p>
+<p>All’inizio del campionamento, la distribuzione dei campioni può essere significativamente diversa dalla distribuzione stazionaria. Questo periodo iniziale è chiamato “burn-in”. Durante il burn-in, i campioni possono non rappresentare accuratamente la distribuzione a posteriori e sono tipicamente scartati. Man mano che il numero di iterazioni aumenta, la distribuzione dei campioni si avvicina sempre più alla distribuzione target.</p>
+<p>Dopo aver eseguito il modello in Stan, otteniamo una serie di campioni <span class="math inline">\(\theta^{(m)}\)</span> dalla distribuzione a posteriori <span class="math inline">\(p(\theta \mid N, y)\)</span>. Ogni campione rappresenta un possibile valore di <span class="math inline">\(\theta\)</span> compatibile con i dati osservati <span class="math inline">\(y\)</span>. Procediamo quindi a estrarre i campioni a posteriori per le variabili <code>theta</code> e <code>boys_gt_girls</code>.</p>
+<div id="cell-26" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:41.108104Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:41.102113Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>theta_draws <span class="op">=</span> sample.stan_variable(<span class="st">'theta'</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>boys_gt_girls_draws <span class="op">=</span> sample.stan_variable(<span class="st">'boys_gt_girls'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Tracciando un istogramma di questi campioni, possiamo visualizzare dove i valori di <span class="math inline">\(\theta\)</span> sono più probabili e comprendere meglio la forma della distribuzione a posteriori. L’istogramma ci fornisce diverse informazioni:</p>
+<ul>
+<li><strong>Valore più probabile di <span class="math inline">\(\theta\)</span></strong>: Questo è il valore intorno al quale i campioni sono più concentrati, noto come la moda della distribuzione.</li>
+<li><strong>Distribuzione dei possibili valori di <span class="math inline">\(\theta\)</span></strong>: Questo ci dà un’idea dell’incertezza nella stima di <span class="math inline">\(\theta\)</span>.</li>
+</ul>
+<p>Se l’istogramma è stretto e concentrato attorno a un valore specifico, significa che c’è poca incertezza nella stima di <span class="math inline">\(\theta\)</span>. In altre parole, possiamo essere abbastanza sicuri che il valore vero di <span class="math inline">\(\theta\)</span> sia vicino a questo valore.</p>
+<p>Se l’istogramma è largo e distribuito, significa che c’è maggiore incertezza nella stima di <span class="math inline">\(\theta\)</span>. Questo indica che i dati osservati non forniscono una stima precisa e che il valore di <span class="math inline">\(\theta\)</span> potrebbe variare notevolmente.</p>
+<div id="cell-28" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:45:44.900508Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:45:44.527902Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#b97c7c"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>color_edge <span class="op">=</span> <span class="st">"#8f2727"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    theta_draws,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>color_fill,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    edgecolor<span class="op">=</span>color_edge,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Istogramma della distribizione a posteriori di theta'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Valori'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Frequenza'</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15_stan_beta_binomial_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="stime-puntuali-bayesiane" class="level2" data-number="43.7">
+<h2 data-number="43.7" class="anchored" data-anchor-id="stime-puntuali-bayesiane"><span class="header-section-number">43.7</span> Stime Puntuali Bayesiane</h2>
+<p>In termini bayesiani, una <em>stima puntuale</em> per un parametro <span class="math inline">\(\Theta\)</span> condizionato sui dati osservati <span class="math inline">\(Y = y\)</span> è un singolo valore <span class="math inline">\(\hat{\theta} \in \mathbb{R}^D\)</span> che riassume la distribuzione a posteriori <span class="math inline">\(p(\theta \mid y)\)</span>. La notazione <span class="math inline">\(\hat{\theta}\)</span> è convenzionale nella statistica per indicare una stima di un parametro <span class="math inline">\(\theta\)</span>. In questa sezione definiamo tre stimatori e discutiamo come i due stimatori bayesiani minimizzino una <em>funzione di perdita</em> tra il valore vero e la stima. Torneremo alla funzione di perdita e alle proprietà degli stimatori dopo averli definiti.</p>
+<section id="stimatore-della-media-posteriori" class="level3" data-number="43.7.1">
+<h3 data-number="43.7.1" class="anchored" data-anchor-id="stimatore-della-media-posteriori"><span class="header-section-number">43.7.1</span> Stimatore della Media Posteriori</h3>
+<p>La stima puntuale bayesiana più comune per un parametro è la media posteriori,</p>
+<p><span class="math display">\[
+\begin{align}
+\widehat{\theta}
+&amp;= \mathbb{E}[\Theta \mid Y = y] \\
+&amp;= \int_{\Theta} \theta \cdot p(\theta \mid y) \, \textrm{d}\theta \\
+&amp;= \lim_{M \rightarrow \infty} \, \frac{1}{M} \sum_{m=1}^M \theta^{(m)} \\
+&amp;\approx \frac{1}{M} \sum_{m=1}^M \theta^{(m)},
+\end{align}
+\]</span></p>
+<p>dove nelle ultime due righe, ogni estrazione è distribuita approssimativamente secondo la distribuzione a posteriori,</p>
+<p><span class="math display">\[
+\theta^{(m)} \sim p(\theta \mid y).
+\]</span></p>
+<p>Abbiamo introdotto la notazione di <em>aspettativa condizionale</em> nella prima riga di questa definizione. Le aspettative sono semplicemente medie ponderate, con i pesi dati da una densità di probabilità. L’inferenza bayesiana coinvolge aspettative sulla distribuzione a posteriori, la cui notazione concisa è quella dell’<em>aspettativa condizionale</em>,</p>
+<p><span class="math display">\[
+\mathbb{E}\!
+\left[ f(\Theta) \mid Y = y \right]
+= \int_{\mathbb{R^N}} f(\theta) \cdot p_{\Theta \mid Y}(\theta \mid y) \, \textrm{d}\theta,
+\]</span></p>
+<p>dove <span class="math inline">\(\Theta\)</span> e <span class="math inline">\(Y\)</span> sono variabili casuali, mentre <span class="math inline">\(\theta\)</span> e <span class="math inline">\(y\)</span> sono variabili vincolate ordinarie.</p>
+<p>Per il modello di Laplace, la stima per il tasso di nascite maschili <span class="math inline">\(\theta\)</span> condizionata sui dati di nascita <span class="math inline">\(y\)</span> è calcolata come la media campionaria delle estrazioni per <code>theta</code>.</p>
+<div id="cell-30" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:46:45.791282Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:46:45.766651Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="op">=</span> np.mean(theta_draws)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"estimated theta = </span><span class="sc">{</span>theta_hat<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>estimated theta = 0.512</code></pre>
+</div>
+</div>
+</section>
+<section id="stimatore-della-mediana-posteriori-quantili-e-intervalli" class="level3" data-number="43.7.2">
+<h3 data-number="43.7.2" class="anchored" data-anchor-id="stimatore-della-mediana-posteriori-quantili-e-intervalli"><span class="header-section-number">43.7.2</span> Stimatore della Mediana Posteriori, Quantili e Intervalli</h3>
+<p>Un’alternativa popolare alla stima puntuale bayesiana è la <em>mediana posteriori</em>, <span class="math inline">\(\theta^+\)</span>. La mediana è il valore tale che, per ogni dimensione <span class="math inline">\(d \in 1{:}D\)</span>,</p>
+<p><span class="math display">\[
+\Pr[\Theta_d \leq \theta^+_d] = \frac{1}{2}.
+\]</span></p>
+<p>In altre parole, la mediana è il valore che divide la distribuzione a posteriori in due parti uguali: il 50% dei campioni è al di sotto della mediana e il 50% è al di sopra. La mediana posteriori può essere calcolata prendendo la mediana dei campioni dalla distribuzione a posteriori.</p>
+<p>Ecco come calcolare la mediana posteriori utilizzando Python:</p>
+<div id="cell-32" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:46:52.715592Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:46:52.709025Z&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>theta_plus <span class="op">=</span> np.median(theta_draws)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"estimated (median) theta = </span><span class="sc">{</span>theta_plus<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>estimated (median) theta = 0.512</code></pre>
+</div>
+</div>
+<p>Poiché la distribuzione a posteriori per i dati di Laplace è quasi simmetrica, la media posteriori e la mediana posteriori sono molto simili.</p>
+</section>
+<section id="quantili-e-intervalli-di-credibilità" class="level3" data-number="43.7.3">
+<h3 data-number="43.7.3" class="anchored" data-anchor-id="quantili-e-intervalli-di-credibilità"><span class="header-section-number">43.7.3</span> Quantili e Intervalli di Credibilità</h3>
+<p>Oltre alla mediana, possiamo anche calcolare i quantili e gli intervalli di credibilità per fornire ulteriori informazioni sulla distribuzione a posteriori. I quantili sono valori che dividono la distribuzione in intervalli con una probabilità specificata. Gli intervalli di credibilità indicano l’intervallo entro il quale cade una certa percentuale della distribuzione a posteriori.</p>
+<section id="quantili" class="level4" data-number="43.7.3.1">
+<h4 data-number="43.7.3.1" class="anchored" data-anchor-id="quantili"><span class="header-section-number">43.7.3.1</span> Quantili</h4>
+<p>Ad esempio, se vogliamo calcolare il quantile al 95% della distribuzione a posteriori, possiamo semplicemente prendere il valore che si trova al 95° percentile nella sequenza ordinata dei campioni. Di seguito sono riportati i quantili al 5% e al 95% della distribuzione a posteriori di Laplace, calcolati utilizzando i quantili empirici.</p>
+<div id="cell-36" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:46:57.238509Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:46:57.229690Z&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>quantile_05 <span class="op">=</span> np.quantile(theta_draws, <span class="fl">0.05</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>quantile_95 <span class="op">=</span> np.quantile(theta_draws, <span class="fl">0.95</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"""0.05 quantile = </span><span class="sc">{</span>quantile_05<span class="sc">:.3f}</span><span class="ss">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="ss">0.95 quantile = </span><span class="sc">{</span>quantile_95<span class="sc">:.3f}</span><span class="ss">"""</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.05 quantile = 0.510;
+0.95 quantile = 0.513</code></pre>
+</div>
+</div>
+</section>
+<section id="intervalli-posteriori" class="level4" data-number="43.7.3.2">
+<h4 data-number="43.7.3.2" class="anchored" data-anchor-id="intervalli-posteriori"><span class="header-section-number">43.7.3.2</span> Intervalli Posteriori</h4>
+<p>Insieme, il quantile al 5% e al 95% ci forniscono i limiti del nostro <em>intervallo di probabilità centrale</em> al 90%. Questo intervallo è definito come l’intervallo che contiene il 90% della massa di probabilità a posteriori, con il 5% della massa rimanente al di sotto dell’intervallo e il 5% al di sopra.</p>
+</section>
+</section>
+<section id="errore-di-stima-e-bias" class="level3" data-number="43.7.4">
+<h3 data-number="43.7.4" class="anchored" data-anchor-id="errore-di-stima-e-bias"><span class="header-section-number">43.7.4</span> Errore di Stima e Bias</h3>
+<p>L’<em>errore</em> di una stima è la differenza tra la stima stessa e il valore vero del parametro,</p>
+<p><span class="math display">\[
+\textrm{err} = \hat{\theta} - \theta.
+\]</span></p>
+<p>La nostra stima <span class="math inline">\(\hat{\theta}\)</span> è implicitamente una funzione dei dati <span class="math inline">\(y\)</span>, quindi anche l’errore dipende dai dati. Possiamo rendere esplicita questa dipendenza scrivendo</p>
+<p><span class="math display">\[
+\text{err}(y) = \hat{\theta}(y) - \theta.
+\]</span></p>
+<p>Il <em>bias</em> di uno stimatore è definito come l’errore atteso, cioè la media dell’errore rispetto alla distribuzione dei dati per la variabile casuale <span class="math inline">\(Y\)</span>,</p>
+<p><span class="math display">\[
+\begin{align}
+\text{bias}
+&amp;= \mathbb{E}[\text{err}(Y)] \\
+&amp;= \mathbb{E}[\hat{\theta}(Y) - \theta] \\
+&amp;= \int_Y (\hat{\theta}(y) - \theta) \, \text{d}y.
+\end{align}
+\]</span></p>
+<p>In altre parole, il bias misura quanto, in media, la stima <span class="math inline">\(\hat{\theta}\)</span> si discosta dal valore vero <span class="math inline">\(\theta\)</span> considerando tutte le possibili realizzazioni dei dati <span class="math inline">\(Y\)</span>. Un bias nullo indica che lo stimatore è corretto in media, cioè non tende a sovrastimare o sottostimare il valore vero del parametro.</p>
+</section>
+<section id="stimatore-della-moda-posteriori" class="level3" data-number="43.7.5">
+<h3 data-number="43.7.5" class="anchored" data-anchor-id="stimatore-della-moda-posteriori"><span class="header-section-number">43.7.5</span> Stimatore della Moda Posteriori</h3>
+<p>Uno stimatore popolare, sebbene non strettamente bayesiano, è la moda a posteriori, che rappresenta il valore del parametro <span class="math inline">\(\theta\)</span> per cui la densità a posteriori è massima. Formalmente, è definita come:</p>
+<p><span class="math display">\[
+\theta^* = \text{arg max}_\theta \ p(\theta \mid y).
+\]</span></p>
+<p>La stima <span class="math inline">\(\theta^*\)</span> è spesso chiamata stima MAP (Maximum A Posteriori). La moda a posteriori non è considerata un vero stimatore bayesiano perché non tiene conto dell’incertezza nella stessa misura in cui lo fanno altri metodi bayesiani. In altre parole, non minimizza una funzione di perdita basata sui valori veri dei parametri, ma cerca semplicemente il valore più probabile dato i dati osservati.</p>
+</section>
+<section id="caratteristiche-della-moda-posteriori" class="level3" data-number="43.7.6">
+<h3 data-number="43.7.6" class="anchored" data-anchor-id="caratteristiche-della-moda-posteriori"><span class="header-section-number">43.7.6</span> Caratteristiche della Moda Posteriori</h3>
+<ul>
+<li><strong>Non considera l’incertezza</strong>: La stima MAP si focalizza solo sul valore più probabile della distribuzione a posteriori, senza tenere conto della variabilità dei dati.</li>
+<li><strong>Massimo della densità a posteriori</strong>: La moda a posteriori rappresenta il punto in cui la densità a posteriori raggiunge il suo massimo.</li>
+<li><strong>Possibili limitazioni</strong>: La stima MAP potrebbe non esistere in alcuni casi, come nei modelli in cui la densità cresce senza limiti. Questo può accadere, ad esempio, nei modelli bayesiani gerarchici o in distribuzioni semplici come la distribuzione esponenziale con parametro 1 (<span class="math inline">\(\textrm{esponenziale}(1)\)</span>).</li>
+</ul>
+</section>
+<section id="funzioni-di-perdita-e-proprietà-degli-stimatori" class="level3" data-number="43.7.7">
+<h3 data-number="43.7.7" class="anchored" data-anchor-id="funzioni-di-perdita-e-proprietà-degli-stimatori"><span class="header-section-number">43.7.7</span> Funzioni di Perdita e Proprietà degli Stimatori</h3>
+<p>La media a posteriori è uno stimatore bayesiano popolare per due ragioni principali. Primo, è uno stimatore non distorto, il che significa che ha un bias nullo. Secondo, ha l’errore quadratico medio atteso minimo tra tutti gli stimatori non distorti. L’errore quadratico di una stima è definito come:</p>
+<p><span class="math display">\[
+\text{err}^2(y) = \left(\hat{\theta}(y) - \theta\right)^2.
+\]</span></p>
+<p>Questa è una funzione di perdita, che misura la differenza tra una stima <span class="math inline">\(\hat{\theta}\)</span> e il valore vero <span class="math inline">\(\theta\)</span>. Tuttavia, la media a posteriori potrebbe non esistere se la distribuzione a posteriori ha code molto ampie, come accade nella distribuzione di Cauchy standard.</p>
+</section>
+<section id="proprietà-della-mediana-posteriori" class="level3" data-number="43.7.8">
+<h3 data-number="43.7.8" class="anchored" data-anchor-id="proprietà-della-mediana-posteriori"><span class="header-section-number">43.7.8</span> Proprietà della Mediana Posteriori</h3>
+<p>La mediana a posteriori <span class="math inline">\(\theta^+\)</span> ha tre proprietà interessanti:</p>
+<ol type="1">
+<li><strong>Sempre ben definita</strong>: La mediana a posteriori è sempre ben definita, anche per densità con poli o code molto ampie.</li>
+<li><strong>Minimizzazione dell’errore assoluto atteso</strong>: La mediana minimizza l’errore assoluto atteso, il che la rende robusta.</li>
+<li><strong>Robustezza ai valori anomali</strong>: La mediana è meno sensibile ai valori anomali rispetto alla media, perché minimizza l’errore assoluto anziché l’errore quadrato.</li>
+</ol>
+</section>
+<section id="concentrazione-sulle-medie-a-posteriori" class="level3" data-number="43.7.9">
+<h3 data-number="43.7.9" class="anchored" data-anchor-id="concentrazione-sulle-medie-a-posteriori"><span class="header-section-number">43.7.9</span> Concentrazione sulle Medie a Posteriori</h3>
+<p>In questa introduzione a Stan, ci concentreremo principalmente sulle medie a posteriori. La media a posteriori non solo fornisce una stima non distorta, ma minimizza anche l’errore quadratico medio atteso, rendendola uno strumento potente per l’inferenza bayesiana. Tuttavia, è importante essere consapevoli delle sue limitazioni, specialmente in presenza di distribuzioni a posteriori con code molto ampie.</p>
+</section>
+<section id="errore-markov-chain-monte-carlo-e-dimensione-del-campione-effettivo" class="level3" data-number="43.7.10">
+<h3 data-number="43.7.10" class="anchored" data-anchor-id="errore-markov-chain-monte-carlo-e-dimensione-del-campione-effettivo"><span class="header-section-number">43.7.10</span> Errore (Markov Chain) Monte Carlo e Dimensione del Campione Effettivo</h3>
+<p>Quando utilizziamo un campionatore di catene di Markov per stimare parametri, otteniamo una sequenza di campioni casuali. Questa sequenza è essa stessa una variabile casuale, perché è composta da molte variabili casuali. A causa di questa natura casuale, ogni esecuzione del campionatore può produrre risultati leggermente diversi, introducendo quello che è noto come errore Monte Carlo.</p>
+<p>L’errore Monte Carlo è l’errore introdotto dal fatto che utilizziamo solo un numero finito di campioni ($ M $) per stimare i parametri. Questo tipo di errore si verifica perché, con un numero limitato di campioni, non possiamo catturare perfettamente l’intera distribuzione a posteriori.</p>
+<section id="errore-standard-di-monte-carlo-mcmc" class="level4" data-number="43.7.10.1">
+<h4 data-number="43.7.10.1" class="anchored" data-anchor-id="errore-standard-di-monte-carlo-mcmc"><span class="header-section-number">43.7.10.1</span> Errore Standard di Monte Carlo (MCMC)</h4>
+<p>Stan riporta l’errore standard di Monte Carlo (MCMC) insieme alle stime della media. L’errore standard MCMC per un parametro scalare $ _d $ è definito come:</p>
+<p><span class="math display">\[
+\text{mcmc-se} = \frac{\textrm{sd}[\Theta_d \mid Y = y]}{\sqrt{N^{\text{eff}}}},
+\]</span></p>
+<p>dove: - <span class="math inline">\(\text{sd}[\Theta_d \mid Y = y]\)</span> è la deviazione standard del parametro $ _d $ nella distribuzione a posteriori. - <span class="math inline">\(N^{\text{eff}}\)</span> è la dimensione del campione effettivo, che riflette il numero di campioni indipendenti equivalenti ottenuti dal campionatore.</p>
+</section>
+<section id="dimensione-del-campione-effettivo" class="level4" data-number="43.7.10.2">
+<h4 data-number="43.7.10.2" class="anchored" data-anchor-id="dimensione-del-campione-effettivo"><span class="header-section-number">43.7.10.2</span> Dimensione del Campione Effettivo</h4>
+<p>Nel classico teorema del limite centrale, la dimensione del campione (numero di estrazioni indipendenti) appare al posto di <span class="math inline">\(N^{\text{eff}}\)</span>. Tuttavia, nel contesto delle catene di Markov, i campioni successivi sono correlati tra loro. La dimensione del campione effettivo (<span class="math inline">\(N^{\text{eff}}\)</span>) tiene conto di questa correlazione e rappresenta il numero di estrazioni indipendenti che porterebbero allo stesso errore delle nostre estrazioni correlate.</p>
+<p>La dimensione del campione effettivo per un campione di dimensione $ M $ è definita come:</p>
+<p><span class="math display">\[
+N^{\text{eff}} = \frac{M}{\text{IAT}},
+\]</span></p>
+<p>dove <span class="math inline">\(\text{IAT}\)</span> è il tempo di autocorrelazione integrata. Sebbene non sia definito formalmente qui, può essere considerato come l’intervallo tra estrazioni effettivamente indipendenti nella nostra catena di Markov. Se l’autocorrelazione è bassa, <span class="math inline">\(\text{IAT}\)</span> sarà vicino a 1; se l’autocorrelazione è alta, <span class="math inline">\(\text{IAT}\)</span> sarà molto più alto.</p>
+<p>In sintesi, <span class="math inline">\(N^{\text{eff}}\)</span> rappresenta il numero di estrazioni indipendenti che porterebbero allo stesso errore delle estrazioni correlate della nostra catena di Markov.</p>
+<p>In conclusione, l’errore standard di Monte Carlo (MCMC) fornisce una misura di quanto varierebbero le nostre stime se ripetessimo il processo di campionamento più volte. È un indicatore dell’affidabilità delle nostre stime, tenendo conto della casualità introdotta dall’utilizzo di un numero finito di campioni. Conoscere questo errore ci aiuta a valutare la precisione delle nostre stime e a comprendere meglio l’incertezza associata ai risultati ottenuti tramite il campionamento di catene di Markov.</p>
+</section>
+</section>
+</section>
+<section id="stima-delle-probabilità-di-evento" class="level2" data-number="43.8">
+<h2 data-number="43.8" class="anchored" data-anchor-id="stima-delle-probabilità-di-evento"><span class="header-section-number">43.8</span> Stima delle Probabilità di Evento</h2>
+<p>Laplace non cercava semplicemente un valore specifico per <span class="math inline">\(\theta\)</span>. Voleva sapere qual era la probabilità che <span class="math inline">\(\theta\)</span> fosse maggiore di <span class="math inline">\(\frac{1}{2}\)</span> dopo aver osservato <span class="math inline">\(y\)</span> nascite maschili su un totale di <span class="math inline">\(N\)</span> nascite. In termini di teoria della probabilità, voleva stimare la probabilità di un evento.</p>
+<p>Un sottoinsieme di parametri è noto come <em>evento</em>. Possiamo convertire le condizioni sui parametri in eventi. Ad esempio, la condizione <span class="math inline">\(\theta &gt; \frac{1}{2}\)</span> può essere espressa come l’evento:</p>
+<p><span class="math display">\[ A = \left\{ \theta \in \Theta : \theta &gt; \frac{1}{2} \right\}. \]</span></p>
+<p>Data una misura di probabilità, la probabilità dell’evento <span class="math inline">\(A\)</span>, ossia che il tasso di nascite maschili sia superiore a quello delle nascite femminili, sarà ben definita. Poiché possiamo convertire le condizioni in eventi, possiamo trattarle come tali. Questo ci permette di scrivere <span class="math inline">\(\Pr\!\left[\Theta &gt; \frac{1}{2} \, \big| \, N, y\right]\)</span> per indicare la probabilità dell’evento <span class="math inline">\(\Theta &gt; \frac{1}{2}\)</span>.</p>
+<section id="probabilità-di-evento-tramite-indicatori" class="level3" data-number="43.8.1">
+<h3 data-number="43.8.1" class="anchored" data-anchor-id="probabilità-di-evento-tramite-indicatori"><span class="header-section-number">43.8.1</span> Probabilità di Evento tramite Indicatori</h3>
+<p>La <em>funzione indicatrice</em> <span class="math inline">\(\textrm{I}\)</span> assegna il valore 1 alle proposizioni vere e 0 a quelle false. Ad esempio, <span class="math inline">\(\textrm{I}(\theta &gt; \frac{1}{2}) = 1\)</span> se la proposizione <span class="math inline">\(\theta &gt; \frac{1}{2}\)</span> è vera, cioè quando <span class="math inline">\(\theta\)</span> è maggiore di un mezzo.</p>
+<p>Le <em>probabilità di evento</em> sono definite come aspettative condizionali posteriori delle funzioni indicatrici per eventi:</p>
+<p><span class="math display">\[
+\begin{align}
+\Pr[\Theta &gt; 0.5 \mid N, y]
+&amp;= \mathbb{E}\!\left[\textrm{I}[\Theta &gt; 0.5] \mid N, y\right] \\
+&amp;= \int_{\Theta} \textrm{I}(\theta &gt; 0.5) \cdot p(\theta \mid N, y) \, \textrm{d}\theta \\
+&amp;\approx \frac{1}{M} \sum_{m=1}^M \textrm{I}(\theta^{(m)} &gt; 0.5),
+\end{align}
+\]</span></p>
+<p>dove <span class="math inline">\(\theta^{(m)}\)</span> rappresenta i campioni dalla distribuzione a posteriori <span class="math inline">\(p(\theta \mid N, y)\)</span> per <span class="math inline">\(m = 1, 2, \ldots, M\)</span>.</p>
+</section>
+<section id="eventi-come-indicatori-in-stan" class="level3" data-number="43.8.2">
+<h3 data-number="43.8.2" class="anchored" data-anchor-id="eventi-come-indicatori-in-stan"><span class="header-section-number">43.8.2</span> Eventi come Indicatori in Stan</h3>
+<p>In Stan, possiamo codificare direttamente il valore della funzione indicatrice e assegnarlo a una variabile nel blocco delle quantità generate.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; boys_gt_girls = theta &gt; <span class="fl">0.5</span>;</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Le espressioni condizionali come <code>theta &gt; 0.5</code> assumono il valore 1 se sono vere e 0 se sono false. In notazione matematica, scriveremmo <span class="math inline">\(\textrm{I}(\theta &gt; 0.5)\)</span>, che assume valore 1 se <span class="math inline">\(\theta &gt; 0.5\)</span> e 0 altrimenti. In Stan, come in C++, trattiamo <code>&gt;</code> come un operatore binario che restituisce 0 o 1, quindi scriviamo semplicemente <code>theta &gt; 0.5</code>.</p>
+</section>
+<section id="la-risposta-alla-domanda-di-laplace" class="level3" data-number="43.8.3">
+<h3 data-number="43.8.3" class="anchored" data-anchor-id="la-risposta-alla-domanda-di-laplace"><span class="header-section-number">43.8.3</span> La Risposta alla Domanda di Laplace</h3>
+<p>La media a posteriori della variabile <code>boys_gt_girls</code> è quindi la nostra stima per <span class="math inline">\(\Pr[\theta &gt; 0.5 \mid N, y]\)</span>. È essenzialmente 1. Stampando a 15 cifre decimali, vediamo</p>
+<div id="cell-39" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:47:37.286129Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:47:37.278856Z&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Pr_boy_gt_girl <span class="op">=</span> np.mean(boys_gt_girls_draws)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"estimated Pr[boy more likely] = </span><span class="sc">{</span>Pr_boy_gt_girl<span class="sc">:.15f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>estimated Pr[boy more likely] = 1.000000000000000</code></pre>
+</div>
+</div>
+<p>Come possiamo vedere di seguito, tutti i nostri campioni per <span class="math inline">\(\theta\)</span> sono maggiori di <span class="math inline">\(\frac{1}{2}\)</span>, ovvero <code>boys_gt_girls_draws</code> è sempre uguale a 1:</p>
+<div id="cell-41" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>np.unique(boys_gt_girls_draws)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>array([1.])</code></pre>
+</div>
+</div>
+<p>Il valore 1 restituito come stima solleva l’importante problema della precisione numerica. Laplace calcolò il risultato analiticamente, che è</p>
+<p><span class="math display">\[
+\Pr\!\left[\Theta &gt; \frac{1}{2} \ \bigg| \ N, y\right] \approx 1 - 10^{-27}.
+\]</span></p>
+<p>Quindi avremmo bisogno di un numero astronomico di campioni a posteriori prima di generare un valore di <span class="math inline">\(\theta\)</span> inferiore a <span class="math inline">\(\frac{1}{2}\)</span>. Come detto, la risposta di 1.0 è molto vicina alla risposta vera e ben entro il nostro errore Monte Carlo atteso.</p>
+</section>
+<section id="statistiche-di-riepilogo-mcmc-da-stan" class="level3" data-number="43.8.4">
+<h3 data-number="43.8.4" class="anchored" data-anchor-id="statistiche-di-riepilogo-mcmc-da-stan"><span class="header-section-number">43.8.4</span> Statistiche di riepilogo MCMC da Stan</h3>
+<p>Con Stan, possiamo ottenere un riepilogo completo della variabile <span class="math inline">\(\theta\)</span> nella distribuzione a posteriori. Per fare ciò, basta chiamare la funzione <code>.summary()</code> sul campione. Questo riepilogo include tutte le statistiche rilevanti.</p>
+<div id="cell-44" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:47:41.793811Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:47:41.063287Z&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sample.summary(sig_figs <span class="op">=</span> <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Mean</th>
+<th data-quarto-table-cell-role="th">MCSE</th>
+<th data-quarto-table-cell-role="th">StdDev</th>
+<th data-quarto-table-cell-role="th">5%</th>
+<th data-quarto-table-cell-role="th">50%</th>
+<th data-quarto-table-cell-role="th">95%</th>
+<th data-quarto-table-cell-role="th">N_Eff</th>
+<th data-quarto-table-cell-role="th">N_Eff/s</th>
+<th data-quarto-table-cell-role="th">R_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">lp__</td>
+<td>-149000.000</td>
+<td>0.004770</td>
+<td>6.720000e-01</td>
+<td>-149000.00</td>
+<td>-149000.000</td>
+<td>-149000.000</td>
+<td>19800.0</td>
+<td>51300.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">theta</td>
+<td>0.512</td>
+<td>0.000009</td>
+<td>1.090000e-03</td>
+<td>0.51</td>
+<td>0.512</td>
+<td>0.513</td>
+<td>13700.0</td>
+<td>35400.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">boys_gt_girls</td>
+<td>1.000</td>
+<td>NaN</td>
+<td>9.380000e-14</td>
+<td>1.00</td>
+<td>1.000</td>
+<td>1.000</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>L’istruzione <code>print(sample.diagnose())</code> in Stan viene utilizzata per eseguire una diagnosi completa del campionamento MCMC. Questa funzione fornisce una serie di statistiche diagnostiche che aiutano a valutare la qualità e la convergenza del campionamento.</p>
+<p>Questi sono alcuni degli aspetti che possono essere diagnosticati:</p>
+<ol type="1">
+<li><p><strong>Convergenza</strong>: La diagnosi verifica se le catene di Markov sono convergenti, ad esempio controllando il valore di <span class="math inline">\(\hat{R}\)</span>. Un valore di <span class="math inline">\(\hat{R}\)</span> vicino a 1 indica che le catene sono ben mescolate e convergenti.</p></li>
+<li><p><strong>Autocorrelazione</strong>: Fornisce informazioni sull’autocorrelazione delle catene, che può influire sull’efficienza del campionamento. Bassa autocorrelazione è desiderabile per ottenere campioni indipendenti.</p></li>
+<li><p><strong>Efficienza del campionamento</strong>: Viene calcolata la dimensione del campione effettivo (<span class="math inline">\(N_{\text{eff}}\)</span>), che indica quanti campioni indipendenti equivarrebbero ai campioni correlati ottenuti.</p></li>
+<li><p><strong>Varianza e Deviazione Standard</strong>: Viene riportata la varianza e la deviazione standard dei campioni, aiutando a comprendere la distribuzione a posteriori del parametro.</p></li>
+</ol>
+<div id="cell-46" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:47:49.768552Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:47:49.601366Z&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sample.diagnose())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Processing csv files: /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp2f8ucg3j/sex-ratioils7kx9j/sex-ratio-20240725102513_1.csv, /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp2f8ucg3j/sex-ratioils7kx9j/sex-ratio-20240725102513_2.csv, /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp2f8ucg3j/sex-ratioils7kx9j/sex-ratio-20240725102513_3.csv, /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp2f8ucg3j/sex-ratioils7kx9j/sex-ratio-20240725102513_4.csv
+
+Checking sampler transitions treedepth.
+Treedepth satisfactory for all transitions.
+
+Checking sampler transitions for divergences.
+No divergent transitions found.
+
+Checking E-BFMI - sampler transitions HMC potential energy.
+E-BFMI satisfactory.
+
+Effective sample size satisfactory.
+
+Split R-hat values satisfactory all parameters.
+
+Processing complete, no problems detected.
+</code></pre>
+</div>
+</div>
+<p>Un grafico con le tracce si ottiene nel modo seguente:</p>
+<div id="cell-48" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:47:54.951821Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:47:53.977863Z&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(sample, var_names<span class="op">=</span>(<span class="st">"theta"</span>), combined<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15_stan_beta_binomial_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="riscaldamento-e-monitoraggio-della-convergenza" class="level1" data-number="44">
+<h1 data-number="44"><span class="header-section-number">44</span> Riscaldamento e monitoraggio della convergenza</h1>
+<p>Quando si eseguono catene di Markov, è importante assicurarsi che i campioni siano approssimativamente estratti dalla distribuzione a posteriori. Un modo standard per monitorare la convergenza è avviare più catene di Markov con inizializzazioni diverse (idealmente scelte da una distribuzione iniziale diffusa) e misurare se stanno producendo campioni dalla stessa distribuzione.</p>
+<section id="riscaldamento" class="level2" data-number="44.1">
+<h2 data-number="44.1" class="anchored" data-anchor-id="riscaldamento"><span class="header-section-number">44.1</span> Riscaldamento</h2>
+<p>Durante le fasi iniziali di riscaldamento, Stan cerca di trovare la regione di alta probabilità da cui campionare, adattare una buona dimensione del passo e stimare la varianza a posteriori. La varianza stimata viene utilizzata per migliorare l’efficienza del campionatore, un processo chiamato “precondizionamento”. Precondizionare significa ridimensionare i parametri per rendere il campionamento più efficiente.</p>
+<p>Stan può anche stimare una matrice di covarianza completa, che rappresenta le relazioni tra tutti i parametri. Utilizzando questa matrice, Stan può effettuare rotazioni e ridimensionamenti dei parametri per campionare in modo più efficace. In questo contesto, “rotazione e scalatura” si riferiscono alla trasformazione dei parametri in una nuova base (rotazione) e alla regolazione delle loro scale (scalatura) per facilitare il campionamento, rendendolo più rapido e affidabile. Per ulteriori dettagli su questi processi, si può fare riferimento a Neal (2011).</p>
+<p>Il riscaldamento converge quando la dimensione del passo e le stime della covarianza a posteriori diventano stabili. Con più catene, è possibile verificare che tutte convergano verso una dimensione del passo e una stima della covarianza simili. A meno che non ci siano problemi, generalmente non misuriamo la convergenza dell’adattamento, ma piuttosto se otteniamo campioni a posteriori ragionevoli dopo il riscaldamento.</p>
+<p>Durante la fase di riscaldamento, Stan non produce una catena di Markov coerente perché utilizza la memoria per adattarsi alle condizioni del modello. Questo adattamento serve a trovare i migliori parametri di campionamento. Tuttavia, una volta terminato il riscaldamento e iniziata la fase di campionamento, Stan inizia a produrre una vera e propria catena di Markov.</p>
+<p>Le nostre analisi a posteriori si baseranno esclusivamente sui campioni generati durante questa fase di campionamento, non sui campioni raccolti durante il riscaldamento. È comunque possibile salvare ed esaminare i campioni del riscaldamento per comprendere meglio come il processo di adattamento è avvenuto e se ci sono stati problemi.</p>
+</section>
+<section id="riduzione-potenziale-della-scala-e-widehatr" class="level2" data-number="44.2">
+<h2 data-number="44.2" class="anchored" data-anchor-id="riduzione-potenziale-della-scala-e-widehatr"><span class="header-section-number">44.2</span> Riduzione potenziale della scala e <span class="math inline">\(\widehat{R}\)</span></h2>
+<p>Stan utilizza la statistica di <em>riduzione potenziale della scala</em> <span class="math inline">\(\widehat{R}\)</span> (pronunciata “R hat”). Dato un insieme di catene di Markov, Stan divide ciascuna di esse a metà per assicurarsi che la prima metà e la seconda metà della catena concordino, quindi calcola le varianze all’interno di ciascuna catena e tra tutte le catene e le confronta. La statistica <span class="math inline">\(\widehat{R}\)</span> converge a 1 quando le catene di Markov convergono alla stessa distribuzione.</p>
+</section>
+<section id="quante-catene-per-quanto-tempo" class="level2" data-number="44.3">
+<h2 data-number="44.3" class="anchored" data-anchor-id="quante-catene-per-quanto-tempo"><span class="header-section-number">44.3</span> Quante catene per quanto tempo?</h2>
+<p>Una semplice regola empirica consiste nell’eseguire quattro catene finché <span class="math inline">\(\widehat{R} \leq 1.01\)</span> e la dimensione campionaria effettiva (ESS) è superiore a 100. La raccomandazione di avere una dimensione campionaria effettiva di “soli” 100 è dovuta al fatto che questo valore implica un errore standard pari a <span class="math inline">\(\frac{1}{10}\)</span> della deviazione standard. Poiché la deviazione standard a posteriori rappresenta l’incertezza residua, calcolare le medie con una precisione maggiore è raramente utile.</p>
+<p>Il modo più semplice per ottenere <span class="math inline">\(\widehat{R} \leq 1.01\)</span> e <span class="math inline">\(N_{\text{eff}} &gt; 100\)</span> è iniziare con 100 iterazioni di riscaldamento e 100 iterazioni di campionamento. Se i valori di <span class="math inline">\(\widehat{R}\)</span> sono troppo alti o se la dimensione campionaria effettiva è troppo bassa, raddoppiare il numero di iterazioni di riscaldamento e di campionamento e riprovare. Eseguire più iterazioni di riscaldamento è importante perché il campionamento non sarà efficiente se il riscaldamento non è convergente. Utilizzare lo stesso numero di iterazioni di riscaldamento e di campionamento può comportare un costo massimo doppio rispetto alle impostazioni ottimali, che non sono note in anticipo.</p>
+<p>Anche se si utilizzano più di quattro catene, è necessario assicurarsi che la dimensione campionaria effettiva sia almeno 25 per catena. Non è tanto per l’inferenza, quanto per garantire la fiducia nello stimatore della dimensione campionaria effettiva, che non è affidabile se è molto inferiore. Un modo per verificare l’adeguatezza dello stimatore ESS è raddoppiare il numero di campioni e assicurarsi che anche l’ESS raddoppi. Se ciò non accade, significa che la prima stima dell’ESS non è affidabile.</p>
+</section>
+<section id="esecuzione-delle-catene-contemporaneamente" class="level2" data-number="44.4">
+<h2 data-number="44.4" class="anchored" data-anchor-id="esecuzione-delle-catene-contemporaneamente"><span class="header-section-number">44.4</span> Esecuzione delle catene contemporaneamente</h2>
+<p>È possibile impostare il numero di catene da eseguire utilizzando l’argomento <code>chains</code> del metodo <code>sample()</code>. Inoltre, è possibile controllare quante catene possono essere eseguite contemporaneamente con l’argomento <code>parallel_cores</code> (che per default è impostato su 1, ovvero esecuzione sequenziale).</p>
+<p>Se il numero massimo di catene parallele è impostato troppo basso, le risorse della CPU potrebbero non essere sfruttate appieno. Al contrario, se è impostato troppo alto, la CPU o la memoria potrebbero diventare il collo di bottiglia, rallentando le prestazioni complessive rispetto all’esecuzione con un numero inferiore di catene parallele.</p>
+<p>In progetti personali sul nostro hardware, l’obiettivo è solitamente ottenere la massima dimensione campionaria effettiva nel minor tempo possibile. Tuttavia, a volte è necessario lasciare abbastanza potenza di elaborazione per continuare a lavorare su altre attività come documenti, email, ecc.</p>
+<section id="matrici-vettori-o-array-in-stan" class="level3" data-number="44.4.1">
+<h3 data-number="44.4.1" class="anchored" data-anchor-id="matrici-vettori-o-array-in-stan"><span class="header-section-number">44.4.1</span> Matrici, Vettori o Array in Stan</h3>
+<p>Stan offre vari tipi di dati per gestire operazioni di algebra lineare e per definire strutture di dati più generali come gli array. Capire le differenze tra questi tipi è fondamentale per sapere cosa possiamo fare con essi e per ottimizzare la velocità di esecuzione del nostro modello.</p>
+<ol type="1">
+<li><strong>Tipi di base per l’algebra lineare</strong>:
+<ul>
+<li><strong><code>vector</code></strong>: un vettore colonna di dimensione N.</li>
+<li><strong><code>row_vector</code></strong>: un vettore riga di dimensione N.</li>
+<li><strong><code>matrix</code></strong>: una matrice di dimensioni N1 × N2.</li>
+</ul></li>
+<li><strong>Array</strong>:
+<ul>
+<li>Gli array possono essere creati con qualsiasi tipo di elemento e possono avere più dimensioni. Ad esempio:
+<ul>
+<li><code>array[N] real a;</code> definisce un array unidimensionale di numeri reali.</li>
+<li><code>array[N1, N2] real m;</code> definisce un array bidimensionale di numeri reali.</li>
+</ul></li>
+</ul></li>
+<li><strong>Intercambiabilità e limitazioni</strong>:
+<ul>
+<li>Anche se possiamo usare sia <code>vector</code> che <code>array</code> per contenitori unidimensionali, l’algebra matriciale (come la moltiplicazione) è definita solo per vettori e matrici, non per array.</li>
+<li>Alcune funzioni, come <code>normal_lpdf</code>, accettano sia vettori che array.</li>
+</ul></li>
+<li><strong>Esempi pratici</strong>:
+<ul>
+<li><p>Quando definiamo una media (<code>mu</code>) come somma di un parametro (<code>alpha</code>) e il prodotto di un vettore di carichi (<code>c_load</code>) con un coefficiente (<code>beta</code>), dobbiamo usare i vettori:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dt">vector</span>[N] mu = alpha + c_load * beta;</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Per utilizzare un generatore di numeri casuali (_rng) in modo vettoriale, dobbiamo usare un array:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="dt">array</span>[N] <span class="dt">real</span> p_size_pred = normal_rng(alpha + c_load * beta, sigma);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul></li>
+</ol>
+<p>In sintesi, la scelta tra <code>vector</code>, <code>row_vector</code>, <code>matrix</code> e <code>array</code> dipende dalle operazioni che si desidera eseguire e dalle specifiche esigenze del modello. Scegliere il tipo di dato appropriato permette di sfruttare appieno le funzionalità di Stan e ottimizzare le prestazioni del modello.</p>
+</section>
+</section>
+<section id="modello-di-esecuzione-di-stan" class="level2" data-number="44.5">
+<h2 data-number="44.5" class="anchored" data-anchor-id="modello-di-esecuzione-di-stan"><span class="header-section-number">44.5</span> Modello di esecuzione di Stan</h2>
+<p>I programmi Stan sono composti da diversi blocchi. Ecco una panoramica di ciascun blocco, di quando viene eseguito e di cosa fa. Nessuno di questi blocchi è obbligatorio, ma se presenti, devono seguire quest’ordine.</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Blocco</strong></th>
+<th style="text-align: left;"><strong>Quando viene eseguito</strong></th>
+<th style="text-align: left;"><strong>Cosa fa</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>functions</code></td>
+<td style="text-align: left;">secondo necessità</td>
+<td style="text-align: left;">Definizione delle funzioni create dall’utente</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data</code></td>
+<td style="text-align: left;">una volta</td>
+<td style="text-align: left;">Lettura dei dati per costruire il modello</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>transformed data</code></td>
+<td style="text-align: left;">una volta</td>
+<td style="text-align: left;">Definizione dei dati trasformati</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>parameters</code></td>
+<td style="text-align: left;">una volta / densità logaritmica</td>
+<td style="text-align: left;">Definizione dei parametri con i relativi vincoli</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>transformed parameters</code></td>
+<td style="text-align: left;">una volta / densità logaritmica</td>
+<td style="text-align: left;">Definizione dei parametri trasformati</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">una volta / densità logaritmica</td>
+<td style="text-align: left;">Valutazione della densità logaritmica del modello</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>generated quantities</code></td>
+<td style="text-align: left;">una volta / per estrazione</td>
+<td style="text-align: left;">Definizione delle quantità generate</td>
+</tr>
+</tbody>
+</table>
+<section id="dati-e-dati-trasformati" class="level3" data-number="44.5.1">
+<h3 data-number="44.5.1" class="anchored" data-anchor-id="dati-e-dati-trasformati"><span class="header-section-number">44.5.1</span> Dati e dati trasformati</h3>
+<p>Il blocco <em>data</em> contiene solo le dichiarazioni delle variabili. Queste variabili vengono lette una volta durante il caricamento dei dati.</p>
+<p>Il blocco <em>transformed data</em> contiene sia dichiarazioni che definizioni delle variabili. Questo blocco serve per calcolare nuove variabili a partire dai dati originali, come predittori standardizzati o costanti per i priori. Può anche includere la generazione pseudocasuale di numeri. Viene eseguito una volta, dopo la lettura dei dati, per definire le nuove variabili trasformate.</p>
+<p>In ogni blocco, tutte le variabili devono avere il loro tipo e dimensione dichiarati (che possono dipendere dai dati). Le variabili locali all’interno dei blocchi, invece, sono dichiarate senza specificare la dimensione.</p>
+<p>I vincoli sulle variabili nel blocco <em>data</em> vengono controllati mentre i dati vengono letti, mentre quelli nel blocco <em>transformed data</em> vengono verificati alla fine dell’esecuzione del blocco. Se ci sono violazioni dei vincoli nei dati o nei dati trasformati, si genera un’eccezione che interrompe l’esecuzione del programma.</p>
+<p>Le variabili definite nel blocco <em>transformed data</em> possono essere assegnate una volta, ma non possono essere riassegnate dopo l’esecuzione del blocco.</p>
+</section>
+<section id="parametri-e-parametri-trasformati" class="level3" data-number="44.5.2">
+<h3 data-number="44.5.2" class="anchored" data-anchor-id="parametri-e-parametri-trasformati"><span class="header-section-number">44.5.2</span> Parametri e Parametri Trasformati</h3>
+<p>Il blocco <em>parameters</em> serve a dichiarare le variabili su cui è basato il modello. In pratica, si tratta di elencare i parametri che il modello utilizzerà, specificandone le dimensioni. Quando il blocco viene eseguito, vengono forniti i valori concreti di questi parametri.</p>
+<p>I vincoli sui parametri sono utilizzati per trasformare le variabili vincolate in variabili non vincolate. Ad esempio, se una variabile ha un vincolo <code>lower=0</code> (cioè deve essere maggiore o uguale a zero), questa variabile viene trasformata usando il logaritmo per renderla non vincolata. È essenziale dichiarare tutti i vincoli necessari sui parametri affinché il modello funzioni correttamente su tutto lo spazio dei parametri.</p>
+<p>Il blocco <em>transformed parameters</em> permette di definire nuove variabili che sono funzioni dei parametri originali e dei dati. Gli utenti possono creare le loro trasformazioni dei parametri in questo blocco. I vincoli su queste nuove variabili vengono verificati alla fine dell’esecuzione del blocco. Se questi vincoli non sono rispettati, viene generata un’eccezione che di solito porta al rifiuto della proposta corrente.</p>
+<p>Le variabili dichiarate nel blocco <em>parameters</em> sono simili agli argomenti di una funzione: la funzione di densità logaritmica del programma Stan prende questi parametri come input. Quindi, i valori dei parametri vengono sempre forniti dall’esterno del programma Stan.</p>
+<p>Dopo l’esecuzione del blocco <em>transformed parameters</em>, le variabili dichiarate in esso non possono essere modificate ulteriormente.</p>
+<p>La differenza principale tra le variabili dichiarate come locali nel blocco <em>model</em> e quelle nel blocco <em>transformed parameters</em> è che le variabili trasformate vengono stampate e sono disponibili anche nel blocco <em>generated quantities</em>.</p>
+</section>
+<section id="modello" class="level3" data-number="44.5.3">
+<h3 data-number="44.5.3" class="anchored" data-anchor-id="modello"><span class="header-section-number">44.5.3</span> Modello</h3>
+<p>Lo scopo del blocco <em>model</em> è definire la funzione che calcola la densità logaritmica del modello. Una volta caricati i dati, il compito principale di un programma Stan è fornire questa funzione di densità logaritmica non normalizzata sui parametri non vincolati. Algoritmi esterni, come ottimizzatori, campionatori o metodi di inferenza variazionale, forniranno i valori dei parametri non vincolati per la valutazione.</p>
+<p>Il valore della densità logaritmica non normalizzata calcolato dal modello viene conservato in una variabile chiamata <code>target</code>. Le densità posteriori (che ci interessano) sono calcolate moltiplicando i fattori delle funzioni di densità o massa di probabilità. In termini logaritmici, questo equivale ad aggiungere i termini delle funzioni di densità o massa non normalizzate alla <code>target</code>.</p>
+<p>L’accumulatore <code>target</code> parte da zero e viene incrementato durante l’esecuzione del programma Stan. Come accennato prima, la prima cosa che questa funzione di densità logaritmica non normalizzata fa è trasformare i parametri vincolati in non vincolati e aggiungere un aggiustamento logaritmico per il cambio di variabili alla <code>target</code>. Questo processo è automatico e fornisce i valori dei parametri trasformati al codice che verrà eseguito successivamente nel blocco <em>model</em>.</p>
+<p>La densità logaritmica accumulata in <code>target</code> può essere incrementata direttamente, come mostrato nell’esempio seguente:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> -<span class="fl">0.5</span> * x^<span class="dv">2</span>;</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Anche se non è possibile usare direttamente <code>target</code> come variabile, il suo valore attuale può essere recuperato tramite la funzione <code>target()</code>, utile per il debugging.</p>
+<p>Le istruzioni di campionamento sono una scorciatoia per incrementare <code>target</code>. Ad esempio, l’istruzione</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>x ~ normal(<span class="dv">0</span>, <span class="dv">1</span>);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>è equivalente a</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> normal_lupdf(x | <span class="dv">0</span>, <span class="dv">1</span>);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Qui, <code>_lupdf</code> indica che si tratta di una funzione di densità di probabilità logaritmica non normalizzata.</p>
+<p>La barra verticale <code>|</code> è utilizzata per separare le variabili osservate dai parametri. La notazione <code>lpdf</code> denota una funzione di densità di probabilità logaritmica, mentre <code>lpmf</code> indica una funzione di massa di probabilità logaritmica. Le varianti <code>lupdf</code> e <code>lupmf</code> sono le loro controparti non normalizzate, che possono omettere le costanti di normalizzazione che non dipendono dai parametri. A meno che non siano necessarie, ad esempio in un componente di un modello di mescolanza, è più efficiente usare le forme <code>lupdf</code> e <code>lupmf</code> incrementando direttamente <code>target</code> o tramite istruzioni di campionamento.</p>
+</section>
+<section id="quantità-generate" class="level3" data-number="44.5.4">
+<h3 data-number="44.5.4" class="anchored" data-anchor-id="quantità-generate"><span class="header-section-number">44.5.4</span> Quantità generate</h3>
+<p>Il blocco <em>generated quantities</em> viene eseguito una volta per ogni campione generato, anziché ogni volta che viene calcolata la densità logaritmica. Con algoritmi come il campionamento Monte Carlo Hamiltoniano, ogni campione può richiedere diverse valutazioni della densità logaritmica.</p>
+<p>Un vantaggio delle quantità generate è che vengono calcolate utilizzando numeri in virgola mobile a doppia precisione, il che le rende molto efficienti. Questo blocco può anche utilizzare numeri pseudocasuali. I vincoli sui dati generati vengono verificati alla fine del blocco, ma eventuali errori non causano il rigetto del campione, solo possibili avvertimenti o valori non definiti (NaN).</p>
+<p>Le quantità generate non influenzano il calcolo della densità logaritmica, ma sono comunque una parte importante del modello statistico. Sono utilizzate principalmente per fare previsioni su nuovi dati, basandosi sui parametri stimati dal modello. Questo processo è noto come inferenza predittiva posteriore. In altre parole, ci permette di fare previsioni su nuovi dati utilizzando i valori dei parametri generati dal modello.</p>
+<p>Esempi di utilizzo delle quantità generate includono la previsione di nuovi valori o il calcolo di statistiche derivate dai parametri stimati. Le quantità generate offrono un modo per esplorare ulteriormente il comportamento del modello e fare inferenze utili dai dati simulati.</p>
+</section>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="44.6">
+<h2 data-number="44.6" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">44.6</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="cell-53" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:48:08.464793Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:48:08.410689Z&quot;}" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m <span class="op">-</span>p cmdstanpy</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Thu Jul 25 2024
+
+Python implementation: CPython
+Python version       : 3.12.4
+IPython version      : 8.26.0
+
+cmdstanpy: 1.2.4
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.5.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+logging   : 0.5.1.2
+pandas    : 2.2.2
+cmdstanpy : 1.2.4
+matplotlib: 3.9.1
+arviz     : 0.18.0
+numpy     : 1.26.4
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/chapter_5/10_metropolis.html" class="pagination-link" aria-label="Monte Carlo a Catena di Markov">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/chapter_5/16_stan_summary_posterior.html" class="pagination-link" aria-label="Metodi di sintesi della distribuzione a posteriori">
+        <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/chapter_5/15_stan_beta_binomial.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div></div></footer></body></html>
