@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 41&nbsp; Sintesi a posteriori</title>
+<title>Data Science per Psicologi - Appendice O — Simulazione Monte Carlo</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,27 +55,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -84,8 +64,8 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/bayesian_inference/06_balance_prior_post.html" rel="next">
-<link href="../../chapters/bayesian_inference/04_conjugate_families_2.html" rel="prev">
+<link href="../../chapters/appendix/a45_mcmc.html" rel="next">
+<link href="../../chapters/appendix/a40_rng.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -164,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/introduction_bayes_inference.html">Inferenza bayesiana</a></li><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/05_summary_posterior.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/appendix/a00_installation.html">Appendici</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/a44_montecarlo.html"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Simulazione Monte Carlo</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -454,13 +434,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
  <span class="menu-text">Inferenza bayesiana</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/introduction_bayes_inference.html" class="sidebar-item-text sidebar-link">
@@ -493,7 +473,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/bayesian_inference/05_summary_posterior.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../chapters/bayesian_inference/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
   </div>
 </li>
@@ -860,13 +840,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true">
  <span class="menu-text">Appendici</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a00_installation.html" class="sidebar-item-text sidebar-link">
@@ -953,7 +933,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/appendix/a44_montecarlo.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/appendix/a44_montecarlo.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Simulazione Monte Carlo</span></span></a>
   </div>
 </li>
@@ -1011,24 +991,21 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#riepilogo-numerico" id="toc-riepilogo-numerico" class="nav-link" data-scroll-target="#riepilogo-numerico"><span class="header-section-number">41.1</span> Riepilogo numerico</a>
+  <li><a href="#stima-dellintegrale-di-un-cerchio" id="toc-stima-dellintegrale-di-un-cerchio" class="nav-link active" data-scroll-target="#stima-dellintegrale-di-un-cerchio"><span class="header-section-number">O.1</span> Stima dell’integrale di un cerchio</a>
   <ul class="collapse">
-  <li><a href="#stima-puntuale" id="toc-stima-puntuale" class="nav-link" data-scroll-target="#stima-puntuale"><span class="header-section-number">41.1.1</span> Stima puntuale</a></li>
-  <li><a href="#intervallo-di-credibilità" id="toc-intervallo-di-credibilità" class="nav-link" data-scroll-target="#intervallo-di-credibilità"><span class="header-section-number">41.1.2</span> Intervallo di credibilità</a></li>
+  <li><a href="#codice-stan" id="toc-codice-stan" class="nav-link" data-scroll-target="#codice-stan"><span class="header-section-number">O.1.1</span> Codice Stan</a></li>
+  <li><a href="#media-campionaria-dellindicatore" id="toc-media-campionaria-dellindicatore" class="nav-link" data-scroll-target="#media-campionaria-dellindicatore"><span class="header-section-number">O.1.2</span> Media Campionaria dell’Indicatore</a></li>
+  <li><a href="#compilazione-e-campionamento" id="toc-compilazione-e-campionamento" class="nav-link" data-scroll-target="#compilazione-e-campionamento"><span class="header-section-number">O.1.3</span> Compilazione e Campionamento</a></li>
   </ul></li>
-  <li><a href="#verifica-di-ipotesi-bayesiana" id="toc-verifica-di-ipotesi-bayesiana" class="nav-link" data-scroll-target="#verifica-di-ipotesi-bayesiana"><span class="header-section-number">41.2</span> Verifica di ipotesi bayesiana</a></li>
-  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">41.3</span> Commenti e considerazioni finali</a></li>
-  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/bayesian_inference/05_summary_posterior.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/appendix/a44_montecarlo.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/introduction_bayes_inference.html">Inferenza bayesiana</a></li><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/05_summary_posterior.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/appendix/a00_installation.html">Appendici</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/a44_montecarlo.html"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Simulazione Monte Carlo</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sintesi-distr-post" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></h1>
+<h1 class="title"><span id="sec-montecarlo-integration" class="quarto-section-identifier">Appendice O — Simulazione Monte Carlo</span></h1>
 </div>
 
 
@@ -1045,251 +1022,127 @@ window.Quarto = {
 </header>
 
 
-<p><strong>Prerequisiti</strong></p>
-<p><strong>Concetti e competenze chiave</strong></p>
-<p><strong>Preparazione del Notebook</strong></p>
-<div id="7df04cab-dd67-4f5e-af26-691b749f075b" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:30.279665Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:28.610854Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="63d7ec28-3663-4c47-98af-efee26f54e21" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run ..<span class="op">/</span>..<span class="op">/</span>config.py <span class="co"># Import the configuration settings</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d9f9dda9-2722-45f4-8d66-bf873fbeab11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:33.266182Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:33.258952Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>RANDOM_SEED <span class="op">=</span> <span class="dv">8927</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(RANDOM_SEED)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">'retina'</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d53f718b-fa53-446c-b6fc-654f2546102e" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">'retina'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>RANDOM_SEED <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(RANDOM_SEED)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduzione" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo, concentriamo la nostra attenzione sulla sintesi dell’informazione racchiusa nella distribuzione a posteriori, la quale rappresenta il nostro livello di incertezza riguardo al parametro o ai parametri incogniti oggetto dell’inferenza.</p>
-</section>
-<section id="riepilogo-numerico" class="level2" data-number="41.1">
-<h2 data-number="41.1" class="anchored" data-anchor-id="riepilogo-numerico"><span class="header-section-number">41.1</span> Riepilogo numerico</h2>
-<p>La distribuzione a posteriori contiene in sé tutte le informazioni disponibili sui potenziali valori del parametro. Nel caso di un parametro unidimensionale o bidimensionale, possiamo rappresentare la distribuzione a posteriori mediante un grafico <span class="math inline">\(p(\theta \mid y)\)</span>.</p>
-<p>Tuttavia, quando ci troviamo di fronte a vettori di parametri con più di due dimensioni, risulta vantaggioso eseguire una sintesi numerica della distribuzione a posteriori. Possiamo distinguere due forme di sintesi numerica della distribuzione a posteriori:</p>
-<ul>
-<li>Stima puntuale;</li>
-<li>Intervallo di credibilità.</li>
-</ul>
-<section id="stima-puntuale" class="level3" data-number="41.1.1">
-<h3 data-number="41.1.1" class="anchored" data-anchor-id="stima-puntuale"><span class="header-section-number">41.1.1</span> Stima puntuale</h3>
-<p>Nel contesto dell’inferenza bayesiana, il processo di stima del valore più credibile del parametro <span class="math inline">\(\theta\)</span> tramite la distribuzione a posteriori è un compito cruciale. Comunemente, tale processo si avvale di tre statistiche: la moda, la mediana e la media, la cui scelta è guidata dalla forma della distribuzione a posteriori. Queste statistiche sono utilizzate per ottenere una stima puntuale della tendenza centrale della distribuzione a posteriori, che a sua volta fornisce il “valore più credibile” del parametro. Questo valore rappresenta la stima a cui attribuiamo il massimo grado di fiducia soggettiva, basandoci sui dati osservati e sulle nostre credenze a priori.</p>
-<ol type="1">
-<li><p><strong>Media a posteriori</strong>: La media a posteriori è il valore atteso del parametro <span class="math inline">\(\theta\)</span>, calcolato sulla base della distribuzione a posteriori. In termini matematici, nel caso continuo, è espressa dalla formula:</p>
-<p><span class="math display">\[ E(\theta | y) = \int_{-\infty}^{\infty} \theta \, p(\theta | y) \, d\theta. \]</span></p></li>
-<li><p><strong>Moda (Massimo a posteriori, MAP)</strong>: La moda identifica il valore più probabile del parametro, ovvero quello che massimizza la distribuzione a posteriori. Questo valore è noto come “massimo a posteriori” (MAP). La stima MAP inizia con il concetto di stima di massima verosimiglianza (MLE), che cerca il valore di <span class="math inline">\(\theta\)</span>, denotato come <span class="math inline">\(\hat{\theta}_{ML}\)</span>, che massimizza la funzione di verosimiglianza <span class="math inline">\(L(\theta | y)\)</span>, come segue:</p>
-<p><span class="math display">\[ \hat{\theta}_{ML} = \arg \max_\theta L(\theta | y). \]</span></p>
-<p>Nell’inferenza bayesiana, <span class="math inline">\(\theta\)</span> è considerato come una variabile casuale, e si specifica una distribuzione a priori su <span class="math inline">\(\theta\)</span> per riflettere la nostra incertezza su <span class="math inline">\(\theta\)</span>. Integrando la distribuzione a priori, otteniamo la formula per la stima MAP:</p>
-<p><span class="math display">\[ \hat{\theta}_{MAP} = \arg \max_\theta L(\theta | y)p(\theta). \]</span></p>
-<p>Questa formula evidenzia che la stima MAP corrisponde al valore che massimizza la densità a posteriori di <span class="math inline">\(\theta\)</span> dati <span class="math inline">\(y\)</span>, che coincide con la moda della densità a posteriori.</p></li>
-<li><p><strong>Mediana</strong>: La mediana è il valore del parametro per cui il 50% della massa di probabilità a posteriori si distribuisce equamente a sinistra e a destra. È una misura robusta della tendenza centrale, particolarmente utile in presenza di distribuzioni asimmetriche o multimodali, dove la moda potrebbe non fornire una stima accurata del valore più probabile del parametro.</p></li>
-</ol>
-<p>Per valutare l’incertezza associata al parametro <span class="math inline">\(\theta\)</span>, è utile calcolare la varianza a posteriori. Questa varianza è basata sulla tendenza centrale definita dalla media a posteriori, e la sua radice quadrata fornisce la deviazione standard a posteriori, che misura l’incertezza a posteriori relativa a <span class="math inline">\(\theta\)</span>, espressa nelle stesse unità di misura dei dati. La formula per la varianza a posteriori è data da:</p>
-<p><span class="math display">\[ V(\theta|y) = E[((\theta - E[(\theta|y)])^2 |y) = \int_{-\infty}^{\infty} (\theta - E[\theta | y])^2 p(\theta | y) d\theta = E[\theta^2 |y] - E[\theta|y]^2. \]</span></p>
-<p>In sintesi, la media, la moda e la mediana a posteriori, insieme alla varianza a posteriori, forniscono una descrizione comprensiva del comportamento della distribuzione a posteriori di <span class="math inline">\(\theta\)</span>, permettendoci di derivare stime puntuali e misurare l’incertezza associata a <span class="math inline">\(\theta\)</span> in modo informativo.</p>
-</section>
-<section id="intervallo-di-credibilità" class="level3" data-number="41.1.2">
-<h3 data-number="41.1.2" class="anchored" data-anchor-id="intervallo-di-credibilità"><span class="header-section-number">41.1.2</span> Intervallo di credibilità</h3>
-<p>Nel contesto dell’inferenza bayesiana, l’intervallo di credibilità è uno strumento fondamentale per valutare l’ampiezza dell’intervallo che racchiude una determinata percentuale della massa della distribuzione a posteriori del parametro <span class="math inline">\(\theta\)</span>. Questo intervallo fornisce informazioni sulla nostra incertezza relativa al valore del parametro: un intervallo più ampio indica una maggiore incertezza associata. L’obiettivo primario dell’intervallo di credibilità è di fornire una misura quantitativa dell’incertezza legata alla stima del parametro <span class="math inline">\(\theta\)</span>.</p>
-<p>La definizione di intervallo di credibilità non determina un unico intervallo di ordine <span class="math inline">\((1 - \alpha) \cdot 100\%\)</span>, ma rende possibile una gamma infinita di tali intervalli. Di conseguenza, è essenziale introdurre condizioni aggiuntive per la selezione dell’intervallo di credibilità. Due delle condizioni aggiuntive più comuni sono l’intervallo di credibilità simmetrico e l’intervallo di credibilità più stretto.</p>
-<ol type="1">
-<li><p><strong>Intervallo di Credibilità Simmetrico</strong>: Questa condizione richiede che l’intervallo di credibilità sia simmetrico rispetto al punto di stima puntuale. Se <span class="math inline">\(\hat{\theta}\)</span> è il valore stimato del parametro, l’intervallo di credibilità avrà la forma <span class="math inline">\((\hat{\theta} - a, \hat{\theta} + a)\)</span>, dove <span class="math inline">\(a\)</span> è un valore positivo adeguato. Un intervallo di credibilità simmetrico al livello <span class="math inline">\(\alpha\)</span> può essere rappresentato come:</p>
-<p><span class="math display">\[ I_{\alpha} = [q_{\alpha/2}, q_{1 - \alpha/2}], \]</span></p>
-<p>dove <span class="math inline">\(q_z\)</span> è un quantile della distribuzione a posteriori. Ad esempio, un intervallo di credibilità simmetrico al 94% sarà:</p>
-<p><span class="math display">\[ I_{0.06} = [q_{0.03}, q_{0.97}] \]</span></p>
-<p>assicurando che il 3% della densità di probabilità a posteriori sia compreso in ciascuna coda dell’intervallo.</p></li>
-<li><p><strong>Intervallo di Credibilità Più Stretto (Intervallo di Massima Densità Posteriore, HPD)</strong>: Questo intervallo è scelto in modo da avere la larghezza minima tra tutti gli intervalli di ordine <span class="math inline">\((1 - \alpha) \cdot 100\%\)</span>, rappresentando la stima più precisa possibile del parametro <span class="math inline">\(\theta\)</span>. A differenza dell’intervallo di credibilità simmetrico, l’intervallo di credibilità più stretto, o Intervallo di Massima Densità Posteriore (HPD), è costruito per includere tutti i valori di <span class="math inline">\(\theta\)</span> che godono di maggiore credibilità a posteriori. Questo intervallo può essere ottenuto tracciando una linea orizzontale sulla rappresentazione grafica della distribuzione a posteriori e regolando l’altezza della linea in modo che l’area sottesa alla curva sia pari a <span class="math inline">\(1 - \alpha\)</span>. L’intervallo HPD è il più stretto possibile tra tutti gli intervalli possibili con lo stesso livello di fiducia. Quando la distribuzione a posteriori è unimodale e simmetrica, l’intervallo di credibilità più stretto coincide con l’intervallo di credibilità simmetrico.</p></li>
-</ol>
-<p>Il calcolo degli intervalli di credibilità può richiedere l’uso di software statistici dedicati, data la complessità nel determinarli manualmente, specialmente in situazioni con modelli bayesiani più complessi o quando il calcolo coinvolge simulazioni numeriche.</p>
-<p>Un aspetto importante del trattare i parametri in modo probabilistico riguarda l’interpretazione degli intervalli di confidenza. Nell’ambito frequentista, è necessario immaginare un parametro fisso, ad esempio la media della popolazione <span class="math inline">\(\mu\)</span>, e immaginare un numero infinito di campioni ripetuti dalla popolazione caratterizzata da <span class="math inline">\(\mu\)</span>. Per ogni campione, possiamo ottenere la media del campione <span class="math inline">\(\bar{x}\)</span> e quindi formare un intervallo di confidenza al <span class="math inline">\(100(1 − \alpha)\%\)</span>. L’interpretazione corretta in termini frequentisti è che il <span class="math inline">\(100(1 − \alpha)\%\)</span> degli intervalli di confidenza formati in questo modo cattura il vero parametro <span class="math inline">\(\mu\)</span> sotto l’ipotesi nulla. In questo contesto, la probabilità che il parametro sia nell’intervallo è o 0 o 1.</p>
-<p>In contrasto, il framework bayesiano assume che un parametro abbia una distribuzione di probabilità. Campionando dalla distribuzione a posteriori dei parametri del modello, possiamo ottenere i suoi quantili e, dai quantili, possiamo ottenere direttamente la probabilità che un parametro rientri in un determinato intervallo. Quindi, in questo caso, un intervallo di probabilità a posteriori del 95% significherebbe che la probabilità che il parametro rientri nell’intervallo è 0.95. Questo è completamente diverso dall’interpretazione frequentista, e si allinea più sensatamente con il senso comune.</p>
-</section>
-</section>
-<section id="verifica-di-ipotesi-bayesiana" class="level2" data-number="41.2">
-<h2 data-number="41.2" class="anchored" data-anchor-id="verifica-di-ipotesi-bayesiana"><span class="header-section-number">41.2</span> Verifica di ipotesi bayesiana</h2>
-<p>L’inferenza bayesiana può anche procedere attraverso un altro approccio, conosciuto come verifica di ipotesi bayesiana. Questo secondo tipo di inferenza bayesiana si concentra su problemi in cui intendiamo valutare la plausibilità dell’affermazione che il parametro <span class="math inline">\(\theta\)</span> assuma valori all’interno di un intervallo specifico (ad esempio, <span class="math inline">\(\theta &gt; 0.5\)</span>). In questa situazione, è possibile calcolare la probabilità a posteriori che <span class="math inline">\(\theta\)</span> cada all’interno dell’intervallo di interesse (come ad esempio, [0.5, 1.0]), integrando la distribuzione a posteriori su tale intervallo.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 41.1</strong></span> Per comprendere meglio attraverso un esempio pratico, esaminiamo i dati relativi ai punteggi del BDI-II (Beck Depression Inventory - Second Edition) di 30 soggetti clinici, come riportato nello studio condotto da <span class="citation" data-cites="zetsche_2019future">Zetsche, Buerkner, e Renneberg (<a href="../../99-references.html#ref-zetsche_2019future" role="doc-biblioref">2019</a>)</span>. Il BDI-II è un questionario utilizzato per valutare la gravità dei sintomi depressivi.</p>
-<div id="75888346-5319-48b2-a9ea-aae0acf57696" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:40.189244Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:40.183137Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bdi <span class="op">=</span> np.array([</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">26</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">35</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">30</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">25</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">44</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">30</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">33</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">43</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">22</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">43</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">24</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="dv">19</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">39</span>,</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="dv">31</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="dv">25</span>,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="dv">28</span>,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="dv">35</span>,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="dv">30</span>,</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="dv">26</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="dv">31</span>,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="dv">41</span>,</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="dv">36</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="dv">26</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="dv">35</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="dv">33</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="dv">28</span>,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="dv">27</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="dv">34</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="dv">27</span>,</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="dv">22</span>,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="op">*</span>bdi)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>26 35 30 25 44 30 33 43 22 43 24 19 39 31 25 28 35 30 26 31 41 36 26 35 33 28 27 34 27 22</code></pre>
-</div>
-</div>
-<p>Un valore BDI-II <span class="math inline">\(\geq 30\)</span> indica la presenza di un livello grave di depressione. Nel campione clinico di {cite:t}<code>zetsche_2019future</code>, 17 pazienti su 30 manifestano un livello grave di depressione.</p>
-<div id="8b4b55fc-d031-4aaf-bc87-4b09e28e46e5" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:45.900810Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:45.892416Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">sum</span>(bdi <span class="op">&gt;=</span> <span class="dv">30</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>17</code></pre>
-</div>
-</div>
-<p>Supponiamo di volere stimare la distribuzione a posteriori della probabilità <span class="math inline">\(\theta\)</span> di depressione grave nei pazienti clinici, così come viene misurata dal test BDI-II, imponendo su <span class="math inline">\(\theta\)</span> una distribuzione a priori <span class="math inline">\(Beta(8, 2)\)</span>.</p>
-<p>Poiché i dati possono essere concepiti come una sequenza di prove Bernoulliane indipendenti, laddove la presenza di depressione grave viene concepita come un “successo”, la verosimiglianza sarà Binomiale con paramentri <span class="math inline">\(n\)</span> = 30 e <span class="math inline">\(y\)</span> = 17.</p>
-<p>Avendo scelto, quale distribuzione a priori, una <span class="math inline">\(Beta(8, 2)\)</span>, la distribuzione a posteriori di <span class="math inline">\(\theta\)</span> sarà una <span class="math inline">\(Beta(8 + 17, 2 + 30 - 17)\)</span>:</p>
+<section id="stima-dellintegrale-di-un-cerchio" class="level2" data-number="O.1">
+<h2 data-number="O.1" class="anchored" data-anchor-id="stima-dellintegrale-di-un-cerchio"><span class="header-section-number">O.1</span> Stima dell’integrale di un cerchio</h2>
+<p>Immaginiamo un quadrato di lato 2 centrato sull’origine. Genereremo punti casuali uniformemente distribuiti all’interno di questo quadrato. Per ogni punto <span class="math inline">\((x, y)\)</span>, verificheremo se cade all’interno del cerchio di raggio unitario inscritto nel quadrato, cioè se la distanza dall’origine è minore di 1:</p>
 <p><span class="math display">\[
-f(\theta \mid y = 17) = \frac{\Gamma(25 + 15)}{\Gamma(25)\Gamma(15)}\theta^{25-1} (1-\theta)^{15-1} \;\; \text{ for } \theta \in [0,1] \; .
-\]</span> (eq-post-beta-25-15)</p>
-<div id="9a938f31-4bc2-4fe0-9149-fa4353bf450b" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:49.774583Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:49.281433Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">200</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="dv">25</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> <span class="dv">15</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>pdf <span class="op">=</span> stats.beta.pdf(theta, alpha, beta)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.plot(theta, pdf, label<span class="op">=</span><span class="vs">r"$\alpha$ = </span><span class="sc">{}</span><span class="vs">, $\beta$ = </span><span class="sc">{}</span><span class="vs">"</span>.<span class="bu">format</span>(alpha, beta))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$\theta$"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Densità di probabilità"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+\sqrt{x^2 + y^2} &lt; 1,
+\]</span></p>
+<p>che si semplifica a:</p>
+<p><span class="math display">\[
+x^2 + y^2 &lt; 1.
+\]</span></p>
+<p>La proporzione di tali punti rappresenta la proporzione dell’area del quadrato occupata dal cerchio. Poiché il quadrato ha un’area di 4, l’area del cerchio è pari a 4 volte la proporzione dei punti che cadono all’interno del cerchio.</p>
+<p>Quindi, se generiamo un numero sufficiente di punti casuali e contiamo quanti di essi cadono all’interno del cerchio, possiamo stimare <span class="math inline">\(\pi\)</span> come:</p>
+<p><span class="math display">\[
+\pi \approx 4 \times \frac{\text{numero di punti dentro il cerchio}}{\text{numero totale di punti}}.
+\]</span></p>
+<section id="codice-stan" class="level3" data-number="O.1.1">
+<h3 data-number="O.1.1" class="anchored" data-anchor-id="codice-stan"><span class="header-section-number">O.1.1</span> Codice Stan</h3>
+<p>Esaminiamo il corrispondente codice Stan.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">1</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; x = uniform_rng(-<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=-<span class="dv">1</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; y = uniform_rng(-<span class="dv">1</span>, <span class="dv">1</span>);</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; inside = x^<span class="dv">2</span> + y^<span class="dv">2</span> &lt; <span class="dv">1</span>;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">4</span>&gt; pi = <span class="dv">4</span> * inside;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li><strong>Variabili <code>x</code> e <code>y</code></strong>:
+<ul>
+<li>Vengono generate casualmente e uniformemente nell’intervallo <span class="math inline">\((-1, 1)\)</span>. Questo significa che stiamo campionando punti all’interno di un quadrato di lato 2 centrato sull’origine.</li>
+</ul></li>
+<li><strong>Variabile <code>inside</code></strong>:
+<ul>
+<li>È un indicatore che verifica se il punto <span class="math inline">\((x, y)\)</span> cade all’interno del cerchio unitario. La condizione <span class="math inline">\(x^2 + y^2 &lt; 1\)</span> è vera se il punto <span class="math inline">\((x, y)\)</span> è all’interno del cerchio di raggio 1 centrato sull’origine, e falsa altrimenti.</li>
+<li>Se la condizione è vera, <code>inside</code> è impostato a 1, altrimenti a 0.</li>
+</ul></li>
+<li><strong>Variabile <code>pi</code></strong>:
+<ul>
+<li><code>pi</code> viene calcolata come 4 volte il valore di <code>inside</code>.</li>
+</ul></li>
+</ol>
+<p>Il programma Stan genera punti casuali, verifica se cadono all’interno del cerchio e usa la proporzione di punti che cadono all’interno del cerchio per stimare <span class="math inline">\(\pi\)</span>. Moltiplicando il valore indicatore per 4, otteniamo una stima di <span class="math inline">\(\pi\)</span> basata su ciascun punto generato. La stima finale di <span class="math inline">\(\pi\)</span> sarà la media di queste stime su molti punti campionati.</p>
+</section>
+<section id="media-campionaria-dellindicatore" class="level3" data-number="O.1.2">
+<h3 data-number="O.1.2" class="anchored" data-anchor-id="media-campionaria-dellindicatore"><span class="header-section-number">O.1.2</span> Media Campionaria dell’Indicatore</h3>
+<p>Dopo aver generato un numero sufficiente di punti casuali e aver verificato quanti di essi cadono all’interno del cerchio, calcoliamo la media campionaria dell’indicatore <code>inside</code>. Questo indicatore è uguale a 1 se il punto è dentro il cerchio e a 0 se è fuori. La media di questi valori ci dà la proporzione dei punti che cadono dentro il cerchio.</p>
+<p>Questa proporzione è una stima della probabilità che un punto casuale sia all’interno del cerchio. Moltiplicando questa proporzione per 4, otteniamo una stima di <span class="math inline">\(\pi\)</span>.</p>
+<p>Matematicamente, possiamo scrivere questo processo come segue:</p>
+<p><span class="math display">\[
+\mathbb{E}[4 \cdot \textrm{I}(\sqrt{X^2 + Y^2} \leq 1)] = \int_{-1}^1 \int_{-1}^1 4 \cdot \textrm{I}(x^2 + y^2 &lt; 1) \, \textrm{d}x \, \textrm{d}y = \pi,
+\]</span></p>
+<p>dove <span class="math inline">\(\textrm{I}()\)</span> è l’indicatore che ritorna 1 se il suo argomento è vero e 0 altrimenti.</p>
+<p>In altre parole, stiamo calcolando l’aspettativa di 4 volte l’indicatore che un punto casuale <span class="math inline">\((x, y)\)</span> cade dentro il cerchio unitario. Questo valore atteso è uguale a <span class="math inline">\(\pi\)</span>, il che ci permette di stimare <span class="math inline">\(\pi\)</span> usando i metodi Monte Carlo.</p>
+</section>
+<section id="compilazione-e-campionamento" class="level3" data-number="O.1.3">
+<h3 data-number="O.1.3" class="anchored" data-anchor-id="compilazione-e-campionamento"><span class="header-section-number">O.1.3</span> Compilazione e Campionamento</h3>
+<p>Compiliamo e poi campioniamo dal modello, prendendo un campione di dimensione <span class="math inline">\(M = 10,000\)</span> estrazioni.</p>
+<div id="cell-4" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> <span class="dv">10_000</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"../../stan/monte-carlo-pi.stan"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> model.sample(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    chains<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span>M,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>x_draws <span class="op">=</span> sample.stan_variable(<span class="st">"x"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>y_draws <span class="op">=</span> sample.stan_variable(<span class="st">"y"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>inside_draws <span class="op">=</span> sample.stan_variable(<span class="st">"inside"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>pi_draws <span class="op">=</span> sample.stan_variable(<span class="st">"pi"</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"N"</span>: <span class="dv">1000</span>, <span class="st">"x"</span>: x_draws, <span class="st">"y"</span>: y_draws, <span class="st">"inside"</span>: inside_draws})</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">5</span>))</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>plt.scatter(df[<span class="st">"x"</span>], df[<span class="st">"y"</span>], c<span class="op">=</span>df[<span class="st">"inside"</span>], cmap<span class="op">=</span><span class="st">"coolwarm"</span>, s<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Monte Carlo Simulation of Pi Estimation"</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">"equal"</span>, adjustable<span class="op">=</span><span class="st">"box"</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="05_summary_posterior_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="a44_montecarlo_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Vediamo ora come ottenere delle stime puntuali da tale distribuzione a posteriori.</p>
-<p>per il presente esempio, la media della distribuzione a posteriori di <span class="math inline">\(\theta\)</span> è</p>
-<p><span class="math display">\[
-\mathbb{E}(\pi \mid y = 17) = \frac{\alpha}{\alpha + \beta} = \frac{25}{25+15} = 0.625.
-\]</span></p>
-<p>Una stima del massimo della probabilità a posteriori, o brevemente massimo a posteriori, MAP (da <em>maximum a posteriori probability</em>), è la moda della distribuzione a posteriori. Nel caso presente, abbiamo</p>
-<p><span class="math display">\[
-Mo(\pi \mid y = 17) = \frac{\alpha-1}{\alpha + \beta-2} = \frac{25-1}{25+15-2} = 0.6316.
-\]</span></p>
-<p>La mediana si ottiene con la funzione <code>beta.ppf()</code>:</p>
-<div id="9512c62b-2bbe-4f85-8e5d-44ab6394a6bc" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:58.032364Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:58.024101Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stats.beta.ppf(<span class="fl">0.5</span>, alpha, beta)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>0.6271031100419254</code></pre>
-</div>
-</div>
-<p>L’intervallo di credibilità simmetrico al 94% è dato dalla chiamata a <code>beta.ppf()</code>.</p>
-<div id="f6dd1edd-bbbe-4abc-9c67-976f76848e36" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:16:00.706407Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:16:00.699626Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>[stats.beta.ppf(<span class="fl">0.03</span>, alpha, beta), stats.beta.ppf(<span class="fl">0.97</span>, alpha, beta)]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>[0.4781025861696672, 0.7612890799836668]</code></pre>
-</div>
-</div>
-<p>Il calcolo precedente evidenzia l’interpretazione intuitiva dell’intervallo di credibilità. Tale intervallo, infatti, può essere interpretato nel modo seguente: possiamo attribuire una certezza soggettiva del 94% all’evento che <span class="math inline">\(\theta\)</span> assuma un valore compreso tra 0.478 e 0.761. Il valore di 0.94 corrisponde infatti all’area sottesa dalla distribuzione a posteriori nell’intervallo <span class="math display">\[0.478, 0.761\]</span>.</p>
-<p><span class="math display">\[
-P(\theta \in (0.478, 0.761) \mid Y = 17) = \int_{0.478}^{0.761} f(\theta \mid y=17) d\theta = 0.94.
-\]</span></p>
-<div id="2a36b78b-1cb6-4d44-9041-498876f14812" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:16:04.817324Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:16:04.808676Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>betacdf <span class="op">=</span> stats.beta(alpha, beta).cdf</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>betacdf(<span class="fl">0.7612890799836668</span>) <span class="op">-</span> betacdf(<span class="fl">0.4781025861696672</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>0.9400000000000001</code></pre>
-</div>
-</div>
-<p>Possiamo costruire vari intervalli di credibilità simmetrici. Ad esempio, l’intervallo di credibilità compreso tra il 25-esimo e il 75-esimo percentile:</p>
-<div id="a6355efc-0f26-4c45-a572-885032e6f5a1" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:16:07.795638Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:16:07.788982Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>[stats.beta.ppf(<span class="fl">0.25</span>, alpha, beta), stats.beta.ppf(<span class="fl">0.75</span>, alpha, beta)]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>[0.5743877928498646, 0.6778673380880944]</code></pre>
-</div>
-</div>
-<p>In questo secondo caso, possiamo affermare con una certezza soggettiva del 50% che la probabilità di depressione grave tra i pazienti clinici si situa tra 0.57 e 0.68.</p>
-<p>Non esiste un livello “giusto” di credibilità soggettiva. I ricercatori adottano livelli differenti, come il 50%, l’80% o il 94%, a seconda del contesto dell’analisi statistica. Ogni intervallo offre una prospettiva unica sulla nostra comprensione della distribuzione a posteriori del parametro d’interesse.</p>
-<p>Non sempre è appropriato presentare un intervallo di credibilità con le stesse code. Quando la distribuzione a posteriori è marcatamente asimmetrica, risulta più adeguato fornire l’intervallo di credibilità più stretto (o Intervallo di Massima Densità Posteriore, HPD). L’intervallo HPD è più facilmente calcolabile quando si approssima la distribuzione a posteriori con il metodo MCMC.</p>
-<p>Passiamo ora alla verifica di ipotesi bayesiana. Supponiamo che la nostra ipotesi sia: <span class="math inline">\(\theta &gt;\)</span> 0.5. La credibilità soggettiva dell’evento <span class="math inline">\(\theta &gt; 0.5\)</span> può essere ottenuta calcolando il seguente integrale:</p>
-<p><span class="math display">\[
-f(\theta &gt; 0.5 \; \mid \; y = 17) = \int_{0.5}^{1}f(\theta \mid y=17)d\theta \;,
-\]</span></p>
-<p>dove <span class="math inline">\(f(\cdot)\)</span> è la distribuzione Beta(25, 15).</p>
-<p>È facile trovare questo valore con Python.</p>
-<div id="823eb36d-85a2-4e2f-866c-905091c76171" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:16:12.036559Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:16:12.031101Z&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri della distribuzione Beta</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="dv">25</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> <span class="dv">15</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcoliamo la probabilità P(theta &lt; 0.5) utilizzando la funzione cdf </span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>probability <span class="op">=</span> stats.beta.cdf(<span class="fl">0.5</span>, alpha, beta)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># La probabilità P(theta &lt; 0.5) è data da 1 - P(theta &gt; 0.5)</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>probability_less_than_0_5 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> probability</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"La probabilità P(theta &lt; 0.5) per una Beta(25, 15) è: </span><span class="sc">{</span>probability_less_than_0_5<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Successivamente, calcoliamo la media campionaria dell’indicatore dentro-il-cerchio, che produce una stima della probabilità che un punto sia dentro il cerchio:</p>
+<div id="cell-6" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Pr_is_inside <span class="op">=</span> np.mean(inside_draws)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pi_hat <span class="op">=</span> np.mean(pi_draws)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Pr[Y is inside circle] = </span><span class="sc">{</span>Pr_is_inside<span class="sc">:.3f}</span><span class="ss">;"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"estimate for pi = </span><span class="sc">{</span>pi_hat<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>La probabilità P(theta &lt; 0.5) per una Beta(25, 15) è: 0.9459</code></pre>
+<pre><code>Pr[Y is inside circle] = 0.786;
+estimate for pi = 3.144</code></pre>
 </div>
 </div>
-</div>
+<p>Il valore esatto di <span class="math inline">\(\pi\)</span> fino a tre cifre decimali è <span class="math inline">\(3.142\)</span>. Con il nostro metodo, ci avviciniamo a questo valore, ma non lo raggiungiamo esattamente, il che è tipico dei metodi Monte Carlo. Aumentando il numero di estrazioni, l’errore diminuisce. Teoricamente, con un numero sufficiente di estrazioni, possiamo ottenere qualsiasi precisione desiderata; tuttavia, in pratica, dobbiamo accontentarci di pochi decimali di accuratezza nelle nostre stime Monte Carlo. Questo di solito non è un problema, poiché l’incertezza statistica tende a dominare rispetto all’imprecisione numerica nella maggior parte delle applicazioni.</p>
+
+
 </section>
-<section id="commenti-e-considerazioni-finali" class="level2" data-number="41.3">
-<h2 data-number="41.3" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">41.3</span> Commenti e considerazioni finali</h2>
-<p>In conclusione, la distribuzione a posteriori rappresenta la nostra conoscenza aggiornata sui parametri sconosciuti. L’impiego delle statistiche descrittive e l’analisi degli intervalli di credibilità contribuiscono a tracciare un quadro completo della distribuzione a posteriori e delle nostre inferenze riguardo al parametro di interesse.</p>
-<p>Le stime puntuali, ottenute attraverso statistiche descrittive come media, mediana o moda a posteriori, offrono una singola valutazione numerica del parametro ignoto. Gli intervalli di credibilità forniscono un intervallo di valori all’interno del quale si ritiene, con un certo grado di probabilità soggettiva, che il parametro incognito possa rientrare. Questi intervalli quantificano l’incertezza associata al parametro e consentono di esprimere il livello di fiducia soggettiva riguardo ai possibili valori del parametro dopo l’analisi dei dati. Abbiamo inoltre esaminato il concetto di test di ipotesi bayesiano, il quale può essere condotto agevolmente calcolando l’area appropriata sotto la distribuzione a posteriori, in accordo con l’ipotesi in questione.</p>
-</section>
-<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cfc3cadf-2cc8-43bd-910d-a1fb1bd10c95" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:17:25.930402Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:17:25.837464Z&quot;}" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Thu Mar 28 2024
-
-Python implementation: CPython
-Python version       : 3.11.8
-IPython version      : 8.22.2
-
-Compiler    : Clang 16.0.6 
-OS          : Darwin
-Release     : 23.4.0
-Machine     : x86_64
-Processor   : i386
-CPU cores   : 8
-Architecture: 64bit
-
-scipy     : 1.12.0
-numpy     : 1.26.4
-arviz     : 0.17.1
-sys       : 3.11.8 | packaged by conda-forge | (main, Feb 16 2024, 20:51:20) [Clang 16.0.6 ]
-matplotlib: 3.8.3
-
-Watermark: 2.4.3</code></pre>
-</div>
-</div>
-
-
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-zetsche_2019future" class="csl-entry" role="listitem">
-Zetsche, Ulrike, Paul-Christian Buerkner, e Babette Renneberg. 2019. <span>«Future expectations in clinical depression: biased or realistic?»</span> <em>Journal of Abnormal Psychology</em> 128 (7): 678.
-</div>
-</div>
 </section>
 
 </main> <!-- /main -->
@@ -1704,13 +1557,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/bayesian_inference/04_conjugate_families_2.html" class="pagination-link" aria-label="Distribuzioni coniugate (2)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span>
+      <a href="../../chapters/appendix/a40_rng.html" class="pagination-link" aria-label="Generazione di numeri casuali">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Generazione di numeri casuali</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/bayesian_inference/06_balance_prior_post.html" class="pagination-link" aria-label="L'influenza della distribuzione a priori">
-        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/appendix/a45_mcmc.html" class="pagination-link" aria-label="Catene di Markov">
+        <span class="nav-page-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1722,7 +1575,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/bayesian_inference/05_summary_posterior.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/appendix/a44_montecarlo.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
