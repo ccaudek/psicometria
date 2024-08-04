@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>Data Science per Psicologi - 76&nbsp; Apprendimento per rinforzo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" rel="next">
+<link href="../../chapters/cognitive_models/introduction_cognitive_models.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/introduction_cognitive_models.html">Modelli cognitivi</a></li><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/01_rescorla_wagner.html"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Data Science per Psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/introduction_python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/introduction_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/03_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">L’analisi dei dati psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Le fasi del progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/02_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/03_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/04_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/05_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/introduction_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/01_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/02_prob_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/03_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Distribuzioni di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/04_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/05_bayes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/06_random_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/07_expval_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/08_sampling_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/09_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/10_density_func.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/11_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/12_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/13_likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/14_grid_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">Inferenza bayesiana</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/introduction_bayes_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/02_subj_prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/03_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/04_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/06_balance_prior_post.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">MCMC</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/introduction_mcmc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/09_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/10_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">Modelli lineari</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/introduction_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modello di regressione lineare bayesiano</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/02_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/03_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/04_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/05_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/06_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/07_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/08_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/09_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+ <span class="menu-text">GLM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/introduction_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+ <span class="menu-text">Entropia</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/introduction_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
+ <span class="menu-text">Modelli cognitivi</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+ <span class="menu-text">Inferenza frequentista</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
+ <span class="menu-text">Crisi della replicazione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/introduction_replication_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Introduzione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/05_integrity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri binari, interi, razionali, irrazionali e reali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a12_sum_notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Simbolo di somma (sommatorie)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a20_kde_plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Kernel Density Estimation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a30_prob_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Esercizi di probabilità discreta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a40_rng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Generazione di numeri casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a45_mcmc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a46_stan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a51_reglin_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Regressione lineare bivariata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a100_solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Soluzioni degli Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#lapprendimento-per-rinforzo-imparare-dallesperienza" id="toc-lapprendimento-per-rinforzo-imparare-dallesperienza" class="nav-link" data-scroll-target="#lapprendimento-per-rinforzo-imparare-dallesperienza"><span class="header-section-number">76.1</span> L’apprendimento per rinforzo: imparare dall’esperienza</a>
+  <ul class="collapse">
+  <li><a href="#il-meccanismo-alla-base-dellapprendimento-per-rinforzo" id="toc-il-meccanismo-alla-base-dellapprendimento-per-rinforzo" class="nav-link" data-scroll-target="#il-meccanismo-alla-base-dellapprendimento-per-rinforzo"><span class="header-section-number">76.1.1</span> Il meccanismo alla base dell’apprendimento per rinforzo</a></li>
+  <li><a href="#esplorazione-e-sfruttamento" id="toc-esplorazione-e-sfruttamento" class="nav-link" data-scroll-target="#esplorazione-e-sfruttamento"><span class="header-section-number">76.1.2</span> Esplorazione e sfruttamento</a></li>
+  <li><a href="#lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale" id="toc-lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale" class="nav-link" data-scroll-target="#lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale"><span class="header-section-number">76.1.3</span> L’apprendimento per rinforzo nella ricerca sull’intelligenza artificiale</a></li>
+  </ul></li>
+  <li><a href="#un-esempio-pratico-il-problema-dei-two-armed-bandits" id="toc-un-esempio-pratico-il-problema-dei-two-armed-bandits" class="nav-link" data-scroll-target="#un-esempio-pratico-il-problema-dei-two-armed-bandits"><span class="header-section-number">76.2</span> Un esempio pratico: il problema dei two-armed bandits</a></li>
+  <li><a href="#simulare-lapprendimento" id="toc-simulare-lapprendimento" class="nav-link" data-scroll-target="#simulare-lapprendimento"><span class="header-section-number">76.3</span> Simulare l’Apprendimento</a>
+  <ul class="collapse">
+  <li><a href="#parametri-del-problema" id="toc-parametri-del-problema" class="nav-link" data-scroll-target="#parametri-del-problema"><span class="header-section-number">76.3.1</span> Parametri del Problema</a></li>
+  <li><a href="#esempio-pratico" id="toc-esempio-pratico" class="nav-link" data-scroll-target="#esempio-pratico"><span class="header-section-number">76.3.2</span> Esempio Pratico</a></li>
+  </ul></li>
+  <li><a href="#imparare-il-rinforzo-i-componenti-chiave" id="toc-imparare-il-rinforzo-i-componenti-chiave" class="nav-link" data-scroll-target="#imparare-il-rinforzo-i-componenti-chiave"><span class="header-section-number">76.4</span> Imparare il rinforzo: i componenti chiave</a></li>
+  <li><a href="#modello-di-apprenimento-di-rescorla-wagner" id="toc-modello-di-apprenimento-di-rescorla-wagner" class="nav-link" data-scroll-target="#modello-di-apprenimento-di-rescorla-wagner"><span class="header-section-number">76.5</span> Modello di Apprenimento di Rescorla-Wagner</a>
+  <ul class="collapse">
+  <li><a href="#aspettativa-di-valore" id="toc-aspettativa-di-valore" class="nav-link" data-scroll-target="#aspettativa-di-valore"><span class="header-section-number">76.5.1</span> Aspettativa di Valore</a></li>
+  <li><a href="#la-regola-di-apprendimento" id="toc-la-regola-di-apprendimento" class="nav-link" data-scroll-target="#la-regola-di-apprendimento"><span class="header-section-number">76.5.2</span> La Regola di Apprendimento</a></li>
+  <li><a href="#la-regola-decisionale" id="toc-la-regola-decisionale" class="nav-link" data-scroll-target="#la-regola-decisionale"><span class="header-section-number">76.5.3</span> La Regola Decisionale</a></li>
+  <li><a href="#variazione-di-theta-con-valori-fissi-di-q" id="toc-variazione-di-theta-con-valori-fissi-di-q" class="nav-link" data-scroll-target="#variazione-di-theta-con-valori-fissi-di-q"><span class="header-section-number">76.5.4</span> Variazione di <span class="math inline">\(\theta\)</span> con Valori Fissi di <span class="math inline">\(Q\)</span></a></li>
+  </ul></li>
+  <li><a href="#simulazione-del-modello-di-rescorla-wagner" id="toc-simulazione-del-modello-di-rescorla-wagner" class="nav-link" data-scroll-target="#simulazione-del-modello-di-rescorla-wagner"><span class="header-section-number">76.6</span> Simulazione del Modello di Rescorla-Wagner</a></li>
+  <li><a href="#adattamento-del-modello" id="toc-adattamento-del-modello" class="nav-link" data-scroll-target="#adattamento-del-modello"><span class="header-section-number">76.7</span> Adattamento del Modello</a>
+  <ul class="collapse">
+  <li><a href="#la-massima-verosimiglianza" id="toc-la-massima-verosimiglianza" class="nav-link" data-scroll-target="#la-massima-verosimiglianza"><span class="header-section-number">76.7.1</span> La Massima Verosimiglianza</a></li>
+  <li><a href="#calcolo-del-logaritmo-della-verosimiglianza" id="toc-calcolo-del-logaritmo-della-verosimiglianza" class="nav-link" data-scroll-target="#calcolo-del-logaritmo-della-verosimiglianza"><span class="header-section-number">76.7.2</span> Calcolo del Logaritmo della Verosimiglianza</a></li>
+  <li><a href="#minimizzazione-del-logaritmo-negativo-della-verosimiglianza" id="toc-minimizzazione-del-logaritmo-negativo-della-verosimiglianza" class="nav-link" data-scroll-target="#minimizzazione-del-logaritmo-negativo-della-verosimiglianza"><span class="header-section-number">76.7.3</span> Minimizzazione del Logaritmo Negativo della Verosimiglianza</a></li>
+  <li><a href="#esempio-pratico-1" id="toc-esempio-pratico-1" class="nav-link" data-scroll-target="#esempio-pratico-1"><span class="header-section-number">76.7.4</span> Esempio Pratico</a></li>
+  <li><a href="#validazione" id="toc-validazione" class="nav-link" data-scroll-target="#validazione"><span class="header-section-number">76.7.5</span> Validazione</a></li>
+  </ul></li>
+  <li><a href="#stima-con-stan" id="toc-stima-con-stan" class="nav-link" data-scroll-target="#stima-con-stan"><span class="header-section-number">76.8</span> Stima con Stan</a>
+  <ul class="collapse">
+  <li><a href="#sezione-data" id="toc-sezione-data" class="nav-link" data-scroll-target="#sezione-data"><span class="header-section-number">76.8.1</span> Sezione <code>data</code></a></li>
+  <li><a href="#sezione-transformed-data" id="toc-sezione-transformed-data" class="nav-link" data-scroll-target="#sezione-transformed-data"><span class="header-section-number">76.8.2</span> Sezione <code>transformed data</code></a></li>
+  <li><a href="#sezione-parameters" id="toc-sezione-parameters" class="nav-link" data-scroll-target="#sezione-parameters"><span class="header-section-number">76.8.3</span> Sezione <code>parameters</code></a></li>
+  <li><a href="#sezione-model" id="toc-sezione-model" class="nav-link" data-scroll-target="#sezione-model"><span class="header-section-number">76.8.4</span> Sezione <code>model</code></a></li>
+  <li><a href="#inferenza" id="toc-inferenza" class="nav-link" data-scroll-target="#inferenza"><span class="header-section-number">76.8.5</span> Inferenza</a></li>
+  <li><a href="#interpretazione-delle-stime-dei-parametri" id="toc-interpretazione-delle-stime-dei-parametri" class="nav-link" data-scroll-target="#interpretazione-delle-stime-dei-parametri"><span class="header-section-number">76.8.6</span> Interpretazione delle Stime dei Parametri</a></li>
+  </ul></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/01_rescorla_wagner.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/introduction_cognitive_models.html">Modelli cognitivi</a></li><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/01_rescorla_wagner.html"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-rescorla-wagner" class="quarto-section-identifier"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p>Il presente tutorial trae ispirazione dall’articolo di <a href="https://elifesciences.org/articles/49547">Wilson &amp; Collins (2019)</a> e utilizza il codice fornito da <a href="https://shawnrhoads.github.io/gu-psyc-347/index.html">Rhoads, S. A. &amp; Gan, L. (2022)</a>.</p>
+<p><strong>Concetti e competenze chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Third-party imports</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit  <span class="co"># Funzione logistica</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize  <span class="co"># finding optimal params in models</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> cmdstan_path, CmdStanModel</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"rescorla_wagner"</span>))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Print project directory to verify</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Project directory: </span><span class="sc">{</span>project_directory<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Project directory: /Users/corradocaudek/_repositories/psicometria</code></pre>
+</div>
+</div>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>In questa sezione delle dispense abbiamo esaminato il modello di regressione. Sebbene il modello di regressione sia estremamente popolare in psicologia e nelle scienze sociali, presenta dei limiti sostanziali. È utile per descrivere le associazioni tra variabili, ma non è adatto per scoprire nessi causali, che rappresentano l’obiettivo principale delle teorie scientifiche. Come afferma Richard McElreath:</p>
+<blockquote class="blockquote">
+<p>Le persone una volta facevano teoria. Ora fanno solo regressioni.</p>
+</blockquote>
+<p>Trovare associazioni nei dati osservazionali non è un buon metodo per costruire teorie. Abbiamo bisogno di una motivazione per esaminare determinate variabili, poiché le associazioni tra variabili non sono rare, ma raramente sono causali. Il fatto che nessuno abbia esaminato l’associazione tra certe variabili in precedenza non è un buon motivo per farlo in un nuovo progetto di ricerca.</p>
+<p>Un approccio preferibile, che una volta era comune, è utilizzare una teoria formale per sviluppare aspettative sui dati osservati, misurare le variabili corrette e utilizzare modelli statistici specifici per testare la teoria, non solo regressioni.</p>
+<p>In questo capitolo, forniremo un esempio di questo approccio implementando un modello che rappresenta un processo cognitivo sottostante, piuttosto che limitarsi a descrivere le associazioni tra variabili. Nello specifico, esamineremo uno dei modelli psicologici più influenti: il modello di apprendimento di Rescorla-Wagner. Analizzeremo la definizione del modello, il significato dei suoi parametri e i metodi per stimarli dai dati osservati, con particolare attenzione all’uso della massima verosimiglianza e del software Stan.</p>
+</section>
+<section id="lapprendimento-per-rinforzo-imparare-dallesperienza" class="level2" data-number="76.1">
+<h2 data-number="76.1" class="anchored" data-anchor-id="lapprendimento-per-rinforzo-imparare-dallesperienza"><span class="header-section-number">76.1</span> L’apprendimento per rinforzo: imparare dall’esperienza</h2>
+<p>Immagina un robot alle prese con un videogioco, privo di istruzioni precise ma con un obiettivo ben chiaro: ottenere il punteggio più alto. Attraverso tentativi ed errori, il robot sperimenta diverse azioni, scoprendo quali lo avvicinano al successo e quali no. Questo è il principio fondamentale dell’apprendimento per rinforzo (RL), un metodo di intelligenza artificiale ispirato al modo in cui gli esseri viventi imparano.</p>
+<section id="il-meccanismo-alla-base-dellapprendimento-per-rinforzo" class="level3" data-number="76.1.1">
+<h3 data-number="76.1.1" class="anchored" data-anchor-id="il-meccanismo-alla-base-dellapprendimento-per-rinforzo"><span class="header-section-number">76.1.1</span> Il meccanismo alla base dell’apprendimento per rinforzo</h3>
+<p>Nell’apprendimento per rinforzo, un “agente” (che sia un robot, un modello matematico o una persona) interagisce con un “ambiente”. L’agente compie azioni e riceve in cambio “ricompense” positive o negative, a seconda di quanto le sue azioni sono vicine al raggiungimento del suo obiettivo. L’obiettivo dell’agente è imparare a scegliere le azioni che gli permetteranno di ottenere il maggior numero di ricompense positive nel tempo.</p>
+</section>
+<section id="esplorazione-e-sfruttamento" class="level3" data-number="76.1.2">
+<h3 data-number="76.1.2" class="anchored" data-anchor-id="esplorazione-e-sfruttamento"><span class="header-section-number">76.1.2</span> Esplorazione e sfruttamento</h3>
+<p>Uno dei dilemmi principali che gli agenti di apprendimento per rinforzo si trovano ad affrontare è il bilanciamento tra esplorazione e sfruttamento. Da un lato, l’agente ha bisogno di esplorare l’ambiente, provare nuove azioni e scoprire nuove strategie per ottenere ricompense. Dall’altro lato, desidera anche sfruttare la conoscenza già acquisita, scegliendo le azioni che ha già scoperto essere efficaci in passato.</p>
+</section>
+<section id="lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale" class="level3" data-number="76.1.3">
+<h3 data-number="76.1.3" class="anchored" data-anchor-id="lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale"><span class="header-section-number">76.1.3</span> L’apprendimento per rinforzo nella ricerca sull’intelligenza artificiale</h3>
+<p>Dalla fine degli anni ’60, molti ricercatori nel campo dell’intelligenza artificiale hanno ipotizzato che non esistano principi generali da scoprire, e che l’intelligenza derivi piuttosto dalla conoscenza di un vasto numero di trucchi, procedure ed euristiche specializzati. L’intelligenza artificiale moderna dedica invece molta attenzione alla ricerca di principi generali di apprendimento e processo decisionale. In questo senso, la ricerca sull’apprendimento per rinforzo rappresenta sicuramente un ritorno verso principi di intelligenza artificiale più semplici e universali.</p>
+</section>
+</section>
+<section id="un-esempio-pratico-il-problema-dei-two-armed-bandits" class="level2" data-number="76.2">
+<h2 data-number="76.2" class="anchored" data-anchor-id="un-esempio-pratico-il-problema-dei-two-armed-bandits"><span class="header-section-number">76.2</span> Un esempio pratico: il problema dei two-armed bandits</h2>
+<p>Immaginiamo un giocatore di fronte a due slot machine. Ogni volta che sceglie una slot, può vincere (ottenendo un premio) o perdere (non ottenendo nulla). La probabilità di vincita varia tra le due slot machine, ma il giocatore non le conosce all’inizio. Il suo obiettivo è massimizzare le vincite scegliendo la slot machine con la maggiore probabilità di vincita il più spesso possibile.</p>
+<p>Questo semplice problema illustra il dilemma fondamentale dell’apprendimento per rinforzo: esplorare entrambe le slot machine per scoprire quale è la migliore (esplorazione) o sfruttare la slot machine che ha già scoperto essere la più vincente (sfruttamento)?</p>
+<p>Il modello di apprendimento di Rescorla-Wagner affronta proprio questo problema del “two-armed bandits”. In questo scenario, un partecipante deve compiere ripetutamente delle scelte tra due opzioni o azioni. Dopo ogni scelta, riceve una ricompensa numerica estratta da una distribuzione di probabilità che dipende dall’azione selezionata. L’obiettivo del partecipante è massimizzare la ricompensa totale attesa durante un certo periodo di tempo, ad esempio, durante 100 scelte.</p>
+<p>Una metafora comune per descrivere questa situazione è quella di un giocatore che deve fare una serie di scelte tra due slot machine (“two-armed bandits”) per massimizzare le sue vincite. Se nella scelta <span class="math inline">\(t\)</span> viene selezionata la slot machine <span class="math inline">\(k\)</span>, il partecipante ottiene una ricompensa <span class="math inline">\(r_t\)</span>. Questa ricompensa ha valore <code>1</code> con una probabilità di successo <span class="math inline">\(\mu^k_t\)</span> specifica per quella slot machine, altrimenti ha valore <code>0</code>.</p>
+<p>In altre parole:</p>
+<ul>
+<li>Ogni volta che il partecipante sceglie una slot machine, può vincere (ottenendo una ricompensa di <code>1</code>) o perdere (ottenendo una ricompensa di <code>0</code>).</li>
+<li>La probabilità di vincita varia tra le due diverse slot machine.</li>
+<li>Queste probabilità di successo sono inizialmente sconosciute al partecipante.</li>
+</ul>
+<p>Nella versione più semplice di questo problema, le probabilità di successo <span class="math inline">\(\mu^k_t\)</span> rimangono costanti nel tempo. Questo significa che la probabilità di vincere su una determinata slot machine non cambia durante il periodo di osservazione.</p>
+</section>
+<section id="simulare-lapprendimento" class="level2" data-number="76.3">
+<h2 data-number="76.3" class="anchored" data-anchor-id="simulare-lapprendimento"><span class="header-section-number">76.3</span> Simulare l’Apprendimento</h2>
+<p>Nel problema del two-armed bandit, ogni azione (cioè la scelta di una specifica slot machine) ha un valore associato che rappresenta la ricompensa attesa quando quella specifica azione viene selezionata. Questo valore è chiamato “valore dell’azione”. Conoscendo il valore di ogni azione, il problema di apprendimento si riduce a scegliere sempre l’azione con il valore più alto per massimizzare la ricompensa totale.</p>
+<section id="parametri-del-problema" class="level3" data-number="76.3.1">
+<h3 data-number="76.3.1" class="anchored" data-anchor-id="parametri-del-problema"><span class="header-section-number">76.3.1</span> Parametri del Problema</h3>
+<p>Per simulare il problema, dobbiamo considerare tre parametri principali:</p>
+<ol type="1">
+<li><strong>Il numero di tentativi, <span class="math inline">\(T\)</span></strong>: Questo rappresenta quante volte il partecipante farà una scelta. Ad esempio, se <span class="math inline">\(T = 100\)</span>, il partecipante farà 100 scelte.</li>
+<li><strong>Il numero di slot machine, <span class="math inline">\(K\)</span></strong>: Questo indica quante opzioni di scelta sono disponibili. Ad esempio, se <span class="math inline">\(K = 2\)</span>, ci sono due slot machine tra cui scegliere.</li>
+<li><strong>Le probabilità di ricompensa delle diverse opzioni, <span class="math inline">\(\mu^k_t\)</span></strong>: Queste sono le probabilità che ogni slot machine offra una ricompensa. Queste probabilità possono variare nel tempo, ma nella versione più semplice del problema, rimangono costanti.</li>
+</ol>
+</section>
+<section id="esempio-pratico" class="level3" data-number="76.3.2">
+<h3 data-number="76.3.2" class="anchored" data-anchor-id="esempio-pratico"><span class="header-section-number">76.3.2</span> Esempio Pratico</h3>
+<p>In questo tutorial, simuleremo il comportamento di un partecipante che sceglie tra due slot machine, utilizzando il modello di apprendimento di Rescorla-Wagner. Ecco come configureremo la simulazione:</p>
+<ul>
+<li>Imposteremo il numero di tentativi a <span class="math inline">\(T = 100\)</span>. Questo significa che il partecipante farà 100 scelte.</li>
+<li>Imposteremo il numero di slot machine a <span class="math inline">\(K = 2\)</span>. Ci saranno quindi due slot machine tra cui scegliere.</li>
+<li>Imposteremo le probabilità di ricompensa delle slot machine a <span class="math inline">\(\mu = [0.2, 0.8]\)</span>. Questo significa che la slot machine 1 ha una probabilità del 20% di offrire una ricompensa, mentre la slot machine 2 ha una probabilità dell’80% di offrire una ricompensa.</li>
+</ul>
+<p>Ogni azione ha un valore che rappresenta la ricompensa attesa. In altre parole, il valore dell’azione è la media delle ricompense che ci si aspetta di ottenere scegliendo quella particolare azione. Se si conosce questo valore per ogni azione, il partecipante dovrebbe sempre scegliere l’azione con il valore più alto per massimizzare le sue ricompense.</p>
+<p>L’obiettivo di questo tutorial è mostrare come si può simulare il processo di apprendimento e come si possono usare modelli come quello di Rescorla-Wagner per capire meglio come le persone prendono decisioni in situazioni di incertezza. Attraverso la simulazione, vedremo come il partecipante può apprendere e adattarsi alle probabilità di ricompensa delle slot machine per massimizzare le sue vincite nel corso del tempo.</p>
+</section>
+</section>
+<section id="imparare-il-rinforzo-i-componenti-chiave" class="level2" data-number="76.4">
+<h2 data-number="76.4" class="anchored" data-anchor-id="imparare-il-rinforzo-i-componenti-chiave"><span class="header-section-number">76.4</span> Imparare il rinforzo: i componenti chiave</h2>
+<p>L’apprendimento per rinforzo è simile a come gli esseri viventi imparano attraverso l’esperienza: provando e sbagliando, imparano ad associare le loro azioni a conseguenze positive o negative.</p>
+<p>Per comprendere meglio il funzionamento dell’apprendimento per rinforzo, è fondamentale analizzare i suoi quattro componenti chiave.</p>
+<p><strong>1. La politica (o strategia)</strong> Il robot non agisce a caso. Ha una strategia, un piano d’azione che cambia nel tempo in base ai risultati ottenuti. Inizialmente, potrebbe scegliere le slot casualmente (50% leva A, 50% leva B). Ma con l’esperienza, impara a preferire la leva che gli ha dato più vincite. In termini tecnici, la strategia è rappresentata dalla funzione <em>π (pi)</em>, che associa le azioni possibili (tirare la leva A o B) ai diversi stati del gioco (vincita, perdita). All’inizio, <em>π</em> potrebbe essere casuale. Ma con il tempo, si aggiorna in base alle ricompense ricevute, aumentando la probabilità di scegliere la leva vincente.</p>
+<p><strong>2. La ricompensa</strong> La ricompensa è un segnale che indica all’agente la bontà o meno delle sue azioni. La ricompensa può essere positiva (rinforzo) se l’azione è stata vantaggiosa, o negativa (punizione) se l’azione è stata dannosa. L’obiettivo dell’agente è massimizzare la ricompensa cumulativa nel lungo periodo. In termini tecnici, la funzione di ricompensa <em>R</em> assegna un valore numerico a ogni stato del gioco: 1 per la vincita e 0 per la perdita. Il robot è “motivato” a massimizzare la <em>ricompensa cumulativa</em>, ovvero la somma totale delle vincite ottenute nel tempo.</p>
+<p><strong>3. La funzione di valore</strong> Per ogni leva, il robot calcola la ricompensa media che si aspetta di ricevere in futuro. In altre parole, cerca di capire quale slot è più “generosa” nel lungo periodo. In termini tecnici, la funzione di valore <em>Q</em> stima la ricompensa media attesa per ogni stato del gioco. Il robot utilizza questa stima per scegliere l’azione che lo porterà nello stato con il valore <em>Q</em> più alto, ovvero la slot machine che ha maggiori probabilità di fargli ottenere una vincita nel lungo periodo.</p>
+<p><strong>4. Il modello dell’ambiente</strong> In alcuni casi, il robot può avere un asso nella manica: un <em>modello dell’ambiente</em>, ovvero una simulazione dell’ambiente che permette all’agente di prevedere le conseguenze delle sue azioni prima di compierle. In termini tecnici, il modello dell’ambiente <em>M</em> è una simulazione delle slot machine che permette al robot di prevedere la probabilità di vincita per ogni leva. Il robot può utilizzare questa informazione per aggiornare la sua funzione di valore e scegliere l’azione che massimizza la ricompensa attesa.</p>
+</section>
+<section id="modello-di-apprenimento-di-rescorla-wagner" class="level2" data-number="76.5">
+<h2 data-number="76.5" class="anchored" data-anchor-id="modello-di-apprenimento-di-rescorla-wagner"><span class="header-section-number">76.5</span> Modello di Apprenimento di Rescorla-Wagner</h2>
+<p>Il modello di apprendimento di Rescorla-Wagner, sviluppato per comprendere come gli esseri viventi apprendono le associazioni tra eventi, è particolarmente utile nel descrivere l’apprendimento associativo, come il condizionamento classico. Il modello si basa sull’idea che l’apprendimento avvenga attraverso l’aggiornamento continuo delle aspettative sulla base degli <em>errori di previsione</em>. In altre parole, la differenza tra ciò che ci si aspetta di ricevere e ciò che viene effettivamente osservato determina come modifichiamo le nostre aspettative per il futuro.</p>
+<section id="aspettativa-di-valore" class="level3" data-number="76.5.1">
+<h3 data-number="76.5.1" class="anchored" data-anchor-id="aspettativa-di-valore"><span class="header-section-number">76.5.1</span> Aspettativa di Valore</h3>
+<p>Immaginiamo un problema con <em>due bandit a due braccia</em>: ogni braccio rappresenta un’azione con una specifica ricompensa media associata. Il valore di un’azione corrisponde alla sua ricompensa media attesa.</p>
+<p>Indichiamo con:</p>
+<ul>
+<li><span class="math inline">\(A_t\)</span>: l’azione scelta al tempo <span class="math inline">\(t\)</span>;</li>
+<li><span class="math inline">\(R_t\)</span>: la ricompensa ottenuta dopo aver scelto l’azione <span class="math inline">\(A_t\)</span>;</li>
+<li><span class="math inline">\(q^{*}(a)\)</span>: il valore atteso dell’azione <span class="math inline">\(a\)</span> (ovvero la ricompensa media attesa se scegliamo <span class="math inline">\(a\)</span>).</li>
+</ul>
+<p>Se conoscessimo il valore esatto di ogni azione, il problema del bandit a due braccia sarebbe banale: basterebbe scegliere sempre l’azione con il valore più alto. Tuttavia, in realtà, non conosciamo con certezza i valori delle azioni, ma possiamo solo stimarli.</p>
+<p>Indichiamo con <span class="math inline">\(Q_t(a)\)</span> la stima del valore dell’azione <span class="math inline">\(a\)</span> al tempo <em>t</em>. L’obiettivo è far sì che <span class="math inline">\(Q_t(a)\)</span> si avvicini il più possibile al valore reale <span class="math inline">\(q^{*}(a)\)</span>.</p>
+</section>
+<section id="la-regola-di-apprendimento" class="level3" data-number="76.5.2">
+<h3 data-number="76.5.2" class="anchored" data-anchor-id="la-regola-di-apprendimento"><span class="header-section-number">76.5.2</span> La Regola di Apprendimento</h3>
+<p>Secondo il modello Rescorla-Wagner, il valore atteso di un’azione viene aggiornato dopo ogni tentativo usando la seguente regola:</p>
+<p><span class="math display">\[Q_k(t + 1) = Q_k(t) + \alpha (R_k - Q_k(t))\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(Q_k(t)\)</span>: valore atteso dell’azione <em>k</em> al tempo <em>t</em></li>
+<li><span class="math inline">\(\alpha\)</span>: <em>tasso di apprendimento</em>, un valore compreso tra 0 e 1 che determina la velocità di aggiornamento delle aspettative. Un valore più alto di <em>α</em> implica un apprendimento più rapido, mentre uno più basso implica un apprendimento più lento.</li>
+<li><span class="math inline">\(R_k\)</span>: ricompensa ottenuta dopo aver scelto l’azione <em>k</em> al tempo <em>t</em></li>
+<li><span class="math inline">\(R_k - Q_k(t)\)</span>: <em>errore di previsione</em>, la differenza tra la ricompensa ottenuta e quella attesa</li>
+</ul>
+<p>In parole semplici, l’errore di previsione guida l’aggiornamento delle nostre aspettative: se la ricompensa è maggiore del previsto, il valore dell’azione viene aumentato; se la ricompensa è minore del previsto, il valore dell’azione viene diminuito.</p>
+</section>
+<section id="la-regola-decisionale" class="level3" data-number="76.5.3">
+<h3 data-number="76.5.3" class="anchored" data-anchor-id="la-regola-decisionale"><span class="header-section-number">76.5.3</span> La Regola Decisionale</h3>
+<p>Per decidere quale azione intraprendere, utilizziamo la regola <em>softmax</em>, che bilancia l’esplorazione di nuove opzioni con la scelta dell’azione con il valore atteso più alto. La regola softmax trasforma i valori attesi <em>Q</em> in probabilità di scelta:</p>
+<p><span class="math display">\[p_k(t) = \frac{exp(\theta Q_k(t))}{\sum_{i=1}^K exp(\theta Q_i(t))}\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(p_k(t)\)</span>: probabilità di scegliere l’azione <em>k</em> al tempo <em>t</em></li>
+<li><span class="math inline">\(\theta\)</span>: parametro <em>temperatura</em> che controlla il livello di esplorazione. Valori alti di <span class="math inline">\(\theta\)</span> portano a scelte più deterministiche (quasi sempre l’azione con il valore più alto), mentre valori bassi portano a scelte più casuali.</li>
+</ul>
+<section id="esempio-di-calcolo-della-softmax" class="level4" data-number="76.5.3.1">
+<h4 data-number="76.5.3.1" class="anchored" data-anchor-id="esempio-di-calcolo-della-softmax"><span class="header-section-number">76.5.3.1</span> Esempio di Calcolo della Softmax</h4>
+<p>Per capire come funziona la softmax, consideriamo alcuni valori di <span class="math inline">\(Q\)</span> e <span class="math inline">\(\theta\)</span>.</p>
+<div id="cell-8" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax(Q, theta):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> np.exp(theta <span class="op">*</span> Q) <span class="op">/</span> np.<span class="bu">sum</span>(np.exp(theta <span class="op">*</span> Q))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">3.5</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.1480472 0.8519528]</code></pre>
+</div>
+</div>
+<div id="cell-9" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.4378235 0.5621765]</code></pre>
+</div>
+</div>
+<p>La funzione softmax trasforma i valori <span class="math inline">\(Q\)</span> e <span class="math inline">\(\theta\)</span> in una distribuzione di probabilità, mostrando come la probabilità di scelta cambia al variare di <span class="math inline">\(\theta\)</span>.</p>
+</section>
+</section>
+<section id="variazione-di-theta-con-valori-fissi-di-q" class="level3" data-number="76.5.4">
+<h3 data-number="76.5.4" class="anchored" data-anchor-id="variazione-di-theta-con-valori-fissi-di-q"><span class="header-section-number">76.5.4</span> Variazione di <span class="math inline">\(\theta\)</span> con Valori Fissi di <span class="math inline">\(Q\)</span></h3>
+<p>Manteniamo fissi i valori di <span class="math inline">\(Q\)</span> e facciamo variare <span class="math inline">\(\theta\)</span>:</p>
+<div id="cell-11" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.1</span>, <span class="fl">0.75</span>])</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>theta_values <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>probabilities_list <span class="op">=</span> []</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> theta <span class="kw">in</span> theta_values:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> softmax(Q, theta)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    probabilities_list.append(probabilities)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>probabilities_array <span class="op">=</span> np.array(probabilities_list).T</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>option_labels <span class="op">=</span> [<span class="st">'Opzione 1'</span>, <span class="st">'Opzione 2'</span>]</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(option_labels)):</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    plt.plot(theta_values, probabilities_array[i], label<span class="op">=</span>option_labels[i])</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Theta'</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Funzione Softmax - Modello Rescorla-Wagner'</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il grafico risultante mostra come le probabilità di scelta cambiano al variare del parametro <span class="math inline">\(\theta\)</span>. Quando <span class="math inline">\(\theta\)</span> è vicino a zero, la scelta è quasi casuale. Quando <span class="math inline">\(\theta\)</span> è molto grande, la scelta è quasi sempre l’opzione con il valore più alto.</p>
+</section>
+</section>
+<section id="simulazione-del-modello-di-rescorla-wagner" class="level2" data-number="76.6">
+<h2 data-number="76.6" class="anchored" data-anchor-id="simulazione-del-modello-di-rescorla-wagner"><span class="header-section-number">76.6</span> Simulazione del Modello di Rescorla-Wagner</h2>
+<p>Combiniamo la regola di apprendimento e la regola decisionale per simulare il comportamento del partecipante:</p>
+<div id="cell-13" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_RescorlaWagner(params, T, mu, noisy_choice<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    alpha, theta <span class="op">=</span> params</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un array di zeri di lunghezza T</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un array multidimensionale di zeri di dimensione 2xT</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    Q_stored <span class="op">=</span> np.zeros((<span class="dv">2</span>, T), dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizializza Q per t == 0</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Salva i valori Q per Q_{t+1}</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        Q_stored[:, t] <span class="op">=</span> Q</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola le probabilità di scelta</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        p0 <span class="op">=</span> np.exp(theta<span class="op">*</span>Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta<span class="op">*</span>Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta<span class="op">*</span>Q[<span class="dv">1</span>]))</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        p1 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p0</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Se noisy_choice è vero, viene simulato un comportamento di scelta rumoroso in </span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cui l'opzione 0 è scelta con probabilità p0, mentre l'opzione 1 è scelta con </span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># probabilità 1-p0.</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> noisy_choice:</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> np.random.random_sample(<span class="dv">1</span>) <span class="op">&lt;</span> p0:</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                c[t] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>                c[t] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:  <span class="co"># la scelta viene effettuata senza rumore</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            c[t] <span class="op">=</span> np.argmax([p0, p1])</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Genera la ricompensa sulla base delle probabilità di ricompensa</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        r[t] <span class="op">=</span> np.random.rand() <span class="op">&lt;</span> mu[c[t]]</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aggiorna le aspettative di valore</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>        Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c, r, Q_stored</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Simuliamo <code>T</code> = 100 prove utilizzando il modello generativo dei dati definito in precedenza.</p>
+<div id="cell-15" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>c, r, Q <span class="op">=</span> simulate_RescorlaWagner([<span class="fl">.1</span>, <span class="fl">2.5</span>], T<span class="op">=</span>T, mu<span class="op">=</span>mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Rappresentiamo graficamente i risultati ottenuti dalla simulazione.</p>
+<div id="cell-18" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), r, <span class="st">'r--'</span>, alpha<span class="op">=</span><span class="fl">.6</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), c, <span class="st">'+'</span>, label<span class="op">=</span><span class="st">'scelta'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Prove'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Feedback (1=Ricompensa,</span><span class="ch">\n</span><span class="st"> 0=Nessuna ricompensa)'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Apprendimento di Rescorla-Wagner'</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Come possiamo osservare, le scelte per la slot machine che produce meno ricompense diventano meno frequenti nel corso delle prove.</p>
+<p>Possiamo anche rappresentare graficamente le aspettative di valore <span class="math inline">\(Q\)</span> delle due slot machine nel corso delle prove.</p>
+<div id="cell-20" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), Q[<span class="dv">1</span>, :], <span class="st">'r--'</span>, alpha<span class="op">=</span><span class="fl">.6</span>, label<span class="op">=</span><span class="st">'80% machine'</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), Q[<span class="dv">0</span>, :], <span class="st">'m-'</span>, alpha<span class="op">=</span><span class="fl">.6</span>, label<span class="op">=</span><span class="st">'20% machine'</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), c, <span class="st">'b+'</span>, label<span class="op">=</span><span class="st">'choice'</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'trials'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'value'</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Rescorla-Wagner Learning'</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Si noti come nel corso delle prove i valori delle slot macchine convergano lentamente verso le probabilità di ricompensa (20% e 80%).</p>
+<p>In sintesi, il modello di Rescorla-Wagner ci permette di simulare come le persone apprendono e prendono decisioni basate su ricompense. Utilizzando la regola di apprendimento (<span class="math inline">\(\delta\)</span>-rule) e la regola decisionale softmax, possiamo vedere come le aspettative di valore e le scelte cambiano nel tempo in risposta alle ricompense ottenute.</p>
+</section>
+<section id="adattamento-del-modello" class="level2" data-number="76.7">
+<h2 data-number="76.7" class="anchored" data-anchor-id="adattamento-del-modello"><span class="header-section-number">76.7</span> Adattamento del Modello</h2>
+<p>Dopo aver visto come funziona il modello di Rescorla-Wagner, il passo successivo è stimare i parametri del modello a partire dai dati osservati. Questo processo è fondamentale nella modellazione computazionale perché ci permette di capire quali valori dei parametri descrivono meglio il comportamento osservato. Esistono diversi metodi per stimare i parametri, ma ci concentreremo sull’approccio della <em>Massima Verosimiglianza</em>.</p>
+<section id="la-massima-verosimiglianza" class="level3" data-number="76.7.1">
+<h3 data-number="76.7.1" class="anchored" data-anchor-id="la-massima-verosimiglianza"><span class="header-section-number">76.7.1</span> La Massima Verosimiglianza</h3>
+<p>L’approccio della massima verosimiglianza cerca di trovare i valori dei parametri del modello che massimizzano la probabilità dei dati osservati. In altre parole, vogliamo trovare i parametri <span class="math inline">\((\alpha, \theta)\)</span> che rendono i dati osservati <span class="math inline">\(d_{1:T}\)</span> più probabili secondo il modello Rescorla-Wagner.</p>
+</section>
+<section id="calcolo-del-logaritmo-della-verosimiglianza" class="level3" data-number="76.7.2">
+<h3 data-number="76.7.2" class="anchored" data-anchor-id="calcolo-del-logaritmo-della-verosimiglianza"><span class="header-section-number">76.7.2</span> Calcolo del Logaritmo della Verosimiglianza</h3>
+<p>Massimizzare la verosimiglianza è spesso più facile se si lavora con il logaritmo della verosimiglianza, perché le moltiplicazioni di probabilità diventano somme. La log-verosimiglianza può essere espressa come:</p>
+<p><span class="math display">\[
+\log \mathcal{L} = \log p(d_{1:T} | (\alpha, \theta)_m, m) = \sum_{t=1}^T \log p(c_t | d_{1:t-1}, s_t, (\alpha, \theta)_m, m)
+\]</span></p>
+<p>In questa equazione:</p>
+<ul>
+<li><span class="math inline">\(\log \mathcal{L}\)</span> è il logaritmo della verosimiglianza.</li>
+<li><span class="math inline">\(p(d_{1:T} | (\alpha, \theta)_m, m)\)</span> è la probabilità dei dati osservati dato il modello e i parametri.</li>
+<li><span class="math inline">\(p(c_t | d_{1:t-1}, s_t, (\alpha, \theta)_m, m)\)</span> è la probabilità di ogni singola scelta <span class="math inline">\(c_t\)</span> data la storia delle scelte e dei feedback fino al tempo <span class="math inline">\(t\)</span> e i parametri del modello.</li>
+</ul>
+</section>
+<section id="minimizzazione-del-logaritmo-negativo-della-verosimiglianza" class="level3" data-number="76.7.3">
+<h3 data-number="76.7.3" class="anchored" data-anchor-id="minimizzazione-del-logaritmo-negativo-della-verosimiglianza"><span class="header-section-number">76.7.3</span> Minimizzazione del Logaritmo Negativo della Verosimiglianza</h3>
+<p>In pratica, massimizzare la log-verosimiglianza è equivalente a minimizzare il logaritmo negativo della verosimiglianza. Questo ci porta alla seguente equazione:</p>
+<p><span class="math display">\[
+-\log \mathcal{L} = -\sum_{t=1}^T \log p(c_t | d_{1:t-1}, s_t, (\alpha, \theta)_m, m)
+\]</span></p>
+<p>Per applicare questa procedura al modello di Rescorla-Wagner, dobbiamo definire la funzione di log-verosimiglianza negativa specifica per il nostro modello. Questa funzione ci permette di calcolare quanto bene i parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> spiegano i dati osservati. Durante il processo di stima, l’obiettivo è minimizzare questa funzione per trovare i valori ottimali dei parametri.</p>
+</section>
+<section id="esempio-pratico-1" class="level3" data-number="76.7.4">
+<h3 data-number="76.7.4" class="anchored" data-anchor-id="esempio-pratico-1"><span class="header-section-number">76.7.4</span> Esempio Pratico</h3>
+<p>Immaginiamo di avere dati osservati da un esperimento in cui un partecipante ha fatto 100 scelte tra due slot machine. Il nostro obiettivo è stimare i parametri <span class="math inline">\(\alpha\)</span> (tasso di apprendimento) e <span class="math inline">\(\theta\)</span> (temperatura) che meglio spiegano queste scelte. Per fare ciò, utilizziamo il metodo della massima verosimiglianza.</p>
+<p>La seguente funzione <code>negll_RescorlaWagner</code> calcola il negativo della log-verosimiglianza per il modello di apprendimento di Rescorla-Wagner. Questo ci permette di capire quanto bene i parametri del modello (<span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span>) spiegano le scelte osservate. Ecco una spiegazione passo passo per capire come funziona questa funzione.</p>
+<p>I parametri della Funzione sono:</p>
+<ul>
+<li><code>params</code>: una lista che contiene i valori dei parametri <span class="math inline">\(\alpha\)</span> (tasso di apprendimento) e <span class="math inline">\(\theta\)</span> (temperatura).</li>
+<li><code>c</code>: un array che contiene le scelte effettuate dal partecipante (0 o 1).</li>
+<li><code>r</code>: un array che contiene le ricompense ricevute dopo ogni scelta (1 per ricompensa, 0 per nessuna ricompensa).</li>
+</ul>
+<p>Esaminiamo ora il corpo della funzione.</p>
+<ol type="1">
+<li><p><strong>Inizializzazione dei Parametri</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>alpha, theta <span class="op">=</span> params</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="bu">len</span>(c)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>choiceProb <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">float</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>alpha</code> e <code>theta</code> sono estratti dalla lista <code>params</code>.</li>
+<li><code>Q</code> è una lista che tiene traccia delle aspettative di valore per le due slot machine, inizializzate a 0.5.</li>
+<li><code>T</code> è il numero di scelte effettuate.</li>
+<li><code>choiceProb</code> è un array che memorizza la probabilità di ogni scelta effettuata.</li>
+</ul></li>
+<li><p><strong>Calcolo delle Probabilità di Scelta e Aggiornamento dei Valori</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    p0 <span class="op">=</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">1</span>]))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> [p0, <span class="dv">1</span> <span class="op">-</span> p0]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    choiceProb[t] <span class="op">=</span> p[c[t]]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><p><strong>Calcolo delle Probabilità di Scelta</strong>:</p>
+<ul>
+<li><code>p0</code> è la probabilità di scegliere la prima slot machine.</li>
+<li><code>p</code> è una lista delle probabilità di scegliere ciascuna delle due slot machine.</li>
+<li><code>choiceProb[t]</code> memorizza la probabilità della scelta effettivamente fatta al tempo <span class="math inline">\(t\)</span>.</li>
+</ul></li>
+<li><p><strong>Aggiornamento delle Aspettative di Valore</strong>:</p>
+<ul>
+<li><code>delta</code> è la differenza tra la ricompensa effettiva <code>r[t]</code> e l’aspettativa di valore <code>Q[c[t]]</code> per la scelta fatta.</li>
+<li><code>Q[c[t]]</code> viene aggiornata secondo la regola di Rescorla-Wagner: il nuovo valore atteso è il vecchio valore atteso più una frazione (determinata da <span class="math inline">\(\alpha\)</span>) dell’errore di previsione.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Calcolo del Negativo della Log-Verosimiglianza</strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>negLL <span class="op">=</span> <span class="op">-</span>np.<span class="bu">sum</span>(np.log(choiceProb))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> negLL</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><p><strong>Log-Verosimiglianza</strong>:</p>
+<ul>
+<li><code>np.log(choiceProb)</code> calcola il logaritmo delle probabilità di scelta.</li>
+<li><code>np.sum(np.log(choiceProb))</code> somma questi logaritmi.</li>
+</ul></li>
+<li><p><strong>Negativo della Log-Verosimiglianza</strong>:</p>
+<ul>
+<li>Il risultato è moltiplicato per -1 per ottenere il negativo della log-verosimiglianza, poiché nella stima dei parametri cerchiamo di minimizzare questa funzione.</li>
+</ul></li>
+</ul></li>
+</ol>
+<p>In sintesi, la funzione <code>negll_RescorlaWagner</code>:</p>
+<ol type="1">
+<li>Calcola le probabilità di scelta basate sui parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span>.</li>
+<li>Aggiorna le aspettative di valore in base alle scelte e alle ricompense osservate.</li>
+<li>Calcola il negativo della log-verosimiglianza per valutare quanto bene i parametri spiegano i dati osservati.</li>
+</ol>
+<p>Ecco la funzione completa con commenti per facilitarne la comprensione:</p>
+<div id="cell-24" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> negll_RescorlaWagner(params, c, r):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    alpha, theta <span class="op">=</span> params</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(c)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    choiceProb <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola le probabilità di scelta per k = 2</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        p0 <span class="op">=</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">1</span>]))</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># "p" è una lista di probabilità di scelta per le due opzioni disponibili</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> [p0, <span class="dv">1</span> <span class="op">-</span> p0]</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Memorizza la probabilità della scelta effettuata</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        choiceProb[t] <span class="op">=</span> p[c[t]]</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aggiorna le aspettative di valore secondo la regola di Rescorla-Wagner</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcola il negativo della log-verosimiglianza</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    negLL <span class="op">=</span> <span class="op">-</span>np.<span class="bu">sum</span>(np.log(choiceProb))</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> negLL</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Simuliamo ora un set di dati.</p>
+<div id="cell-26" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate choices from RW Model</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">.2</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">1.5</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>c, r, Q2 <span class="op">=</span> simulate_RescorlaWagner([alpha, theta], T<span class="op">=</span>T, mu<span class="op">=</span>[<span class="fl">.2</span>, <span class="fl">.8</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per fare un esempio, valutiamo la log-verosimiglianza negativa per i dati simulati in corrispondenza dei valori <code>alpha</code> e <code>theta</code> indicati di seguito.</p>
+<div id="cell-28" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="op">=</span> <span class="fl">2.5</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>negLL <span class="op">=</span> negll_RescorlaWagner([alpha_hat, theta_hat], c, r)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(alpha_hat, theta_hat, negLL)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.3 2.5 67.02432583559954</code></pre>
+</div>
+</div>
+<div id="cell-29" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> <span class="fl">0.2</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="op">=</span> <span class="fl">1.5</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>negLL <span class="op">=</span> negll_RescorlaWagner([alpha_hat, theta_hat], c, r)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(alpha_hat, theta_hat, negLL)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.2 1.5 62.40238018291291</code></pre>
+</div>
+</div>
+<p>Un metodo per trovare i parametri di massima verosimiglianza è effettuare una ricerca esaustiva su tutto lo spazio dei parametri. Questo significa selezionare i valori di <code>alpha</code> e <code>theta</code> per i quali la funzione <code>negLL</code> assume il valore più basso.</p>
+<p>Per illustrare questo metodo, applichiamolo a un set di dati simulato. Per semplicità, assumiamo di conoscere il valore di <span class="math inline">\(\theta\)</span> e di dover trovare solo il valore di <span class="math inline">\(\alpha\)</span>.</p>
+<div id="cell-31" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nLL <span class="op">=</span> []</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>alpha_vals <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1000</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> alpha_val <span class="kw">in</span> alpha_vals:</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    nLL.append(negll_RescorlaWagner([alpha_val, theta], c, r))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>plt.plot(alpha_vals, nLL, <span class="st">'-'</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    alpha_vals[np.argmin(nLL)], nLL[np.argmin(nLL)],</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'X'</span>, label<span class="op">=</span><span class="vs">r'optimal $\hat \alpha$'</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'negative log likelihood'</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">fr'learning rate, $\hat \alpha$'</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Rescorla-Wagner Learning'</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="validazione" class="level3" data-number="76.7.5">
+<h3 data-number="76.7.5" class="anchored" data-anchor-id="validazione"><span class="header-section-number">76.7.5</span> Validazione</h3>
+<p>Una volta stabilito un metodo per stimare i parametri del modello dai dati, dobbiamo valutare quanto accuratamente queste stime riflettano i veri valori dei parametri del modello. Per rispondere a questa domanda, possiamo condurre uno studio di simulazione.</p>
+<p>I parametri della simulazione sono i seguenti.</p>
+<div id="cell-33" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">250</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>num_subjects <span class="op">=</span> <span class="dv">20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calcolimo i valori di massima verosimiglianza dei parametri <code>alpha</code> e <code>theta</code> usando la funzione <code>minimize</code> per minimizzare la funzione di log-verosimiglianza. Simuliamo i dati di un soggetto.</p>
+<p>Specifichiamo poi le stime iniziali per i valori dei parametri e i valori margine delle possibili soluzioni. I risultati saranno salvati nell’oggetto <code>result</code>. Le stime dei due parametri si estraggono con <code>result.x</code>.</p>
+<div id="cell-35" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>c, r, Q <span class="op">=</span> simulate_RescorlaWagner([<span class="fl">0.15</span>, <span class="fl">1.5</span>], T<span class="op">=</span>T, mu<span class="op">=</span>mu)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>init_guess <span class="op">=</span> (<span class="fl">0.1</span>, <span class="fl">0.1</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># minimize neg LL</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> minimize(</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    negll_RescorlaWagner,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    init_guess,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    (c, r),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    bounds<span class="op">=</span>((<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">10</span>)),</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result.x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.1093135  1.27704408]</code></pre>
+</div>
+</div>
+<p>Simuliamo i dati per 500 soggetti, con 250 osservazioni ciascuno, utilizzando valori casuali di <code>alpha</code> e <code>theta</code>. Successivamente, eseguiamo la stima di massima verosimiglianza per i dati di ogni soggetto, inizializzando casualmente i parametri per ciascuno di essi. Infine, salviamo i risultati ottenuti nel DataFrame <code>df</code>. Ecco il codice corrispondente:</p>
+<div id="cell-37" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>NREP <span class="op">=</span> <span class="dv">500</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="bu">range</span>(<span class="dv">0</span>, NREP), columns<span class="op">=</span>[<span class="st">"true_alpha"</span>, <span class="st">"alpha"</span>, <span class="st">"true_theta"</span>, <span class="st">"theta"</span>]</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through subjects</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index <span class="kw">in</span> <span class="bu">range</span>(NREP):</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    true_alpha <span class="op">=</span> <span class="fl">0.95</span> <span class="op">*</span> np.random.random()</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    true_theta <span class="op">=</span> <span class="fl">4.0</span> <span class="op">*</span> np.random.random()</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    c, r, Q <span class="op">=</span> simulate_RescorlaWagner([true_alpha, true_theta], T<span class="op">=</span><span class="dv">250</span>, mu<span class="op">=</span>mu)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    init_guess <span class="op">=</span> (<span class="fl">0.2</span> <span class="op">*</span> np.random.random(), <span class="fl">1.0</span> <span class="op">*</span> np.random.random())</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># minimize neg LL</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    param_fits <span class="op">=</span> minimize(</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        negll_RescorlaWagner,</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        init_guess,</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        (c, r),</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        bounds<span class="op">=</span>((<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">10</span>)),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># store in dataframe</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"true_alpha"</span>] <span class="op">=</span> true_alpha</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"true_theta"</span>] <span class="op">=</span> true_theta</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"alpha"</span>] <span class="op">=</span> param_fits.x[<span class="dv">0</span>]</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"theta"</span>] <span class="op">=</span> param_fits.x[<span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La figura successiva mostra una corrispondenza tra i valori stimati di alpha e i valori veri. È importante notare che la corrispondenza non è perfetta a causa della presenza di una componente di casualità nei dati. Inoltre, in alcuni casi si possono osservare valori stimati di alpha pari a 0 o 1, che corrispondono a risultati spurii dell’algoritmo. Il numero di risultati spurii aumenta con il diminuire del numero di osservazioni per ciascun soggetto.</p>
+<div id="cell-39" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df.true_alpha, df.alpha, <span class="st">'ob'</span>, alpha<span class="op">=</span><span class="fl">.4</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'True alpha'</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Estimated alpha'</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'ML estimation'</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Un discorso analogo si può fare per theta, anche se in questo caso vi è una migliore corrispondenza tra i valori stimati e i valori veri.</p>
+<div id="cell-41" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df.true_theta, df.theta, <span class="st">'or'</span>, alpha<span class="op">=</span><span class="fl">.4</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'True theta'</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Estimated theta'</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'ML estimation'</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In sintesi, possiamo affermare che il metodo della massima verosimiglianza è in grado di recuperare i valori simulati dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> del modello di Rescorla-Wagner, ma solo quando il numero di osservazioni per soggetto è considerevole. Tuttavia, è importante notare che questo metodo può produrre risultati imprecisi in determinate circostanze.</p>
+<p>Esistono altri metodi di stima che offrono risultati migliori anche con un numero inferiore di osservazioni per soggetto. Tra questi, il metodo gerarchico bayesiano è ampiamente utilizzato nella pratica. Va precisato che l’obiettivo di questo tutorial era principalmente illustrare in modo semplice come sia possibile ottenere con buona accuratezza i parametri del modello di Rescorla-Wagner dai dati generati da una simulazione, considerando condizioni ottimali in cui i valori dei parametri del modello sono noti.</p>
+<p>È importante sottolineare che, nella pratica, la stima dei parametri può essere un processo complesso e che l’accuratezza delle stime dipende da molteplici fattori, come la dimensione del campione e la natura dei dati osservati. Pertanto, è sempre consigliabile valutare attentamente i risultati e considerare l’utilizzo di approcci più sofisticati, come il metodo gerarchico bayesiano, per ottenere stime più affidabili dei parametri del modello.</p>
+</section>
+</section>
+<section id="stima-con-stan" class="level2" data-number="76.8">
+<h2 data-number="76.8" class="anchored" data-anchor-id="stima-con-stan"><span class="header-section-number">76.8</span> Stima con Stan</h2>
+<p>Consideriamo ora la stima dei parametri del modello Rescorla-Wagner usando un metodo bayesiano, ovvero mediante Stan. Compiliamo il modello e stampiamo il codice Stan.</p>
+<div id="cell-44" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"rescorla_wagner.stan"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>12:57:16 - cmdstanpy - INFO - compiling stan file /Users/corradocaudek/_repositories/psicometria/stan/rescorla_wagner.stan to exe file /Users/corradocaudek/_repositories/psicometria/stan/rescorla_wagner
+12:57:27 - cmdstanpy - INFO - compiled model executable: /Users/corradocaudek/_repositories/psicometria/stan/rescorla_wagner</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=1&gt; nTrials; // numero di tentativi
+  array[nTrials] int&lt;lower=1, upper=2&gt; choice; // scelte effettuate (1 o 2)
+  array[nTrials] real&lt;lower=0, upper=1&gt; reward; // ricompense ricevute (0 o 1)
+}
+transformed data {
+  vector[2] initV; // valori iniziali per V
+  initV = rep_vector(0.5, 2); // inizializzati a 0.5
+}
+parameters {
+  real&lt;lower=0, upper=1&gt; alpha; // tasso di apprendimento
+  real&lt;lower=0&gt; theta; // temperatura
+}
+model {
+  vector[2] v; // valori attesi
+  real delta; // errore di previsione
+  
+  // Priori
+  alpha ~ beta(1, 1); // prior uniforme su [0, 1]
+  theta ~ normal(0, 10); // prior normale con media 0 e deviazione standard 10
+  
+  v = initV;
+  
+  for (t in 1 : nTrials) {
+    // Calcolo delle probabilità di scelta usando la funzione softmax con limitazione
+    vector[2] logits;
+    logits = theta * v;
+    logits = fmin(logits, 20); // Limita i valori massimi per evitare overflow
+    logits = fmax(logits, -20); // Limita i valori minimi per evitare underflow
+    
+    choice[t] ~ categorical_logit(logits);
+    
+    // Errore di previsione
+    delta = reward[t] - v[choice[t]];
+    
+    // Aggiornamento dei valori attesi (apprendimento)
+    v[choice[t]] = v[choice[t]] + alpha * delta;
+  }
+}
+</code></pre>
+</div>
+</div>
+<section id="sezione-data" class="level3" data-number="76.8.1">
+<h3 data-number="76.8.1" class="anchored" data-anchor-id="sezione-data"><span class="header-section-number">76.8.1</span> Sezione <code>data</code></h3>
+<p>Questa sezione definisce i dati che vengono forniti al modello:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>&gt; nTrials; <span class="co">// numero di tentativi</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[nTrials] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=<span class="dv">2</span>&gt; choice; <span class="co">// scelte effettuate (1 o 2)</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[nTrials] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; reward; <span class="co">// ricompense ricevute (0 o 1)</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>nTrials</code>: Il numero totale di tentativi o scelte effettuate dal partecipante.</li>
+<li><code>choice</code>: Un array che contiene le scelte effettuate dal partecipante in ciascun tentativo (1 o 2).</li>
+<li><code>reward</code>: Un array che contiene le ricompense ricevute per ciascun tentativo (0 o 1).</li>
+</ul>
+</section>
+<section id="sezione-transformed-data" class="level3" data-number="76.8.2">
+<h3 data-number="76.8.2" class="anchored" data-anchor-id="sezione-transformed-data"><span class="header-section-number">76.8.2</span> Sezione <code>transformed data</code></h3>
+<p>Questa sezione prepara alcuni dati iniziali trasformati per il modello:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[<span class="dv">2</span>] initV; <span class="co">// valori iniziali per V</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  initV = rep_vector(<span class="fl">0.5</span>, <span class="dv">2</span>); <span class="co">// inizializzati a 0.5</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>initV</code>: Un vettore di lunghezza 2 che rappresenta i valori iniziali delle aspettative di ricompensa per le due opzioni, entrambi inizializzati a 0.5.</li>
+</ul>
+</section>
+<section id="sezione-parameters" class="level3" data-number="76.8.3">
+<h3 data-number="76.8.3" class="anchored" data-anchor-id="sezione-parameters"><span class="header-section-number">76.8.3</span> Sezione <code>parameters</code></h3>
+<p>Questa sezione definisce i parametri del modello che Stan cercherà di stimare:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; alpha; <span class="co">// tasso di apprendimento</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; theta; <span class="co">// temperatura</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>alpha</code>: Il tasso di apprendimento, che determina quanto rapidamente il partecipante aggiorna le proprie aspettative. Questo valore è compreso tra 0 e 1.</li>
+<li><code>theta</code>: La temperatura, che controlla il livello di esplorazione (quanto spesso il partecipante sceglie l’opzione con il valore atteso più alto rispetto a esplorare altre opzioni). Questo valore è positivo.</li>
+</ul>
+</section>
+<section id="sezione-model" class="level3" data-number="76.8.4">
+<h3 data-number="76.8.4" class="anchored" data-anchor-id="sezione-model"><span class="header-section-number">76.8.4</span> Sezione <code>model</code></h3>
+<p>Questa è la sezione principale che definisce come il modello effettua le stime e aggiorna i valori:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[<span class="dv">2</span>] v; <span class="co">// valori attesi</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> delta; <span class="co">// errore di previsione</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Priori</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  alpha ~ beta(<span class="dv">1</span>, <span class="dv">1</span>); <span class="co">// prior uniforme su [0, 1]</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>, <span class="dv">10</span>); <span class="co">// prior normale con media 0 e deviazione standard 10</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  v = initV;</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span> : nTrials) {</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Calcolo delle probabilità di scelta usando la funzione softmax con limitazione</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>[<span class="dv">2</span>] logits;</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    logits = theta * v;</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    logits = fmin(logits, <span class="dv">20</span>); <span class="co">// Limita i valori massimi per evitare overflow</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    logits = fmax(logits, -<span class="dv">20</span>); <span class="co">// Limita i valori minimi per evitare underflow</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    choice[t] ~ categorical_logit(logits);</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Errore di previsione</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>    delta = reward[t] - v[choice[t]];</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Aggiornamento dei valori attesi (apprendimento)</span></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>    v[choice[t]] = v[choice[t]] + alpha * delta;</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>v</code>: Un vettore che contiene i valori attesi delle ricompense per le due opzioni.</li>
+<li><code>delta</code>: La differenza tra la ricompensa ricevuta e il valore atteso (errore di previsione).</li>
+</ul>
+<section id="priori" class="level4" data-number="76.8.4.1">
+<h4 data-number="76.8.4.1" class="anchored" data-anchor-id="priori"><span class="header-section-number">76.8.4.1</span> Priori</h4>
+<p>Le distribuzioni prior definiscono le nostre convinzioni iniziali sui parametri prima di vedere i dati:</p>
+<ul>
+<li><code>alpha ~ beta(1, 1)</code>: Una distribuzione beta uniforme per <code>alpha</code>, che assegna uguale probabilità a tutti i valori tra 0 e 1.</li>
+<li><code>theta ~ normal(0, 10)</code>: Una distribuzione normale per <code>theta</code> con media 0 e deviazione standard 10.</li>
+</ul>
+</section>
+<section id="ciclo-sui-tentativi" class="level4" data-number="76.8.4.2">
+<h4 data-number="76.8.4.2" class="anchored" data-anchor-id="ciclo-sui-tentativi"><span class="header-section-number">76.8.4.2</span> Ciclo sui Tentativi</h4>
+<p>Per ogni tentativo, il modello:</p>
+<ol type="1">
+<li><p><strong>Calcola le probabilità di scelta</strong> utilizzando la funzione softmax, limitando i valori per evitare overflow numerici:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>logits = theta * v;</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>logits = fmin(logits, <span class="dv">20</span>);</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>logits = fmax(logits, -<span class="dv">20</span>);</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>choice[t] ~ categorical_logit(logits);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><code>logits = theta * v;</code>: <code>logits</code> è un vettore che contiene i valori trasformati <code>theta * v</code>.</li>
+<li><code>theta</code> è la temperatura, che controlla quanto il partecipante esplora rispetto a sfruttare (scegliere l’opzione con il valore atteso più alto).</li>
+<li><code>v</code> sono i valori attesi delle ricompense per le due opzioni.</li>
+<li><code>logits = fmin(logits, 20);</code>: Questa funzione assicura che nessun valore in <code>logits</code> sia maggiore di 20. Se un valore è maggiore di 20, viene impostato a 20.</li>
+<li><code>logits = fmax(logits, -20);</code>: Questa funzione assicura che nessun valore in <code>logits</code> sia minore di -20. Se un valore è minore di -20, viene impostato a -20.</li>
+<li><code>choice[t] ~ categorical_logit(logits);</code>: <code>categorical_logit(logits)</code> è una distribuzione che assegna probabilità alle scelte (1 o 2) in base ai valori <code>logits</code>.</li>
+</ul>
+<p><strong>Motivazione</strong>: Limitare i valori dei <code>logits</code> è importante per evitare problemi numerici (overflow) quando si calcolano le probabilità. Valori estremi di <code>theta * v</code> possono causare risultati non definiti o infiniti, quindi li limitiamo a un intervallo ragionevole (-20 a 20).</p>
+<p><strong>Funzionamento della Funzione <code>categorical_logit</code></strong>:</p>
+<ul>
+<li><p><code>categorical_logit(logits)</code> utilizza la funzione softmax per convertire i <code>logits</code> in probabilità.</p></li>
+<li><p>La funzione softmax è definita come:</p>
+<p><span class="math display">\[
+\text{softmax}(z_i) = \frac{\exp(z_i)}{\sum_{j=1}^{K} \exp(z_j)},
+\]</span></p>
+<p>dove <code>z_i</code> sono i <code>logits</code> per ciascuna opzione.</p></li>
+<li><p>Questa funzione garantisce che le probabilità siano comprese tra 0 e 1 e che la loro somma sia 1.</p></li>
+</ul>
+<p><strong>Esempio Pratico</strong>:</p>
+<p>Supponiamo che <code>theta = 1</code> e i valori attesi siano <code>v = [0.3, 0.7]</code>. I <code>logits</code> sarebbero calcolati come:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>logits = theta * v; <span class="co">// logits = [1 * 0.3, 1 * 0.7] = [0.3, 0.7]</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>logits = fmin(logits, <span class="dv">20</span>); <span class="co">// nessun valore è maggiore di 20, quindi rimane [0.3, 0.7]</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>logits = fmax(logits, -<span class="dv">20</span>); <span class="co">// nessun valore è minore di -20, quindi rimane [0.3, 0.7]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Applicando la funzione softmax:</p>
+<p><span class="math display">\[
+\text{softmax}(0.3, 0.7) = \left( \frac{\exp(0.3)}{\exp(0.3) + \exp(0.7)}, \frac{\exp(0.7)}{\exp(0.3) + \exp(0.7)} \right)
+\]</span></p>
+<p>Calcolando le esponenziali e le probabilità:</p>
+<p><span class="math display">\[
+\exp(0.3) \approx 1.35, \quad \exp(0.7) \approx 2.01
+\]</span></p>
+<p><span class="math display">\[
+\text{softmax}(0.3, 0.7) \approx \left( \frac{1.35}{1.35 + 2.01}, \frac{2.01}{1.35 + 2.01} \right) = \left( 0.40, 0.60 \right)
+\]</span></p>
+<p>Quindi, le probabilità di scegliere l’opzione 1 e l’opzione 2 sono circa 0.40 e 0.60, rispettivamente. Il modello usa queste probabilità per determinare quale scelta viene effettivamente fatta al tempo <code>t</code>.</p></li>
+<li><p><strong>Calcola l’errore di previsione</strong> come la differenza tra la ricompensa ricevuta e il valore atteso:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>delta = reward[t] - v[choice[t]];</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><strong>Aggiorna i valori attesi</strong> utilizzando l’errore di previsione e il tasso di apprendimento <code>alpha</code>:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>v[choice[t]] = v[choice[t]] + alpha * delta;</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+<p>In sintesi,</p>
+<ul>
+<li>I <code>logits</code> sono valori calcolati come <code>theta * v</code> e limitati tra -20 e 20 per evitare problemi numerici.</li>
+<li><code>categorical_logit(logits)</code> converte questi <code>logits</code> in probabilità utilizzando la funzione softmax.</li>
+<li>La scelta al tempo <code>t</code> (<code>choice[t]</code>) è modellata come una variabile categoriale con queste probabilità, riflettendo la probabilità che il partecipante scelga ciascuna delle opzioni.</li>
+<li>L’errore di previsione (<code>delta</code>) è calcolato come la differenza tra la ricompensa ricevuta e il valore atteso.</li>
+<li>I valori attesi (<code>v</code>) vengono aggiornati utilizzando l’errore di previsione e il tasso di apprendimento (<code>alpha</code>).</li>
+</ul>
+<p>Questo modello Stan implementa il processo di apprendimento del modello di Rescorla-Wagner. Utilizza le scelte e le ricompense osservate per stimare i parametri <code>alpha</code> e <code>theta</code>, aggiornando le aspettative di ricompensa in base ai risultati di ogni tentativo.</p>
+</section>
+</section>
+<section id="inferenza" class="level3" data-number="76.8.5">
+<h3 data-number="76.8.5" class="anchored" data-anchor-id="inferenza"><span class="header-section-number">76.8.5</span> Inferenza</h3>
+<p>Compiliamo il modello Stan:</p>
+<div id="cell-47" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Definiamo i parametri della simulazione:</p>
+<div id="cell-49" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">2.5</span>]  <span class="co"># alpha, theta</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">300</span>  <span class="co"># numero di tentativi</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]  <span class="co"># probabilità di ricompensa per le due opzioni</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Simuliamo i dati:</p>
+<div id="cell-51" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>choices, rewards, Q_stored <span class="op">=</span> simulate_RescorlaWagner(params, T, mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Prepariamo i dati per Stan. Si noti che abbiamo sommato 1 a <code>choices</code> per adattarsi agli indici di Stan che partono da 1.</p>
+<div id="cell-53" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> choices <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'nTrials'</span>: T,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'choice'</span>: c.tolist(),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'reward'</span>: rewards.tolist()</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'nTrials': 300, 'choice': [1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2], 'reward': [1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0]}</code></pre>
+</div>
+</div>
+<p>Eseguiamo il campionamento:</p>
+<div id="cell-55" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> model.sample(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>12:58:12 - cmdstanpy - INFO - CmdStan start processing
+12:58:12 - cmdstanpy - INFO - Chain [1] start processing
+12:58:12 - cmdstanpy - INFO - Chain [2] start processing
+12:58:12 - cmdstanpy - INFO - Chain [3] start processing
+12:58:12 - cmdstanpy - INFO - Chain [4] start processing
+12:58:14 - cmdstanpy - INFO - Chain [3] done processing
+12:58:14 - cmdstanpy - INFO - Chain [1] done processing
+12:58:15 - cmdstanpy - INFO - Chain [2] done processing
+12:58:15 - cmdstanpy - INFO - Chain [4] done processing</code></pre>
+</div>
+</div>
+<p>Esaminiamo le distribuzioni a posteriori dei due parametri oggetto dell’inferenza insieme alle loro tracce (cioè i vettori dei campioni dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> prodotti dalla procedura di campionamento MCMC) mediante un <em>trace plot</em> .</p>
+<div id="cell-57" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(trace)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretazione-delle-stime-dei-parametri" class="level3" data-number="76.8.6">
+<h3 data-number="76.8.6" class="anchored" data-anchor-id="interpretazione-delle-stime-dei-parametri"><span class="header-section-number">76.8.6</span> Interpretazione delle Stime dei Parametri</h3>
+<p>Utilizzando <code>az.summary(trace, hdi_prob=0.94, round_to=2)</code>, otteniamo un riassunto delle stime dei parametri del modello, che include la media, la deviazione standard, gli intervalli di credibilità (HDI) e altre statistiche diagnostiche:</p>
+<div id="cell-59" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>az.summary(trace, hdi_prob<span class="op">=</span><span class="fl">0.94</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">alpha</td>
+<td>0.12</td>
+<td>0.06</td>
+<td>0.02</td>
+<td>0.24</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2582.93</td>
+<td>2151.18</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">theta</td>
+<td>2.36</td>
+<td>0.35</td>
+<td>1.77</td>
+<td>2.96</td>
+<td>0.01</td>
+<td>0.01</td>
+<td>2578.16</td>
+<td>1868.05</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Con 300 prove, le stime dei parametri fornite dal modello sono adeguate:</p>
+<ul>
+<li>L’intervallo di credibilità al 94% (hdi_3% - hdi_97%) include il valore simulato del parametro. Questo significa che le stime del modello sono coerenti con i parametri originali usati nella simulazione.</li>
+<li>La deviazione standard della stima a posteriori è relativamente piccola, indicando che le stime sono precise.</li>
+<li>I valori di <code>r_hat</code> sono vicini a 1, indicando che le catene di campionamento sono ben mescolate e hanno ottenuto la convergenza.</li>
+</ul>
+<p>Questi risultati suggeriscono che il modello di apprendimento di Rescorla-Wagner ha stimato correttamente i parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> dai dati simulati.</p>
+</section>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="cell-62" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Fri Jul 26 2024
+
+Python implementation: CPython
+Python version       : 3.12.4
+IPython version      : 8.26.0
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.5.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+arviz     : 0.18.0
+scipy     : 1.14.0
+pandas    : 2.2.2
+matplotlib: 3.9.1
+numpy     : 1.26.4
+seaborn   : 0.13.2
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="pagination-link" aria-label="Introduzione">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Introduzione</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Introduzione</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Data Science per Psicologi è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/01_rescorla_wagner.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
