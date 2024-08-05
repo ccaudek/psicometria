@@ -1091,13 +1091,13 @@ window.Quarto = {
 </section>
 <section id="la-distribuzione-predittiva-a-posteriori" class="level2" data-number="48.1">
 <h2 data-number="48.1" class="anchored" data-anchor-id="la-distribuzione-predittiva-a-posteriori"><span class="header-section-number">48.1</span> La distribuzione predittiva a posteriori</h2>
-<p>La distribuzione predittiva a posteriori (PPD) è un concetto essenziale nell’inferenza bayesiana e permette di valutare quanto bene un modello si adatti ai dati osservati. Secondo <span class="citation" data-cites="gelman2013philosophy">Gelman e Shalizi (<a href="../../99-references.html#ref-gelman2013philosophy" role="doc-biblioref">2013</a>)</span>, questa metodologia fornisce una valutazione critica della coerenza tra i dati reali e quelli simulati dal modello. La verifica predittiva a posteriori (PPC) utilizza la PPD per confrontare direttamente i dati osservati con quelli generati dal modello, rivelando eventuali discrepanze che possono indicare problemi nella specificazione del modello. In pratica, la PPC funge da test diagnostico, consentendo di individuare e correggere eventuali lacune nel modello al fine di migliorarne le capacità predittive.</p>
+<p>La <a href="https://mc-stan.org/docs/stan-users-guide/posterior-predictive-checks.html#prior-predictive-checks">distribuzione predittiva a posteriori</a> è un concetto essenziale nell’inferenza bayesiana e permette di valutare quanto bene un modello si adatti ai dati osservati. Secondo <span class="citation" data-cites="gelman2013philosophy">Gelman e Shalizi (<a href="../../99-references.html#ref-gelman2013philosophy" role="doc-biblioref">2013</a>)</span>, questa metodologia fornisce una valutazione critica della coerenza tra i dati reali e quelli simulati dal modello. La verifica predittiva a posteriori utilizza la distribuzione predittiva a posteriori per confrontare direttamente i dati osservati con quelli generati dal modello, rivelando eventuali discrepanze che possono indicare problemi nella specificazione del modello. In pratica, la PPC funge da test diagnostico, consentendo di individuare e correggere eventuali lacune nel modello al fine di migliorarne le capacità predittive.</p>
 <p>Per comprendere meglio il concetto, è utile considerare la distribuzione predittiva a posteriori in termini di un modello coniugato normale-normale. Supponiamo di voler predire la media di una distribuzione normale futura, basandoci sui dati osservati e sulle nostre conoscenze a priori. La PPD ci offre uno strumento per calcolare queste probabilità, combinando le informazioni provenienti dai dati osservati con quelle fornite dalla distribuzione a priori.</p>
 <p>Ad esempio, immaginiamo di aver raccolto dati sulle altezze di 100 persone, ottenendo una media campionaria di 170 cm e una deviazione standard campionaria di 10 cm. Il nostro obiettivo è stimare la media delle altezze in un futuro campione di <span class="math inline">\(n=100\)</span> persone. La nostra conoscenza a priori sulla media delle altezze è rappresentata da una distribuzione normale con media 175 cm e deviazione standard di 5 cm.</p>
 <p>In termini di notazione, possiamo esprimere questa distribuzione come <span class="math inline">\(P(\tilde{y}|\theta=\theta_1)\)</span>, dove <span class="math inline">\(\tilde{y}\)</span> rappresenta un nuovo dato che è diverso dai dati attuali <span class="math inline">\(y\)</span>, e <span class="math inline">\(\theta_1\)</span> è la media a posteriori. Tuttavia, in statistica bayesiana, è fondamentale incorporare tutta l’incertezza nei risultati. Poiché <span class="math inline">\(\theta_1\)</span> è solo uno dei possibili valori per <span class="math inline">\(\theta\)</span>, dovremmo includere ogni valore di <span class="math inline">\(\theta\)</span> per la nostra previsione. Per ottenere la migliore previsione, possiamo “mediare” le previsioni attraverso i diversi valori di <span class="math inline">\(\theta\)</span>, ponderando ciascun valore secondo la sua probabilità a posteriori.</p>
 <p>La distribuzione risultante è la distribuzione predittiva a posteriori, che in notazione matematica è data da:</p>
 <p><span class="math display">\[ P(\tilde{y}|y) = \int_\theta p(\tilde{y}|\theta, y) p(\theta|y) d\theta \]</span></p>
-<p>In questo modo, la PPD combina le informazioni dai dati osservati con la conoscenza a priori, fornendo una previsione che riflette l’incertezza associata a tutti i possibili valori dei parametri del modello.</p>
+<p>In questo modo, la distribuzione predittiva a posteriori combina le informazioni dai dati osservati con la conoscenza a priori, fornendo una previsione che riflette l’incertezza associata a tutti i possibili valori dei parametri del modello.</p>
 </section>
 <section id="distribuzione-predittiva-a-posteriori-nel-modello-normale-normale" class="level2" data-number="48.2">
 <h2 data-number="48.2" class="anchored" data-anchor-id="distribuzione-predittiva-a-posteriori-nel-modello-normale-normale"><span class="header-section-number">48.2</span> Distribuzione predittiva a posteriori nel modello normale-normale</h2>
@@ -1183,16 +1183,19 @@ window.Quarto = {
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulazioni</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>y_pred_samples <span class="op">=</span> np.random.normal(mu_pred, sigma_pred, <span class="dv">1000</span>)</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>plt.hist(y_pred_samples, bins<span class="op">=</span><span class="dv">30</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Posterior Predictive'</span>)</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">160</span>, <span class="dv">190</span>, <span class="dv">200</span>)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>plt.plot(x, stats.norm.pdf(x, mu_pred, sigma_pred), <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Predictive Distribution'</span>)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span>mu_pred, color<span class="op">=</span><span class="st">'k'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Mean Prediction'</span>)</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Heights (cm)'</span>)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Posterior Predictive Distribution for Heights'</span>)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>color_fill <span class="op">=</span> <span class="st">"#B17F7D"</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>color_edge <span class="op">=</span> <span class="st">"#832F2B"</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>plt.hist(y_pred_samples, bins<span class="op">=</span><span class="dv">30</span>, density<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span>color_fill, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Posterior Predictive'</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">160</span>, <span class="dv">190</span>, <span class="dv">200</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>plt.plot(x, stats.norm.pdf(x, mu_pred, sigma_pred), <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Predictive Distribution'</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span>mu_pred, color<span class="op">=</span>color_edge, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Mean Prediction'</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Heights (cm)'</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Posterior Predictive Distribution for Heights'</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1220,15 +1223,11 @@ window.Quarto = {
 </ol>
 <p>Ripetendo questi due passaggi un numero sufficiente di volte, l’istogramma risultante approssimerà la distribuzione predittiva a posteriori.</p>
 <p>Esaminiamo ora come ottenere la distribuzione predittiva a posteriori con Stan per i dati dell’esempio precedente. Iniziamo creando le distribuzioni a posteriori di <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\sigma\)</span>.</p>
-<div id="cell-7" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:19:56.833793Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:19:56.000560Z&quot;}" data-execution_count="22">
+<div id="cell-7" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:19:56.833793Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:19:56.000560Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stan_ncp_file <span class="op">=</span> os.path.join(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">'stan'</span>, <span class="st">'gaussian_model.stan'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model_ncp <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_ncp_file)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_ncp.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>15:26:44 - cmdstanpy - INFO - compiling stan file /Users/corradocaudek/_repositories/psicometria/stan/gaussian_model.stan to exe file /Users/corradocaudek/_repositories/psicometria/stan/gaussian_model
-15:26:53 - cmdstanpy - INFO - compiled model executable: /Users/corradocaudek/_repositories/psicometria/stan/gaussian_model</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>data {
   int&lt;lower=0&gt; N; // number of observations
@@ -1257,82 +1256,82 @@ generated quantities {
 </div>
 </div>
 <p>Definiamo un dizionario che contiene i dati.</p>
-<div id="cell-9" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:20:06.552022Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:20:06.545619Z&quot;}" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>: <span class="bu">len</span>(y_observed), </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y'</span>: y_observed,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mu_prior'</span>: <span class="dv">180</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sigma_prior'</span>: <span class="dv">20</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sigma_prior_mean'</span>: <span class="dv">10</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sigma_prior_sd'</span>: <span class="dv">3</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:20:06.552022Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:20:06.545619Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>: <span class="bu">len</span>(y_observed), </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y'</span>: y_observed,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mu_prior'</span>: <span class="dv">180</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sigma_prior'</span>: <span class="dv">20</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sigma_prior_mean'</span>: <span class="dv">10</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sigma_prior_sd'</span>: <span class="dv">3</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'N': 100, 'y': array([163.03829252, 171.8260298 , 149.03346431, 171.10835601,
-       165.40564353, 164.62031511, 172.23484393, 171.71222731,
-       166.73424582, 167.85648401, 170.64341454, 158.79189133,
-       170.7261915 , 189.77814847, 165.78847249, 167.50542467,
-       174.85206562, 164.66535447, 169.5993395 , 161.00901002,
-       176.58547966, 185.32892096, 164.967703  , 161.42818566,
-       169.18639244, 167.59732887, 168.287622  , 171.66814407,
-       174.6327421 , 192.29813272, 175.53657138, 169.17081859,
-       174.42044156, 177.85690533, 192.642118  , 170.61123211,
-       159.80187291, 165.94677538, 187.92084403, 177.31115642,
-       173.21989926, 146.62999304, 161.9378786 , 180.24818871,
-       170.03082465, 162.01961767, 162.81806965, 183.27308728,
-       171.25737665, 160.29445196, 174.27422366, 161.27684277,
-       164.06896628, 186.82481721, 181.98210113, 179.34178842,
-       172.61187987, 155.54597619, 174.84083496, 171.52543002,
-       149.5014418 , 162.87157548, 198.98312411, 155.06147858,
-       180.37015172, 166.72248358, 173.78808233, 169.40929923,
-       172.62025384, 169.1714668 , 187.18604038, 170.08857288,
-       175.99711057, 164.81253285, 174.50916078, 175.20297894,
-       156.57534641, 175.37178783, 162.20122764, 155.99396689,
-       156.10087552, 193.21395355, 163.28093382, 154.69274245,
-       177.02075474, 143.64590168, 174.87692826, 163.37005749,
-       183.81584882, 159.44280443, 179.02850926, 182.00174932,
-       156.834391  , 148.29439162, 171.73937402, 150.53058593,
-       163.04070206, 158.41094439, 179.09338973, 168.99236983]), 'mu_prior': 180, 'sigma_prior': 20, 'sigma_prior_mean': 10, 'sigma_prior_sd': 3}</code></pre>
+<pre><code>{'N': 100, 'y': array([162.84787146, 161.04839081, 179.47577095, 181.12527437,
+       171.49098193, 159.22874224, 176.45915011, 185.03984279,
+       155.86708548, 166.74740115, 178.42289272, 172.60852497,
+       172.44806286, 167.26396127, 166.30450208, 170.05155153,
+       180.8355277 , 172.55633398, 170.17618804, 173.07907092,
+       163.54108406, 165.73937461, 181.31548994, 149.61562483,
+       167.40960479, 170.69764087, 155.04683583, 174.53102596,
+       174.13818648, 156.86288728, 151.03523009, 157.39548176,
+       163.70335409, 166.11651898, 155.22542166, 165.02308717,
+       169.6978678 , 184.06879508, 179.77051126, 160.28623502,
+       168.35101542, 170.29659473, 154.82238549, 178.62021142,
+       176.1802103 , 157.61538566, 163.02477907, 182.03113017,
+       192.00390212, 167.57285945, 179.18080576, 172.08287015,
+       154.41187389, 159.49697373, 170.1896094 , 174.42961851,
+       170.80827696, 168.62216784, 163.97488914, 164.5576843 ,
+       161.13774343, 160.59831839, 174.79536747, 181.71164366,
+       185.60098039, 160.46056883, 158.34680483, 155.84009689,
+       182.21908406, 163.21383868, 181.04765122, 177.73559479,
+       176.09674444, 145.33347281, 167.16959796, 171.78867767,
+       194.14953508, 177.29486361, 171.08615454, 155.68094096,
+       175.51890099, 183.82918407, 178.04883624, 158.13937901,
+       169.96512415, 162.17717457, 190.64787268, 169.68701713,
+       176.276485  , 157.29360776, 175.59538391, 189.98182609,
+       166.98236999, 163.19208668, 160.11878234, 164.24464514,
+       172.26831966, 165.03295583, 177.08597046, 177.22899718]), 'mu_prior': 180, 'sigma_prior': 20, 'sigma_prior_mean': 10, 'sigma_prior_sd': 3}</code></pre>
 </div>
 </div>
-<div id="cell-10" class="cell" data-execution_count="44">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y_mean <span class="op">=</span> np.mean(y_observed)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y_std <span class="op">=</span> np.std(y_observed)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean of y: </span><span class="sc">{</span>y_mean<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Standard Deviation of y: </span><span class="sc">{</span>y_std<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-10" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>y_mean <span class="op">=</span> np.mean(y_observed)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y_std <span class="op">=</span> np.std(y_observed)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean of y: </span><span class="sc">{</span>y_mean<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Standard Deviation of y: </span><span class="sc">{</span>y_std<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean of y: 169.58016140725135
-Standard Deviation of y: 10.696132342385374</code></pre>
+<pre><code>Mean of y: 169.57193226941754
+Standard Deviation of y: 9.930634097490112</code></pre>
 </div>
 </div>
 <p>Eseguiamo il campionamento MCMC:</p>
-<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:20:59.486239Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:20:59.288858Z&quot;}" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>trace_ncp <span class="op">=</span> model_ncp.sample(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">1_000</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling <span class="op">=</span> <span class="dv">2_000</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    seed <span class="op">=</span> <span class="dv">123</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    show_progress <span class="op">=</span> <span class="va">False</span>, </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    show_console <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:20:59.486239Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:20:59.288858Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>trace_ncp <span class="op">=</span> model_ncp.sample(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">1_000</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling <span class="op">=</span> <span class="dv">2_000</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    seed <span class="op">=</span> <span class="dv">123</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    show_progress <span class="op">=</span> <span class="va">False</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    show_console <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>15:35:17 - cmdstanpy - INFO - CmdStan start processing
-15:35:17 - cmdstanpy - INFO - Chain [1] start processing
-15:35:17 - cmdstanpy - INFO - Chain [2] start processing
-15:35:17 - cmdstanpy - INFO - Chain [3] start processing
-15:35:17 - cmdstanpy - INFO - Chain [4] start processing
-15:35:18 - cmdstanpy - INFO - Chain [1] done processing
-15:35:18 - cmdstanpy - INFO - Chain [2] done processing
-15:35:18 - cmdstanpy - INFO - Chain [4] done processing
-15:35:18 - cmdstanpy - INFO - Chain [3] done processing</code></pre>
+<pre><code>16:57:29 - cmdstanpy - INFO - CmdStan start processing
+16:57:29 - cmdstanpy - INFO - Chain [1] start processing
+16:57:29 - cmdstanpy - INFO - Chain [2] start processing
+16:57:29 - cmdstanpy - INFO - Chain [3] start processing
+16:57:29 - cmdstanpy - INFO - Chain [4] start processing
+16:57:29 - cmdstanpy - INFO - Chain [1] done processing
+16:57:29 - cmdstanpy - INFO - Chain [2] done processing
+16:57:29 - cmdstanpy - INFO - Chain [3] done processing
+16:57:29 - cmdstanpy - INFO - Chain [4] done processing</code></pre>
 </div>
 </div>
 <p>Un sommario delle distribuzioni a posteriori dei parametri si ottiene nel modo seguente:</p>
-<div id="cell-14" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:21:05.502226Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:21:05.461835Z&quot;}" data-execution_count="46">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>az.summary(trace_ncp, var_names<span class="op">=</span>[<span class="st">'mu'</span>, <span class="st">'sigma'</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="46">
+<div id="cell-14" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:21:05.502226Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:21:05.461835Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>az.summary(trace_ncp, var_names<span class="op">=</span>[<span class="st">'mu'</span>, <span class="st">'sigma'</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 <div>
 
@@ -1355,26 +1354,26 @@ Standard Deviation of y: 10.696132342385374</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">mu</td>
-<td>169.61</td>
-<td>1.08</td>
-<td>167.68</td>
-<td>171.79</td>
+<td>169.62</td>
+<td>1.00</td>
+<td>167.73</td>
+<td>171.43</td>
 <td>0.01</td>
 <td>0.01</td>
-<td>6059.59</td>
-<td>4618.77</td>
+<td>6155.68</td>
+<td>5203.68</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">sigma</td>
-<td>10.83</td>
-<td>0.75</td>
-<td>9.42</td>
-<td>12.23</td>
+<td>10.09</td>
+<td>0.71</td>
+<td>8.69</td>
+<td>11.35</td>
 <td>0.01</td>
 <td>0.01</td>
-<td>6538.55</td>
-<td>4978.75</td>
+<td>7169.12</td>
+<td>5070.39</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1385,19 +1384,19 @@ Standard Deviation of y: 10.696132342385374</code></pre>
 </div>
 </div>
 <p>Convertiamo l’oggetto <code>sample_ncp</code> in un oggetto di classe InferenceData:</p>
-<div id="cell-16" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:21:52.479183Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:21:52.449069Z&quot;}" data-execution_count="47">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> az.from_cmdstanpy(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    posterior<span class="op">=</span>trace_ncp, </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    posterior_predictive<span class="op">=</span><span class="st">'y_rep'</span>, </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: y_observed}</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-16" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:21:52.479183Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:21:52.449069Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> az.from_cmdstanpy(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    posterior<span class="op">=</span>trace_ncp, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    posterior_predictive<span class="op">=</span><span class="st">'y_rep'</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: y_observed}</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La distribuzione predittiva a posteriori è utilizzata per eseguire i <em>controlli predittivi a posteriori</em> (PPC), noti come <em>Posterior Predictive Checks</em>. I PPC consistono in un confronto grafico tra <span class="math inline">\(p(y^{rep} \mid y)\)</span>, ossia la distribuzione delle osservazioni future previste, e i dati osservati <span class="math inline">\(y\)</span>. Questo confronto visivo permette di valutare se il modello utilizzato è adeguato per descrivere le proprietà dei dati osservati.</p>
 <p>Oltre al confronto grafico tra le distribuzioni <span class="math inline">\(p(y)\)</span> e <span class="math inline">\(p(y^{rep})\)</span>, è possibile effettuare un confronto tra le distribuzioni di varie statistiche descrittive calcolate su diversi campioni <span class="math inline">\(y^{rep}\)</span> e le corrispondenti statistiche calcolate sui dati osservati. Tipicamente, vengono considerate statistiche descrittive come la media, la varianza, la deviazione standard, il minimo o il massimo, ma è possibile confrontare qualsiasi altra statistica rilevante.</p>
 <p>I controlli predittivi a posteriori offrono un valido strumento per un’analisi critica delle prestazioni del modello e, se necessario, per apportare eventuali modifiche o considerare modelli alternativi più adatti ai dati in esame.</p>
 <p>Possiamo ora usare ArviZ per generare il posterior-predictive plot:</p>
-<div id="cell-18" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:21:57.233201Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:21:55.956206Z&quot;}" data-execution_count="48">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(idata, data_pairs<span class="op">=</span>{<span class="st">"y"</span>: <span class="st">"y_rep"</span>}, num_pp_samples<span class="op">=</span><span class="dv">500</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-18" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:21:57.233201Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:21:55.956206Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_ppc(idata, data_pairs<span class="op">=</span>{<span class="st">"y"</span>: <span class="st">"y_rep"</span>}, num_pp_samples<span class="op">=</span><span class="dv">500</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1409,16 +1408,16 @@ Standard Deviation of y: 10.696132342385374</code></pre>
 </section>
 <section id="distribuzione-predittiva-a-priori" class="level2" data-number="48.5">
 <h2 data-number="48.5" class="anchored" data-anchor-id="distribuzione-predittiva-a-priori"><span class="header-section-number">48.5</span> Distribuzione Predittiva a Priori</h2>
-<p>Le verifiche predittive a priori generano dati utilizzando unicamente le distribuzioni a priori, ignorando i dati osservati, al fine di valutare se tali distribuzioni a priori sono appropriate (Gabry et al.&nbsp;2019). La distribuzione predittiva a priori è quindi simile alla distribuzione predittiva a posteriori, ma senza dati osservati, rappresentando il caso limite di una verifica predittiva a posteriori senza dati.</p>
+<p>Le <a href="https://mc-stan.org/docs/stan-users-guide/posterior-predictive-checks.html#prior-predictive-checks">verifiche predittive a priori</a> generano dati utilizzando unicamente le distribuzioni a priori, ignorando i dati osservati, al fine di valutare se tali distribuzioni a priori sono appropriate (Gabry et al.&nbsp;2019). La distribuzione predittiva a priori è quindi simile alla distribuzione predittiva a posteriori, ma senza dati osservati, rappresentando il caso limite di una verifica predittiva a posteriori senza dati.</p>
 <p>Questo processo può essere realizzato facilmente simulando i parametri secondo le distribuzioni a priori e poi simulando i dati in base al modello dati i parametri simulati. Il risultato è una simulazione dalla distribuzione predittiva a priori.</p>
 <p>Questa procedura è fondamentale per verificare se le ipotesi a priori sono realistiche e adeguate prima di raccogliere o utilizzare i dati osservati. Se i dati simulati dalla distribuzione predittiva a priori non risultano plausibili, potrebbe essere necessario rivedere le scelte delle distribuzioni a priori.</p>
 <p>Un <em>prior predictive check</em> è codificato come un <em>posterior predictive check</em>. Se disponiamo già del codice per un posterior predictive check ed è possibile impostare i dati come vuoti, allora non è necessario alcun codice ulteriore. I <em>prior predictive checks</em> possono essere codificati interamente all’interno del blocco <code>generated quantities</code> utilizzando la generazione di numeri casuali. I draw risultanti saranno indipendenti.</p>
 <p>Consideriamo, quale esempio, il caso discusso in precedenza di un campione di dati gaussiani e di un modello gaussiano in cui le distribuzioni a priori per μ e σ sono gaussiane.</p>
-<div id="cell-21" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:22:04.511199Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:22:04.333697Z&quot;}" data-execution_count="49">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">'stan'</span>, <span class="st">'gaussian_model_prior.stan'</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>model_gauss <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_gauss.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-21" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:22:04.511199Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:22:04.333697Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">'stan'</span>, <span class="st">'gaussian_model_prior.stan'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>model_gauss <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_gauss.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>data {
   int&lt;lower=0&gt; N; // number of observations
@@ -1439,53 +1438,53 @@ generated quantities {
 </div>
 </div>
 <p>Il codice precedente</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    y_rep[n] = normal_rng(mu, sigma);</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:N) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    y_rep[n] = normal_rng(mu, sigma);</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>illustra come generare campioni predittivi a priori nel blocco <code>generated quantities</code>. In questo esempio, <code>mu</code> e <code>sigma</code> sono generati dalle loro rispettive distribuzioni a priori e usati per generare campioni di dati simulati <code>y_rep</code>.</p>
 <p>Eseguiamo il campionamento MCMC.</p>
-<div id="cell-23" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:23:46.234982Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:23:46.145975Z&quot;}" data-execution_count="50">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>prior_predictive_samples <span class="op">=</span> model_gauss.sample(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data, </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    fixed_param<span class="op">=</span><span class="va">True</span>, </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">1000</span>, </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1</span>, </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    chains<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>, </span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-23" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:23:46.234982Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:23:46.145975Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>prior_predictive_samples <span class="op">=</span> model_gauss.sample(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    fixed_param<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">1000</span>, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    chains<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>15:35:40 - cmdstanpy - INFO - CmdStan start processing
-15:35:40 - cmdstanpy - INFO - Chain [1] start processing
-15:35:40 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
+<pre><code>16:57:47 - cmdstanpy - INFO - CmdStan start processing
+16:57:47 - cmdstanpy - INFO - Chain [1] start processing
+16:57:47 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
 </div>
 </div>
 <p>Estraiamo le variabili necessarie.</p>
-<div id="cell-25" class="cell" data-execution_count="51">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>y_rep_samples <span class="op">=</span> prior_predictive_samples.stan_variable(<span class="st">"y_rep"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>y_rep_flattened <span class="op">=</span> y_rep_samples.flatten()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-25" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>y_rep_samples <span class="op">=</span> prior_predictive_samples.stan_variable(<span class="st">"y_rep"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>y_rep_flattened <span class="op">=</span> y_rep_samples.flatten()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calcoliamo le statistiche descrittive dei valori <code>y_rep</code>.</p>
-<div id="cell-27" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:24:16.801662Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:24:16.793781Z&quot;}" data-execution_count="52">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>y_rep_mean <span class="op">=</span> np.mean(y_rep_flattened)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y_rep_std <span class="op">=</span> np.std(y_rep_flattened)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean of y_rep: </span><span class="sc">{</span>y_rep_mean<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Standard Deviation of y_rep: </span><span class="sc">{</span>y_rep_std<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-27" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:24:16.801662Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:24:16.793781Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>y_rep_mean <span class="op">=</span> np.mean(y_rep_flattened)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>y_rep_std <span class="op">=</span> np.std(y_rep_flattened)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean of y_rep: </span><span class="sc">{</span>y_rep_mean<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Standard Deviation of y_rep: </span><span class="sc">{</span>y_rep_std<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Mean of y_rep: 180.25485629199997
-Standard Deviation of y_rep: 22.228357080924063</code></pre>
+<pre><code>Mean of y_rep: 179.22629213099998
+Standard Deviation of y_rep: 22.230201028377742</code></pre>
 </div>
 </div>
 <p>Creiamo un KDE plot con la distribuzione predittiva a priori.</p>
-<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:24:21.497231Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:24:21.137771Z&quot;}" data-execution_count="53">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sns.kdeplot(y_rep_flattened, fill<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Prior Predictive Check'</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Height (cm)'</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span>y_rep_mean, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>y_rep_mean<span class="sc">:.2f}</span><span class="ss">'</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:24:21.497231Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:24:21.137771Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sns.kdeplot(y_rep_flattened, fill<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span>color_fill)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Prior Predictive Check'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Height (cm)'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>plt.axvline(x<span class="op">=</span>y_rep_mean, color<span class="op">=</span>color_edge, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="ss">f'Mean: </span><span class="sc">{</span>y_rep_mean<span class="sc">:.2f}</span><span class="ss">'</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1508,13 +1507,11 @@ Standard Deviation of y_rep: 22.228357080924063</code></pre>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-33" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:30:44.178876Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:30:44.093791Z&quot;}" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-33" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:30:44.178876Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:30:44.093791Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The watermark extension is already loaded. To reload it, use:
-  %reload_ext watermark
-Last updated: Fri Aug 02 2024
+<pre><code>Last updated: Sun Aug 04 2024
 
 Python implementation: CPython
 Python version       : 3.12.4
@@ -1528,12 +1525,12 @@ Processor   : arm
 CPU cores   : 8
 Architecture: 64bit
 
+numpy     : 1.26.4
+arviz     : 0.18.0
+scipy     : 1.14.0
+pandas    : 2.2.2
 seaborn   : 0.13.2
 matplotlib: 3.9.1
-arviz     : 0.18.0
-numpy     : 1.26.4
-pandas    : 2.2.2
-scipy     : 1.14.0
 
 Watermark: 2.4.3
 </code></pre>
