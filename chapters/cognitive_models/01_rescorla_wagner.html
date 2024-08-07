@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -972,20 +992,26 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a55_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a100_solutions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Soluzioni degli Esercizi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">Soluzioni degli Esercizi</span></span></a>
   </div>
 </li>
       </ul>
@@ -1001,44 +1027,39 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#lapprendimento-per-rinforzo-imparare-dallesperienza" id="toc-lapprendimento-per-rinforzo-imparare-dallesperienza" class="nav-link" data-scroll-target="#lapprendimento-per-rinforzo-imparare-dallesperienza"><span class="header-section-number">72.1</span> L’apprendimento per rinforzo: imparare dall’esperienza</a>
+  <li><a href="#apprendimento-per-rinforzo" id="toc-apprendimento-per-rinforzo" class="nav-link" data-scroll-target="#apprendimento-per-rinforzo"><span class="header-section-number">72.1</span> Apprendimento per rinforzo</a></li>
+  <li><a href="#concetti-fondamentali" id="toc-concetti-fondamentali" class="nav-link" data-scroll-target="#concetti-fondamentali"><span class="header-section-number">72.2</span> Concetti Fondamentali</a></li>
+  <li><a href="#modello-di-rescorla-wagner" id="toc-modello-di-rescorla-wagner" class="nav-link" data-scroll-target="#modello-di-rescorla-wagner"><span class="header-section-number">72.3</span> Modello di Rescorla-Wagner</a>
   <ul class="collapse">
-  <li><a href="#il-meccanismo-alla-base-dellapprendimento-per-rinforzo" id="toc-il-meccanismo-alla-base-dellapprendimento-per-rinforzo" class="nav-link" data-scroll-target="#il-meccanismo-alla-base-dellapprendimento-per-rinforzo"><span class="header-section-number">72.1.1</span> Il meccanismo alla base dell’apprendimento per rinforzo</a></li>
-  <li><a href="#esplorazione-e-sfruttamento" id="toc-esplorazione-e-sfruttamento" class="nav-link" data-scroll-target="#esplorazione-e-sfruttamento"><span class="header-section-number">72.1.2</span> Esplorazione e sfruttamento</a></li>
-  <li><a href="#lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale" id="toc-lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale" class="nav-link" data-scroll-target="#lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale"><span class="header-section-number">72.1.3</span> L’apprendimento per rinforzo nella ricerca sull’intelligenza artificiale</a></li>
+  <li><a href="#bilanciare-sfruttamento-ed-esplorazione-con-la-regola-softmax" id="toc-bilanciare-sfruttamento-ed-esplorazione-con-la-regola-softmax" class="nav-link" data-scroll-target="#bilanciare-sfruttamento-ed-esplorazione-con-la-regola-softmax"><span class="header-section-number">72.3.1</span> Bilanciare Sfruttamento ed Esplorazione con la Regola Softmax</a></li>
   </ul></li>
-  <li><a href="#un-esempio-pratico-il-problema-dei-two-armed-bandits" id="toc-un-esempio-pratico-il-problema-dei-two-armed-bandits" class="nav-link" data-scroll-target="#un-esempio-pratico-il-problema-dei-two-armed-bandits"><span class="header-section-number">72.2</span> Un esempio pratico: il problema dei two-armed bandits</a></li>
-  <li><a href="#simulare-lapprendimento" id="toc-simulare-lapprendimento" class="nav-link" data-scroll-target="#simulare-lapprendimento"><span class="header-section-number">72.3</span> Simulare l’Apprendimento</a>
+  <li><a href="#algoritmi-upper-confidence-bound-ucb-e-thompson-sampling" id="toc-algoritmi-upper-confidence-bound-ucb-e-thompson-sampling" class="nav-link" data-scroll-target="#algoritmi-upper-confidence-bound-ucb-e-thompson-sampling"><span class="header-section-number">72.4</span> Algoritmi Upper Confidence Bound (UCB) e Thompson Sampling</a>
   <ul class="collapse">
-  <li><a href="#parametri-del-problema" id="toc-parametri-del-problema" class="nav-link" data-scroll-target="#parametri-del-problema"><span class="header-section-number">72.3.1</span> Parametri del Problema</a></li>
-  <li><a href="#esempio-pratico" id="toc-esempio-pratico" class="nav-link" data-scroll-target="#esempio-pratico"><span class="header-section-number">72.3.2</span> Esempio Pratico</a></li>
+  <li><a href="#upper-confidence-bound-ucb" id="toc-upper-confidence-bound-ucb" class="nav-link" data-scroll-target="#upper-confidence-bound-ucb"><span class="header-section-number">72.4.1</span> Upper Confidence Bound (UCB)</a></li>
+  <li><a href="#thompson-sampling" id="toc-thompson-sampling" class="nav-link" data-scroll-target="#thompson-sampling"><span class="header-section-number">72.4.2</span> Thompson Sampling</a></li>
   </ul></li>
-  <li><a href="#imparare-il-rinforzo-i-componenti-chiave" id="toc-imparare-il-rinforzo-i-componenti-chiave" class="nav-link" data-scroll-target="#imparare-il-rinforzo-i-componenti-chiave"><span class="header-section-number">72.4</span> Imparare il rinforzo: i componenti chiave</a></li>
-  <li><a href="#modello-di-apprenimento-di-rescorla-wagner" id="toc-modello-di-apprenimento-di-rescorla-wagner" class="nav-link" data-scroll-target="#modello-di-apprenimento-di-rescorla-wagner"><span class="header-section-number">72.5</span> Modello di Apprenimento di Rescorla-Wagner</a>
+  <li><a href="#contextual-bandits" id="toc-contextual-bandits" class="nav-link" data-scroll-target="#contextual-bandits"><span class="header-section-number">72.5</span> Contextual Bandits</a>
   <ul class="collapse">
-  <li><a href="#aspettativa-di-valore" id="toc-aspettativa-di-valore" class="nav-link" data-scroll-target="#aspettativa-di-valore"><span class="header-section-number">72.5.1</span> Aspettativa di Valore</a></li>
-  <li><a href="#la-regola-di-apprendimento" id="toc-la-regola-di-apprendimento" class="nav-link" data-scroll-target="#la-regola-di-apprendimento"><span class="header-section-number">72.5.2</span> La Regola di Apprendimento</a></li>
-  <li><a href="#la-regola-decisionale" id="toc-la-regola-decisionale" class="nav-link" data-scroll-target="#la-regola-decisionale"><span class="header-section-number">72.5.3</span> La Regola Decisionale</a></li>
-  <li><a href="#variazione-di-theta-con-valori-fissi-di-q" id="toc-variazione-di-theta-con-valori-fissi-di-q" class="nav-link" data-scroll-target="#variazione-di-theta-con-valori-fissi-di-q"><span class="header-section-number">72.5.4</span> Variazione di <span class="math inline">\(\theta\)</span> con Valori Fissi di <span class="math inline">\(Q\)</span></a></li>
+  <li><a href="#il-protocollo-dei-contextual-bandits" id="toc-il-protocollo-dei-contextual-bandits" class="nav-link" data-scroll-target="#il-protocollo-dei-contextual-bandits"><span class="header-section-number">72.5.1</span> Il Protocollo dei Contextual Bandits</a></li>
+  <li><a href="#modello-matematico" id="toc-modello-matematico" class="nav-link" data-scroll-target="#modello-matematico"><span class="header-section-number">72.5.2</span> Modello Matematico</a></li>
+  <li><a href="#esempio-anoressia-nervosa" id="toc-esempio-anoressia-nervosa" class="nav-link" data-scroll-target="#esempio-anoressia-nervosa"><span class="header-section-number">72.5.3</span> Esempio: Anoressia Nervosa</a></li>
+  <li><a href="#rigidità-cognitiva-e-difficoltà-di-rl-nellanoressia-nervosa" id="toc-rigidità-cognitiva-e-difficoltà-di-rl-nellanoressia-nervosa" class="nav-link" data-scroll-target="#rigidità-cognitiva-e-difficoltà-di-rl-nellanoressia-nervosa"><span class="header-section-number">72.5.4</span> Rigidità Cognitiva e Difficoltà di RL nell’Anoressia Nervosa</a></li>
+  <li><a href="#contextual-bandits-nel-contesto-dellanoressia-nervosa" id="toc-contextual-bandits-nel-contesto-dellanoressia-nervosa" class="nav-link" data-scroll-target="#contextual-bandits-nel-contesto-dellanoressia-nervosa"><span class="header-section-number">72.5.5</span> Contextual Bandits nel Contesto dell’Anoressia Nervosa</a></li>
   </ul></li>
-  <li><a href="#simulazione-del-modello-di-rescorla-wagner" id="toc-simulazione-del-modello-di-rescorla-wagner" class="nav-link" data-scroll-target="#simulazione-del-modello-di-rescorla-wagner"><span class="header-section-number">72.6</span> Simulazione del Modello di Rescorla-Wagner</a></li>
-  <li><a href="#adattamento-del-modello" id="toc-adattamento-del-modello" class="nav-link" data-scroll-target="#adattamento-del-modello"><span class="header-section-number">72.7</span> Adattamento del Modello</a>
+  <li><a href="#simulare-lapprendimento" id="toc-simulare-lapprendimento" class="nav-link" data-scroll-target="#simulare-lapprendimento"><span class="header-section-number">72.6</span> Simulare l’Apprendimento</a></li>
+  <li><a href="#esempio-di-calcolo-della-softmax" id="toc-esempio-di-calcolo-della-softmax" class="nav-link" data-scroll-target="#esempio-di-calcolo-della-softmax"><span class="header-section-number">72.7</span> Esempio di Calcolo della Softmax</a></li>
+  <li><a href="#simulazione-del-modello-di-rescorla-wagner" id="toc-simulazione-del-modello-di-rescorla-wagner" class="nav-link" data-scroll-target="#simulazione-del-modello-di-rescorla-wagner"><span class="header-section-number">72.8</span> Simulazione del Modello di Rescorla-Wagner</a></li>
+  <li><a href="#adattamento-del-modello" id="toc-adattamento-del-modello" class="nav-link" data-scroll-target="#adattamento-del-modello"><span class="header-section-number">72.9</span> Adattamento del Modello</a>
   <ul class="collapse">
-  <li><a href="#la-massima-verosimiglianza" id="toc-la-massima-verosimiglianza" class="nav-link" data-scroll-target="#la-massima-verosimiglianza"><span class="header-section-number">72.7.1</span> La Massima Verosimiglianza</a></li>
-  <li><a href="#calcolo-del-logaritmo-della-verosimiglianza" id="toc-calcolo-del-logaritmo-della-verosimiglianza" class="nav-link" data-scroll-target="#calcolo-del-logaritmo-della-verosimiglianza"><span class="header-section-number">72.7.2</span> Calcolo del Logaritmo della Verosimiglianza</a></li>
-  <li><a href="#minimizzazione-del-logaritmo-negativo-della-verosimiglianza" id="toc-minimizzazione-del-logaritmo-negativo-della-verosimiglianza" class="nav-link" data-scroll-target="#minimizzazione-del-logaritmo-negativo-della-verosimiglianza"><span class="header-section-number">72.7.3</span> Minimizzazione del Logaritmo Negativo della Verosimiglianza</a></li>
-  <li><a href="#esempio-pratico-1" id="toc-esempio-pratico-1" class="nav-link" data-scroll-target="#esempio-pratico-1"><span class="header-section-number">72.7.4</span> Esempio Pratico</a></li>
-  <li><a href="#validazione" id="toc-validazione" class="nav-link" data-scroll-target="#validazione"><span class="header-section-number">72.7.5</span> Validazione</a></li>
+  <li><a href="#sezione-data" id="toc-sezione-data" class="nav-link" data-scroll-target="#sezione-data"><span class="header-section-number">72.9.1</span> Sezione <code>data</code></a></li>
+  <li><a href="#sezione-transformed-data" id="toc-sezione-transformed-data" class="nav-link" data-scroll-target="#sezione-transformed-data"><span class="header-section-number">72.9.2</span> Sezione <code>transformed data</code></a></li>
+  <li><a href="#sezione-parameters" id="toc-sezione-parameters" class="nav-link" data-scroll-target="#sezione-parameters"><span class="header-section-number">72.9.3</span> Sezione <code>parameters</code></a></li>
+  <li><a href="#sezione-model" id="toc-sezione-model" class="nav-link" data-scroll-target="#sezione-model"><span class="header-section-number">72.9.4</span> Sezione <code>model</code></a></li>
+  <li><a href="#inferenza" id="toc-inferenza" class="nav-link" data-scroll-target="#inferenza"><span class="header-section-number">72.9.5</span> Inferenza</a></li>
+  <li><a href="#interpretazione-delle-stime-dei-parametri" id="toc-interpretazione-delle-stime-dei-parametri" class="nav-link" data-scroll-target="#interpretazione-delle-stime-dei-parametri"><span class="header-section-number">72.9.6</span> Interpretazione delle Stime dei Parametri</a></li>
   </ul></li>
-  <li><a href="#stima-con-stan" id="toc-stima-con-stan" class="nav-link" data-scroll-target="#stima-con-stan"><span class="header-section-number">72.8</span> Stima con Stan</a>
-  <ul class="collapse">
-  <li><a href="#sezione-data" id="toc-sezione-data" class="nav-link" data-scroll-target="#sezione-data"><span class="header-section-number">72.8.1</span> Sezione <code>data</code></a></li>
-  <li><a href="#sezione-transformed-data" id="toc-sezione-transformed-data" class="nav-link" data-scroll-target="#sezione-transformed-data"><span class="header-section-number">72.8.2</span> Sezione <code>transformed data</code></a></li>
-  <li><a href="#sezione-parameters" id="toc-sezione-parameters" class="nav-link" data-scroll-target="#sezione-parameters"><span class="header-section-number">72.8.3</span> Sezione <code>parameters</code></a></li>
-  <li><a href="#sezione-model" id="toc-sezione-model" class="nav-link" data-scroll-target="#sezione-model"><span class="header-section-number">72.8.4</span> Sezione <code>model</code></a></li>
-  <li><a href="#inferenza" id="toc-inferenza" class="nav-link" data-scroll-target="#inferenza"><span class="header-section-number">72.8.5</span> Inferenza</a></li>
-  <li><a href="#interpretazione-delle-stime-dei-parametri" id="toc-interpretazione-delle-stime-dei-parametri" class="nav-link" data-scroll-target="#interpretazione-delle-stime-dei-parametri"><span class="header-section-number">72.8.6</span> Interpretazione delle Stime dei Parametri</a></li>
-  </ul></li>
+  <li><a href="#apprendimento-probabilistico-e-reversal-learning" id="toc-apprendimento-probabilistico-e-reversal-learning" class="nav-link" data-scroll-target="#apprendimento-probabilistico-e-reversal-learning"><span class="header-section-number">72.10</span> Apprendimento Probabilistico e Reversal Learning</a></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">72.11</span> Commenti e considerazioni finali</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/01_rescorla_wagner.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
@@ -1068,6 +1089,13 @@ window.Quarto = {
 <p><strong>Prerequisiti</strong></p>
 <p>Il presente tutorial trae ispirazione dall’articolo di <a href="https://elifesciences.org/articles/49547">Wilson &amp; Collins (2019)</a> e utilizza il codice fornito da <a href="https://shawnrhoads.github.io/gu-psyc-347/index.html">Rhoads, S. A. &amp; Gan, L. (2022)</a>.</p>
 <p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Concetti di apprendimento associativo, agente, ambiente, azioni, ricompense, politica e valore Q.</li>
+<li>Concetti di esplorazione/sfruttamento.</li>
+<li>Regola softmax.</li>
+<li>Politica <em>greedy</em> e suoi limiti.</li>
+<li>Modello Rescorla-Wagner e sua implementazione in Stan.</li>
+</ul>
 <p><strong>Preparazione del Notebook</strong></p>
 <div id="cell-2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
@@ -1092,269 +1120,250 @@ window.Quarto = {
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Print project directory to verify</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Project directory: </span><span class="sc">{</span>project_directory<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Project directory: /Users/corradocaudek/_repositories/psicometria</code></pre>
 </div>
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questa sezione delle dispense abbiamo esaminato il modello di regressione. Sebbene il modello di regressione sia estremamente popolare in psicologia e nelle scienze sociali, presenta dei limiti sostanziali. È utile per descrivere le associazioni tra variabili, ma non è adatto per scoprire nessi causali, che rappresentano l’obiettivo principale delle teorie scientifiche. Come afferma Richard McElreath:</p>
+<p>In precedenza abbiamo esaminato il modello di regressione. Sebbene il modello di regressione sia estremamente popolare in psicologia e nelle scienze sociali, presenta dei limiti sostanziali. È utile per descrivere le associazioni tra variabili, ma non è adatto per scoprire nessi causali, che rappresentano l’obiettivo principale delle teorie scientifiche. Come afferma Richard McElreath:</p>
 <blockquote class="blockquote">
 <p>Le persone una volta facevano teoria. Ora fanno solo regressioni.</p>
 </blockquote>
-<p>Trovare associazioni nei dati osservazionali non è un buon metodo per costruire teorie. Abbiamo bisogno di una motivazione per esaminare determinate variabili, poiché le associazioni tra variabili non sono rare, ma raramente sono causali. Il fatto che nessuno abbia esaminato l’associazione tra certe variabili in precedenza non è un buon motivo per farlo in un nuovo progetto di ricerca.</p>
-<p>Un approccio preferibile, che una volta era comune, è utilizzare una teoria formale per sviluppare aspettative sui dati osservati, misurare le variabili corrette e utilizzare modelli statistici specifici per testare la teoria, non solo regressioni.</p>
-<p>In questo capitolo, forniremo un esempio di questo approccio implementando un modello che rappresenta un processo cognitivo sottostante, piuttosto che limitarsi a descrivere le associazioni tra variabili. Nello specifico, esamineremo uno dei modelli psicologici più influenti: il modello di apprendimento di Rescorla-Wagner. Analizzeremo la definizione del modello, il significato dei suoi parametri e i metodi per stimarli dai dati osservati, con particolare attenzione all’uso della massima verosimiglianza e del software Stan.</p>
+<p>Trovare associazioni nei dati osservazionali non è un buon metodo per costruire teorie. Abbiamo bisogno di una motivazione per esaminare determinate variabili, poiché le associazioni tra variabili non sono rare, ma raramente ci informano sulle relazioni causali.</p>
+<p>Un approccio preferibile è utilizzare una teoria formale per sviluppare aspettative sui dati osservati, misurare le variabili corrette e utilizzare modelli statistici specifici per testare la teoria.</p>
+<p>In questo capitolo, forniremo un esempio di questo approccio implementando un modello che rappresenta un processo cognitivo sottostante, piuttosto che limitarci a descrivere le associazioni tra variabili. Nello specifico, esamineremo uno dei modelli psicologici più influenti: il modello di apprendimento di Rescorla-Wagner. Analizzeremo la definizione del modello, il significato dei suoi parametri e i metodi per stimarli dai dati osservati, con particolare attenzione all’utilizzo del linguaggio di programmazione probabilistica Stan.</p>
 </section>
-<section id="lapprendimento-per-rinforzo-imparare-dallesperienza" class="level2" data-number="72.1">
-<h2 data-number="72.1" class="anchored" data-anchor-id="lapprendimento-per-rinforzo-imparare-dallesperienza"><span class="header-section-number">72.1</span> L’apprendimento per rinforzo: imparare dall’esperienza</h2>
-<p>Immagina un robot alle prese con un videogioco, privo di istruzioni precise ma con un obiettivo ben chiaro: ottenere il punteggio più alto. Attraverso tentativi ed errori, il robot sperimenta diverse azioni, scoprendo quali lo avvicinano al successo e quali no. Questo è il principio fondamentale dell’apprendimento per rinforzo (RL), un metodo di intelligenza artificiale ispirato al modo in cui gli esseri viventi imparano.</p>
-<section id="il-meccanismo-alla-base-dellapprendimento-per-rinforzo" class="level3" data-number="72.1.1">
-<h3 data-number="72.1.1" class="anchored" data-anchor-id="il-meccanismo-alla-base-dellapprendimento-per-rinforzo"><span class="header-section-number">72.1.1</span> Il meccanismo alla base dell’apprendimento per rinforzo</h3>
-<p>Nell’apprendimento per rinforzo, un “agente” (che sia un robot, un modello matematico o una persona) interagisce con un “ambiente”. L’agente compie azioni e riceve in cambio “ricompense” positive o negative, a seconda di quanto le sue azioni sono vicine al raggiungimento del suo obiettivo. L’obiettivo dell’agente è imparare a scegliere le azioni che gli permetteranno di ottenere il maggior numero di ricompense positive nel tempo.</p>
+<section id="apprendimento-per-rinforzo" class="level2" data-number="72.1">
+<h2 data-number="72.1" class="anchored" data-anchor-id="apprendimento-per-rinforzo"><span class="header-section-number">72.1</span> Apprendimento per rinforzo</h2>
+<p>Immagina di partecipare a un esperimento psicologico in cui ti vengono presentate due carte, A e B. Ogni volta che ne scegli una, ricevi una ricompensa o una penalità. All’inizio, non hai alcuna idea di quale carta sia associata a quale risultato. Man mano che effettui le tue scelte, inizi a formare delle associazioni mentali tra le carte e le conseguenze delle tue azioni. Questo processo di apprendimento, basato sull’esperienza e sulle sue conseguenze, è noto come <em>apprendimento per rinforzo</em>.</p>
 </section>
-<section id="esplorazione-e-sfruttamento" class="level3" data-number="72.1.2">
-<h3 data-number="72.1.2" class="anchored" data-anchor-id="esplorazione-e-sfruttamento"><span class="header-section-number">72.1.2</span> Esplorazione e sfruttamento</h3>
-<p>Uno dei dilemmi principali che gli agenti di apprendimento per rinforzo si trovano ad affrontare è il bilanciamento tra esplorazione e sfruttamento. Da un lato, l’agente ha bisogno di esplorare l’ambiente, provare nuove azioni e scoprire nuove strategie per ottenere ricompense. Dall’altro lato, desidera anche sfruttare la conoscenza già acquisita, scegliendo le azioni che ha già scoperto essere efficaci in passato.</p>
+<section id="concetti-fondamentali" class="level2" data-number="72.2">
+<h2 data-number="72.2" class="anchored" data-anchor-id="concetti-fondamentali"><span class="header-section-number">72.2</span> Concetti Fondamentali</h2>
+<p>Nell’apprendimento per rinforzo, immaginiamo un “agente” che interagisce con un “ambiente”, simile a un giocatore che esplora un nuovo videogioco. L’agente compie una serie di azioni per imparare quali siano le migliori per ottenere il massimo punteggio o “ricompensa”. Questo processo avviene in diversi turni, durante i quali l’agente fa delle scelte e riceve feedback sotto forma di ricompense.</p>
+<p>Ad ogni turno, l’agente seleziona un’azione tra quelle disponibili. Nel caso più semplice, potrebbe avere solo due opzioni, come scegliere tra due porte in un gioco. Dopo aver fatto la sua scelta, l’agente riceve una ricompensa, che può essere positiva o negativa. Per comprendere meglio questo concetto, possiamo pensare a uno psicologo che cerca il miglior trattamento per un paziente. In questo scenario, ogni “azione” rappresenterebbe un diverso approccio terapeutico, e la “ricompensa” sarebbe il miglioramento del benessere del paziente.</p>
+<p>È importante notare che le ricompense sono stocastiche, ovvero, non sono sempre le stesse per una data azione, ma sono probabilistiche. Le ricompense vengono generate indipendentemente secondo la distribuzione <span class="math inline">\(r_t \sim M^\star(\cdot | \pi_t)\)</span>, dove <span class="math inline">\(M^\star(\cdot | \cdot)\)</span> è il modello sottostante.</p>
+<p>Definiamo <span class="math inline">\(f(\pi) := \mathbb{E}[r | \pi]\)</span> come la funzione di ricompensa media sotto <span class="math inline">\(r \sim M^\star(\cdot | \pi)\)</span>. Ad esempio, l’azione A potrebbe essere associata a una probabilità di ricompensa positiva dell’80% e a una probabilità di ricompensa negativa del 20%. Questa probabilità può rimanere costante nel corso dei tentativi, oppure variare nel tempo.</p>
+<p>Nel contesto dell’apprendimento per rinforzo, definiamo la “storia” <span class="math inline">\(\mathcal{H}^t\)</span> come la sequenza delle scelte e delle ricompense ottenute fino al momento t. Matematicamente, la rappresentiamo come <span class="math inline">\(\mathcal{H}^t = (\pi^1, r^1), \ldots, (\pi^t, r^t)\)</span>. Questa storia è essenzialmente l’elenco delle scelte fatte e delle ricompense ottenute fino a quel momento, fornendo un quadro completo del percorso di apprendimento dell’agente.</p>
+<p>L’obiettivo principale dell’agente è trovare l’azione che, in media, dà la ricompensa migliore. Per valutare l’efficacia dell’apprendimento dell’agente, si utilizza il concetto di “regret”. Il regret misura quanto l’agente sta perdendo rispetto a quello che avrebbe potuto ottenere se avesse sempre scelto l’azione migliore.</p>
+<p>Matematicamente, il regret (<span class="math inline">\(\text{Reg}\)</span>) viene calcolato come la differenza cumulativa tra la ricompensa massima possibile (ottenuta scegliendo sempre l’opzione migliore) e la ricompensa effettivamente ottenuta seguendo le nostre scelte:</p>
+<p><span class="math display">\[
+\text{Reg} := \sum_{t=1}^{T} f^\star(\pi^\star) - \sum_{t=1}^{T} \mathbb{E}[f(\pi^t)].
+\]</span></p>
+<p>In questa formula, <span class="math inline">\(f^\star(\pi^\star)\)</span> rappresenta la ricompensa media massima ottenibile scegliendo la politica ottimale <span class="math inline">\(\pi^\star\)</span>, cioè quella che massimizza la ricompensa media. Ad esempio, se <span class="math inline">\(f^\star(A) = 0.75\)</span> e <span class="math inline">\(f^\star(B) = 0.25\)</span>, il simbolo <span class="math inline">\(\pi^\star\)</span> rappresenta la scelta che massimizza la ricompensa media, in questo caso l’azione A, che ha la probabilità più alta di ricompensa (0.75).</p>
+<p>Il termine “politica” (<span class="math inline">\(\pi\)</span>) è un concetto cruciale che rappresenta una strategia o una regola che ci guida nella scelta in ciascuna prova. Ad esempio, una politica potrebbe essere scegliere sempre A, scegliere sempre B, o basarsi su una regola specifica determinata dalle informazioni disponibili.</p>
+<p>Un approccio semplice ma spesso inefficace è la strategia “greedy”. Questa strategia sceglie sempre l’azione che finora sembra la migliore, basandosi solo sulle esperienze passate. È come se un giocatore, dopo aver trovato un buon posto dove raccogliere monete in un gioco, continuasse a tornare sempre lì senza mai esplorare il resto del livello. Il problema di questa strategia è che l’agente potrebbe rimanere “bloccato” su un’azione che sembra buona, ma non è la migliore in assoluto. Potrebbe esserci un’azione ancora migliore che non è stata provata abbastanza.</p>
+<p>Per superare questo limite, gli algoritmi più avanzati cercano di bilanciare due aspetti fondamentali: l’esplorazione e lo sfruttamento. L’esplorazione consiste nel provare azioni nuove o poco testate per scoprire se sono migliori, mentre lo sfruttamento si concentra sullo scegliere le azioni che finora hanno dato i risultati migliori. Questo dilemma tra esplorazione e sfruttamento è centrale nell’apprendimento per rinforzo. Possiamo paragonarlo alla scelta tra ordinare sempre il nostro piatto preferito al ristorante (sfruttamento) o provare qualcosa di nuovo dal menu (esplorazione).</p>
+<p>Sono stati proposti diversi algoritmi che possono essere usati per trovare un equilibrio tra esplorazione e sfruttamento.</p>
 </section>
-<section id="lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale" class="level3" data-number="72.1.3">
-<h3 data-number="72.1.3" class="anchored" data-anchor-id="lapprendimento-per-rinforzo-nella-ricerca-sullintelligenza-artificiale"><span class="header-section-number">72.1.3</span> L’apprendimento per rinforzo nella ricerca sull’intelligenza artificiale</h3>
-<p>Dalla fine degli anni ’60, molti ricercatori nel campo dell’intelligenza artificiale hanno ipotizzato che non esistano principi generali da scoprire, e che l’intelligenza derivi piuttosto dalla conoscenza di un vasto numero di trucchi, procedure ed euristiche specializzati. L’intelligenza artificiale moderna dedica invece molta attenzione alla ricerca di principi generali di apprendimento e processo decisionale. In questo senso, la ricerca sull’apprendimento per rinforzo rappresenta sicuramente un ritorno verso principi di intelligenza artificiale più semplici e universali.</p>
-</section>
-</section>
-<section id="un-esempio-pratico-il-problema-dei-two-armed-bandits" class="level2" data-number="72.2">
-<h2 data-number="72.2" class="anchored" data-anchor-id="un-esempio-pratico-il-problema-dei-two-armed-bandits"><span class="header-section-number">72.2</span> Un esempio pratico: il problema dei two-armed bandits</h2>
-<p>Immaginiamo un giocatore di fronte a due slot machine. Ogni volta che sceglie una slot, può vincere (ottenendo un premio) o perdere (non ottenendo nulla). La probabilità di vincita varia tra le due slot machine, ma il giocatore non le conosce all’inizio. Il suo obiettivo è massimizzare le vincite scegliendo la slot machine con la maggiore probabilità di vincita il più spesso possibile.</p>
-<p>Questo semplice problema illustra il dilemma fondamentale dell’apprendimento per rinforzo: esplorare entrambe le slot machine per scoprire quale è la migliore (esplorazione) o sfruttare la slot machine che ha già scoperto essere la più vincente (sfruttamento)?</p>
-<p>Il modello di apprendimento di Rescorla-Wagner affronta proprio questo problema del “two-armed bandits”. In questo scenario, un partecipante deve compiere ripetutamente delle scelte tra due opzioni o azioni. Dopo ogni scelta, riceve una ricompensa numerica estratta da una distribuzione di probabilità che dipende dall’azione selezionata. L’obiettivo del partecipante è massimizzare la ricompensa totale attesa durante un certo periodo di tempo, ad esempio, durante 100 scelte.</p>
-<p>Una metafora comune per descrivere questa situazione è quella di un giocatore che deve fare una serie di scelte tra due slot machine (“two-armed bandits”) per massimizzare le sue vincite. Se nella scelta <span class="math inline">\(t\)</span> viene selezionata la slot machine <span class="math inline">\(k\)</span>, il partecipante ottiene una ricompensa <span class="math inline">\(r_t\)</span>. Questa ricompensa ha valore <code>1</code> con una probabilità di successo <span class="math inline">\(\mu^k_t\)</span> specifica per quella slot machine, altrimenti ha valore <code>0</code>.</p>
-<p>In altre parole:</p>
+<section id="modello-di-rescorla-wagner" class="level2" data-number="72.3">
+<h2 data-number="72.3" class="anchored" data-anchor-id="modello-di-rescorla-wagner"><span class="header-section-number">72.3</span> Modello di Rescorla-Wagner</h2>
+<p>Il modello di Rescorla-Wagner è uno dei modelli più semplici e influenti nell’apprendimento associativo. È ampiamente utilizzato per spiegare come gli animali e gli esseri umani apprendono le associazioni tra stimoli e conseguenze delle azioni. Si basa sul principio dell’errore di previsione, secondo cui l’apprendimento avviene quando c’è una discrepanza tra l’aspettativa di una ricompensa e il risultato osservato.</p>
+<p>Nel modello, l’aspettativa di valore (cioè la ricompensa attesa) per un’azione scelta viene aggiornata secondo la seguente formula:</p>
+<p><span class="math display">\[ \Delta Q = \alpha (R - Q) \]</span></p>
+<p>dove:</p>
 <ul>
-<li>Ogni volta che il partecipante sceglie una slot machine, può vincere (ottenendo una ricompensa di <code>1</code>) o perdere (ottenendo una ricompensa di <code>0</code>).</li>
-<li>La probabilità di vincita varia tra le due diverse slot machine.</li>
-<li>Queste probabilità di successo sono inizialmente sconosciute al partecipante.</li>
+<li><span class="math inline">\(\Delta Q\)</span> rappresenta la variazione del valore atteso,</li>
+<li><span class="math inline">\(\alpha\)</span> è il tasso di apprendimento (un valore tra 0 e 1),</li>
+<li><span class="math inline">\(R\)</span> è la ricompensa effettivamente ottenuta,</li>
+<li><span class="math inline">\(Q\)</span> è il valore atteso attuale.</li>
 </ul>
-<p>Nella versione più semplice di questo problema, le probabilità di successo <span class="math inline">\(\mu^k_t\)</span> rimangono costanti nel tempo. Questo significa che la probabilità di vincere su una determinata slot machine non cambia durante il periodo di osservazione.</p>
-</section>
-<section id="simulare-lapprendimento" class="level2" data-number="72.3">
-<h2 data-number="72.3" class="anchored" data-anchor-id="simulare-lapprendimento"><span class="header-section-number">72.3</span> Simulare l’Apprendimento</h2>
-<p>Nel problema del two-armed bandit, ogni azione (cioè la scelta di una specifica slot machine) ha un valore associato che rappresenta la ricompensa attesa quando quella specifica azione viene selezionata. Questo valore è chiamato “valore dell’azione”. Conoscendo il valore di ogni azione, il problema di apprendimento si riduce a scegliere sempre l’azione con il valore più alto per massimizzare la ricompensa totale.</p>
-<section id="parametri-del-problema" class="level3" data-number="72.3.1">
-<h3 data-number="72.3.1" class="anchored" data-anchor-id="parametri-del-problema"><span class="header-section-number">72.3.1</span> Parametri del Problema</h3>
-<p>Per simulare il problema, dobbiamo considerare tre parametri principali:</p>
+<p>La nuova aspettativa di valore <span class="math inline">\(Q\)</span> viene quindi aggiornata come segue:</p>
+<p><span class="math display">\[ Q(t+1) = Q(t) + \Delta Q. \]</span></p>
+<p>Sostituendo <span class="math inline">\(\Delta Q\)</span> nella formula, otteniamo:</p>
+<p><span class="math display">\[ Q(t+1) = Q(t) + \alpha (R - Q(t)). \]</span></p>
+<p>Il funzionamento del modello può essere descritto nel modo seguente.</p>
 <ol type="1">
-<li><strong>Il numero di tentativi, <span class="math inline">\(T\)</span></strong>: Questo rappresenta quante volte il partecipante farà una scelta. Ad esempio, se <span class="math inline">\(T = 100\)</span>, il partecipante farà 100 scelte.</li>
-<li><strong>Il numero di slot machine, <span class="math inline">\(K\)</span></strong>: Questo indica quante opzioni di scelta sono disponibili. Ad esempio, se <span class="math inline">\(K = 2\)</span>, ci sono due slot machine tra cui scegliere.</li>
-<li><strong>Le probabilità di ricompensa delle diverse opzioni, <span class="math inline">\(\mu^k_t\)</span></strong>: Queste sono le probabilità che ogni slot machine offra una ricompensa. Queste probabilità possono variare nel tempo, ma nella versione più semplice del problema, rimangono costanti.</li>
+<li>L’agente ha un’aspettativa iniziale <span class="math inline">\(Q(t)\)</span> riguardo alla ricompensa associata a uno stimolo o a un’azione.</li>
+<li>L’agente sperimenta lo stimolo o compie l’azione, ricevendo una ricompensa effettiva <span class="math inline">\(R\)</span>.</li>
+<li>La differenza tra la ricompensa attesa e quella ottenuta <span class="math inline">\((R - Q(t))\)</span> costituisce l’errore di previsione.</li>
+<li>Questo errore viene moltiplicato per il tasso di apprendimento <span class="math inline">\(\alpha\)</span> per determinare l’aggiornamento dell’aspettativa <span class="math inline">\(\Delta Q\)</span>.</li>
+<li>L’aspettativa di valore per il prossimo turno viene aggiornata secondo la formula <span class="math inline">\(Q(t+1) = Q(t) + \alpha (R - Q(t))\)</span>.</li>
+</ol>
+<p>In parole semplici, il modello Rescorla-Wagner descrive come le aspettative di ricompensa vengono aggiornate sulla base dell’errore di previsione. Se la ricompensa ottenuta <span class="math inline">\(R\)</span> è maggiore del valore previsto <span class="math inline">\(Q(t)\)</span>, il valore dell’azione <span class="math inline">\(Q(t)\)</span> aumenta. Se la ricompensa è minore del previsto, il valore dell’azione diminuisce.</p>
+<section id="bilanciare-sfruttamento-ed-esplorazione-con-la-regola-softmax" class="level3" data-number="72.3.1">
+<h3 data-number="72.3.1" class="anchored" data-anchor-id="bilanciare-sfruttamento-ed-esplorazione-con-la-regola-softmax"><span class="header-section-number">72.3.1</span> Bilanciare Sfruttamento ed Esplorazione con la Regola Softmax</h3>
+<p>Il modello di Rescorla-Wagner di per sé non crea un equilibrio diretto tra sfruttamento ed esplorazione. Per bilanciare questi due aspetti, è possibile integrare il modello con una regola di selezione delle azioni, come la regola softmax.</p>
+<p>La formula della regola softmax è:</p>
+<p><span class="math display">\[ P(\pi_k) = \frac{e^{Q_k(t) / \tau}}{\sum_{j} e^{Q_j(t) / \tau}}, \]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(P(\pi_k)\)</span> è la probabilità di scegliere l’azione <span class="math inline">\(k\)</span>,</li>
+<li><span class="math inline">\(Q_k(t)\)</span> è il valore atteso dell’azione <span class="math inline">\(k\)</span> al tempo <span class="math inline">\(t\)</span>,</li>
+<li><span class="math inline">\(\tau\)</span> è il parametro di temperatura che controlla il grado di esplorazione (un valore alto di <span class="math inline">\(\tau\)</span> porta a una maggiore esplorazione, mentre un valore basso favorisce lo sfruttamento).</li>
+</ul>
+<p>L’ntegrazione del Modello di Rescorla-Wagner con la Regola Softmax avviene nel modo seguente.</p>
+<ol type="1">
+<li>Dopo ogni turno, aggiornare le aspettative di valore <span class="math inline">\(Q_k(t)\)</span> per tutte le azioni <span class="math inline">\(k\)</span> utilizzando il modello di Rescorla-Wagner.</li>
+<li>Calcolare le probabilità di selezione per ciascuna azione utilizzando la regola softmax.</li>
+<li>Scegliere un’azione <span class="math inline">\(\pi_k\)</span> in modo probabilistico in base alle probabilità <span class="math inline">\(P(\pi_k)\)</span>.</li>
+</ol>
+<p>In sintesi, il modello di Rescorla-Wagner viene utilizzato per aggiornare le aspettative di valore basate sull’errore di previsione, mentre la regola softmax bilancia esplorazione e sfruttamento selezionando le azioni in modo probabilistico. Questa integrazione permette di migliorare l’apprendimento dell’agente attraverso un processo iterativo e adattivo.</p>
+</section>
+</section>
+<section id="algoritmi-upper-confidence-bound-ucb-e-thompson-sampling" class="level2" data-number="72.4">
+<h2 data-number="72.4" class="anchored" data-anchor-id="algoritmi-upper-confidence-bound-ucb-e-thompson-sampling"><span class="header-section-number">72.4</span> Algoritmi Upper Confidence Bound (UCB) e Thompson Sampling</h2>
+<p>Gli algoritmi UCB e Thompson Sampling sono maggiormente utilizzati nel campo dell’intelligenza artificiale.</p>
+<section id="upper-confidence-bound-ucb" class="level3" data-number="72.4.1">
+<h3 data-number="72.4.1" class="anchored" data-anchor-id="upper-confidence-bound-ucb"><span class="header-section-number">72.4.1</span> Upper Confidence Bound (UCB)</h3>
+<p>L’algoritmo UCB (Upper Confidence Bound) bilancia esplorazione e sfruttamento per scegliere le azioni migliori in un contesto di apprendimento per rinforzo. Per ogni azione <span class="math inline">\(\pi\)</span>, l’algoritmo UCB calcola un valore chiamato “limite superiore di confidenza” che tiene conto sia della ricompensa stimata sia dell’incertezza di tale stima. La formula è:</p>
+<p><span class="math display">\[ \text{UCB}(\pi) = \hat{r}(\pi) + \sqrt{\frac{2 \log t}{n(\pi)}} \]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(\hat{r}(\pi)\)</span> è la ricompensa stimata per l’azione <span class="math inline">\(\pi\)</span>.</li>
+<li><span class="math inline">\(t\)</span> è il turno corrente.</li>
+<li><span class="math inline">\(n(\pi)\)</span> è il numero di volte che l’azione <span class="math inline">\(\pi\)</span> è stata scelta.</li>
+</ul>
+<p>Il termine <span class="math inline">\(\sqrt{\frac{2 \log t}{n(\pi)}}\)</span> rappresenta l’incertezza della stima. Più un’azione viene scelta, più diminuisce l’incertezza, e quindi il termine di esplorazione si riduce.</p>
+<p>L’algoritmo seleziona l’azione con il valore UCB più alto. Questo approccio permette di esplorare nuove azioni ma anche di sfruttare quelle che sembrano offrire le migliori ricompense, garantendo un buon equilibrio tra esplorazione e sfruttamento.</p>
+</section>
+<section id="thompson-sampling" class="level3" data-number="72.4.2">
+<h3 data-number="72.4.2" class="anchored" data-anchor-id="thompson-sampling"><span class="header-section-number">72.4.2</span> Thompson Sampling</h3>
+<p>L’algoritmo Thompson Sampling bilancia esplorazione e sfruttamento scegliendo probabilisticamente le azioni in base alla loro probabilità di essere ottimali. Per ogni azione <span class="math inline">\(\pi\)</span>, una ricompensa viene campionata dalla distribuzione a posteriori della sua ricompensa attesa. L’azione con il valore campionato più alto viene scelta. Questo approccio bilancia efficacemente esplorazione (provando azioni meno certe) e sfruttamento (scegliendo l’azione che attualmente sembra la migliore).</p>
+</section>
+</section>
+<section id="contextual-bandits" class="level2" data-number="72.5">
+<h2 data-number="72.5" class="anchored" data-anchor-id="contextual-bandits"><span class="header-section-number">72.5</span> Contextual Bandits</h2>
+<p>I contextual bandits rappresentano un’evoluzione rispetto ai tradizionali problemi multi-armed bandit, offrendo un framework più realistico per il processo decisionale interattivo in scenari complessi. Mentre i multi-armed bandits si concentrano sulla scelta ripetuta tra diverse opzioni fisse, i contextual bandits introducono un nuovo elemento: il contesto. In questo scenario, prima di prendere una decisione, l’agente osserva informazioni contestuali che possono influenzare la scelta ottimale.</p>
+<section id="il-protocollo-dei-contextual-bandits" class="level3" data-number="72.5.1">
+<h3 data-number="72.5.1" class="anchored" data-anchor-id="il-protocollo-dei-contextual-bandits"><span class="header-section-number">72.5.1</span> Il Protocollo dei Contextual Bandits</h3>
+<p>Il processo decisionale nei contextual bandits si svolge come segue:</p>
+<ol type="1">
+<li>L’agente osserva un contesto <span class="math inline">\(x_t\)</span> (ad esempio, le caratteristiche di una situazione sociale per una persona con anoressia nervosa).</li>
+<li>Basandosi su questo contesto, l’agente seleziona un’azione <span class="math inline">\(\pi_t\)</span> (ad esempio, la scelta di mangiare o meno in quella situazione).</li>
+<li>L’agente riceve una ricompensa <span class="math inline">\(r_t\)</span> (ad esempio, il livello di ansia o controllo percepito dopo la scelta).</li>
+</ol>
+<p>Questo processo si ripete per <span class="math inline">\(T\)</span> turni.</p>
+</section>
+<section id="modello-matematico" class="level3" data-number="72.5.2">
+<h3 data-number="72.5.2" class="anchored" data-anchor-id="modello-matematico"><span class="header-section-number">72.5.2</span> Modello Matematico</h3>
+<ol type="1">
+<li>Le ricompense sono generate secondo una distribuzione condizionale <span class="math inline">\(r_t \sim \mathcal{M}^*(\cdot | x_t, \pi_t)\)</span>, il che significa che la ricompensa <span class="math inline">\(r_t\)</span> è distribuita secondo una certa legge <span class="math inline">\(\mathcal{M}^*\)</span> che varia a seconda del contesto e dell’azione.</li>
+<li>La funzione di ricompensa media <span class="math inline">\(f^*(x, \pi)\)</span> rappresenta il valore atteso della ricompensa data un certo contesto <span class="math inline">\(x\)</span> e una certa azione <span class="math inline">\(\pi\)</span>.</li>
+<li>La politica ottimale <span class="math inline">\(\pi^*(x) = \arg\max_{\pi} f^*(x, \pi)\)</span> indica che, per ogni contesto <span class="math inline">\(x\)</span>, cerchiamo l’azione <span class="math inline">\(\pi\)</span> che dà la ricompensa media più alta.</li>
+</ol>
+<p>L’obiettivo di un agente che utilizza contextual bandits è minimizzare il “regret”. Il “regret” è la differenza tra la ricompensa che avremmo ottenuto se avessimo sempre scelto l’azione ottimale e la ricompensa che abbiamo effettivamente ottenuto.</p>
+</section>
+<section id="esempio-anoressia-nervosa" class="level3" data-number="72.5.3">
+<h3 data-number="72.5.3" class="anchored" data-anchor-id="esempio-anoressia-nervosa"><span class="header-section-number">72.5.3</span> Esempio: Anoressia Nervosa</h3>
+<p>Consideriamo un esempio legato all’anoressia nervosa (AN). L’approccio dei contextual bandits può spiegare perché le persone affette da AN mostrano un apprendimento per rinforzo (RL) compromesso in contesti legati al cibo e al corpo, mentre mostrano un RL adeguato in contesti non legati al cibo e al corpo.</p>
+<p>Immaginiamo due scenari distinti:</p>
+<p><strong>Scenario 1: Contesto legato al cibo</strong></p>
+<ul>
+<li><strong>Contesto (<span class="math inline">\(x_t\)</span>)</strong>: Una persona con AN si trova a una cena con amici dove è presente una varietà di cibi.</li>
+<li><strong>Azione (<span class="math inline">\(\pi_t\)</span>)</strong>: La persona deve decidere se mangiare un certo cibo.</li>
+<li><strong>Ricompensa (<span class="math inline">\(r_t\)</span>)</strong>: La ricompensa potrebbe essere misurata in termini di ansia percepita, con alti livelli di ansia che indicano una bassa ricompensa.</li>
+</ul>
+<p>In questo contesto, la persona con AN potrebbe avere una funzione di ricompensa media <span class="math inline">\(f^*(x, \pi)\)</span> che penalizza fortemente le azioni legate al consumo di cibo, a causa delle elevate preoccupazioni legate al peso e all’immagine corporea. Di conseguenza, l’apprendimento per rinforzo sarà compromesso perché la ricompensa attesa per le azioni legate al cibo è molto bassa.</p>
+<p><strong>Scenario 2: Contesto non legato al cibo</strong></p>
+<ul>
+<li><strong>Contesto (<span class="math inline">\(x_t\)</span>)</strong>: La stessa persona con AN si trova in una situazione di lavoro dove deve decidere come completare un compito.</li>
+<li><strong>Azione (<span class="math inline">\(\pi_t\)</span>)</strong>: La persona deve decidere quale strategia usare per completare il compito.</li>
+<li><strong>Ricompensa (<span class="math inline">\(r_t\)</span>)</strong>: La ricompensa potrebbe essere misurata in termini di successo o soddisfazione per il compito completato, con alti livelli di successo che indicano una alta ricompensa.</li>
+</ul>
+<p>In questo contesto, la funzione di ricompensa media <span class="math inline">\(f^*(x, \pi)\)</span> non è influenzata dalle preoccupazioni legate al cibo o al corpo. Pertanto, la persona con AN può imparare efficacemente quale azione porta alla ricompensa massima, mostrando un apprendimento per rinforzo adeguato.</p>
+<p>Questo esempio mostra come i contextual bandits possano spiegare le differenze nell’apprendimento per rinforzo in base al contesto, fornendo un quadro più completo e realistico delle dinamiche decisionali nelle persone con anoressia nervosa.</p>
+<p>In sintesi, i contextual bandits sono un framework di RL che considera il contesto (o stato) quando si sceglie un’azione, ma non considera gli effetti a lungo termine delle azioni o come le azioni influenzano gli stati futuri.</p>
+</section>
+<section id="rigidità-cognitiva-e-difficoltà-di-rl-nellanoressia-nervosa" class="level3" data-number="72.5.4">
+<h3 data-number="72.5.4" class="anchored" data-anchor-id="rigidità-cognitiva-e-difficoltà-di-rl-nellanoressia-nervosa"><span class="header-section-number">72.5.4</span> Rigidità Cognitiva e Difficoltà di RL nell’Anoressia Nervosa</h3>
+<p>La rigidità cognitiva nelle decisioni legate a cibo e corpo può essere spiegata in termini di RL come segue:</p>
+<ol type="1">
+<li><strong>Sovrastima delle ricompense immediate:</strong> Le azioni che portano a sensazioni di controllo o riduzione dell’ansia a breve termine (es. restrizione calorica) ricevono un “peso” eccessivo nel processo decisionale.</li>
+<li><strong>Sottostima delle ricompense a lungo termine:</strong> Le conseguenze positive di un’alimentazione sana o di un’immagine corporea più realistica vengono sottovalutate o ignorate.</li>
+<li><strong>Esplorazione limitata:</strong> La persona potrebbe evitare di esplorare nuove azioni (es. mangiare cibi temuti) a causa dell’ansia associata, limitando così l’apprendimento.</li>
+<li><strong>Aggiornamento selettivo del modello:</strong> Nel caso di apprendimento model-based, la persona potrebbe aggiornare selettivamente il suo modello interno, dando più peso alle informazioni che confermano le sue convinzioni sulla necessità di controllo sul cibo e sul corpo.</li>
 </ol>
 </section>
-<section id="esempio-pratico" class="level3" data-number="72.3.2">
-<h3 data-number="72.3.2" class="anchored" data-anchor-id="esempio-pratico"><span class="header-section-number">72.3.2</span> Esempio Pratico</h3>
-<p>In questo tutorial, simuleremo il comportamento di un partecipante che sceglie tra due slot machine, utilizzando il modello di apprendimento di Rescorla-Wagner. Ecco come configureremo la simulazione:</p>
-<ul>
-<li>Imposteremo il numero di tentativi a <span class="math inline">\(T = 100\)</span>. Questo significa che il partecipante farà 100 scelte.</li>
-<li>Imposteremo il numero di slot machine a <span class="math inline">\(K = 2\)</span>. Ci saranno quindi due slot machine tra cui scegliere.</li>
-<li>Imposteremo le probabilità di ricompensa delle slot machine a <span class="math inline">\(\mu = [0.2, 0.8]\)</span>. Questo significa che la slot machine 1 ha una probabilità del 20% di offrire una ricompensa, mentre la slot machine 2 ha una probabilità dell’80% di offrire una ricompensa.</li>
-</ul>
-<p>Ogni azione ha un valore che rappresenta la ricompensa attesa. In altre parole, il valore dell’azione è la media delle ricompense che ci si aspetta di ottenere scegliendo quella particolare azione. Se si conosce questo valore per ogni azione, il partecipante dovrebbe sempre scegliere l’azione con il valore più alto per massimizzare le sue ricompense.</p>
-<p>L’obiettivo di questo tutorial è mostrare come si può simulare il processo di apprendimento e come si possono usare modelli come quello di Rescorla-Wagner per capire meglio come le persone prendono decisioni in situazioni di incertezza. Attraverso la simulazione, vedremo come il partecipante può apprendere e adattarsi alle probabilità di ricompensa delle slot machine per massimizzare le sue vincite nel corso del tempo.</p>
+<section id="contextual-bandits-nel-contesto-dellanoressia-nervosa" class="level3" data-number="72.5.5">
+<h3 data-number="72.5.5" class="anchored" data-anchor-id="contextual-bandits-nel-contesto-dellanoressia-nervosa"><span class="header-section-number">72.5.5</span> Contextual Bandits nel Contesto dell’Anoressia Nervosa</h3>
+<p>Utilizzando il framework dei contextual bandits, possiamo vedere come una persona con anoressia possa mostrare un apprendimento per rinforzo adeguato in alcuni contesti, ma un apprendimento per rinforzo alterato e rigido in situazioni legate al cibo e al corpo. In contesti legati al cibo, l’ansia e la preoccupazione per il controllo del peso e dell’immagine corporea influenzano negativamente la percezione delle ricompense, portando a decisioni che evitano il cibo e rafforzano comportamenti dannosi.</p>
+<p>Al contrario, in contesti non legati al cibo, dove queste preoccupazioni non sono presenti, la persona con anoressia può fare scelte basate su un’analisi più razionale delle ricompense, mostrando un apprendimento per rinforzo normale. Questo dualismo nell’apprendimento decisionale evidenzia come il contesto giochi un ruolo cruciale nelle scelte di una persona con anoressia, spiegando perché possa avere una rigida resistenza al cambiamento in situazioni legate al cibo e al corpo, ma decisioni più flessibili e adeguate in altri ambiti della vita.</p>
+<p>Questa prospettiva aiuta a spiegare perché le persone con anoressia possono mostrare capacità decisionali normali in molti ambiti della vita, ma una marcata rigidità e resistenza al cambiamento quando si tratta di decisioni legate all’alimentazione e all’immagine corporea.</p>
 </section>
 </section>
-<section id="imparare-il-rinforzo-i-componenti-chiave" class="level2" data-number="72.4">
-<h2 data-number="72.4" class="anchored" data-anchor-id="imparare-il-rinforzo-i-componenti-chiave"><span class="header-section-number">72.4</span> Imparare il rinforzo: i componenti chiave</h2>
-<p>L’apprendimento per rinforzo è simile a come gli esseri viventi imparano attraverso l’esperienza: provando e sbagliando, imparano ad associare le loro azioni a conseguenze positive o negative.</p>
-<p>Per comprendere meglio il funzionamento dell’apprendimento per rinforzo, è fondamentale analizzare i suoi quattro componenti chiave.</p>
-<p><strong>1. La politica (o strategia)</strong> Il robot non agisce a caso. Ha una strategia, un piano d’azione che cambia nel tempo in base ai risultati ottenuti. Inizialmente, potrebbe scegliere le slot casualmente (50% leva A, 50% leva B). Ma con l’esperienza, impara a preferire la leva che gli ha dato più vincite. In termini tecnici, la strategia è rappresentata dalla funzione <em>π (pi)</em>, che associa le azioni possibili (tirare la leva A o B) ai diversi stati del gioco (vincita, perdita). All’inizio, <em>π</em> potrebbe essere casuale. Ma con il tempo, si aggiorna in base alle ricompense ricevute, aumentando la probabilità di scegliere la leva vincente.</p>
-<p><strong>2. La ricompensa</strong> La ricompensa è un segnale che indica all’agente la bontà o meno delle sue azioni. La ricompensa può essere positiva (rinforzo) se l’azione è stata vantaggiosa, o negativa (punizione) se l’azione è stata dannosa. L’obiettivo dell’agente è massimizzare la ricompensa cumulativa nel lungo periodo. In termini tecnici, la funzione di ricompensa <em>R</em> assegna un valore numerico a ogni stato del gioco: 1 per la vincita e 0 per la perdita. Il robot è “motivato” a massimizzare la <em>ricompensa cumulativa</em>, ovvero la somma totale delle vincite ottenute nel tempo.</p>
-<p><strong>3. La funzione di valore</strong> Per ogni leva, il robot calcola la ricompensa media che si aspetta di ricevere in futuro. In altre parole, cerca di capire quale slot è più “generosa” nel lungo periodo. In termini tecnici, la funzione di valore <em>Q</em> stima la ricompensa media attesa per ogni stato del gioco. Il robot utilizza questa stima per scegliere l’azione che lo porterà nello stato con il valore <em>Q</em> più alto, ovvero la slot machine che ha maggiori probabilità di fargli ottenere una vincita nel lungo periodo.</p>
-<p><strong>4. Il modello dell’ambiente</strong> In alcuni casi, il robot può avere un asso nella manica: un <em>modello dell’ambiente</em>, ovvero una simulazione dell’ambiente che permette all’agente di prevedere le conseguenze delle sue azioni prima di compierle. In termini tecnici, il modello dell’ambiente <em>M</em> è una simulazione delle slot machine che permette al robot di prevedere la probabilità di vincita per ogni leva. Il robot può utilizzare questa informazione per aggiornare la sua funzione di valore e scegliere l’azione che massimizza la ricompensa attesa.</p>
+<section id="simulare-lapprendimento" class="level2" data-number="72.6">
+<h2 data-number="72.6" class="anchored" data-anchor-id="simulare-lapprendimento"><span class="header-section-number">72.6</span> Simulare l’Apprendimento</h2>
+<p>In questo tutorial, simuleremo il processo decisionale di un partecipante che sceglie tra due slot machine, utilizzando il modello di apprendimento di Rescorla-Wagner. Questa simulazione ci aiuterà a comprendere come le persone apprendono e prendono decisioni in situazioni di incertezza.</p>
+<p>Configurazione della simulazione:</p>
+<ol type="1">
+<li>Numero di tentativi: <span class="math inline">\(T = 100\)</span>. Significa che il partecipante farà 100 scelte consecutive.</li>
+<li>Numero di slot machine: <span class="math inline">\(K = 2\)</span>. Il partecipante sceglierà tra due slot machine ad ogni tentativo.</li>
+<li>Probabilità di ricompensa: <span class="math inline">\(\mu = [0.2, 0.8]\)</span>. Ciò significa che la Slot machine 1 ha yna probabilità pari a 0.2 di offrire una ricompensa, mentre la Slot machine 2 ha una probabilità pari a 0.8 di offrire una ricompensa.</li>
+</ol>
+<p>Attraverso questa simulazione, osserveremo come il partecipante inizialmente esplora entrambe le opzioni, come gradualmente apprende quale slot machine offre ricompense più frequenti e come adatta le proprie scelte per massimizzare le vincite complessive.</p>
 </section>
-<section id="modello-di-apprenimento-di-rescorla-wagner" class="level2" data-number="72.5">
-<h2 data-number="72.5" class="anchored" data-anchor-id="modello-di-apprenimento-di-rescorla-wagner"><span class="header-section-number">72.5</span> Modello di Apprenimento di Rescorla-Wagner</h2>
-<p>Il modello di apprendimento di Rescorla-Wagner, sviluppato per comprendere come gli esseri viventi apprendono le associazioni tra eventi, è particolarmente utile nel descrivere l’apprendimento associativo, come il condizionamento classico. Il modello si basa sull’idea che l’apprendimento avvenga attraverso l’aggiornamento continuo delle aspettative sulla base degli <em>errori di previsione</em>. In altre parole, la differenza tra ciò che ci si aspetta di ricevere e ciò che viene effettivamente osservato determina come modifichiamo le nostre aspettative per il futuro.</p>
-<section id="aspettativa-di-valore" class="level3" data-number="72.5.1">
-<h3 data-number="72.5.1" class="anchored" data-anchor-id="aspettativa-di-valore"><span class="header-section-number">72.5.1</span> Aspettativa di Valore</h3>
-<p>Immaginiamo un problema con <em>due bandit a due braccia</em>: ogni braccio rappresenta un’azione con una specifica ricompensa media associata. Il valore di un’azione corrisponde alla sua ricompensa media attesa.</p>
-<p>Indichiamo con:</p>
-<ul>
-<li><span class="math inline">\(A_t\)</span>: l’azione scelta al tempo <span class="math inline">\(t\)</span>;</li>
-<li><span class="math inline">\(R_t\)</span>: la ricompensa ottenuta dopo aver scelto l’azione <span class="math inline">\(A_t\)</span>;</li>
-<li><span class="math inline">\(q^{*}(a)\)</span>: il valore atteso dell’azione <span class="math inline">\(a\)</span> (ovvero la ricompensa media attesa se scegliamo <span class="math inline">\(a\)</span>).</li>
-</ul>
-<p>Se conoscessimo il valore esatto di ogni azione, il problema del bandit a due braccia sarebbe banale: basterebbe scegliere sempre l’azione con il valore più alto. Tuttavia, in realtà, non conosciamo con certezza i valori delle azioni, ma possiamo solo stimarli.</p>
-<p>Indichiamo con <span class="math inline">\(Q_t(a)\)</span> la stima del valore dell’azione <span class="math inline">\(a\)</span> al tempo <em>t</em>. L’obiettivo è far sì che <span class="math inline">\(Q_t(a)\)</span> si avvicini il più possibile al valore reale <span class="math inline">\(q^{*}(a)\)</span>.</p>
-</section>
-<section id="la-regola-di-apprendimento" class="level3" data-number="72.5.2">
-<h3 data-number="72.5.2" class="anchored" data-anchor-id="la-regola-di-apprendimento"><span class="header-section-number">72.5.2</span> La Regola di Apprendimento</h3>
-<p>Secondo il modello Rescorla-Wagner, il valore atteso di un’azione viene aggiornato dopo ogni tentativo usando la seguente regola:</p>
-<p><span class="math display">\[Q_k(t + 1) = Q_k(t) + \alpha (R_k - Q_k(t))\]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(Q_k(t)\)</span>: valore atteso dell’azione <em>k</em> al tempo <em>t</em></li>
-<li><span class="math inline">\(\alpha\)</span>: <em>tasso di apprendimento</em>, un valore compreso tra 0 e 1 che determina la velocità di aggiornamento delle aspettative. Un valore più alto di <em>α</em> implica un apprendimento più rapido, mentre uno più basso implica un apprendimento più lento.</li>
-<li><span class="math inline">\(R_k\)</span>: ricompensa ottenuta dopo aver scelto l’azione <em>k</em> al tempo <em>t</em></li>
-<li><span class="math inline">\(R_k - Q_k(t)\)</span>: <em>errore di previsione</em>, la differenza tra la ricompensa ottenuta e quella attesa</li>
-</ul>
-<p>In parole semplici, l’errore di previsione guida l’aggiornamento delle nostre aspettative: se la ricompensa è maggiore del previsto, il valore dell’azione viene aumentato; se la ricompensa è minore del previsto, il valore dell’azione viene diminuito.</p>
-</section>
-<section id="la-regola-decisionale" class="level3" data-number="72.5.3">
-<h3 data-number="72.5.3" class="anchored" data-anchor-id="la-regola-decisionale"><span class="header-section-number">72.5.3</span> La Regola Decisionale</h3>
-<p>Per decidere quale azione intraprendere, utilizziamo la regola <em>softmax</em>, che bilancia l’esplorazione di nuove opzioni con la scelta dell’azione con il valore atteso più alto. La regola softmax trasforma i valori attesi <em>Q</em> in probabilità di scelta:</p>
-<p><span class="math display">\[p_k(t) = \frac{exp(\theta Q_k(t))}{\sum_{i=1}^K exp(\theta Q_i(t))}\]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(p_k(t)\)</span>: probabilità di scegliere l’azione <em>k</em> al tempo <em>t</em></li>
-<li><span class="math inline">\(\theta\)</span>: parametro <em>temperatura</em> che controlla il livello di esplorazione. Valori alti di <span class="math inline">\(\theta\)</span> portano a scelte più deterministiche (quasi sempre l’azione con il valore più alto), mentre valori bassi portano a scelte più casuali.</li>
-</ul>
-<section id="esempio-di-calcolo-della-softmax" class="level4" data-number="72.5.3.1">
-<h4 data-number="72.5.3.1" class="anchored" data-anchor-id="esempio-di-calcolo-della-softmax"><span class="header-section-number">72.5.3.1</span> Esempio di Calcolo della Softmax</h4>
-<p>Per capire come funziona la softmax, consideriamo alcuni valori di <span class="math inline">\(Q\)</span> e <span class="math inline">\(\theta\)</span>.</p>
-<div id="cell-8" class="cell" data-execution_count="2">
+<section id="esempio-di-calcolo-della-softmax" class="level2" data-number="72.7">
+<h2 data-number="72.7" class="anchored" data-anchor-id="esempio-di-calcolo-della-softmax"><span class="header-section-number">72.7</span> Esempio di Calcolo della Softmax</h2>
+<p>Per capire come funziona la softmax, consideriamo due valori di <span class="math inline">\(Q\)</span> (aspettativa di ricompensa) e un valore fisso di <span class="math inline">\(\theta\)</span>.</p>
+<p>La funzione softmax trasforma i valori <span class="math inline">\(Q\)</span> e <span class="math inline">\(\theta\)</span> in una distribuzione di probabilità, mostrando come la probabilità di scelta cambia al variare di <span class="math inline">\(\theta\)</span>.</p>
+<div id="cell-9" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax(Q, theta):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> np.exp(theta <span class="op">*</span> Q) <span class="op">/</span> np.<span class="bu">sum</span>(np.exp(theta <span class="op">*</span> Q))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">3.5</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Consideriamo una situazione in cui la seconda scelta ha un’aspettativa di valore tre volte maggiore la prima.</p>
+<div id="cell-11" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo il caso di un valore <span class="math inline">\(\theta\)</span> alto.</p>
+<div id="cell-13" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">3.5</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-14" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0.1480472 0.8519528]</code></pre>
 </div>
 </div>
-<div id="cell-9" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.5</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In tali circostanze, la probabilità di scegliere la seconda azione è quasi sei volte maggiore quella di scegliere la prima azione.</p>
+<div id="cell-16" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.8519528</span> <span class="op">/</span> <span class="fl">0.1480472</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>5.754602586202238</code></pre>
+</div>
+</div>
+<p>Consideriamo ora il caso in cui il valore <span class="math inline">\(\theta\)</span> è basso.</p>
+<div id="cell-18" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0.4378235 0.5621765]</code></pre>
 </div>
 </div>
-<p>La funzione softmax trasforma i valori <span class="math inline">\(Q\)</span> e <span class="math inline">\(\theta\)</span> in una distribuzione di probabilità, mostrando come la probabilità di scelta cambia al variare di <span class="math inline">\(\theta\)</span>.</p>
-</section>
-</section>
-<section id="variazione-di-theta-con-valori-fissi-di-q" class="level3" data-number="72.5.4">
-<h3 data-number="72.5.4" class="anchored" data-anchor-id="variazione-di-theta-con-valori-fissi-di-q"><span class="header-section-number">72.5.4</span> Variazione di <span class="math inline">\(\theta\)</span> con Valori Fissi di <span class="math inline">\(Q\)</span></h3>
-<p>Manteniamo fissi i valori di <span class="math inline">\(Q\)</span> e facciamo variare <span class="math inline">\(\theta\)</span>:</p>
-<div id="cell-11" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.1</span>, <span class="fl">0.75</span>])</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>theta_values <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>probabilities_list <span class="op">=</span> []</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> theta <span class="kw">in</span> theta_values:</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> softmax(Q, theta)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    probabilities_list.append(probabilities)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>probabilities_array <span class="op">=</span> np.array(probabilities_list).T</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>option_labels <span class="op">=</span> [<span class="st">'Opzione 1'</span>, <span class="st">'Opzione 2'</span>]</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(option_labels)):</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    plt.plot(theta_values, probabilities_array[i], label<span class="op">=</span>option_labels[i])</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Theta'</span>)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Funzione Softmax - Modello Rescorla-Wagner'</span>)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="01_rescorla_wagner_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<p>In tali circostanze, la probabilità di scegliere la seconda azione è appena maggiore di quella di scegliere la prima azione. Quando <span class="math inline">\(\theta\)</span> è zero, la probabilità di scegliere una delle due azioni è 0.5, indipendentemente dall’aspettativa di ricompensa delle due azioni.</p>
+<div id="cell-20" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(softmax(Q, theta))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.5 0.5]</code></pre>
 </div>
 </div>
-</div>
-<p>Il grafico risultante mostra come le probabilità di scelta cambiano al variare del parametro <span class="math inline">\(\theta\)</span>. Quando <span class="math inline">\(\theta\)</span> è vicino a zero, la scelta è quasi casuale. Quando <span class="math inline">\(\theta\)</span> è molto grande, la scelta è quasi sempre l’opzione con il valore più alto.</p>
-</section>
-</section>
-<section id="simulazione-del-modello-di-rescorla-wagner" class="level2" data-number="72.6">
-<h2 data-number="72.6" class="anchored" data-anchor-id="simulazione-del-modello-di-rescorla-wagner"><span class="header-section-number">72.6</span> Simulazione del Modello di Rescorla-Wagner</h2>
-<p>Combiniamo la regola di apprendimento e la regola decisionale per simulare il comportamento del partecipante:</p>
-<div id="cell-13" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_RescorlaWagner(params, T, mu, noisy_choice<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    alpha, theta <span class="op">=</span> params</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un array di zeri di lunghezza T</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">int</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">int</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un array multidimensionale di zeri di dimensione 2xT</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    Q_stored <span class="op">=</span> np.zeros((<span class="dv">2</span>, T), dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizializza Q per t == 0</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Salva i valori Q per Q_{t+1}</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        Q_stored[:, t] <span class="op">=</span> Q</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola le probabilità di scelta</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        p0 <span class="op">=</span> np.exp(theta<span class="op">*</span>Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta<span class="op">*</span>Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta<span class="op">*</span>Q[<span class="dv">1</span>]))</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        p1 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p0</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Se noisy_choice è vero, viene simulato un comportamento di scelta rumoroso in </span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cui l'opzione 0 è scelta con probabilità p0, mentre l'opzione 1 è scelta con </span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># probabilità 1-p0.</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> noisy_choice:</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> np.random.random_sample(<span class="dv">1</span>) <span class="op">&lt;</span> p0:</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                c[t] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>                c[t] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:  <span class="co"># la scelta viene effettuata senza rumore</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            c[t] <span class="op">=</span> np.argmax([p0, p1])</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Genera la ricompensa sulla base delle probabilità di ricompensa</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        r[t] <span class="op">=</span> np.random.rand() <span class="op">&lt;</span> mu[c[t]]</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aggiorna le aspettative di valore</span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>        Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c, r, Q_stored</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Simuliamo <code>T</code> = 100 prove utilizzando il modello generativo dei dati definito in precedenza.</p>
-<div id="cell-15" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-16" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>c, r, Q <span class="op">=</span> simulate_RescorlaWagner([<span class="fl">.1</span>, <span class="fl">2.5</span>], T<span class="op">=</span>T, mu<span class="op">=</span>mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Rappresentiamo graficamente i risultati ottenuti dalla simulazione.</p>
-<div id="cell-18" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), r, <span class="st">'r--'</span>, alpha<span class="op">=</span><span class="fl">.6</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), c, <span class="st">'+'</span>, label<span class="op">=</span><span class="st">'scelta'</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Prove'</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Feedback (1=Ricompensa,</span><span class="ch">\n</span><span class="st"> 0=Nessuna ricompensa)'</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Apprendimento di Rescorla-Wagner'</span>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="01_rescorla_wagner_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Come possiamo osservare, le scelte per la slot machine che produce meno ricompense diventano meno frequenti nel corso delle prove.</p>
-<p>Possiamo anche rappresentare graficamente le aspettative di valore <span class="math inline">\(Q\)</span> delle due slot machine nel corso delle prove.</p>
-<div id="cell-20" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), Q[<span class="dv">1</span>, :], <span class="st">'r--'</span>, alpha<span class="op">=</span><span class="fl">.6</span>, label<span class="op">=</span><span class="st">'80% machine'</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), Q[<span class="dv">0</span>, :], <span class="st">'m-'</span>, alpha<span class="op">=</span><span class="fl">.6</span>, label<span class="op">=</span><span class="st">'20% machine'</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), c, <span class="st">'b+'</span>, label<span class="op">=</span><span class="st">'choice'</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'trials'</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'value'</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Rescorla-Wagner Learning'</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ora manteniamo fisso il valore di <span class="math inline">\(Q\)</span> e facciamo variare <span class="math inline">\(\theta\)</span>.</p>
+<div id="cell-22" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>theta_values <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>probabilities_list <span class="op">=</span> []</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> theta <span class="kw">in</span> theta_values:</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> softmax(Q, theta)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    probabilities_list.append(probabilities)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>probabilities_array <span class="op">=</span> np.array(probabilities_list).T</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>option_labels <span class="op">=</span> [<span class="st">'Opzione 1: Q = 0.25'</span>, <span class="st">'Opzione 2: Q = 0.75'</span>]</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(option_labels)):</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    plt.plot(theta_values, probabilities_array[i], label<span class="op">=</span>option_labels[i])</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Theta'</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probabilità'</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Funzione Softmax - Modello Rescorla-Wagner'</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1363,172 +1372,91 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Si noti come nel corso delle prove i valori delle slot macchine convergano lentamente verso le probabilità di ricompensa (20% e 80%).</p>
-<p>In sintesi, il modello di Rescorla-Wagner ci permette di simulare come le persone apprendono e prendono decisioni basate su ricompense. Utilizzando la regola di apprendimento (<span class="math inline">\(\delta\)</span>-rule) e la regola decisionale softmax, possiamo vedere come le aspettative di valore e le scelte cambiano nel tempo in risposta alle ricompense ottenute.</p>
+<p>Il grafico risultante mostra come le probabilità di scelta cambiano al variare del parametro <span class="math inline">\(\theta\)</span>. Quando <span class="math inline">\(\theta\)</span> è vicino a zero, la scelta è quasi casuale. Quando <span class="math inline">\(\theta\)</span> è molto grande, la scelta è quasi sempre l’opzione con il valore più alto.</p>
 </section>
-<section id="adattamento-del-modello" class="level2" data-number="72.7">
-<h2 data-number="72.7" class="anchored" data-anchor-id="adattamento-del-modello"><span class="header-section-number">72.7</span> Adattamento del Modello</h2>
-<p>Dopo aver visto come funziona il modello di Rescorla-Wagner, il passo successivo è stimare i parametri del modello a partire dai dati osservati. Questo processo è fondamentale nella modellazione computazionale perché ci permette di capire quali valori dei parametri descrivono meglio il comportamento osservato. Esistono diversi metodi per stimare i parametri, ma ci concentreremo sull’approccio della <em>Massima Verosimiglianza</em>.</p>
-<section id="la-massima-verosimiglianza" class="level3" data-number="72.7.1">
-<h3 data-number="72.7.1" class="anchored" data-anchor-id="la-massima-verosimiglianza"><span class="header-section-number">72.7.1</span> La Massima Verosimiglianza</h3>
-<p>L’approccio della massima verosimiglianza cerca di trovare i valori dei parametri del modello che massimizzano la probabilità dei dati osservati. In altre parole, vogliamo trovare i parametri <span class="math inline">\((\alpha, \theta)\)</span> che rendono i dati osservati <span class="math inline">\(d_{1:T}\)</span> più probabili secondo il modello Rescorla-Wagner.</p>
-</section>
-<section id="calcolo-del-logaritmo-della-verosimiglianza" class="level3" data-number="72.7.2">
-<h3 data-number="72.7.2" class="anchored" data-anchor-id="calcolo-del-logaritmo-della-verosimiglianza"><span class="header-section-number">72.7.2</span> Calcolo del Logaritmo della Verosimiglianza</h3>
-<p>Massimizzare la verosimiglianza è spesso più facile se si lavora con il logaritmo della verosimiglianza, perché le moltiplicazioni di probabilità diventano somme. La log-verosimiglianza può essere espressa come:</p>
-<p><span class="math display">\[
-\log \mathcal{L} = \log p(d_{1:T} | (\alpha, \theta)_m, m) = \sum_{t=1}^T \log p(c_t | d_{1:t-1}, s_t, (\alpha, \theta)_m, m)
-\]</span></p>
-<p>In questa equazione:</p>
-<ul>
-<li><span class="math inline">\(\log \mathcal{L}\)</span> è il logaritmo della verosimiglianza.</li>
-<li><span class="math inline">\(p(d_{1:T} | (\alpha, \theta)_m, m)\)</span> è la probabilità dei dati osservati dato il modello e i parametri.</li>
-<li><span class="math inline">\(p(c_t | d_{1:t-1}, s_t, (\alpha, \theta)_m, m)\)</span> è la probabilità di ogni singola scelta <span class="math inline">\(c_t\)</span> data la storia delle scelte e dei feedback fino al tempo <span class="math inline">\(t\)</span> e i parametri del modello.</li>
-</ul>
-</section>
-<section id="minimizzazione-del-logaritmo-negativo-della-verosimiglianza" class="level3" data-number="72.7.3">
-<h3 data-number="72.7.3" class="anchored" data-anchor-id="minimizzazione-del-logaritmo-negativo-della-verosimiglianza"><span class="header-section-number">72.7.3</span> Minimizzazione del Logaritmo Negativo della Verosimiglianza</h3>
-<p>In pratica, massimizzare la log-verosimiglianza è equivalente a minimizzare il logaritmo negativo della verosimiglianza. Questo ci porta alla seguente equazione:</p>
-<p><span class="math display">\[
--\log \mathcal{L} = -\sum_{t=1}^T \log p(c_t | d_{1:t-1}, s_t, (\alpha, \theta)_m, m)
-\]</span></p>
-<p>Per applicare questa procedura al modello di Rescorla-Wagner, dobbiamo definire la funzione di log-verosimiglianza negativa specifica per il nostro modello. Questa funzione ci permette di calcolare quanto bene i parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> spiegano i dati osservati. Durante il processo di stima, l’obiettivo è minimizzare questa funzione per trovare i valori ottimali dei parametri.</p>
-</section>
-<section id="esempio-pratico-1" class="level3" data-number="72.7.4">
-<h3 data-number="72.7.4" class="anchored" data-anchor-id="esempio-pratico-1"><span class="header-section-number">72.7.4</span> Esempio Pratico</h3>
-<p>Immaginiamo di avere dati osservati da un esperimento in cui un partecipante ha fatto 100 scelte tra due slot machine. Il nostro obiettivo è stimare i parametri <span class="math inline">\(\alpha\)</span> (tasso di apprendimento) e <span class="math inline">\(\theta\)</span> (temperatura) che meglio spiegano queste scelte. Per fare ciò, utilizziamo il metodo della massima verosimiglianza.</p>
-<p>La seguente funzione <code>negll_RescorlaWagner</code> calcola il negativo della log-verosimiglianza per il modello di apprendimento di Rescorla-Wagner. Questo ci permette di capire quanto bene i parametri del modello (<span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span>) spiegano le scelte osservate. Ecco una spiegazione passo passo per capire come funziona questa funzione.</p>
-<p>I parametri della Funzione sono:</p>
-<ul>
-<li><code>params</code>: una lista che contiene i valori dei parametri <span class="math inline">\(\alpha\)</span> (tasso di apprendimento) e <span class="math inline">\(\theta\)</span> (temperatura).</li>
-<li><code>c</code>: un array che contiene le scelte effettuate dal partecipante (0 o 1).</li>
-<li><code>r</code>: un array che contiene le ricompense ricevute dopo ogni scelta (1 per ricompensa, 0 per nessuna ricompensa).</li>
-</ul>
-<p>Esaminiamo ora il corpo della funzione.</p>
-<ol type="1">
-<li><p><strong>Inizializzazione dei Parametri</strong></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>alpha, theta <span class="op">=</span> params</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="bu">len</span>(c)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>choiceProb <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">float</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li><code>alpha</code> e <code>theta</code> sono estratti dalla lista <code>params</code>.</li>
-<li><code>Q</code> è una lista che tiene traccia delle aspettative di valore per le due slot machine, inizializzate a 0.5.</li>
-<li><code>T</code> è il numero di scelte effettuate.</li>
-<li><code>choiceProb</code> è un array che memorizza la probabilità di ogni scelta effettuata.</li>
-</ul></li>
-<li><p><strong>Calcolo delle Probabilità di Scelta e Aggiornamento dei Valori</strong></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    p0 <span class="op">=</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">1</span>]))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> [p0, <span class="dv">1</span> <span class="op">-</span> p0]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    choiceProb[t] <span class="op">=</span> p[c[t]]</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li><p><strong>Calcolo delle Probabilità di Scelta</strong>:</p>
-<ul>
-<li><code>p0</code> è la probabilità di scegliere la prima slot machine.</li>
-<li><code>p</code> è una lista delle probabilità di scegliere ciascuna delle due slot machine.</li>
-<li><code>choiceProb[t]</code> memorizza la probabilità della scelta effettivamente fatta al tempo <span class="math inline">\(t\)</span>.</li>
-</ul></li>
-<li><p><strong>Aggiornamento delle Aspettative di Valore</strong>:</p>
-<ul>
-<li><code>delta</code> è la differenza tra la ricompensa effettiva <code>r[t]</code> e l’aspettativa di valore <code>Q[c[t]]</code> per la scelta fatta.</li>
-<li><code>Q[c[t]]</code> viene aggiornata secondo la regola di Rescorla-Wagner: il nuovo valore atteso è il vecchio valore atteso più una frazione (determinata da <span class="math inline">\(\alpha\)</span>) dell’errore di previsione.</li>
-</ul></li>
-</ul></li>
-<li><p><strong>Calcolo del Negativo della Log-Verosimiglianza</strong></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>negLL <span class="op">=</span> <span class="op">-</span>np.<span class="bu">sum</span>(np.log(choiceProb))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> negLL</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li><p><strong>Log-Verosimiglianza</strong>:</p>
-<ul>
-<li><code>np.log(choiceProb)</code> calcola il logaritmo delle probabilità di scelta.</li>
-<li><code>np.sum(np.log(choiceProb))</code> somma questi logaritmi.</li>
-</ul></li>
-<li><p><strong>Negativo della Log-Verosimiglianza</strong>:</p>
-<ul>
-<li>Il risultato è moltiplicato per -1 per ottenere il negativo della log-verosimiglianza, poiché nella stima dei parametri cerchiamo di minimizzare questa funzione.</li>
-</ul></li>
-</ul></li>
-</ol>
-<p>In sintesi, la funzione <code>negll_RescorlaWagner</code>:</p>
-<ol type="1">
-<li>Calcola le probabilità di scelta basate sui parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span>.</li>
-<li>Aggiorna le aspettative di valore in base alle scelte e alle ricompense osservate.</li>
-<li>Calcola il negativo della log-verosimiglianza per valutare quanto bene i parametri spiegano i dati osservati.</li>
-</ol>
-<p>Ecco la funzione completa con commenti per facilitarne la comprensione:</p>
-<div id="cell-24" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> negll_RescorlaWagner(params, c, r):</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    alpha, theta <span class="op">=</span> params</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> <span class="bu">len</span>(c)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    choiceProb <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola le probabilità di scelta per k = 2</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        p0 <span class="op">=</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta <span class="op">*</span> Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta <span class="op">*</span> Q[<span class="dv">1</span>]))</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># "p" è una lista di probabilità di scelta per le due opzioni disponibili</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> [p0, <span class="dv">1</span> <span class="op">-</span> p0]</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Memorizza la probabilità della scelta effettuata</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        choiceProb[t] <span class="op">=</span> p[c[t]]</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aggiorna le aspettative di valore secondo la regola di Rescorla-Wagner</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcola il negativo della log-verosimiglianza</span></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    negLL <span class="op">=</span> <span class="op">-</span>np.<span class="bu">sum</span>(np.log(choiceProb))</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> negLL</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="simulazione-del-modello-di-rescorla-wagner" class="level2" data-number="72.8">
+<h2 data-number="72.8" class="anchored" data-anchor-id="simulazione-del-modello-di-rescorla-wagner"><span class="header-section-number">72.8</span> Simulazione del Modello di Rescorla-Wagner</h2>
+<p>Combiniamo la regola di apprendimento e la regola decisionale per simulare il comportamento del partecipante:</p>
+<div id="cell-24" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_RescorlaWagner(params, T, mu, noisy_choice<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    alpha, theta <span class="op">=</span> params</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un array di zeri di lunghezza T</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.zeros((T), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un array multidimensionale di zeri di dimensione 2xT</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    Q_stored <span class="op">=</span> np.zeros((<span class="dv">2</span>, T), dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizializza Q per t == 0</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.5</span>]</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Salva i valori Q per Q_{t+1}</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        Q_stored[:, t] <span class="op">=</span> Q</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola le probabilità di scelta</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        p0 <span class="op">=</span> np.exp(theta<span class="op">*</span>Q[<span class="dv">0</span>]) <span class="op">/</span> (np.exp(theta<span class="op">*</span>Q[<span class="dv">0</span>]) <span class="op">+</span> np.exp(theta<span class="op">*</span>Q[<span class="dv">1</span>]))</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>        p1 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> p0</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Se noisy_choice è vero, viene simulato un comportamento di scelta rumoroso in </span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># cui l'opzione 0 è scelta con probabilità p0, mentre l'opzione 1 è scelta con </span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># probabilità 1-p0.</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> noisy_choice:</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> np.random.random_sample(<span class="dv">1</span>) <span class="op">&lt;</span> p0:</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>                c[t] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>                c[t] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:  <span class="co"># la scelta viene effettuata senza rumore</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>            c[t] <span class="op">=</span> np.argmax([p0, p1])</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Genera la ricompensa sulla base delle probabilità di ricompensa</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>        r[t] <span class="op">=</span> np.random.rand() <span class="op">&lt;</span> mu[c[t]]</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aggiorna le aspettative di valore</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        delta <span class="op">=</span> r[t] <span class="op">-</span> Q[c[t]]</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>        Q[c[t]] <span class="op">=</span> Q[c[t]] <span class="op">+</span> alpha <span class="op">*</span> delta</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c, r, Q_stored</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Simuliamo ora un set di dati.</p>
-<div id="cell-26" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate choices from RW Model</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">.2</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">1.5</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>c, r, Q2 <span class="op">=</span> simulate_RescorlaWagner([alpha, theta], T<span class="op">=</span>T, mu<span class="op">=</span>[<span class="fl">.2</span>, <span class="fl">.8</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Simuliamo <code>T</code> = 100 prove utilizzando il modello generativo dei dati definito in precedenza.</p>
+<div id="cell-26" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Per fare un esempio, valutiamo la log-verosimiglianza negativa per i dati simulati in corrispondenza dei valori <code>alpha</code> e <code>theta</code> indicati di seguito.</p>
-<div id="cell-28" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> <span class="fl">0.3</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="op">=</span> <span class="fl">2.5</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>negLL <span class="op">=</span> negll_RescorlaWagner([alpha_hat, theta_hat], c, r)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(alpha_hat, theta_hat, negLL)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.3 2.5 67.02432583559954</code></pre>
+<div id="cell-27" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>c, r, Q <span class="op">=</span> simulate_RescorlaWagner([<span class="fl">.1</span>, <span class="fl">2.5</span>], T<span class="op">=</span>T, mu<span class="op">=</span>mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Rappresentiamo graficamente i risultati ottenuti dalla simulazione.</p>
+<div id="cell-29" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), r, <span class="st">'r--'</span>, alpha<span class="op">=</span><span class="fl">.6</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), c, <span class="st">'+'</span>, label<span class="op">=</span><span class="st">'scelta'</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Prove'</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Feedback (1=Ricompensa,</span><span class="ch">\n</span><span class="st"> 0=Nessuna ricompensa)'</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Apprendimento di Rescorla-Wagner'</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_rescorla_wagner_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div id="cell-29" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> <span class="fl">0.2</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="op">=</span> <span class="fl">1.5</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>negLL <span class="op">=</span> negll_RescorlaWagner([alpha_hat, theta_hat], c, r)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(alpha_hat, theta_hat, negLL)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.2 1.5 62.40238018291291</code></pre>
 </div>
-</div>
-<p>Un metodo per trovare i parametri di massima verosimiglianza è effettuare una ricerca esaustiva su tutto lo spazio dei parametri. Questo significa selezionare i valori di <code>alpha</code> e <code>theta</code> per i quali la funzione <code>negLL</code> assume il valore più basso.</p>
-<p>Per illustrare questo metodo, applichiamolo a un set di dati simulato. Per semplicità, assumiamo di conoscere il valore di <span class="math inline">\(\theta\)</span> e di dover trovare solo il valore di <span class="math inline">\(\alpha\)</span>.</p>
-<div id="cell-31" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nLL <span class="op">=</span> []</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>alpha_vals <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1000</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> alpha_val <span class="kw">in</span> alpha_vals:</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    nLL.append(negll_RescorlaWagner([alpha_val, theta], c, r))</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>plt.plot(alpha_vals, nLL, <span class="st">'-'</span>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    alpha_vals[np.argmin(nLL)], nLL[np.argmin(nLL)],</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'X'</span>, label<span class="op">=</span><span class="vs">r'optimal $\hat \alpha$'</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'negative log likelihood'</span>)</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">fr'learning rate, $\hat \alpha$'</span>)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Rescorla-Wagner Learning'</span>)</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Come possiamo osservare, le scelte per la slot machine che produce meno ricompense diventano meno frequenti nel corso delle prove.</p>
+<p>Il diagramma seguente illustra l’aggiornamento del valore <span class="math inline">\(Q\)</span>, mostrando come l’aspettativa di ricompensa delle due slot machine venga aggiornata in base all’errore di predizione nel corso delle prove.</p>
+<div id="cell-31" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), Q[<span class="dv">1</span>, :], <span class="st">'r--'</span>, alpha<span class="op">=</span><span class="fl">.6</span>, label<span class="op">=</span><span class="st">'80% machine'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), Q[<span class="dv">0</span>, :], <span class="st">'m-'</span>, alpha<span class="op">=</span><span class="fl">.6</span>, label<span class="op">=</span><span class="st">'20% machine'</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(T), c, <span class="st">'b+'</span>, label<span class="op">=</span><span class="st">'choice'</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'trials'</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'value'</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'Rescorla-Wagner Learning'</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1537,107 +1465,16 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p>Si noti come nel corso delle prove i valori delle slot macchine convergano lentamente verso le probabilità di ricompensa (20% e 80%).</p>
+<p>In sintesi, il modello di Rescorla-Wagner ci permette di simulare come le persone apprendono e prendono decisioni basate su ricompense. Utilizzando la regola di apprendimento (<span class="math inline">\(\delta\)</span>-rule) e la regola decisionale softmax, possiamo vedere come le aspettative di valore e le scelte cambiano nel tempo in risposta alle ricompense ottenute.</p>
 </section>
-<section id="validazione" class="level3" data-number="72.7.5">
-<h3 data-number="72.7.5" class="anchored" data-anchor-id="validazione"><span class="header-section-number">72.7.5</span> Validazione</h3>
-<p>Una volta stabilito un metodo per stimare i parametri del modello dai dati, dobbiamo valutare quanto accuratamente queste stime riflettano i veri valori dei parametri del modello. Per rispondere a questa domanda, possiamo condurre uno studio di simulazione.</p>
-<p>I parametri della simulazione sono i seguenti.</p>
-<div id="cell-33" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">250</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>num_subjects <span class="op">=</span> <span class="dv">20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Calcolimo i valori di massima verosimiglianza dei parametri <code>alpha</code> e <code>theta</code> usando la funzione <code>minimize</code> per minimizzare la funzione di log-verosimiglianza. Simuliamo i dati di un soggetto.</p>
-<p>Specifichiamo poi le stime iniziali per i valori dei parametri e i valori margine delle possibili soluzioni. I risultati saranno salvati nell’oggetto <code>result</code>. Le stime dei due parametri si estraggono con <code>result.x</code>.</p>
-<div id="cell-35" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>c, r, Q <span class="op">=</span> simulate_RescorlaWagner([<span class="fl">0.15</span>, <span class="fl">1.5</span>], T<span class="op">=</span>T, mu<span class="op">=</span>mu)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>init_guess <span class="op">=</span> (<span class="fl">0.1</span>, <span class="fl">0.1</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># minimize neg LL</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> minimize(</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    negll_RescorlaWagner,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    init_guess,</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    (c, r),</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    bounds<span class="op">=</span>((<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">10</span>)),</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result.x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[0.1093135  1.27704408]</code></pre>
-</div>
-</div>
-<p>Simuliamo i dati per 500 soggetti, con 250 osservazioni ciascuno, utilizzando valori casuali di <code>alpha</code> e <code>theta</code>. Successivamente, eseguiamo la stima di massima verosimiglianza per i dati di ogni soggetto, inizializzando casualmente i parametri per ciascuno di essi. Infine, salviamo i risultati ottenuti nel DataFrame <code>df</code>. Ecco il codice corrispondente:</p>
-<div id="cell-37" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>NREP <span class="op">=</span> <span class="dv">500</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="bu">range</span>(<span class="dv">0</span>, NREP), columns<span class="op">=</span>[<span class="st">"true_alpha"</span>, <span class="st">"alpha"</span>, <span class="st">"true_theta"</span>, <span class="st">"theta"</span>]</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># loop through subjects</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index <span class="kw">in</span> <span class="bu">range</span>(NREP):</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    true_alpha <span class="op">=</span> <span class="fl">0.95</span> <span class="op">*</span> np.random.random()</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    true_theta <span class="op">=</span> <span class="fl">4.0</span> <span class="op">*</span> np.random.random()</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    c, r, Q <span class="op">=</span> simulate_RescorlaWagner([true_alpha, true_theta], T<span class="op">=</span><span class="dv">250</span>, mu<span class="op">=</span>mu)</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    init_guess <span class="op">=</span> (<span class="fl">0.2</span> <span class="op">*</span> np.random.random(), <span class="fl">1.0</span> <span class="op">*</span> np.random.random())</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># minimize neg LL</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    param_fits <span class="op">=</span> minimize(</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        negll_RescorlaWagner,</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        init_guess,</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        (c, r),</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        bounds<span class="op">=</span>((<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">10</span>)),</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># store in dataframe</span></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"true_alpha"</span>] <span class="op">=</span> true_alpha</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"true_theta"</span>] <span class="op">=</span> true_theta</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"alpha"</span>] <span class="op">=</span> param_fits.x[<span class="dv">0</span>]</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    df.at[index, <span class="st">"theta"</span>] <span class="op">=</span> param_fits.x[<span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>La figura successiva mostra una corrispondenza tra i valori stimati di alpha e i valori veri. È importante notare che la corrispondenza non è perfetta a causa della presenza di una componente di casualità nei dati. Inoltre, in alcuni casi si possono osservare valori stimati di alpha pari a 0 o 1, che corrispondono a risultati spurii dell’algoritmo. Il numero di risultati spurii aumenta con il diminuire del numero di osservazioni per ciascun soggetto.</p>
-<div id="cell-39" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df.true_alpha, df.alpha, <span class="st">'ob'</span>, alpha<span class="op">=</span><span class="fl">.4</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'True alpha'</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Estimated alpha'</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'ML estimation'</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="01_rescorla_wagner_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Un discorso analogo si può fare per theta, anche se in questo caso vi è una migliore corrispondenza tra i valori stimati e i valori veri.</p>
-<div id="cell-41" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df.true_theta, df.theta, <span class="st">'or'</span>, alpha<span class="op">=</span><span class="fl">.4</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'True theta'</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Estimated theta'</span>)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'ML estimation'</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="01_rescorla_wagner_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>In sintesi, possiamo affermare che il metodo della massima verosimiglianza è in grado di recuperare i valori simulati dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> del modello di Rescorla-Wagner, ma solo quando il numero di osservazioni per soggetto è considerevole. Tuttavia, è importante notare che questo metodo può produrre risultati imprecisi in determinate circostanze.</p>
-<p>Esistono altri metodi di stima che offrono risultati migliori anche con un numero inferiore di osservazioni per soggetto. Tra questi, il metodo gerarchico bayesiano è ampiamente utilizzato nella pratica. Va precisato che l’obiettivo di questo tutorial era principalmente illustrare in modo semplice come sia possibile ottenere con buona accuratezza i parametri del modello di Rescorla-Wagner dai dati generati da una simulazione, considerando condizioni ottimali in cui i valori dei parametri del modello sono noti.</p>
-<p>È importante sottolineare che, nella pratica, la stima dei parametri può essere un processo complesso e che l’accuratezza delle stime dipende da molteplici fattori, come la dimensione del campione e la natura dei dati osservati. Pertanto, è sempre consigliabile valutare attentamente i risultati e considerare l’utilizzo di approcci più sofisticati, come il metodo gerarchico bayesiano, per ottenere stime più affidabili dei parametri del modello.</p>
-</section>
-</section>
-<section id="stima-con-stan" class="level2" data-number="72.8">
-<h2 data-number="72.8" class="anchored" data-anchor-id="stima-con-stan"><span class="header-section-number">72.8</span> Stima con Stan</h2>
-<p>Consideriamo ora la stima dei parametri del modello Rescorla-Wagner usando un metodo bayesiano, ovvero mediante Stan. Compiliamo il modello e stampiamo il codice Stan.</p>
-<div id="cell-44" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"rescorla_wagner.stan"</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="adattamento-del-modello" class="level2" data-number="72.9">
+<h2 data-number="72.9" class="anchored" data-anchor-id="adattamento-del-modello"><span class="header-section-number">72.9</span> Adattamento del Modello</h2>
+<p>Dopo aver compreso il funzionamento del modello di Rescorla-Wagner, il passo successivo consiste nello stimare i parametri del modello a partire dai dati osservati. Questo processo è cruciale nella modellazione computazionale poiché ci permette di determinare quali valori dei parametri descrivono meglio il comportamento osservato. Esistono diversi metodi per stimare i parametri. La sezione <span class="quarto-unresolved-ref">?sec-rescorla-wagner-ml</span> mostra come implementare l’approccio della <em>Massima Verosimiglianza</em>. Qui illustreremo la stima dei parametri del modello Rescorla-Wagner utilizzando un metodo bayesiano, attraverso l’uso di Stan. Procediamo quindi a compilare il modello e a stampare il codice Stan.</p>
+<div id="cell-34" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"rescorla_wagner.stan"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>12:57:16 - cmdstanpy - INFO - compiling stan file /Users/corradocaudek/_repositories/psicometria/stan/rescorla_wagner.stan to exe file /Users/corradocaudek/_repositories/psicometria/stan/rescorla_wagner
 12:57:27 - cmdstanpy - INFO - compiled model executable: /Users/corradocaudek/_repositories/psicometria/stan/rescorla_wagner</code></pre>
@@ -1685,185 +1522,137 @@ model {
 </code></pre>
 </div>
 </div>
-<section id="sezione-data" class="level3" data-number="72.8.1">
-<h3 data-number="72.8.1" class="anchored" data-anchor-id="sezione-data"><span class="header-section-number">72.8.1</span> Sezione <code>data</code></h3>
+<section id="sezione-data" class="level3" data-number="72.9.1">
+<h3 data-number="72.9.1" class="anchored" data-anchor-id="sezione-data"><span class="header-section-number">72.9.1</span> Sezione <code>data</code></h3>
 <p>Questa sezione definisce i dati che vengono forniti al modello:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>&gt; nTrials; <span class="co">// numero di tentativi</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[nTrials] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=<span class="dv">2</span>&gt; choice; <span class="co">// scelte effettuate (1 o 2)</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[nTrials] <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; reward; <span class="co">// ricompense ricevute (0 o 1)</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li><code>nTrials</code>: Il numero totale di tentativi o scelte effettuate dal partecipante.</li>
 <li><code>choice</code>: Un array che contiene le scelte effettuate dal partecipante in ciascun tentativo (1 o 2).</li>
 <li><code>reward</code>: Un array che contiene le ricompense ricevute per ciascun tentativo (0 o 1).</li>
 </ul>
 </section>
-<section id="sezione-transformed-data" class="level3" data-number="72.8.2">
-<h3 data-number="72.8.2" class="anchored" data-anchor-id="sezione-transformed-data"><span class="header-section-number">72.8.2</span> Sezione <code>transformed data</code></h3>
-<p>Questa sezione prepara alcuni dati iniziali trasformati per il modello:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">transformed data</span> {</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[<span class="dv">2</span>] initV; <span class="co">// valori iniziali per V</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  initV = rep_vector(<span class="fl">0.5</span>, <span class="dv">2</span>); <span class="co">// inizializzati a 0.5</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li><code>initV</code>: Un vettore di lunghezza 2 che rappresenta i valori iniziali delle aspettative di ricompensa per le due opzioni, entrambi inizializzati a 0.5.</li>
-</ul>
+<section id="sezione-transformed-data" class="level3" data-number="72.9.2">
+<h3 data-number="72.9.2" class="anchored" data-anchor-id="sezione-transformed-data"><span class="header-section-number">72.9.2</span> Sezione <code>transformed data</code></h3>
+<p>Questa sezione prepara alcuni dati iniziali trasformati per il modello. Qui <code>initV</code> è un vettore di lunghezza 2 che rappresenta i valori iniziali delle aspettative di ricompensa per le due opzioni, entrambi inizializzati a 0.5.</p>
 </section>
-<section id="sezione-parameters" class="level3" data-number="72.8.3">
-<h3 data-number="72.8.3" class="anchored" data-anchor-id="sezione-parameters"><span class="header-section-number">72.8.3</span> Sezione <code>parameters</code></h3>
+<section id="sezione-parameters" class="level3" data-number="72.9.3">
+<h3 data-number="72.9.3" class="anchored" data-anchor-id="sezione-parameters"><span class="header-section-number">72.9.3</span> Sezione <code>parameters</code></h3>
 <p>Questa sezione definisce i parametri del modello che Stan cercherà di stimare:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; alpha; <span class="co">// tasso di apprendimento</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; theta; <span class="co">// temperatura</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li><code>alpha</code>: Il tasso di apprendimento, che determina quanto rapidamente il partecipante aggiorna le proprie aspettative. Questo valore è compreso tra 0 e 1.</li>
 <li><code>theta</code>: La temperatura, che controlla il livello di esplorazione (quanto spesso il partecipante sceglie l’opzione con il valore atteso più alto rispetto a esplorare altre opzioni). Questo valore è positivo.</li>
 </ul>
 </section>
-<section id="sezione-model" class="level3" data-number="72.8.4">
-<h3 data-number="72.8.4" class="anchored" data-anchor-id="sezione-model"><span class="header-section-number">72.8.4</span> Sezione <code>model</code></h3>
-<p>Questa è la sezione principale che definisce come il modello effettua le stime e aggiorna i valori:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">vector</span>[<span class="dv">2</span>] v; <span class="co">// valori attesi</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span> delta; <span class="co">// errore di previsione</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Priori</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  alpha ~ beta(<span class="dv">1</span>, <span class="dv">1</span>); <span class="co">// prior uniforme su [0, 1]</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  theta ~ normal(<span class="dv">0</span>, <span class="dv">10</span>); <span class="co">// prior normale con media 0 e deviazione standard 10</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  v = initV;</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span> : nTrials) {</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Calcolo delle probabilità di scelta usando la funzione softmax con limitazione</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">vector</span>[<span class="dv">2</span>] logits;</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    logits = theta * v;</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    logits = fmin(logits, <span class="dv">20</span>); <span class="co">// Limita i valori massimi per evitare overflow</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    logits = fmax(logits, -<span class="dv">20</span>); <span class="co">// Limita i valori minimi per evitare underflow</span></span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    choice[t] ~ categorical_logit(logits);</span>
-<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Errore di previsione</span></span>
-<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>    delta = reward[t] - v[choice[t]];</span>
-<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Aggiornamento dei valori attesi (apprendimento)</span></span>
-<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>    v[choice[t]] = v[choice[t]] + alpha * delta;</span>
-<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li><code>v</code>: Un vettore che contiene i valori attesi delle ricompense per le due opzioni.</li>
-<li><code>delta</code>: La differenza tra la ricompensa ricevuta e il valore atteso (errore di previsione).</li>
-</ul>
-<section id="priori" class="level4" data-number="72.8.4.1">
-<h4 data-number="72.8.4.1" class="anchored" data-anchor-id="priori"><span class="header-section-number">72.8.4.1</span> Priori</h4>
-<p>Le distribuzioni prior definiscono le nostre convinzioni iniziali sui parametri prima di vedere i dati:</p>
-<ul>
-<li><code>alpha ~ beta(1, 1)</code>: Una distribuzione beta uniforme per <code>alpha</code>, che assegna uguale probabilità a tutti i valori tra 0 e 1.</li>
-<li><code>theta ~ normal(0, 10)</code>: Una distribuzione normale per <code>theta</code> con media 0 e deviazione standard 10.</li>
-</ul>
-</section>
-<section id="ciclo-sui-tentativi" class="level4" data-number="72.8.4.2">
-<h4 data-number="72.8.4.2" class="anchored" data-anchor-id="ciclo-sui-tentativi"><span class="header-section-number">72.8.4.2</span> Ciclo sui Tentativi</h4>
-<p>Per ogni tentativo, il modello:</p>
+<section id="sezione-model" class="level3" data-number="72.9.4">
+<h3 data-number="72.9.4" class="anchored" data-anchor-id="sezione-model"><span class="header-section-number">72.9.4</span> Sezione <code>model</code></h3>
+<p>La sezione <code>model</code> del codice Stan è il cuore del modello, dove avviene il processo di stima e aggiornamento dei valori attesi in base ai dati osservati. Vediamo passo passo come funziona.</p>
 <ol type="1">
-<li><p><strong>Calcola le probabilità di scelta</strong> utilizzando la funzione softmax, limitando i valori per evitare overflow numerici:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>logits = theta * v;</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>logits = fmin(logits, <span class="dv">20</span>);</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>logits = fmax(logits, -<span class="dv">20</span>);</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>choice[t] ~ categorical_logit(logits);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<li><p>Inizializzazione.</p>
 <ul>
-<li><code>logits = theta * v;</code>: <code>logits</code> è un vettore che contiene i valori trasformati <code>theta * v</code>.</li>
-<li><code>theta</code> è la temperatura, che controlla quanto il partecipante esplora rispetto a sfruttare (scegliere l’opzione con il valore atteso più alto).</li>
-<li><code>v</code> sono i valori attesi delle ricompense per le due opzioni.</li>
-<li><code>logits = fmin(logits, 20);</code>: Questa funzione assicura che nessun valore in <code>logits</code> sia maggiore di 20. Se un valore è maggiore di 20, viene impostato a 20.</li>
-<li><code>logits = fmax(logits, -20);</code>: Questa funzione assicura che nessun valore in <code>logits</code> sia minore di -20. Se un valore è minore di -20, viene impostato a -20.</li>
-<li><code>choice[t] ~ categorical_logit(logits);</code>: <code>categorical_logit(logits)</code> è una distribuzione che assegna probabilità alle scelte (1 o 2) in base ai valori <code>logits</code>.</li>
-</ul>
-<p><strong>Motivazione</strong>: Limitare i valori dei <code>logits</code> è importante per evitare problemi numerici (overflow) quando si calcolano le probabilità. Valori estremi di <code>theta * v</code> possono causare risultati non definiti o infiniti, quindi li limitiamo a un intervallo ragionevole (-20 a 20).</p>
-<p><strong>Funzionamento della Funzione <code>categorical_logit</code></strong>:</p>
-<ul>
-<li><p><code>categorical_logit(logits)</code> utilizza la funzione softmax per convertire i <code>logits</code> in probabilità.</p></li>
-<li><p>La funzione softmax è definita come:</p>
-<p><span class="math display">\[
-\text{softmax}(z_i) = \frac{\exp(z_i)}{\sum_{j=1}^{K} \exp(z_j)},
-\]</span></p>
-<p>dove <code>z_i</code> sono i <code>logits</code> per ciascuna opzione.</p></li>
-<li><p>Questa funzione garantisce che le probabilità siano comprese tra 0 e 1 e che la loro somma sia 1.</p></li>
-</ul>
-<p><strong>Esempio Pratico</strong>:</p>
-<p>Supponiamo che <code>theta = 1</code> e i valori attesi siano <code>v = [0.3, 0.7]</code>. I <code>logits</code> sarebbero calcolati come:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>logits = theta * v; <span class="co">// logits = [1 * 0.3, 1 * 0.7] = [0.3, 0.7]</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>logits = fmin(logits, <span class="dv">20</span>); <span class="co">// nessun valore è maggiore di 20, quindi rimane [0.3, 0.7]</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>logits = fmax(logits, -<span class="dv">20</span>); <span class="co">// nessun valore è minore di -20, quindi rimane [0.3, 0.7]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Applicando la funzione softmax:</p>
-<p><span class="math display">\[
-\text{softmax}(0.3, 0.7) = \left( \frac{\exp(0.3)}{\exp(0.3) + \exp(0.7)}, \frac{\exp(0.7)}{\exp(0.3) + \exp(0.7)} \right)
-\]</span></p>
-<p>Calcolando le esponenziali e le probabilità:</p>
-<p><span class="math display">\[
-\exp(0.3) \approx 1.35, \quad \exp(0.7) \approx 2.01
-\]</span></p>
-<p><span class="math display">\[
-\text{softmax}(0.3, 0.7) \approx \left( \frac{1.35}{1.35 + 2.01}, \frac{2.01}{1.35 + 2.01} \right) = \left( 0.40, 0.60 \right)
-\]</span></p>
-<p>Quindi, le probabilità di scegliere l’opzione 1 e l’opzione 2 sono circa 0.40 e 0.60, rispettivamente. Il modello usa queste probabilità per determinare quale scelta viene effettivamente fatta al tempo <code>t</code>.</p></li>
-<li><p><strong>Calcola l’errore di previsione</strong> come la differenza tra la ricompensa ricevuta e il valore atteso:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>delta = reward[t] - v[choice[t]];</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><strong>Aggiorna i valori attesi</strong> utilizzando l’errore di previsione e il tasso di apprendimento <code>alpha</code>:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>v[choice[t]] = v[choice[t]] + alpha * delta;</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li>Partiamo con valori attesi uguali per entrambe le opzioni (<code>v = [0.5, 0.5]</code>).</li>
+<li>Scegliamo valori casuali iniziali per <code>alpha</code> e <code>theta</code>.</li>
+</ul></li>
+<li><p>Per ogni tentativo dell’esperimento:</p>
+<ol type="a">
+<li>Calcolo delle probabilità di scelta:</li>
 </ol>
-<p>In sintesi,</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>logits = theta * v;</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>logits = fmin(logits, <span class="dv">20</span>);</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>logits = fmax(logits, -<span class="dv">20</span>);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li>I <code>logits</code> sono valori calcolati come <code>theta * v</code> e limitati tra -20 e 20 per evitare problemi numerici.</li>
-<li><code>categorical_logit(logits)</code> converte questi <code>logits</code> in probabilità utilizzando la funzione softmax.</li>
-<li>La scelta al tempo <code>t</code> (<code>choice[t]</code>) è modellata come una variabile categoriale con queste probabilità, riflettendo la probabilità che il partecipante scelga ciascuna delle opzioni.</li>
-<li>L’errore di previsione (<code>delta</code>) è calcolato come la differenza tra la ricompensa ricevuta e il valore atteso.</li>
-<li>I valori attesi (<code>v</code>) vengono aggiornati utilizzando l’errore di previsione e il tasso di apprendimento (<code>alpha</code>).</li>
+<li>Moltiplichiamo i valori attesi per la temperatura.</li>
+<li>Limitiamo i risultati tra -20 e 20 per evitare problemi numerici.</li>
 </ul>
-<p>Questo modello Stan implementa il processo di apprendimento del modello di Rescorla-Wagner. Utilizza le scelte e le ricompense osservate per stimare i parametri <code>alpha</code> e <code>theta</code>, aggiornando le aspettative di ricompensa in base ai risultati di ogni tentativo.</p>
+<p><em>Esempio:</em></p>
+<p>Se <code>v = [0.3, 0.7]</code> e <code>theta = 2</code>:</p>
+<ol type="1">
+<li><code>logits = 2 * [0.3, 0.7] = [0.6, 1.4]</code></li>
+<li>Nessun cambiamento dopo <code>fmin</code> e <code>fmax</code> perché i valori sono già tra -20 e 20.</li>
+</ol>
+<ol start="2" type="a">
+<li>Modellazione della scelta:</li>
+</ol>
+<div class="sourceCode" id="cb24"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>choice[t] ~ categorical_logit(logits);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Usiamo i <code>logits</code> per calcolare le probabilità di scelta.</li>
+<li>La funzione <code>softmax</code> converte i <code>logits</code> in probabilità.</li>
+</ul>
+<p><em>Esempio (continuazione):</em></p>
+<ul>
+<li><code>softmax([0.6, 1.4]) ≈ [0.38, 0.62]</code></li>
+<li>C’è il 38% di probabilità di scegliere la prima opzione e il 62% per la seconda.</li>
+</ul>
+<ol start="3" type="a">
+<li>Calcolo dell’errore di previsione:</li>
+</ol>
+<div class="sourceCode" id="cb25"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>delta = reward[t] - v[choice[t]];</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Confrontiamo la ricompensa ricevuta con quanto ci aspettavamo.</li>
+<li>Se positivo, siamo stati piacevolmente sorpresi; se negativo, delusi.</li>
+</ul>
+<p><em>Esempio:</em></p>
+<p>Se scegliamo la seconda opzione e riceviamo una ricompensa di 1:</p>
+<ul>
+<li><code>delta = 1 - 0.7 = 0.3</code></li>
+</ul>
+<p>Siamo stati leggermente sorpresi in positivo.</p>
+<ol start="4" type="a">
+<li>Aggiornamento dei valori attesi:</li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>v[choice[t]] = v[choice[t]] + alpha * delta;</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Aggiorniamo la nostra aspettativa per l’opzione scelta.</li>
+<li><code>alpha</code> determina quanto peso diamo alla nuova esperienza.</li>
+</ul>
+<p><em>Esempio (continuazione):</em></p>
+<p>Se <code>alpha = 0.2</code>:</p>
+<ul>
+<li>Nuovo valore per la seconda opzione: <code>0.7 + 0.2 * 0.3 = 0.76</code></li>
+</ul>
+<p>La nostra aspettativa per la seconda opzione è leggermente aumentata.</p></li>
+<li><p>Ripetizione.</p></li>
+</ol>
+<ul>
+<li>Ripetiamo i passaggi 2a-2d per ogni tentativo dell’esperimento.</li>
+<li>Ad ogni iterazione, affiniamo le nostre stime di <code>alpha</code> e <code>theta</code>.</li>
+</ul>
 </section>
-</section>
-<section id="inferenza" class="level3" data-number="72.8.5">
-<h3 data-number="72.8.5" class="anchored" data-anchor-id="inferenza"><span class="header-section-number">72.8.5</span> Inferenza</h3>
-<p>Compiliamo il modello Stan:</p>
-<div id="cell-47" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Definiamo i parametri della simulazione:</p>
-<div id="cell-49" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">2.5</span>]  <span class="co"># alpha, theta</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">300</span>  <span class="co"># numero di tentativi</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]  <span class="co"># probabilità di ricompensa per le due opzioni</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="inferenza" class="level3" data-number="72.9.5">
+<h3 data-number="72.9.5" class="anchored" data-anchor-id="inferenza"><span class="header-section-number">72.9.5</span> Inferenza</h3>
+<p>Considereremo qui i dati di un singolo partecipante che esegue 300 prove. Definiamo i parametri della simulazione:</p>
+<div id="cell-38" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">2.5</span>]  <span class="co"># alpha, theta</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">300</span>  <span class="co"># numero di tentativi</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.8</span>]  <span class="co"># probabilità di ricompensa per le due opzioni</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Simuliamo i dati:</p>
-<div id="cell-51" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>choices, rewards, Q_stored <span class="op">=</span> simulate_RescorlaWagner(params, T, mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-40" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>choices, rewards, Q_stored <span class="op">=</span> simulate_RescorlaWagner(params, T, mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Prepariamo i dati per Stan. Si noti che abbiamo sommato 1 a <code>choices</code> per adattarsi agli indici di Stan che partono da 1.</p>
-<div id="cell-53" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> choices <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'nTrials'</span>: T,</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'choice'</span>: c.tolist(),</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'reward'</span>: rewards.tolist()</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-42" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> choices <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'nTrials'</span>: T,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'choice'</span>: c.tolist(),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'reward'</span>: rewards.tolist()</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'nTrials': 300, 'choice': [1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2], 'reward': [1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0]}</code></pre>
 </div>
 </div>
 <p>Eseguiamo il campionamento:</p>
-<div id="cell-55" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> model.sample(</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-44" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> model.sample(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1_000</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>12:58:12 - cmdstanpy - INFO - CmdStan start processing
 12:58:12 - cmdstanpy - INFO - Chain [1] start processing
@@ -1877,22 +1666,22 @@ model {
 </div>
 </div>
 <p>Esaminiamo le distribuzioni a posteriori dei due parametri oggetto dell’inferenza insieme alle loro tracce (cioè i vettori dei campioni dei parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> prodotti dalla procedura di campionamento MCMC) mediante un <em>trace plot</em> .</p>
-<div id="cell-57" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(trace)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-46" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(trace)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_rescorla_wagner_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="01_rescorla_wagner_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="interpretazione-delle-stime-dei-parametri" class="level3" data-number="72.8.6">
-<h3 data-number="72.8.6" class="anchored" data-anchor-id="interpretazione-delle-stime-dei-parametri"><span class="header-section-number">72.8.6</span> Interpretazione delle Stime dei Parametri</h3>
+<section id="interpretazione-delle-stime-dei-parametri" class="level3" data-number="72.9.6">
+<h3 data-number="72.9.6" class="anchored" data-anchor-id="interpretazione-delle-stime-dei-parametri"><span class="header-section-number">72.9.6</span> Interpretazione delle Stime dei Parametri</h3>
 <p>Utilizzando <code>az.summary(trace, hdi_prob=0.94, round_to=2)</code>, otteniamo un riassunto delle stime dei parametri del modello, che include la media, la deviazione standard, gli intervalli di credibilità (HDI) e altre statistiche diagnostiche:</p>
-<div id="cell-59" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>az.summary(trace, hdi_prob<span class="op">=</span><span class="fl">0.94</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-48" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>az.summary(trace, hdi_prob<span class="op">=</span><span class="fl">0.94</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <div>
 <div>
@@ -1954,11 +1743,20 @@ model {
 <p>Questi risultati suggeriscono che il modello di apprendimento di Rescorla-Wagner ha stimato correttamente i parametri <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\theta\)</span> dai dati simulati.</p>
 </section>
 </section>
+<section id="apprendimento-probabilistico-e-reversal-learning" class="level2" data-number="72.10">
+<h2 data-number="72.10" class="anchored" data-anchor-id="apprendimento-probabilistico-e-reversal-learning"><span class="header-section-number">72.10</span> Apprendimento Probabilistico e Reversal Learning</h2>
+<p>Un paradigma sperimentale particolarmente interessante per indagare i meccanismi dell’apprendimento umano è il <em>Probabilistic Reversal Learning</em> <span class="citation" data-cites="caudek2020cognitive caudek2021susceptibility">(<a href="../../99-references.html#ref-caudek2020cognitive" role="doc-biblioref">Caudek et al. 2020</a>, <a href="../../99-references.html#ref-caudek2021susceptibility" role="doc-biblioref">2021</a>)</span>. In questo compito, le associazioni tra stimoli e outcomes vengono invertite a metà della procedura sperimentale. Ad esempio, se inizialmente lo stimolo A era associato a una ricompensa, in seguito questa associazione può essere invertita, rendendo lo stimolo A svantaggioso.</p>
+<p>L’apprendimento per rinforzo offre un solido quadro teorico per comprendere come gli individui si adattano a tali cambiamenti. Modelli computazionali come quello di Rescorla-Wagner possono essere impiegati per simulare questo tipo di apprendimento e per studiare i processi cognitivi sottostanti.</p>
+</section>
+<section id="commenti-e-considerazioni-finali" class="level2" data-number="72.11">
+<h2 data-number="72.11" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">72.11</span> Commenti e considerazioni finali</h2>
+<p>L’apprendimento per rinforzo offre un potente framework per studiare come gli organismi apprendono dall’interazione con l’ambiente. Modelli come quello di Rescorla-Wagner e algoritmi come UCB e Thompson Sampling forniscono strumenti utili per comprendere i processi cognitivi sottostanti l’apprendimento associativo e per sviluppare agenti intelligenti.</p>
+</section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-62" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-53" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Last updated: Fri Jul 26 2024
 
@@ -1987,6 +1785,14 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-caudek2021susceptibility" class="csl-entry" role="listitem">
+Caudek, Corrado, Claudio Sica, Silvia Cerea, Ilaria Colpizzi, e Debora Stendardi. 2021. <span>«Susceptibility to eating disorders is associated with cognitive inflexibility in female university students»</span>. <em>Journal of Behavioral and Cognitive Therapy</em> 31 (4): 317–28.
+</div>
+<div id="ref-caudek2020cognitive" class="csl-entry" role="listitem">
+Caudek, Corrado, Claudio Sica, Igor Marchetti, Ilaria Colpizzi, e Debora Stendardi. 2020. <span>«Cognitive inflexibility specificity for individuals with high levels of obsessive-compulsive symptoms»</span>. <em>Journal of Behavioral and Cognitive Therapy</em> 30 (2): 103–13.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
