@@ -1,4 +1,4 @@
-# Introduzione 
+# Introduzione {.unnumbered}
 
 In questa parte della dispensa, esamineremo le procedure Monte Carlo a catena di Markov, con un focus particolare sull'algoritmo di Metropolis, che permette di approssimare la distribuzione a posteriori quando non è possibile ottenere una soluzione analitica.
 

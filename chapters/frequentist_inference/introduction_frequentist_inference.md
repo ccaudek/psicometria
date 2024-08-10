@@ -1,4 +1,4 @@
-# Introduzione
+# Introduzione {.unnumbered}
 
 Nell'inferenza statistica esistono due approcci principali: la statistica frequentista e la statistica bayesiana. Entrambi i metodi permettono di trarre conclusioni sulla popolazione di interesse analizzando i dati, stimare quantità sconosciute, fare previsioni e testare ipotesi. Tuttavia, differiscono nell'interpretazione della probabilità e nell'integrazione di conoscenze precedenti ed evidenze.
 
