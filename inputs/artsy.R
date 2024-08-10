@@ -12,10 +12,11 @@ canvas_flame(
   blend = FALSE, weighted = TRUE, iterations = 1e8
 )
 
-set.seed(16431)
+set.seed(16133)
 
 canvas_forest(colors = colorPalette("azul"))
 
 canvas_blacklight(colors = colorPalette("azul", n = 88))
 
 canvas_chladni(colors = colorPalette("neo3", n = 18))
+canvas_maze(color = colorPalette("jasp", n = 33))
