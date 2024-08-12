@@ -10,9 +10,9 @@ parameters {
 }
 model {
   // distribuzioni a priori
-  alpha ~ normal(0, 2);
-  beta ~ normal(0, 2);
-  sigma ~ cauchy(0, 2);
+  alpha ~ normal(0, 5.0);
+  beta ~ normal(0, 1.0);
+  sigma ~ cauchy(0, 1.0);
   // verosimiglianza
   y ~ normal(alpha + beta * x, sigma);
 }

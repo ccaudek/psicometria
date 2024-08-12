@@ -1,7 +1,5 @@
 # Misura di Probabilità {#sec-prob-spaces}
 
-![](../../figures/art_07.png){ width=40% } 
-
 **Prerequisiti**
 
 - Leggi l'@sec-combinatorics.
