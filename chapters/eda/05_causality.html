@@ -89,6 +89,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -977,20 +1006,26 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Regressione multipla</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Regressione multipla</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_entropia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"></span></a>
   </div>
 </li>
       </ul>
@@ -1023,6 +1058,7 @@ div.csl-indent {
   <li><a href="#applicazioni" id="toc-applicazioni" class="nav-link" data-scroll-target="#applicazioni"><span class="header-section-number">17.6.1</span> Applicazioni</a></li>
   </ul></li>
   <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">17.7</span> Commenti e Considerazioni Finali</a></li>
+  <li><a href="#esercizi" id="toc-esercizi" class="nav-link" data-scroll-target="#esercizi"><span class="header-section-number">17.8</span> Esercizi</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/eda/05_causality.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
@@ -1073,8 +1109,8 @@ div.csl-indent {
 <figcaption>Esempio di albero decisionale per la selezione di una procedura statistica appropriata. Iniziando dall’alto, l’utente risponde a una serie di domande riguardanti la misurazione e l’intento, arrivando infine al nome di una procedura. Sono possibili molti alberi decisionali simili. (Figura tratta da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>).</figcaption>
 </figure>
 </div>
-<p>È importante notare come tale procedura non fornisca strumenti utili per identificare le effettive cause sottostanti ai fenomeni osservati. Questa limitazione metodologica è stata identificata come uno dei fattori principali che hanno contribuito alla crisi di replicabilità nella ricerca psicologica, come approfondito nel <a href="../replication_crisis/01_crisis.html" class="quarto-xref"><span>Capitolo 73</span></a>. L’approccio descritto, pur essendo potente nell’individuare correlazioni, manca della “saggezza” necessaria per distinguere tra semplici associazioni e vere relazioni causali, analogamente ai Golem della metafora di McElreath.</p>
-<p>Un problema evidenziato da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span> è che processi causali completamente distinti possono generare la stessa distribuzione di risultati osservati. Pertanto, un approccio focalizzato esclusivamente sull’analisi delle associazioni mediante il test dell’ipotesi nulla non è in grado di distinguere tra questi diversi scenari, come spiegato nel <span class="quarto-unresolved-ref">?sec-causal-inference-regr</span>.</p>
+<p>È importante notare come tale procedura non fornisca strumenti utili per identificare le effettive cause sottostanti ai fenomeni osservati. Questa limitazione metodologica è stata identificata come uno dei fattori principali che hanno contribuito alla crisi di replicabilità nella ricerca psicologica, come approfondito nel <a href="../replication_crisis/01_crisis.html" class="quarto-xref"><span>Capitolo 75</span></a>. L’approccio descritto, pur essendo potente nell’individuare correlazioni, manca della “saggezza” necessaria per distinguere tra semplici associazioni e vere relazioni causali, analogamente ai Golem della metafora di McElreath.</p>
+<p>Un problema evidenziato da <span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span> è che processi causali completamente distinti possono generare la stessa distribuzione di risultati osservati. Pertanto, un approccio focalizzato esclusivamente sull’analisi delle associazioni mediante il test dell’ipotesi nulla non è in grado di distinguere tra questi diversi scenari, come spiegato nel <a href="../linear_models/09_causal_inference.html" class="quarto-xref"><span>Capitolo 58</span></a>.</p>
 <p>L’approccio frequentista, che si limita a descrivere le associazioni tra le variabili, ha una scarsa capacità di rilevare le caratteristiche cruciali dei fenomeni studiati e tende a produrre un alto tasso di falsi positivi <span class="citation" data-cites="van2023new">(<a href="../../99-references.html#ref-van2023new" role="doc-biblioref">Zwet et al. 2023</a>)</span>. È invece necessario utilizzare una metodologia che non si limiti a confutare ipotesi nulle, ma sia in grado di sviluppare modelli causali che rispondano direttamente alle domande di ricerca. In questo capitolo, ci concentreremo sull’introduzione dei concetti fondamentali dell’analisi causale.</p>
 </section>
 <section id="cosè-la-causalità" class="level2" data-number="17.1">
@@ -1300,6 +1336,143 @@ Figura&nbsp;17.2: <strong>Una visualizzazione del bias da variabile omessa e del
 <p>Pertanto, un diagramma causale è un primo passo fondamentale per identificare potenziali bias da variabili omesse. I DAG giustificano anche la scelta delle variabili di controllo, rendendo trasparenti le assunzioni che un ricercatore fa su come funziona il sistema oggetto di studio.</p>
 <p>È importante notare che i DAG possono essere incorretti o non includere variabili confondenti sconosciute. Infatti, un DAG rappresenta solo la comprensione <em>attuale</em> e le assunzioni del ricercatore riguardo alle relazioni causali all’interno di un sistema.</p>
 <p>Un sommario ironico di questi concetti è fornito nella vignetta di <a href="https://www.explainxkcd.com/wiki/index.php/2560:_Confounding_Variables">xkcd</a>.</p>
+</section>
+<section id="esercizi" class="level2" data-number="17.8">
+<h2 data-number="17.8" class="anchored" data-anchor-id="esercizi"><span class="header-section-number">17.8</span> Esercizi</h2>
+<div id="exr-causality-1" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.1</strong></span> Consideriamo il seguente DAG dove A influenza B e D, B influenza C, e D influenza B.</p>
+<div id="cell-8" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_causality_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se vogliamo stimare l’effetto causale di A su C, quale delle seguenti affermazioni è corretta riguardo alla d-separazione e al controllo delle variabili?</p>
+<ol type="a">
+<li><p>Controllare per B è sufficiente e necessario per ottenere una stima non distorta dell’effetto di A su C.</p></li>
+<li><p>Controllare per D è necessario per bloccare il back-door path tra A e C.</p></li>
+<li><p>Non è necessario controllare per alcuna variabile, poiché non ci sono confondenti tra A e C.</p></li>
+<li><p>Controllare sia per B che per D è necessario per ottenere una stima non distorta dell’effetto di A su C.</p></li>
+<li><p>Controllare per B potrebbe introdurre un bias, poiché B è un collider nel percorso A → B ← D.</p></li>
+</ol>
+</div>
+<div id="exr-causality-2" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.2</strong></span> Consideriamo il seguente DAG dove X è la variabile di esposizione, Y è l’outcome, e Z e W sono altre variabili nel sistema.</p>
+<div id="cell-11" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_causality_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se vogliamo stimare l’effetto causale di X su Y utilizzando il criterio del back-door, quale delle seguenti affermazioni è corretta?</p>
+<ol type="a">
+<li><p>Non è necessario controllare per alcuna variabile, poiché non ci sono back-door paths tra X e Y.</p></li>
+<li><p>È necessario controllare solo per Z per bloccare tutti i back-door paths tra X e Y.</p></li>
+<li><p>È necessario controllare solo per W per bloccare tutti i back-door paths tra X e Y.</p></li>
+<li><p>È necessario controllare sia per Z che per W per bloccare tutti i back-door paths tra X e Y.</p></li>
+<li><p>Non è possibile stimare l’effetto causale di X su Y in questo DAG utilizzando il criterio del back-door.</p></li>
+</ol>
+</div>
+<div id="exr-causality-3" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.3</strong></span> Consideriamo il seguente DAG dove A e B influenzano C indipendentemente, e C influenza D.</p>
+<div id="cell-14" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_causality_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Supponiamo di voler studiare la relazione tra A e B. Quale delle seguenti affermazioni è corretta riguardo a questo DAG e al concetto di collider?</p>
+<ol type="a">
+<li><p>A e B sono indipendenti, ma diventano dipendenti se controlliamo per C.</p></li>
+<li><p>A e B sono dipendenti, ma diventano indipendenti se controlliamo per C.</p></li>
+<li><p>A e B sono sempre dipendenti, indipendentemente dal fatto che controlliamo o meno per C.</p></li>
+<li><p>A e B sono sempre indipendenti, indipendentemente dal fatto che controlliamo o meno per C o D.</p></li>
+<li><p>Controllare per D è necessario per rendere A e B indipendenti.</p></li>
+</ol>
+</div>
+<div id="exr-causality-4" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.4</strong></span> Consideriamo il seguente DAG dove X è la variabile di esposizione, Y è l’outcome, U è una variabile non osservata, e Z è una variabile osservata.</p>
+<div id="cell-17" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_causality_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Quale delle seguenti affermazioni è corretta riguardo all’applicazione del criterio del back-door per stimare l’effetto causale di X su Y in questo DAG?</p>
+<ol type="a">
+<li><p>Non è possibile applicare il criterio del back-door perché U non è osservata.</p></li>
+<li><p>Controllare per Z è sufficiente per bloccare tutti i back-door paths tra X e Y.</p></li>
+<li><p>Controllare per Z non è necessario perché non ci sono back-door paths tra X e Y.</p></li>
+<li><p>È necessario controllare sia per U che per Z per ottenere una stima non distorta dell’effetto causale di X su Y.</p></li>
+<li><p>Controllare per Z potrebbe introdurre un bias nella stima dell’effetto causale di X su Y.</p></li>
+</ol>
+</div>
+<div id="exr-causality-5" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.5</strong></span> Considera le relazioni tra le variabili:</p>
+<ul>
+<li><span class="math inline">\(A \sim \mathcal{N}(0, 1)\)</span>.</li>
+<li><span class="math inline">\(M = A + \epsilon_1\)</span>, dove <span class="math inline">\(\epsilon_1 \sim \mathcal{N}(0, 1)\)</span>,</li>
+<li><span class="math inline">\(B = M + \epsilon_2\)</span>, dove <span class="math inline">\(\epsilon_2 \sim \mathcal{N}(0, 1)\)</span>.</li>
+</ul>
+<ol type="1">
+<li>Identifica la struttura causale risultante.</li>
+<li>Crea una simulazione in Python con le precedenti relazioni tra variabili (con <span class="math inline">\(n\)</span> = 10,000) e crea un diagramma a dispersione per A e B.</li>
+<li>Calcola la correlazione tra A e B.</li>
+</ol>
+</div>
+<div id="exr-causality-6" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.6</strong></span> Considera le seguenti relazioni tra le variabili:</p>
+<ul>
+<li><span class="math inline">\(C \sim \mathcal{N}(0, 1)\)</span>,</li>
+<li><span class="math inline">\(A = C + \epsilon_1\)</span>, dove <span class="math inline">\(\epsilon_1 \sim \mathcal{N}(0, 1)\)</span>,</li>
+<li><span class="math inline">\(B = C + \epsilon_2\)</span>, dove <span class="math inline">\(\epsilon_2 \sim \mathcal{N}(0, 1)\)</span>.</li>
+</ul>
+<ol type="1">
+<li>Identifica la struttura causale risultante.</li>
+<li>Crea una simulazione in Python con le precedenti relazioni tra variabili (con <span class="math inline">\(n\)</span> = 10,000) e crea un diagramma a dispersione per A e B.</li>
+<li>Calcola la correlazione tra A e B.</li>
+</ol>
+</div>
+<div id="exr-causality-7" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.7</strong></span> Consideriamo la struttura causale del confondimento, in cui una variabile <span class="math inline">\(C\)</span> influenza entrambe le variabili <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span>:</p>
+<ul>
+<li><span class="math inline">\(C \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(C\)</span> è distribuita secondo una normale standard),</li>
+<li><span class="math inline">\(A = C + \epsilon_1\)</span>, dove <span class="math inline">\(\epsilon_1 \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(A\)</span> è una funzione di <span class="math inline">\(C\)</span> con un termine di errore additivo),</li>
+<li><span class="math inline">\(B = C + \epsilon_2\)</span>, dove <span class="math inline">\(\epsilon_2 \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(B\)</span> è una funzione di <span class="math inline">\(C\)</span> con un altro termine di errore additivo).</li>
+</ul>
+<p>In questa simulazione Python, si genericno 10,000 osservazioni secondo le relazioni sopra descritte. Successivamente, si calcolino i residui della regressione di <span class="math inline">\(A\)</span> su <span class="math inline">\(C\)</span> e di <span class="math inline">\(B\)</span> su <span class="math inline">\(C\)</span>. Questi residui rappresentano le componenti di <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> indipendenti linearmente da <span class="math inline">\(C\)</span>. Infine, calcoli la correlazione tra i residui di <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span>, ovvero la correlazione tra <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> dopo aver controllato l’effetto di <span class="math inline">\(C\)</span>. Si interpretino i risultati.</p>
+</div>
+<div id="exr-causality-8" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.8</strong></span> Consideriamo la struttura causale della mediazione, in cui una variabile <span class="math inline">\(A\)</span> influenza una variabile <span class="math inline">\(M\)</span>, che a sua volta influenza una variabile <span class="math inline">\(B\)</span>:</p>
+<ul>
+<li><span class="math inline">\(A \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(A\)</span> è distribuita secondo una normale standard),</li>
+<li><span class="math inline">\(M = A + \epsilon_1\)</span>, dove <span class="math inline">\(\epsilon_1 \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(M\)</span> è una funzione di <span class="math inline">\(A\)</span> con un termine di errore additivo),</li>
+<li><span class="math inline">\(B = M + \epsilon_2\)</span>, dove <span class="math inline">\(\epsilon_2 \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(B\)</span> è una funzione di <span class="math inline">\(M\)</span> con un altro termine di errore additivo).</li>
+</ul>
+<p>In questa simulazione Python, genera 10.000 osservazioni secondo le relazioni sopra descritte. Successivamente, calcola i residui della regressione di <span class="math inline">\(M\)</span> su <span class="math inline">\(A\)</span> e di <span class="math inline">\(B\)</span> su <span class="math inline">\(M\)</span>. Questi residui rappresentano le componenti di <span class="math inline">\(M\)</span> e <span class="math inline">\(B\)</span> indipendenti linearmente da <span class="math inline">\(A\)</span> e <span class="math inline">\(M\)</span>, rispettivamente. Infine, calcoleremo la correlazione tra <span class="math inline">\(A\)</span> e i residui di <span class="math inline">\(B\)</span>, ovvero la correlazione tra <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> dopo aver controllato per l’effetto della mediazione attraverso <span class="math inline">\(M\)</span>.</p>
+</div>
+<div id="exr-causality-9" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 17.9</strong></span> Consideriamo ora la struttura causale di un <strong>collider</strong>, in cui due variabili indipendenti <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> influenzano entrambe una variabile <span class="math inline">\(M\)</span>. In questa configurazione, <span class="math inline">\(M\)</span> è il <strong>collider</strong>. Un aspetto fondamentale di questa struttura è che il controllo su <span class="math inline">\(M\)</span> (il collider) può indurre una correlazione spuria tra <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span>, anche se <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> non sono direttamente correlati.</p>
+<p>Le relazioni causali sono le seguenti:</p>
+<ul>
+<li><span class="math inline">\(A \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(A\)</span> è distribuita secondo una normale standard),</li>
+<li><span class="math inline">\(B \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(B\)</span> è distribuita secondo una normale standard),</li>
+<li><span class="math inline">\(C = A + B + \epsilon_1\)</span>, dove <span class="math inline">\(\epsilon_1 \sim \mathcal{N}(0, 1)\)</span> (cioè, <span class="math inline">\(C\)</span> è una funzione di <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> con un termine di errore additivo).</li>
+</ul>
+<p>In questa simulazione Python, genera 10,000 osservazioni secondo le relazioni sopra descritte. Successivamente, calcola i residui della regressione di <span class="math inline">\(C\)</span> su <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span>. Infine, calcola la correlazione tra <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> dopo aver controllato per <span class="math inline">\(C\)</span>.</p>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
