@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 52&nbsp; Confronto tra le medie di due gruppi</title>
+<title>Data Science per Psicologi - 58&nbsp; Disegno della ricerca e potere statistico</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,17 +55,37 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/linear_models/04_prediction.html" rel="next">
-<link href="../../chapters/linear_models/02_synt_sugar.html" rel="prev">
+<link href="../../chapters/linear_models/07_stan_multreg.html" rel="next">
+<link href="../../chapters/linear_models/05_prediction.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -102,10 +122,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Ricerca"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -148,7 +164,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/03_two_means.html"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/06_design.html"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -496,7 +512,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/07_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/08_exponential_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
   </div>
 </li>
       </ul>
@@ -519,61 +541,73 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/09_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/10_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  <a href="../../chapters/mcmc/10_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/11_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/12_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
   </div>
 </li>
       </ul>
@@ -596,67 +630,73 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/02_synt_sugar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  <a href="../../chapters/linear_models/02_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/03_two_means.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  <a href="../../chapters/linear_models/03_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/04_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+  <a href="../../chapters/linear_models/04_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/05_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+  <a href="../../chapters/linear_models/05_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/05_stan_multreg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  <a href="../../chapters/linear_models/06_design.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/06_hier_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  <a href="../../chapters/linear_models/07_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/07_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  <a href="../../chapters/linear_models/08_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/08_specification_error.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  <a href="../../chapters/linear_models/09_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/09_causal_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  <a href="../../chapters/linear_models/10_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/10_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  <a href="../../chapters/linear_models/11_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/12_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -679,37 +719,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -732,7 +772,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
       </ul>
@@ -755,25 +795,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/04_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -796,25 +836,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -837,37 +877,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1085,19 +1125,30 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#regressione-bayesiana-per-due-gruppi-indipendenti" id="toc-regressione-bayesiana-per-due-gruppi-indipendenti" class="nav-link" data-scroll-target="#regressione-bayesiana-per-due-gruppi-indipendenti"><span class="header-section-number">52.1</span> Regressione bayesiana per due gruppi indipendenti</a></li>
-  <li><a href="#un-esempio-illustrativo" id="toc-un-esempio-illustrativo" class="nav-link" data-scroll-target="#un-esempio-illustrativo"><span class="header-section-number">52.2</span> Un esempio illustrativo</a></li>
-  <li><a href="#parametrizzazione-alternativa" id="toc-parametrizzazione-alternativa" class="nav-link" data-scroll-target="#parametrizzazione-alternativa"><span class="header-section-number">52.3</span> Parametrizzazione alternativa</a></li>
+  <li><a href="#problema-della-potenza-statistica" id="toc-problema-della-potenza-statistica" class="nav-link" data-scroll-target="#problema-della-potenza-statistica"><span class="header-section-number">58.1</span> Problema della potenza statistica</a>
+  <ul class="collapse">
+  <li><a href="#la-maledizione-del-vincitore-negli-studi-a-bassa-potenza" id="toc-la-maledizione-del-vincitore-negli-studi-a-bassa-potenza" class="nav-link" data-scroll-target="#la-maledizione-del-vincitore-negli-studi-a-bassa-potenza"><span class="header-section-number">58.1.1</span> La maledizione del vincitore negli studi a bassa potenza</a></li>
+  <li><a href="#ipotesi-di-dimensione-delleffetto" id="toc-ipotesi-di-dimensione-delleffetto" class="nav-link" data-scroll-target="#ipotesi-di-dimensione-delleffetto"><span class="header-section-number">58.1.2</span> Ipotesi di dimensione dell’effetto</a></li>
+  </ul></li>
+  <li><a href="#stimare-la-dimensione-del-campione" id="toc-stimare-la-dimensione-del-campione" class="nav-link" data-scroll-target="#stimare-la-dimensione-del-campione"><span class="header-section-number">58.2</span> Stimare la dimensione del campione</a>
+  <ul class="collapse">
+  <li><a href="#determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato" id="toc-determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato" class="nav-link" data-scroll-target="#determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato"><span class="header-section-number">58.2.1</span> Determinazione della dimensione del campione per un errore standard specificato</a></li>
+  <li><a href="#dimensione-del-campione-per-una-potenza-dell80" id="toc-dimensione-del-campione-per-una-potenza-dell80" class="nav-link" data-scroll-target="#dimensione-del-campione-per-una-potenza-dell80"><span class="header-section-number">58.2.2</span> Dimensione del campione per una potenza dell’80%</a></li>
+  </ul></li>
+  <li><a href="#confronto-di-medie" id="toc-confronto-di-medie" class="nav-link" data-scroll-target="#confronto-di-medie"><span class="header-section-number">58.3</span> Confronto di medie</a>
+  <ul class="collapse">
+  <li><a href="#dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza" id="toc-dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza" class="nav-link" data-scroll-target="#dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza"><span class="header-section-number">58.3.1</span> Dimensione del campione per una differenza <span class="math inline">\(\Delta\)</span> con l’80% di potenza</a></li>
+  </ul></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/03_two_means.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/06_design.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/03_two_means.html"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/06_design.html"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-stan-two-means" class="quarto-section-identifier"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></h1>
+<h1 class="title"><span id="sec-bayesian-regression-prediction" class="quarto-section-identifier"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></h1>
 </div>
 
 
@@ -1115,1063 +1166,242 @@ window.Quarto = {
 
 
 <p><strong>Prerequisiti</strong></p>
-<p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Leggere <em>Regression and Other Stories</em> <span class="citation" data-cites="gelman2020regression">(<a href="../../99-references.html#ref-gelman2020regression" role="doc-biblioref">Gelman, Hill, e Vehtari 2020</a>)</span>.
+<ul>
+<li>Prestare particolare attenzione al capitolo 16, “Design and sample size decisions”, che offrono una guida dettagliata al tema del “statistical power,” which when studied naively yields unrealistic expectations of success and can lead to the design of ineffective, noisy studies.</li>
+</ul></li>
+</ul>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<ul>
+<li>bla bla</li>
+</ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-07-31T11:39:45.136075Z&quot;,&quot;start_time&quot;:&quot;2023-07-31T11:39:44.400810Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bambi <span class="im">as</span> bmb</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:47.833443Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:46.436472Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> st</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython <span class="im">import</span> get_ipython</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"regr_two_groups"</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-execution_count="90">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"bayesian_regression_prediction"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(home_directory, <span class="st">"_repositories"</span>, <span class="st">"psicometria"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> standardize(series):</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Standardize a pandas series with n degrees of freedom"""</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (series <span class="op">-</span> series.mean()) <span class="op">/</span> series.std(ddof<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>Nel <a href="../mcmc/08_stan_two_groups.html" class="quarto-xref"><span>Capitolo 47</span></a>, abbiamo discusso l’inferenza sulla differenza tra le medie di due campioni indipendenti utilizzando un approccio bayesiano. In quell’analisi, i due gruppi sono stati considerati entità distinte e abbiamo calcolato la differenza tra le loro medie.</p>
-<p>Un’alternativa consiste nell’uso di un modello di regressione. In questo caso, invece di calcolare direttamente la differenza tra le medie, si introduce una variabile “dummy” nel modello di regressione. La variabile “dummy” codifica l’appartenenza ai gruppi con valori binari: 0 per il gruppo di riferimento e 1 per il gruppo di confronto. Il modello di regressione stima un coefficiente per la variabile “dummy”, che rappresenta la differenza tra le medie dei due gruppi. In questo modo, la variabile “dummy” funge da indicatore del gruppo, permettendo di stimare in modo efficiente la differenza tra le medie.</p>
-<p>Entrambi i metodi sono validi per analizzare la differenza tra le medie di due gruppi indipendenti; tuttavia, il modello di regressione offre maggiore flessibilità e potenzialità di espansione. Questo modello permette di includere ulteriori variabili esplicative, ampliando la nostra capacità di comprendere i fattori che influenzano il risultato d’interesse. Tale versatilità è particolarmente vantaggiosa per esaminare come altre variabili possano influire sulla differenza tra le medie o per analizzare più variabili contemporaneamente.</p>
+<p>bla bla</p>
 </section>
-<section id="regressione-bayesiana-per-due-gruppi-indipendenti" class="level2" data-number="52.1">
-<h2 data-number="52.1" class="anchored" data-anchor-id="regressione-bayesiana-per-due-gruppi-indipendenti"><span class="header-section-number">52.1</span> Regressione bayesiana per due gruppi indipendenti</h2>
-<p>Nel contesto bayesiano, il modello di regressione può essere formulato nel modo seguente:</p>
+<section id="problema-della-potenza-statistica" class="level2" data-number="58.1">
+<h2 data-number="58.1" class="anchored" data-anchor-id="problema-della-potenza-statistica"><span class="header-section-number">58.1</span> Problema della potenza statistica</h2>
+<p>La potenza statistica è definita come la probabilità, prima che uno studio venga eseguito, che un determinato confronto raggiunga la “significatività statistica” a un livello predefinito (tipicamente un p-value inferiore a 0.05), dato un certo effetto reale presunto. Un’analisi della potenza viene eseguita ipotizzando prima una dimensione dell’effetto, poi facendo alcune assunzioni sulla variazione dei dati e sulla dimensione del campione dello studio, e infine utilizzando calcoli di probabilità per determinare la probabilità che il p-value sia inferiore alla soglia.</p>
+<p>La visione convenzionale suggerisce di evitare studi con bassa potenza perché è improbabile che abbiano successo. Tuttavia, supponiamo che uno studio abbia bassa potenza ma possa essere eseguito a un costo molto basso rispetto ai potenziali benefici che potrebbero derivare da un successo nella ricerca. In questo caso, un ricercatore potrebbe concludere che vale ancora la pena condurre uno studio con bassa potenza, considerandolo una scommessa che vale la pena tentare. Pertanto, quando i costi sono bassi, i ricercatori sono spesso inclini a rischiare, nella convinzione che un risultato positivo potrebbe portare grandi benefici (per la carriera del ricercatore). Tuttavia, questo non è necessariamente una buona idea, come verrà discusso successivamente.</p>
+<section id="la-maledizione-del-vincitore-negli-studi-a-bassa-potenza" class="level3" data-number="58.1.1">
+<h3 data-number="58.1.1" class="anchored" data-anchor-id="la-maledizione-del-vincitore-negli-studi-a-bassa-potenza"><span class="header-section-number">58.1.1</span> La maledizione del vincitore negli studi a bassa potenza</h3>
+<p>Il problema con il ragionamento convenzionale è che, in uno studio a bassa potenza, il presunto “successo” della significatività statistica può essere in realtà una trappola. Concentrandosi su confronti che sono statisticamente significativi, la comunità accademica e i singoli ricercatori ottengono una visione sistematicamente distorta e eccessivamente ottimistica del mondo.</p>
+<p>In termini semplici, quando il segnale è debole e il rumore è alto, i modelli statisticamente significativi nei dati sono probabilmente errati, nel senso che i risultati difficilmente si replicheranno.</p>
+<p>In termini tecnici, i risultati statisticamente significativi sono soggetti a errori di tipo M e di tipo S (si veda il <a href="../replication_crisis/04_s_m_errors.html" class="quarto-xref"><span>Capitolo 83</span></a>). Uno studio a bassa potenza non ha praticamente alcuna possibilità di fornire informazioni utili, e possiamo affermarlo anche prima che i dati siano raccolti. Pertanto, un rischio chiave per uno studio a bassa potenza non è tanto che abbia poche probabilità di successo, ma piuttosto che un apparente successo mascheri un fallimento più grande. La pubblicazione di risultati rumorosi può contribuire alla crisi di replicazione quando queste affermazioni fragili crollano sotto un’analisi più attenta o non si manifestano in tentativi di replicazione.</p>
+</section>
+<section id="ipotesi-di-dimensione-delleffetto" class="level3" data-number="58.1.2">
+<h3 data-number="58.1.2" class="anchored" data-anchor-id="ipotesi-di-dimensione-delleffetto"><span class="header-section-number">58.1.2</span> Ipotesi di dimensione dell’effetto</h3>
+<p>Un’altra sfida è che qualsiasi analisi della potenza o calcolo della dimensione del campione è condizionato da una dimensione dell’effetto presunta, che è l’obiettivo dello studio e quindi non è mai conosciuta in anticipo. Esistono diversi modi per scegliere una dimensione dell’effetto per eseguire un’analisi di uno studio pianificato. Una strategia è provare una gamma di valori coerenti con la letteratura precedente sull’argomento. Un’altra è decidere quale grandezza dell’effetto sarebbe di interesse pratico.</p>
+<p><span class="citation" data-cites="gelman2021regression">Gelman, Hill, e Vehtari (<a href="../../99-references.html#ref-gelman2021regression" role="doc-biblioref">2021</a>)</span> raccomandano di non prendere decisioni di progettazione basate sulla stima di un singolo studio rumoroso. È meglio utilizzare un insieme di informazioni da studi precedenti per prendere decisioni informate sulla potenza statistica e la dimensione del campione. <span class="citation" data-cites="gelman2021regression">Gelman, Hill, e Vehtari (<a href="../../99-references.html#ref-gelman2021regression" role="doc-biblioref">2021</a>)</span> notano come i risultati pubblicati tendono ad essere sovrastime degli effetti reali per vari motivi, tra cui il fatto che gli interventi vengono spesso testati su persone e in scenari in cui saranno più efficaci, e i risultati “statisticamente significativi” sono più probabilmente riportati e pubblicati, portando a sovrastime.</p>
+</section>
+</section>
+<section id="stimare-la-dimensione-del-campione" class="level2" data-number="58.2">
+<h2 data-number="58.2" class="anchored" data-anchor-id="stimare-la-dimensione-del-campione"><span class="header-section-number">58.2</span> Stimare la dimensione del campione</h2>
+<p>Prima di raccogliere i dati, può essere utile stimare la precisione delle inferenze che ci si aspetta di ottenere con una determinata dimensione del campione, o stimare la dimensione del campione necessaria per ottenere una certa precisione.</p>
+<p>In sintesi, per avere una potenza dell’80%, il vero valore del parametro deve essere 2.8 errori standard lontano dal punto di confronto. Tuttavia, questi calcoli sono validi solo quanto le loro assunzioni, e solitamente non si conosce il vero valore del parametro prima di eseguire lo studio.</p>
+<section id="determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato" class="level3" data-number="58.2.1">
+<h3 data-number="58.2.1" class="anchored" data-anchor-id="determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato"><span class="header-section-number">58.2.1</span> Determinazione della dimensione del campione per un errore standard specificato</h3>
+<p>Supponiamo di voler stimare un valore medio della popolazione <span class="math inline">\(\theta\)</span> a partire dai dati <span class="math inline">\(y_1, \dots, y_n\)</span>, un campione casuale di dimensione <span class="math inline">\(n\)</span>. Una stima veloce di <span class="math inline">\(\theta\)</span> è la media campionaria <span class="math inline">\(\bar{y}\)</span>, che ha un errore standard pari a <span class="math inline">\(\sigma/\sqrt{n}\)</span>, dove <span class="math inline">\(\sigma\)</span> è la deviazione standard di <span class="math inline">\(y\)</span> nella popolazione.</p>
+<p>Se l’obiettivo è ottenere un errore standard specifico per <span class="math inline">\(\bar{y}\)</span>, allora la dimensione del campione deve essere almeno:</p>
 <p><span class="math display">\[
-\begin{align*}
-y_i &amp; \sim \mathcal{N}(\mu_i, \sigma), \\
-\mu_i &amp; = \alpha + \beta x_i.
-\end{align*}
+n = \left(\frac{\sigma}{\text{s.e.}}\right)^2,
 \]</span></p>
-<p>In questa rappresentazione:</p>
+<p>dove <span class="math inline">\(\text{s.e.}\)</span> è l’errore standard desiderato.</p>
+<p>Per capire questo risultato, iniziamo ricordando la formula dell’errore standard della media campionaria:</p>
+<p><span class="math display">\[\text{s.e.}(\bar{y}) = \frac{\sigma}{\sqrt{n}},\]</span></p>
+<p>dove:</p>
 <ul>
-<li>$ $ agisce come intercetta,</li>
-<li>$ $ è il coefficiente angolare o la pendenza,</li>
-<li>$ $ è l’errore standard associato alle osservazioni.</li>
+<li><span class="math inline">\(\text{s.e.}(\bar{y})\)</span> è l’errore standard della media campionaria,</li>
+<li><span class="math inline">\(\sigma\)</span> è la deviazione standard della popolazione,</li>
+<li><span class="math inline">\(n\)</span> è la dimensione del campione.</li>
 </ul>
-<p>Nel caso specifico, la variabile $ x $ è una variabile indicatrice che assume i valori 0 o 1. Per il gruppo identificato da $ x = 0 $, il modello si riduce a:</p>
-<p><span class="math display">\[
-\begin{align*}
-y_i &amp; \sim \mathcal{N}(\mu_i, \sigma), \\
-\mu_i &amp; = \alpha.
-\end{align*}
-\]</span></p>
-<p>Questo implica che $ $ rappresenta la media del gruppo codificato come $ x = 0 $.</p>
-<p>Per il gruppo contrassegnato da $ x = 1 $, il modello diventa:</p>
-<p><span class="math display">\[
-\begin{align*}
-y_i &amp; \sim \mathcal{N}(\mu_i, \sigma), \\
-\mu_i &amp; = \alpha + \beta.
-\end{align*}
-\]</span></p>
-<p>In termini dei parametri del modello, la media per il gruppo codificato con $ x = 1 $ è rappresentata da $ + $. In questa configurazione, $ $ indica la differenza tra la media del gruppo con $ x = 1 $ e quella del gruppo con $ x = 0 $. Di conseguenza, l’analisi della differenza tra le medie dei due gruppi può essere effettuata attraverso l’inferenza sul parametro $ $. In sintesi, per confrontare le medie dei due gruppi indipendenti, si può esaminare la distribuzione a posteriori di $ $.</p>
+<p>Ora, supponiamo di voler ottenere un errore standard specifico, che chiameremo semplicemente <span class="math inline">\(\text{s.e.}\)</span>. Possiamo quindi impostare l’equazione:</p>
+<p><span class="math inline">\(\text{s.e.} = \frac{\sigma}{\sqrt{n}}\)</span></p>
+<p>Per isolare <span class="math inline">\(n\)</span>, prima moltiplichiamo entrambi i lati per <span class="math inline">\(\sqrt{n}\)</span>:</p>
+<p><span class="math inline">\(\text{s.e.} \cdot \sqrt{n} = \sigma\)</span></p>
+<p>Ora, eleviamo al quadrato entrambi i lati:</p>
+<p><span class="math inline">\((\text{s.e.} \cdot \sqrt{n})^2 = \sigma^2\)</span></p>
+<p>Semplifichiamo il lato sinistro:</p>
+<p><span class="math inline">\(\text{s.e.}^2 \cdot n = \sigma^2\)</span></p>
+<p>6Infine, dividiamo entrambi i lati per <span class="math inline">\(\text{s.e.}^2\)</span>:</p>
+<p><span class="math inline">\(n = \frac{\sigma^2}{\text{s.e.}^2}\)</span></p>
+<p>Questa può essere riscritta come:</p>
+<p><span class="math inline">\(n = \left(\frac{\sigma}{\text{s.e.}}\right)^2\)</span></p>
+<p>Quindi, se vogliamo ottenere un errore standard specifico per <span class="math inline">\(\bar{y}\)</span>, la dimensione del campione deve essere almeno pari a <span class="math inline">\(\left(\frac{\sigma}{\text{s.e.}}\right)^2\)</span>, dove <span class="math inline">\(\text{s.e.}\)</span> è l’errore standard desiderato.</p>
+<p>Questa formula ci permette di calcolare la dimensione minima del campione necessaria per ottenere un determinato livello di precisione (misurato dall’errore standard) nella stima della media della popolazione.</p>
 </section>
-<section id="un-esempio-illustrativo" class="level2" data-number="52.2">
-<h2 data-number="52.2" class="anchored" data-anchor-id="un-esempio-illustrativo"><span class="header-section-number">52.2</span> Un esempio illustrativo</h2>
-<p>Esaminiamo nuovamente i dati relativi al quoziente di intelligenza dei bambini le cui madri hanno completato oppure no la scuola superiore. Ci poniamo il problema di replicare i risultati ottenuti in precedenza usando l’analisi di regressione.</p>
-<p>Leggiamo i dati:</p>
-<div id="cell-7" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>kidiq <span class="op">=</span> pd.read_stata(<span class="st">"../../data/kidiq.dta"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>kidiq.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">kid_score</th>
-<th data-quarto-table-cell-role="th">mom_hs</th>
-<th data-quarto-table-cell-role="th">mom_iq</th>
-<th data-quarto-table-cell-role="th">mom_work</th>
-<th data-quarto-table-cell-role="th">mom_age</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>65</td>
-<td>1.0</td>
-<td>121.117529</td>
-<td>4</td>
-<td>27</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>98</td>
-<td>1.0</td>
-<td>89.361882</td>
-<td>4</td>
-<td>25</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>85</td>
-<td>1.0</td>
-<td>115.443165</td>
-<td>4</td>
-<td>27</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>83</td>
-<td>1.0</td>
-<td>99.449639</td>
-<td>3</td>
-<td>25</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>115</td>
-<td>1.0</td>
-<td>92.745710</td>
-<td>4</td>
-<td>27</td>
-</tr>
-</tbody>
-</table>
-
+<section id="dimensione-del-campione-per-una-potenza-dell80" class="level3" data-number="58.2.2">
+<h3 data-number="58.2.2" class="anchored" data-anchor-id="dimensione-del-campione-per-una-potenza-dell80"><span class="header-section-number">58.2.2</span> Dimensione del campione per una potenza dell’80%</h3>
+<p>Se l’obiettivo è ottenere l’80% di potenza per distinguere <span class="math inline">\(\theta\)</span> da un valore specificato <span class="math inline">\(\theta_0\)</span>, allora la dimensione del campione richiesta può essere calcolata con una formula conservativa:</p>
+<p><span class="math display">\[
+n = \left(\frac{2.8 \sigma}{\theta - \theta_0}\right)^2.
+\]</span></p>
+<p>Qui, il valore <span class="math inline">\(2.8\)</span> deriva dalla somma dei quantili della distribuzione normale per l’80% di potenza e il 95% di confidenza.</p>
+<p>Per derivare la formula per la dimensione del campione necessaria a ottenere l’80% di potenza per distinguere <span class="math inline">\(\theta\)</span> da un valore specificato <span class="math inline">\(\theta_0\)</span>, seguiamo i passaggi seguenti.</p>
+<p>I termini che useremo sono i seguenti:</p>
+<ul>
+<li><strong><span class="math inline">\(\theta\)</span></strong>: Il valore medio della popolazione che stiamo cercando di stimare.</li>
+<li><strong><span class="math inline">\(\theta_0\)</span></strong>: Il valore specificato con cui vogliamo confrontare <span class="math inline">\(\theta\)</span>.</li>
+<li><strong><span class="math inline">\(\sigma\)</span></strong>: La deviazione standard della popolazione.</li>
+<li><strong><span class="math inline">\(\text{s.e.}\)</span></strong>: L’errore standard della media campionaria <span class="math inline">\(\bar{y}\)</span>, che è dato da <span class="math inline">\(\sigma/\sqrt{n}\)</span>.</li>
+</ul>
+<p>L’obiettivo è determinare la dimensione del campione <span class="math inline">\(n\)</span> necessaria per avere una potenza dell’80% nel distinguere <span class="math inline">\(\theta\)</span> da <span class="math inline">\(\theta_0\)</span>, con un livello di significatività del 5%.</p>
+<p>La differenza <span class="math inline">\(\theta - \theta_0\)</span> è l’effetto che stiamo cercando di rilevare. L’errore standard associato a questa differenza è dato da:</p>
+<p><span class="math display">\[
+\text{s.e.} = \frac{\sigma}{\sqrt{n}}.
+\]</span></p>
+<p>La precisione della stima della differenza <span class="math inline">\(\theta - \theta_0\)</span> dipende dalla dimensione del campione <span class="math inline">\(n\)</span>.</p>
+<p>Per una potenza dell’80%, vogliamo che la probabilità di rifiutare l’ipotesi nulla (quando in realtà <span class="math inline">\(\theta \neq \theta_0\)</span>) sia almeno dell’80%. Ciò corrisponde a un’area sotto la curva normale standard di <span class="math inline">\(0.8\)</span>.</p>
+<p>Il livello di significatività del 5% corrisponde a un valore critico di <span class="math inline">\(1.96\)</span> (dalla distribuzione normale standard), che è il valore z corrispondente al 97,5% della distribuzione (poiché stiamo lavorando con un test a due code).</p>
+<p>Per ottenere l’80% di potenza, il valore osservato deve trovarsi non solo al di fuori dell’intervallo di confidenza del 95%, ma anche a una certa distanza dalla media, tale da coprire il restante 80% della distribuzione della differenza <span class="math inline">\(\theta - \theta_0\)</span>. Questo valore z corrispondente al restante 80% è <span class="math inline">\(0.84\)</span>.</p>
+<p>Quindi, il valore z totale da considerare è:</p>
+<p><span class="math display">\[
+z_{\text{totale}} = 1.96 + 0.84 = 2.8.
+\]</span></p>
+<p>La differenza <span class="math inline">\(\theta - \theta_0\)</span> deve essere almeno <span class="math inline">\(2.8\)</span> volte l’errore standard per garantire l’80% di potenza. Pertanto, possiamo scrivere:</p>
+<p><span class="math display">\[
+\theta - \theta_0 = 2.8 \times \frac{\sigma}{\sqrt{n}}.
+\]</span></p>
+<p>Risolviamo per <span class="math inline">\(n\)</span>:</p>
+<p><span class="math display">\[
+\sqrt{n} = \frac{2.8 \sigma}{\theta - \theta_0}.
+\]</span></p>
+<p>Elevando al quadrato entrambi i lati:</p>
+<p><span class="math display">\[
+n = \left(\frac{2.8 \sigma}{\theta - \theta_0}\right)^2.
+\]</span></p>
+<p>Questa formula ci dice che, per avere l’80% di potenza nel rilevare una differenza <span class="math inline">\(\theta - \theta_0\)</span> con una deviazione standard <span class="math inline">\(\sigma\)</span>, dobbiamo avere una dimensione del campione pari a <span class="math inline">\(n = \left(\frac{2.8 \sigma}{\theta - \theta_0}\right)^2\)</span>. Il valore <span class="math inline">\(2.8\)</span> deriva dalla somma dei quantili della distribuzione normale standard: <span class="math inline">\(1.96\)</span> (per un intervallo di confidenza del 95%) e <span class="math inline">\(0.84\)</span> (per la potenza dell’80%). Questo valore assicura che l’intervallo di confidenza per <span class="math inline">\(\theta\)</span> non includa <span class="math inline">\(\theta_0\)</span> nel 80% dei casi, il che ci dà l’80% di potenza.</p>
+<section id="correzione-per-la-distribuzione-t-e-incertezze-nella-deviazione-standard" class="level4" data-number="58.2.2.1">
+<h4 data-number="58.2.2.1" class="anchored" data-anchor-id="correzione-per-la-distribuzione-t-e-incertezze-nella-deviazione-standard"><span class="header-section-number">58.2.2.1</span> Correzione per la distribuzione t e incertezze nella deviazione standard</h4>
+<p>Nelle analisi di progettazione, utilizziamo la distribuzione normale per la regressione lineare quando la deviazione standard residua <span class="math inline">\(\sigma\)</span> è conosciuta. Tuttavia, per studi molto piccoli, i gradi di libertà sono bassi, e la deviazione standard residua non è stimata con precisione dai dati. In questi casi, le incertezze inferenziali seguono la distribuzione t di Student anziché la normale. Di conseguenza, il valore <span class="math inline">\(2.8\)</span> deve essere sostituito con un numero più grande per tenere conto di questa ulteriore fonte di incertezza.</p>
+<p>Ad esempio, per uno studio che confronta due gruppi di 6 pazienti ciascuno, i gradi di libertà sono 10. In Python, la somma dei quantili della distribuzione t con 10 gradi di libertà per l’80% di potenza e il 95% di confidenza è <span class="math inline">\(3.1\)</span>, quindi <span class="math inline">\(2.8\)</span> viene sostituito da <span class="math inline">\(3.1\)</span> nei calcoli per la potenza dell’80%.</p>
+<div id="cell-6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola i valori critici dalla distribuzione t di Student con 10 gradi di libertà</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola il quantile per l'80% di potenza (quindi 0.8) e il 95% di confidenza (quindi 0.975)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>t_value_80 <span class="op">=</span> stats.t.ppf(<span class="fl">0.8</span>, df)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>t_value_95 <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Somma dei due quantili</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>t_total <span class="op">=</span> t_value_80 <span class="op">+</span> t_value_95</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>t_total</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>3.1071966805155227</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div id="cell-8" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>kidiq.groupby([<span class="st">"mom_hs"</span>]).size()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>mom_hs
-0.0     93
-1.0    341
-dtype: int64</code></pre>
-</div>
-</div>
-<p>Ci sono 93 bambini la cui madre non ha completato le superiori e 341 bambini la cui madre ha ottenuto il diploma di scuola superiore.</p>
-<div id="cell-10" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="op">=</span> [st.mean, st.stdev]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>kidiq.groupby([<span class="st">"mom_hs"</span>]).aggregate(summary_stats)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">kid_score</th>
-<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">mom_iq</th>
-<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">mom_work</th>
-<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">mom_age</th>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">stdev</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">stdev</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">stdev</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">stdev</th>
-</tr>
-<tr class="header">
-<th data-quarto-table-cell-role="th">mom_hs</th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0.0</td>
-<td>77.548387</td>
-<td>22.573800</td>
-<td>91.889152</td>
-<td>12.630498</td>
-<td>2.322581</td>
-<td>1.226175</td>
-<td>21.677419</td>
-<td>2.727323</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1.0</td>
-<td>89.319648</td>
-<td>19.049483</td>
-<td>102.212049</td>
-<td>14.848414</td>
-<td>3.052786</td>
-<td>1.120727</td>
-<td>23.087977</td>
-<td>2.617453</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<div id="cell-11" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>az.plot_violin(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"mom_hs=0"</span>: kidiq.loc[kidiq.mom_hs <span class="op">==</span> <span class="dv">0</span>, <span class="st">"kid_score"</span>],</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"mom_hs=1"</span>: kidiq.loc[kidiq.mom_hs <span class="op">==</span> <span class="dv">1</span>, <span class="st">"kid_score"</span>],</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Iniziamo l’inferenza statistica sulla differenza tra le medie dei due gruppi utilizzando <code>bambi</code>. Questo pacchetto offre una sintassi semplice per formulare il modello bayesiano di interesse. Un altro vantaggio è che <code>bambi</code> selezionerà automaticamente le distribuzioni a priori appropriate per i parametri del modello, rendendo il processo più intuitivo.</p>
-<p>Il modello di regressione sopra descritto si scrive nel modo seguente.</p>
-<div id="cell-13" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> bmb.Model(<span class="st">"kid_score ~ mom_hs"</span>, kidiq)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Effettuiamo il campionamento.</p>
-<div id="cell-15" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> mod.fit(nuts_sampler<span class="op">=</span><span class="st">"numpyro"</span>, idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Possiamo ispezionare le proprietà del modello nel modo seguente.</p>
-<div id="cell-17" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mod</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>       Formula: kid_score ~ mom_hs
-        Family: gaussian
-          Link: mu = identity
-  Observations: 434
-        Priors: 
-    target = mu
-        Common-level effects
-            Intercept ~ Normal(mu: 86.7972, sigma: 110.1032)
-            mom_hs ~ Normal(mu: 0.0, sigma: 124.2132)
-        
-        Auxiliary parameters
-            sigma ~ HalfStudentT(nu: 4.0, sigma: 20.3872)
-------
-* To see a plot of the priors call the .plot_priors() method.
-* To see a summary or plot of the posterior pass the object returned by .fit() to az.summary() or az.plot_trace()</code></pre>
-</div>
-</div>
-<p>Le distribuzioni a priori utilizzate di default dal modello possono essere visualizzate nel modo seguente.</p>
-<div id="cell-19" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> mod.plot_priors()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Sampling: [Intercept, mom_hs, sigma]</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-11-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Per ispezionare il nostro posteriore e il processo di campionamento possiamo utilizzare <code>az.plot_trace()</code>. L’opzione <code>kind='rank_vlines'</code> ci fornisce una variante del grafico di rango che utilizza linee e punti e ci aiuta a ispezionare la stazionarietà delle catene. Poiché non c’è un modello chiaro o deviazioni serie dalle linee orizzontali, possiamo concludere che le catene sono stazionarie.</p>
-<div id="cell-21" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(results)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-22" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>az.summary(results, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">sd</th>
-<th data-quarto-table-cell-role="th">hdi_3%</th>
-<th data-quarto-table-cell-role="th">hdi_97%</th>
-<th data-quarto-table-cell-role="th">mcse_mean</th>
-<th data-quarto-table-cell-role="th">mcse_sd</th>
-<th data-quarto-table-cell-role="th">ess_bulk</th>
-<th data-quarto-table-cell-role="th">ess_tail</th>
-<th data-quarto-table-cell-role="th">r_hat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Intercept</td>
-<td>77.55</td>
-<td>2.01</td>
-<td>73.68</td>
-<td>81.27</td>
-<td>0.03</td>
-<td>0.02</td>
-<td>4272.34</td>
-<td>2738.90</td>
-<td>1.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">mom_hs</td>
-<td>11.76</td>
-<td>2.25</td>
-<td>7.74</td>
-<td>16.17</td>
-<td>0.03</td>
-<td>0.03</td>
-<td>4169.77</td>
-<td>2921.90</td>
-<td>1.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">sigma</td>
-<td>19.88</td>
-<td>0.66</td>
-<td>18.69</td>
-<td>21.12</td>
-<td>0.01</td>
-<td>0.01</td>
-<td>4540.09</td>
-<td>3039.19</td>
-<td>1.0</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>Il parametro “Intercept” rappresenta la stima a posteriori del punteggio del QI per il gruppo codificato con “mom_hs” uguale a 0. La media a posteriori di questo gruppo è di 77.6, che è praticamente identica al valore campionario corrispondente.</p>
-<p>Il parametro “mom_hs” corrisponde alla stima a posteriori della differenza nei punteggi del QI tra il gruppo codificato con “mom_hs” uguale a 1 e il gruppo codificato con “mom_hs” uguale a 0. Anche in questo caso, la differenza a posteriori di 11.8 tra le medie dei due gruppi è molto simile alla differenza campionaria tra le medie dei due gruppi. La parte importante della tabella riguarda l’intervallo di credibilità al 94%, che è [7.5, 16.2], e che non include lo 0. Ciò significa che, con un livello di certezza soggettiva del 94%, possiamo essere sicuri che il QI dei bambini le cui madri hanno il diploma superiore sarà maggiore (in media) di almeno 7.5 punti, e tale differenza può arrivare fino a 16.2 punti, rispetto al QI dei bambini le cui madri non hanno completato la scuola superiore.</p>
-<p>Se confrontiamo questi risultati con quelli ottenuti nel capitolo {ref}<code>two_groups_comparison_notebook</code>, notiamo che sono quasi identici. Le piccole differenze che si osservano possono essere attribuite sia all’approssimazione numerica sia al fatto che nel modello precedente abbiamo consentito deviazioni standard diverse per i due gruppi, mentre nel caso attuale abbiamo assumo la stessa variabilità per entrambi i gruppi.</p>
-<p>Usiamo ora l’approccio di massima verosimiglianza.</p>
-<div id="cell-25" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lm <span class="op">=</span> pg.linear_regression(kidiq[<span class="st">"mom_hs"</span>], kidiq[<span class="st">"kid_score"</span>])</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>lm.<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">names</th>
-<th data-quarto-table-cell-role="th">coef</th>
-<th data-quarto-table-cell-role="th">se</th>
-<th data-quarto-table-cell-role="th">T</th>
-<th data-quarto-table-cell-role="th">pval</th>
-<th data-quarto-table-cell-role="th">r2</th>
-<th data-quarto-table-cell-role="th">adj_r2</th>
-<th data-quarto-table-cell-role="th">CI[2.5%]</th>
-<th data-quarto-table-cell-role="th">CI[97.5%]</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Intercept</td>
-<td>77.55</td>
-<td>2.06</td>
-<td>37.67</td>
-<td>0.0</td>
-<td>0.06</td>
-<td>0.05</td>
-<td>73.50</td>
-<td>81.59</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>mom_hs</td>
-<td>11.77</td>
-<td>2.32</td>
-<td>5.07</td>
-<td>0.0</td>
-<td>0.06</td>
-<td>0.05</td>
-<td>7.21</td>
-<td>16.34</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>I risultati sono quasi identici a quelli trovati con l’approccio bayesiano.</p>
-<p>Il test bayesiano di ipotesi può essere svolto, per esempio, calcolando la probabilità che <span class="math inline">\(\beta_{mean\_diff} &gt; 0\)</span>. Questa probabilità è 1, per cui concludiamo che la media del gruppo codificato con “mom_hs = 1” è maggiore della media del gruppo codificato con “mom_hs = 0”.</p>
-<div id="cell-28" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>az.plot_posterior(results, var_names<span class="op">=</span><span class="st">"mom_hs"</span>, ref_val<span class="op">=</span><span class="dv">0</span>, figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>))<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Un valore numerico si ottiene nel modo seguente.</p>
-<div id="cell-30" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>results.posterior</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
-<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
-<defs>
-<symbol id="icon-database" viewbox="0 0 32 32">
-<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
-<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
-<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
-</symbol>
-<symbol id="icon-file-text2" viewbox="0 0 32 32">
-<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
-<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
-<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
-<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
-</symbol>
-</defs>
-</svg>
-<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
- *
- */
-
-:root {
-  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
-  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
-  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
-  --xr-border-color: var(--jp-border-color2, #e0e0e0);
-  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
-  --xr-background-color: var(--jp-layout-color0, white);
-  --xr-background-color-row-even: var(--jp-layout-color1, white);
-  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
-}
-
-html[theme=dark],
-body[data-theme=dark],
-body.vscode-dark {
-  --xr-font-color0: rgba(255, 255, 255, 1);
-  --xr-font-color2: rgba(255, 255, 255, 0.54);
-  --xr-font-color3: rgba(255, 255, 255, 0.38);
-  --xr-border-color: #1F1F1F;
-  --xr-disabled-color: #515151;
-  --xr-background-color: #111111;
-  --xr-background-color-row-even: #111111;
-  --xr-background-color-row-odd: #313131;
-}
-
-.xr-wrap {
-  display: block !important;
-  min-width: 300px;
-  max-width: 700px;
-}
-
-.xr-text-repr-fallback {
-  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
-  display: none;
-}
-
-.xr-header {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  margin-bottom: 4px;
-  border-bottom: solid 1px var(--xr-border-color);
-}
-
-.xr-header > div,
-.xr-header > ul {
-  display: inline;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.xr-obj-type,
-.xr-array-name {
-  margin-left: 2px;
-  margin-right: 10px;
-}
-
-.xr-obj-type {
-  color: var(--xr-font-color2);
-}
-
-.xr-sections {
-  padding-left: 0 !important;
-  display: grid;
-  grid-template-columns: 150px auto auto 1fr 20px 20px;
-}
-
-.xr-section-item {
-  display: contents;
-}
-
-.xr-section-item input {
-  display: none;
-}
-
-.xr-section-item input + label {
-  color: var(--xr-disabled-color);
-}
-
-.xr-section-item input:enabled + label {
-  cursor: pointer;
-  color: var(--xr-font-color2);
-}
-
-.xr-section-item input:enabled + label:hover {
-  color: var(--xr-font-color0);
-}
-
-.xr-section-summary {
-  grid-column: 1;
-  color: var(--xr-font-color2);
-  font-weight: 500;
-}
-
-.xr-section-summary > span {
-  display: inline-block;
-  padding-left: 0.5em;
-}
-
-.xr-section-summary-in:disabled + label {
-  color: var(--xr-font-color2);
-}
-
-.xr-section-summary-in + label:before {
-  display: inline-block;
-  content: '►';
-  font-size: 11px;
-  width: 15px;
-  text-align: center;
-}
-
-.xr-section-summary-in:disabled + label:before {
-  color: var(--xr-disabled-color);
-}
-
-.xr-section-summary-in:checked + label:before {
-  content: '▼';
-}
-
-.xr-section-summary-in:checked + label > span {
-  display: none;
-}
-
-.xr-section-summary,
-.xr-section-inline-details {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.xr-section-inline-details {
-  grid-column: 2 / -1;
-}
-
-.xr-section-details {
-  display: none;
-  grid-column: 1 / -1;
-  margin-bottom: 5px;
-}
-
-.xr-section-summary-in:checked ~ .xr-section-details {
-  display: contents;
-}
-
-.xr-array-wrap {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 20px auto;
-}
-
-.xr-array-wrap > label {
-  grid-column: 1;
-  vertical-align: top;
-}
-
-.xr-preview {
-  color: var(--xr-font-color3);
-}
-
-.xr-array-preview,
-.xr-array-data {
-  padding: 0 5px !important;
-  grid-column: 2;
-}
-
-.xr-array-data,
-.xr-array-in:checked ~ .xr-array-preview {
-  display: none;
-}
-
-.xr-array-in:checked ~ .xr-array-data,
-.xr-array-preview {
-  display: inline-block;
-}
-
-.xr-dim-list {
-  display: inline-block !important;
-  list-style: none;
-  padding: 0 !important;
-  margin: 0;
-}
-
-.xr-dim-list li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-}
-
-.xr-dim-list:before {
-  content: '(';
-}
-
-.xr-dim-list:after {
-  content: ')';
-}
-
-.xr-dim-list li:not(:last-child):after {
-  content: ',';
-  padding-right: 5px;
-}
-
-.xr-has-index {
-  font-weight: bold;
-}
-
-.xr-var-list,
-.xr-var-item {
-  display: contents;
-}
-
-.xr-var-item > div,
-.xr-var-item label,
-.xr-var-item > .xr-var-name span {
-  background-color: var(--xr-background-color-row-even);
-  margin-bottom: 0;
-}
-
-.xr-var-item > .xr-var-name:hover span {
-  padding-right: 5px;
-}
-
-.xr-var-list > li:nth-child(odd) > div,
-.xr-var-list > li:nth-child(odd) > label,
-.xr-var-list > li:nth-child(odd) > .xr-var-name span {
-  background-color: var(--xr-background-color-row-odd);
-}
-
-.xr-var-name {
-  grid-column: 1;
-}
-
-.xr-var-dims {
-  grid-column: 2;
-}
-
-.xr-var-dtype {
-  grid-column: 3;
-  text-align: right;
-  color: var(--xr-font-color2);
-}
-
-.xr-var-preview {
-  grid-column: 4;
-}
-
-.xr-index-preview {
-  grid-column: 2 / 5;
-  color: var(--xr-font-color2);
-}
-
-.xr-var-name,
-.xr-var-dims,
-.xr-var-dtype,
-.xr-preview,
-.xr-attrs dt {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-right: 10px;
-}
-
-.xr-var-name:hover,
-.xr-var-dims:hover,
-.xr-var-dtype:hover,
-.xr-attrs dt:hover {
-  overflow: visible;
-  width: auto;
-  z-index: 1;
-}
-
-.xr-var-attrs,
-.xr-var-data,
-.xr-index-data {
-  display: none;
-  background-color: var(--xr-background-color) !important;
-  padding-bottom: 5px !important;
-}
-
-.xr-var-attrs-in:checked ~ .xr-var-attrs,
-.xr-var-data-in:checked ~ .xr-var-data,
-.xr-index-data-in:checked ~ .xr-index-data {
-  display: block;
-}
-
-.xr-var-data > table {
-  float: right;
-}
-
-.xr-var-name span,
-.xr-var-data,
-.xr-index-name div,
-.xr-index-data,
-.xr-attrs {
-  padding-left: 25px !important;
-}
-
-.xr-attrs,
-.xr-var-attrs,
-.xr-var-data,
-.xr-index-data {
-  grid-column: 1 / -1;
-}
-
-dl.xr-attrs {
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 125px auto;
-}
-
-.xr-attrs dt,
-.xr-attrs dd {
-  padding: 0;
-  margin: 0;
-  float: left;
-  padding-right: 10px;
-  width: auto;
-}
-
-.xr-attrs dt {
-  font-weight: normal;
-  grid-column: 1;
-}
-
-.xr-attrs dt:hover span {
-  display: inline-block;
-  background: var(--xr-background-color);
-  padding-right: 10px;
-}
-
-.xr-attrs dd {
-  grid-column: 2;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-.xr-icon-database,
-.xr-icon-file-text2,
-.xr-no-icon {
-  display: inline-block;
-  vertical-align: middle;
-  width: 1em;
-  height: 1.5em !important;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
-}
-</style><pre class="xr-text-repr-fallback">&lt;xarray.Dataset&gt; Size: 104kB
-Dimensions:    (chain: 4, draw: 1000)
-Coordinates:
-  * chain      (chain) int64 32B 0 1 2 3
-  * draw       (draw) int64 8kB 0 1 2 3 4 5 6 7 ... 993 994 995 996 997 998 999
-Data variables:
-    Intercept  (chain, draw) float64 32kB 80.81 75.64 77.14 ... 77.32 77.43
-    mom_hs     (chain, draw) float64 32kB 7.963 13.55 10.86 ... 9.91 10.79 12.88
-    sigma      (chain, draw) float64 32kB 19.3 20.92 20.21 ... 19.26 19.12 20.3
-Attributes:
-    created_at:                  2024-07-30T09:47:03.975197+00:00
-    arviz_version:               0.18.0
-    inference_library:           numpyro
-    inference_library_version:   0.15.1
-    sampling_time:               1.772095
-    tuning_steps:                1000
-    modeling_interface:          bambi
-    modeling_interface_version:  0.14.0</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-7abcb996-f9fd-4a56-85b6-4d6724161c25" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-7abcb996-f9fd-4a56-85b6-4d6724161c25" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"><ul class="xr-dim-list"><li><span class="xr-has-index">chain</span>: 4</li><li><span class="xr-has-index">draw</span>: 1000</li></ul></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-24d140a8-a822-44f9-8475-8ddf48e86895" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-24d140a8-a822-44f9-8475-8ddf48e86895" class="xr-section-summary">Coordinates: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">chain</span></div><div class="xr-var-dims">(chain)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">0 1 2 3</div><input id="attrs-36702ec2-f20d-4029-b663-0f29b356ef72" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-36702ec2-f20d-4029-b663-0f29b356ef72" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-81ea852d-cd6d-44dd-94be-b1caede03602" class="xr-var-data-in" type="checkbox"><label for="data-81ea852d-cd6d-44dd-94be-b1caede03602" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([0, 1, 2, 3])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">draw</span></div><div class="xr-var-dims">(draw)</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">0 1 2 3 4 5 ... 995 996 997 998 999</div><input id="attrs-51530314-bcc0-412a-af27-3d3ccbc1e6f6" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-51530314-bcc0-412a-af27-3d3ccbc1e6f6" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-e09970a3-061e-43e8-ba26-1f4fd20b51b6" class="xr-var-data-in" type="checkbox"><label for="data-e09970a3-061e-43e8-ba26-1f4fd20b51b6" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([  0,   1,   2, ..., 997, 998, 999])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-e4892cf6-5313-4217-aa6f-44a255080961" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-e4892cf6-5313-4217-aa6f-44a255080961" class="xr-section-summary">Data variables: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>Intercept</span></div><div class="xr-var-dims">(chain, draw)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">80.81 75.64 77.14 ... 77.32 77.43</div><input id="attrs-48d8bafd-964a-469e-8762-f82e54296b90" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-48d8bafd-964a-469e-8762-f82e54296b90" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-70c21a27-6584-4e9e-a540-83dfb01cab07" class="xr-var-data-in" type="checkbox"><label for="data-70c21a27-6584-4e9e-a540-83dfb01cab07" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([[80.81483632, 75.63639888, 77.14478867, ..., 75.72595312,
-        77.5423379 , 77.5423379 ],
-       [79.368775  , 79.97070154, 75.33769344, ..., 74.13336094,
-        80.08358757, 81.84041564],
-       [78.28138375, 76.8210174 , 80.13760742, ..., 77.78397138,
-        76.51013651, 78.79410939],
-       [82.03066779, 73.96217327, 76.20589234, ..., 78.7092881 ,
-        77.31896306, 77.4298698 ]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>mom_hs</span></div><div class="xr-var-dims">(chain, draw)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">7.963 13.55 10.86 ... 10.79 12.88</div><input id="attrs-2c840fa4-78cb-4b8d-b54b-9c26a89b3936" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-2c840fa4-78cb-4b8d-b54b-9c26a89b3936" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-f5b08c01-b8ac-4482-87de-bdf28f8e3f4d" class="xr-var-data-in" type="checkbox"><label for="data-f5b08c01-b8ac-4482-87de-bdf28f8e3f4d" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([[ 7.96339175, 13.55420539, 10.86033092, ..., 13.62558002,
-        11.84062159, 11.84062159],
-       [ 9.35003845,  9.9135694 , 13.79285124, ..., 16.97280286,
-         8.09604384,  5.89320385],
-       [12.97640867, 10.9104082 ,  8.77804029, ..., 11.30792615,
-        12.21403645, 11.0726028 ],
-       [ 5.64421123, 16.74073888, 13.98410457, ...,  9.91029743,
-        10.78713598, 12.8766417 ]])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>sigma</span></div><div class="xr-var-dims">(chain, draw)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">19.3 20.92 20.21 ... 19.12 20.3</div><input id="attrs-ed5b348d-8348-46ed-a9d5-43f6c3b7a3dd" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-ed5b348d-8348-46ed-a9d5-43f6c3b7a3dd" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-903e82e5-d6b8-4008-a315-c8edf8a26c63" class="xr-var-data-in" type="checkbox"><label for="data-903e82e5-d6b8-4008-a315-c8edf8a26c63" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array([[19.29803974, 20.92199049, 20.21123626, ..., 20.58998924,
-        20.11170957, 20.11170957],
-       [17.91763444, 20.64037291, 19.88999257, ..., 20.09847731,
-        19.51073177, 19.25492589],
-       [19.99147265, 19.78098389, 19.27150942, ..., 20.86967072,
-        19.83582888, 19.83827133],
-       [19.22442038, 20.07102966, 20.0293815 , ..., 19.26291194,
-        19.11822346, 20.29616769]])</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-a5ba4302-ec6a-49da-93ba-f6edd5ee36a3" class="xr-section-summary-in" type="checkbox"><label for="section-a5ba4302-ec6a-49da-93ba-f6edd5ee36a3" class="xr-section-summary">Indexes: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-index-name"><div>chain</div></div><div class="xr-index-preview">PandasIndex</div><div></div><input id="index-27bb731c-519a-44ff-a558-71d6421ab762" class="xr-index-data-in" type="checkbox"><label for="index-27bb731c-519a-44ff-a558-71d6421ab762" title="Show/Hide index repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-index-data"><pre>PandasIndex(Index([0, 1, 2, 3], dtype='int64', name='chain'))</pre></div></li><li class="xr-var-item"><div class="xr-index-name"><div>draw</div></div><div class="xr-index-preview">PandasIndex</div><div></div><input id="index-623567b7-f768-4da7-b326-bf0bcb72699c" class="xr-index-data-in" type="checkbox"><label for="index-623567b7-f768-4da7-b326-bf0bcb72699c" title="Show/Hide index repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-index-data"><pre>PandasIndex(Index([  0,   1,   2,   3,   4,   5,   6,   7,   8,   9,
-       ...
-       990, 991, 992, 993, 994, 995, 996, 997, 998, 999],
-      dtype='int64', name='draw', length=1000))</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-766e1fdb-4980-4a10-bb51-13e8f6ee842e" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-766e1fdb-4980-4a10-bb51-13e8f6ee842e" class="xr-section-summary">Attributes: <span>(8)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>created_at :</span></dt><dd>2024-07-30T09:47:03.975197+00:00</dd><dt><span>arviz_version :</span></dt><dd>0.18.0</dd><dt><span>inference_library :</span></dt><dd>numpyro</dd><dt><span>inference_library_version :</span></dt><dd>0.15.1</dd><dt><span>sampling_time :</span></dt><dd>1.772095</dd><dt><span>tuning_steps :</span></dt><dd>1000</dd><dt><span>modeling_interface :</span></dt><dd>bambi</dd><dt><span>modeling_interface_version :</span></dt><dd>0.14.0</dd></dl></div></li></ul></div></div>
-</div>
-</div>
-<div id="cell-31" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probabiliy that posterior is &gt; 0</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>(results.posterior[<span class="st">"mom_hs"</span>] <span class="op">&gt;</span> <span class="dv">0</span>).mean().item()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
-<pre><code>1.0</code></pre>
-</div>
+<p>Utilizzando Python, abbiamo calcolato i valori critici dalla distribuzione t di Student con 10 gradi di libertà. La somma dei quantili per l’80% di potenza e il 95% di confidenza è pari a <span class="math inline">\(3.107\)</span>. Questo valore sostituisce il valore <span class="math inline">\(2.8\)</span> nei calcoli per la potenza dell’80% quando si utilizzano piccoli campioni con una distribuzione t invece della distribuzione normale standard.</p>
+</section>
+</section>
+</section>
+<section id="confronto-di-medie" class="level2" data-number="58.3">
+<h2 data-number="58.3" class="anchored" data-anchor-id="confronto-di-medie"><span class="header-section-number">58.3</span> Confronto di medie</h2>
+<p>Consideriamo ora il caso del confronto tra due medie. L’errore standard della differenza tra due medie campionarie <span class="math inline">\(\bar{y}_1 - \bar{y}_2\)</span> è dato da:</p>
+<p><span class="math display">\[
+\text{s.e.} = \sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}.
+\]</span></p>
+<p>Se supponiamo che le dimensioni dei campioni nei due gruppi siano uguali (<span class="math inline">\(n_1 = n_2 = n/2\)</span>), l’errore standard diventa semplicemente:</p>
+<p><span class="math display">\[
+\text{s.e.} = \sqrt{\frac{\sigma_1^2 + \sigma_2^2}{n/2}} = \sqrt{\frac{2\sigma^2}{n}} = \frac{\sqrt{2}\sigma}{\sqrt{n}}.
+\]</span></p>
+<p>Quindi, la dimensione del campione richiesta per ottenere un errore standard specifico sarà:</p>
+<p><span class="math display">\[
+n = \frac{2(\sigma_1^2 + \sigma_2^2)}{\text{s.e.}^2}.
+\]</span></p>
+<p>Se inoltre assumiamo che la variazione all’interno di ciascun gruppo sia la stessa (<span class="math inline">\(\sigma_1 = \sigma_2 = \sigma\)</span>), allora:</p>
+<p><span class="math display">\[
+\text{s.e.} = \frac{2\sigma}{\sqrt{n}}
+\]</span></p>
+<p>e la dimensione del campione richiesta è:</p>
+<p><span class="math display">\[
+n = \left(\frac{2\sigma}{\text{s.e.}}\right)^2.
+\]</span></p>
+<section id="dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza" class="level3" data-number="58.3.1">
+<h3 data-number="58.3.1" class="anchored" data-anchor-id="dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza"><span class="header-section-number">58.3.1</span> Dimensione del campione per una differenza <span class="math inline">\(\Delta\)</span> con l’80% di potenza</h3>
+<p>Per ottenere l’80% di potenza, la differenza <span class="math inline">\(\Delta\)</span> che vogliamo rilevare deve essere abbastanza grande rispetto all’errore standard della differenza tra le medie. Dato che abbiamo già calcolato che il valore <span class="math inline">\(2.8\)</span> è la somma dei quantili per l’80% di potenza e il 95% di confidenza, possiamo scrivere:</p>
+<p><span class="math display">\[
+   \Delta = 2.8 \times \text{s.e.}.
+   \]</span></p>
+<p>Sostituendo l’espressione per <span class="math inline">\(\text{s.e.}\)</span>, otteniamo:</p>
+<p><span class="math display">\[
+   \Delta = 2.8 \times \sqrt{\frac{2(\sigma_1^2 + \sigma_2^2)}{n}}.
+   \]</span></p>
+<p>Ora, risolviamo per <span class="math inline">\(n\)</span>:</p>
+<p><span class="math display">\[
+   \sqrt{n} = \frac{2.8 \times \sqrt{2(\sigma_1^2 + \sigma_2^2)}}{\Delta}.
+   \]</span></p>
+<p>Elevando al quadrato entrambi i lati, otteniamo:</p>
+<p><span class="math display">\[
+   n = 2\left(\frac{2.8 \sqrt{\sigma_1^2 + \sigma_2^2}}{\Delta}\right)^2 = 2\left(\frac{\sigma_1^2 + \sigma_2^2}{\left(\frac{\Delta}{2.8}\right)^2}\right).
+   \]</span></p>
+<p>Se assumiamo che la variazione all’interno dei due gruppi sia la stessa (<span class="math inline">\(\sigma_1 = \sigma_2 = \sigma\)</span>), allora possiamo semplificare ulteriormente la formula. In questo caso, abbiamo:</p>
+<p><span class="math display">\[
+   n = 2\left(\frac{\sigma^2 + \sigma^2}{\left(\frac{\Delta}{2.8}\right)^2}\right) = 2\left(\frac{2\sigma^2}{\left(\frac{\Delta}{2.8}\right)^2}\right).
+   \]</span></p>
+<p>Semplificando, otteniamo:</p>
+<p><span class="math display">\[
+   n = \left(\frac{5.6 \sigma}{\Delta}\right)^2.
+   \]</span></p>
+<p>Qui, <span class="math inline">\(5.6\)</span> è semplicemente <span class="math inline">\(2 \times 2.8\)</span>.</p>
+<p>Questa formula ci dice che, per rilevare una differenza <span class="math inline">\(\Delta\)</span> tra due gruppi con una potenza dell’80%, la dimensione del campione richiesta dipende dalla deviazione standard <span class="math inline">\(\sigma\)</span> comune a entrambi i gruppi e dalla differenza <span class="math inline">\(\Delta\)</span> che vogliamo rilevare.</p>
+<ul>
+<li><em>Se la deviazione standard <span class="math inline">\(\sigma\)</span> è alta</em>: Avremo bisogno di un campione più grande per rilevare una differenza <span class="math inline">\(\Delta\)</span>.</li>
+<li><em>Se la differenza <span class="math inline">\(\Delta\)</span> è piccola</em>: Anche in questo caso avremo bisogno di un campione più grande per garantire che la differenza sia rilevabile con l’80% di potenza.</li>
+</ul>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 58.1</strong></span> Se la differenza <span class="math inline">\(\Delta\)</span> che vogliamo rilevare è pari a metà della deviazione standard (<span class="math inline">\(\Delta = 0.5\sigma\)</span>), allora la formula ci dirà quanti partecipanti sono necessari in ciascun gruppo per rilevare questa differenza con l’80% di potenza. Ad esempio, se <span class="math inline">\(\Delta = 0.5\sigma\)</span>, la dimensione totale del campione sarà:</p>
+<p><span class="math display">\[
+n = \left(\frac{5.6 \sigma}{0.5\sigma}\right)^2 = (11.2)^2 = 125.44 \approx 126.
+\]</span></p>
+<p>Quindi, servirebbero 63 partecipanti per gruppo.</p>
 </div>
 </section>
-<section id="parametrizzazione-alternativa" class="level2" data-number="52.3">
-<h2 data-number="52.3" class="anchored" data-anchor-id="parametrizzazione-alternativa"><span class="header-section-number">52.3</span> Parametrizzazione alternativa</h2>
-<p>Consideriamo adesso il caso in cui, per distinguere i gruppi, anziché una variabile dicotomica, con valori 0 e 1, usiamo una variabile qualitativa con i nomi dei due gruppi. Introduciamo questa nuova variabile nel data frame.</p>
-<div id="cell-33" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a new column 'hs' with the categories based on 'mom_hs'</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>kidiq[<span class="st">"hs"</span>] <span class="op">=</span> kidiq[<span class="st">"mom_hs"</span>].<span class="bu">map</span>({<span class="dv">0</span>: <span class="st">"not_completed"</span>, <span class="dv">1</span>: <span class="st">"completed"</span>})</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>kidiq.tail()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">kid_score</th>
-<th data-quarto-table-cell-role="th">mom_hs</th>
-<th data-quarto-table-cell-role="th">mom_iq</th>
-<th data-quarto-table-cell-role="th">mom_work</th>
-<th data-quarto-table-cell-role="th">mom_age</th>
-<th data-quarto-table-cell-role="th">hs</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">429</td>
-<td>94</td>
-<td>0.0</td>
-<td>84.877412</td>
-<td>4</td>
-<td>21</td>
-<td>not_completed</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">430</td>
-<td>76</td>
-<td>1.0</td>
-<td>92.990392</td>
-<td>4</td>
-<td>23</td>
-<td>completed</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">431</td>
-<td>50</td>
-<td>0.0</td>
-<td>94.859708</td>
-<td>2</td>
-<td>24</td>
-<td>not_completed</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">432</td>
-<td>88</td>
-<td>1.0</td>
-<td>96.856624</td>
-<td>2</td>
-<td>21</td>
-<td>completed</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">433</td>
-<td>70</td>
-<td>1.0</td>
-<td>91.253336</td>
-<td>2</td>
-<td>25</td>
-<td>completed</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>Adattiamo il modello ai dati, usando questa nuova variabile e forziamo a zero l’intercetta che Bambi aggiunge di default al modello.</p>
-<div id="cell-35" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mod_2 <span class="op">=</span> bmb.Model(<span class="st">"kid_score ~ 0 + hs"</span>, kidiq)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>results_2 <span class="op">=</span> mod_2.fit(nuts_sampler<span class="op">=</span><span class="st">"numpyro"</span>, idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Ispezionare il modello e le distribuzioni a priori.</p>
-<div id="cell-37" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mod_2</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>       Formula: kid_score ~ 0 + hs
-        Family: gaussian
-          Link: mu = identity
-  Observations: 434
-        Priors: 
-    target = mu
-        Common-level effects
-            hs ~ Normal(mu: [0. 0.], sigma: [124.2132 124.2132])
-        
-        Auxiliary parameters
-            sigma ~ HalfStudentT(nu: 4.0, sigma: 20.3872)
-------
-* To see a plot of the priors call the .plot_priors() method.
-* To see a summary or plot of the posterior pass the object returned by .fit() to az.summary() or az.plot_trace()</code></pre>
-</div>
-</div>
-<div id="cell-38" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> mod_2.plot_priors()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Sampling: [hs, sigma]</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-21-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Esaminiamo le distribuzioni a posteriori dei parametri del modello.</p>
-<div id="cell-40" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(results_2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-41" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>az.summary(results_2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">sd</th>
-<th data-quarto-table-cell-role="th">hdi_3%</th>
-<th data-quarto-table-cell-role="th">hdi_97%</th>
-<th data-quarto-table-cell-role="th">mcse_mean</th>
-<th data-quarto-table-cell-role="th">mcse_sd</th>
-<th data-quarto-table-cell-role="th">ess_bulk</th>
-<th data-quarto-table-cell-role="th">ess_tail</th>
-<th data-quarto-table-cell-role="th">r_hat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">hs[completed]</td>
-<td>89.297</td>
-<td>1.089</td>
-<td>87.209</td>
-<td>91.231</td>
-<td>0.016</td>
-<td>0.012</td>
-<td>4429.0</td>
-<td>3149.0</td>
-<td>1.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">hs[not_completed]</td>
-<td>77.506</td>
-<td>1.988</td>
-<td>73.744</td>
-<td>81.191</td>
-<td>0.031</td>
-<td>0.022</td>
-<td>4102.0</td>
-<td>2940.0</td>
-<td>1.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">sigma</td>
-<td>19.881</td>
-<td>0.660</td>
-<td>18.647</td>
-<td>21.112</td>
-<td>0.010</td>
-<td>0.007</td>
-<td>4216.0</td>
-<td>2870.0</td>
-<td>1.0</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>In questo caso, notiamo che abbiamo ottenuto le distribuzioni a posteriori per i parametri <code>hs[completed]</code> e <code>hs[not_completed]</code> che corrispondono alle medie dei due gruppi. Tali distribuzioni a posteriori illustrano direttamente l’incertezza sulla media dei due gruppi, alla luce della variabilità campionaria e delle nostre credenze a priori.</p>
-<p>Possiamo svolgere il test bayesiano di ipotesi sulla differenza tra le due medie a posteriori nel modo seguente.</p>
-<div id="cell-43" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>post_group <span class="op">=</span> results_2.posterior[<span class="st">"hs"</span>]</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>diff <span class="op">=</span> post_group.sel(hs_dim<span class="op">=</span><span class="st">"completed"</span>) <span class="op">-</span> post_group.sel(hs_dim<span class="op">=</span><span class="st">"not_completed"</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>az.plot_posterior(diff, ref_val<span class="op">=</span><span class="dv">0</span>, figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">3</span>))<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="03_two_means_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-44" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probabiliy that posterior is &gt; 0</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>(post_group <span class="op">&gt;</span> <span class="dv">0</span>).mean().item()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
-<pre><code>1.0</code></pre>
-</div>
-</div>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-46" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:16.259171Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:03:16.203222Z&quot;}" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>m  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Tue Jul 30 2024
+<pre><code>Last updated: Sun Aug 11 2024
 
 Python implementation: CPython
 Python version       : 3.12.4
@@ -2185,20 +1415,27 @@ Processor   : arm
 CPU cores   : 8
 Architecture: 64bit
 
-arviz     : 0.18.0
+pandas    : 2.2.2
+cmdstanpy : 1.2.4
 seaborn   : 0.13.2
 matplotlib: 3.9.1
-bambi     : 0.14.0
-numpy     : 1.26.4
-pandas    : 2.2.2
 pingouin  : 0.5.4
-
-Watermark: 2.4.3
+numpy     : 1.26.4
+arviz     : 0.18.0
+logging   : 0.5.1.2
 </code></pre>
 </div>
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-gelman2020regression" class="csl-entry" role="listitem">
+Gelman, Andrew, Jennifer Hill, e Aki Vehtari. 2020. <em>Regression and Other Stories</em>. Cambridge University Press.
+</div>
+<div id="ref-gelman2021regression" class="csl-entry" role="listitem">
+———. 2021. <em>Regression and other stories</em>. Cambridge University Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -2613,13 +1850,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/linear_models/02_synt_sugar.html" class="pagination-link" aria-label="Zucchero sintattico">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span>
+      <a href="../../chapters/linear_models/05_prediction.html" class="pagination-link" aria-label="Predizione e inferenza">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/linear_models/04_prediction.html" class="pagination-link" aria-label="Predizione e inferenza">
-        <span class="nav-page-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/linear_models/07_stan_multreg.html" class="pagination-link" aria-label="Regressione multipla con Stan">
+        <span class="nav-page-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -2631,7 +1868,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/03_two_means.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/06_design.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

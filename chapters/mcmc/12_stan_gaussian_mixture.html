@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 54&nbsp; Disegno della ricerca e potere statistico</title>
+<title>Data Science per Psicologi - 52&nbsp; Modelli Mistura Gaussiani</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -78,14 +78,14 @@ div.csl-indent {
 }</style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/linear_models/05_stan_multreg.html" rel="next">
-<link href="../../chapters/linear_models/04_prediction.html" rel="prev">
+<link href="../../chapters/linear_models/introduction_linear_models.html" rel="next">
+<link href="../../chapters/mcmc/11_stan_poisson_model_2.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -122,6 +122,9 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -164,7 +167,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/05_design.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/12_stan_gaussian_mixture.html"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -512,20 +515,26 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/07_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/08_exponential_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
  <span class="menu-text">MCMC</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/introduction_mcmc.html" class="sidebar-item-text sidebar-link">
@@ -535,74 +544,86 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/09_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/10_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  <a href="../../chapters/mcmc/10_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/11_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/12_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
  <span class="menu-text">Modelli lineari</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/introduction_linear_models.html" class="sidebar-item-text sidebar-link">
@@ -612,67 +633,73 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/02_synt_sugar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  <a href="../../chapters/linear_models/02_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/03_two_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  <a href="../../chapters/linear_models/03_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/04_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+  <a href="../../chapters/linear_models/04_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/05_design.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+  <a href="../../chapters/linear_models/05_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/05_stan_multreg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  <a href="../../chapters/linear_models/06_design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/06_hier_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  <a href="../../chapters/linear_models/07_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/07_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  <a href="../../chapters/linear_models/08_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/08_specification_error.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  <a href="../../chapters/linear_models/09_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/09_causal_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  <a href="../../chapters/linear_models/10_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/10_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  <a href="../../chapters/linear_models/11_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/12_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -695,37 +722,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -748,7 +775,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
       </ul>
@@ -771,25 +798,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/04_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -812,25 +839,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -853,37 +880,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1101,30 +1128,18 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#problema-della-potenza-statistica" id="toc-problema-della-potenza-statistica" class="nav-link" data-scroll-target="#problema-della-potenza-statistica"><span class="header-section-number">54.1</span> Problema della potenza statistica</a>
-  <ul class="collapse">
-  <li><a href="#la-maledizione-del-vincitore-negli-studi-a-bassa-potenza" id="toc-la-maledizione-del-vincitore-negli-studi-a-bassa-potenza" class="nav-link" data-scroll-target="#la-maledizione-del-vincitore-negli-studi-a-bassa-potenza"><span class="header-section-number">54.1.1</span> La maledizione del vincitore negli studi a bassa potenza</a></li>
-  <li><a href="#ipotesi-di-dimensione-delleffetto" id="toc-ipotesi-di-dimensione-delleffetto" class="nav-link" data-scroll-target="#ipotesi-di-dimensione-delleffetto"><span class="header-section-number">54.1.2</span> Ipotesi di dimensione dell’effetto</a></li>
-  </ul></li>
-  <li><a href="#stimare-la-dimensione-del-campione" id="toc-stimare-la-dimensione-del-campione" class="nav-link" data-scroll-target="#stimare-la-dimensione-del-campione"><span class="header-section-number">54.2</span> Stimare la dimensione del campione</a>
-  <ul class="collapse">
-  <li><a href="#determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato" id="toc-determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato" class="nav-link" data-scroll-target="#determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato"><span class="header-section-number">54.2.1</span> Determinazione della dimensione del campione per un errore standard specificato</a></li>
-  <li><a href="#dimensione-del-campione-per-una-potenza-dell80" id="toc-dimensione-del-campione-per-una-potenza-dell80" class="nav-link" data-scroll-target="#dimensione-del-campione-per-una-potenza-dell80"><span class="header-section-number">54.2.2</span> Dimensione del campione per una potenza dell’80%</a></li>
-  </ul></li>
-  <li><a href="#confronto-di-medie" id="toc-confronto-di-medie" class="nav-link" data-scroll-target="#confronto-di-medie"><span class="header-section-number">54.3</span> Confronto di medie</a>
-  <ul class="collapse">
-  <li><a href="#dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza" id="toc-dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza" class="nav-link" data-scroll-target="#dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza"><span class="header-section-number">54.3.1</span> Dimensione del campione per una differenza <span class="math inline">\(\Delta\)</span> con l’80% di potenza</a></li>
-  </ul></li>
+  <li><a href="#simulazione-dei-dati" id="toc-simulazione-dei-dati" class="nav-link" data-scroll-target="#simulazione-dei-dati"><span class="header-section-number">52.1</span> Simulazione dei Dati</a></li>
+  <li><a href="#considerazioni-conlusive" id="toc-considerazioni-conlusive" class="nav-link" data-scroll-target="#considerazioni-conlusive"><span class="header-section-number">52.2</span> Considerazioni Conlusive</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/05_design.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/12_stan_gaussian_mixture.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/05_design.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/12_stan_gaussian_mixture.html"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-bayesian-regression-prediction" class="quarto-section-identifier"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></h1>
+<h1 class="title"><span id="sec-stan-gaussian-mixture" class="quarto-section-identifier"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></h1>
 </div>
 
 
@@ -1143,241 +1158,519 @@ window.Quarto = {
 
 <p><strong>Prerequisiti</strong></p>
 <ul>
-<li>Leggere <em>Regression and Other Stories</em> <span class="citation" data-cites="gelman2020regression">(<a href="../../99-references.html#ref-gelman2020regression" role="doc-biblioref">Gelman, Hill, e Vehtari 2020</a>)</span>.
-<ul>
-<li>Prestare particolare attenzione al capitolo 16, “Design and sample size decisions”, che offrono una guida dettagliata al tema del “statistical power,” which when studied naively yields unrealistic expectations of success and can lead to the design of ineffective, noisy studies.</li>
-</ul></li>
+<li>Leggere <a href="https://link.springer.com/content/pdf/10.1007/s12671-020-01335-4.pdf">Mindfulness and affect-network density: Does mindfulness facilitate disengagement from affective experiences in daily life?</a> di <span class="citation" data-cites="rowland2020mindfulness">Rowland e Wenzel (<a href="../../99-references.html#ref-rowland2020mindfulness" role="doc-biblioref">2020</a>)</span>.</li>
 </ul>
-<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Concetti e competenze chiave</strong></p>
 <ul>
-<li>bla bla</li>
+<li>I modelli di mistura gaussiana sono strumenti per analizzare dati provenienti da popolazioni eterogenee, come spesso accade in psicologia.</li>
+<li>Nel tutorial simuleremo dati che rappresentano due gruppi distinti (mindfulness e controllo) e dimostreremo come un modello di mistura gaussiana possa identificare correttamente queste sottopopolazioni.</li>
+<li>L’uso di Stan per l’inferenza bayesiana ci permetterà di stimare i parametri del modello e quantificare l’incertezza associata a queste stime.</li>
+<li>La visualizzazione dei risultati fornisce intuizioni preziose sulla struttura dei dati.</li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:47.833443Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:46.436472Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython <span class="im">import</span> get_ipython</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9522fa85-6d60-4b66-9ca8-fed5b934e147" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="90">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"bayesian_regression_prediction"</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(home_directory, <span class="st">"_repositories"</span>, <span class="st">"psicometria"</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> standardize(series):</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Standardize a pandas series with n degrees of freedom"""</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (series <span class="op">-</span> series.mean()) <span class="op">/</span> series.std(ddof<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8cf6cd1d-6b08-49da-b8fe-15cde3199568" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"stan_gaussian_mixture"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>bla bla</p>
-</section>
-<section id="problema-della-potenza-statistica" class="level2" data-number="54.1">
-<h2 data-number="54.1" class="anchored" data-anchor-id="problema-della-potenza-statistica"><span class="header-section-number">54.1</span> Problema della potenza statistica</h2>
-<p>La potenza statistica è definita come la probabilità, prima che uno studio venga eseguito, che un determinato confronto raggiunga la “significatività statistica” a un livello predefinito (tipicamente un p-value inferiore a 0.05), dato un certo effetto reale presunto. Un’analisi della potenza viene eseguita ipotizzando prima una dimensione dell’effetto, poi facendo alcune assunzioni sulla variazione dei dati e sulla dimensione del campione dello studio, e infine utilizzando calcoli di probabilità per determinare la probabilità che il p-value sia inferiore alla soglia.</p>
-<p>La visione convenzionale suggerisce di evitare studi con bassa potenza perché è improbabile che abbiano successo. Tuttavia, supponiamo che uno studio abbia bassa potenza ma possa essere eseguito a un costo molto basso rispetto ai potenziali benefici che potrebbero derivare da un successo nella ricerca. In questo caso, un ricercatore potrebbe concludere che vale ancora la pena condurre uno studio con bassa potenza, considerandolo una scommessa che vale la pena tentare. Pertanto, quando i costi sono bassi, i ricercatori sono spesso inclini a rischiare, nella convinzione che un risultato positivo potrebbe portare grandi benefici (per la carriera del ricercatore). Tuttavia, questo non è necessariamente una buona idea, come verrà discusso successivamente.</p>
-<section id="la-maledizione-del-vincitore-negli-studi-a-bassa-potenza" class="level3" data-number="54.1.1">
-<h3 data-number="54.1.1" class="anchored" data-anchor-id="la-maledizione-del-vincitore-negli-studi-a-bassa-potenza"><span class="header-section-number">54.1.1</span> La maledizione del vincitore negli studi a bassa potenza</h3>
-<p>Il problema con il ragionamento convenzionale è che, in uno studio a bassa potenza, il presunto “successo” della significatività statistica può essere in realtà una trappola. Concentrandosi su confronti che sono statisticamente significativi, la comunità accademica e i singoli ricercatori ottengono una visione sistematicamente distorta e eccessivamente ottimistica del mondo.</p>
-<p>In termini semplici, quando il segnale è debole e il rumore è alto, i modelli statisticamente significativi nei dati sono probabilmente errati, nel senso che i risultati difficilmente si replicheranno.</p>
-<p>In termini tecnici, i risultati statisticamente significativi sono soggetti a errori di tipo M e di tipo S (si veda il <a href="../replication_crisis/04_s_m_errors.html" class="quarto-xref"><span>Capitolo 79</span></a>). Uno studio a bassa potenza non ha praticamente alcuna possibilità di fornire informazioni utili, e possiamo affermarlo anche prima che i dati siano raccolti. Pertanto, un rischio chiave per uno studio a bassa potenza non è tanto che abbia poche probabilità di successo, ma piuttosto che un apparente successo mascheri un fallimento più grande. La pubblicazione di risultati rumorosi può contribuire alla crisi di replicazione quando queste affermazioni fragili crollano sotto un’analisi più attenta o non si manifestano in tentativi di replicazione.</p>
-</section>
-<section id="ipotesi-di-dimensione-delleffetto" class="level3" data-number="54.1.2">
-<h3 data-number="54.1.2" class="anchored" data-anchor-id="ipotesi-di-dimensione-delleffetto"><span class="header-section-number">54.1.2</span> Ipotesi di dimensione dell’effetto</h3>
-<p>Un’altra sfida è che qualsiasi analisi della potenza o calcolo della dimensione del campione è condizionato da una dimensione dell’effetto presunta, che è l’obiettivo dello studio e quindi non è mai conosciuta in anticipo. Esistono diversi modi per scegliere una dimensione dell’effetto per eseguire un’analisi di uno studio pianificato. Una strategia è provare una gamma di valori coerenti con la letteratura precedente sull’argomento. Un’altra è decidere quale grandezza dell’effetto sarebbe di interesse pratico.</p>
-<p><span class="citation" data-cites="gelman2021regression">Gelman, Hill, e Vehtari (<a href="../../99-references.html#ref-gelman2021regression" role="doc-biblioref">2021</a>)</span> raccomandano di non prendere decisioni di progettazione basate sulla stima di un singolo studio rumoroso. È meglio utilizzare un insieme di informazioni da studi precedenti per prendere decisioni informate sulla potenza statistica e la dimensione del campione. <span class="citation" data-cites="gelman2021regression">Gelman, Hill, e Vehtari (<a href="../../99-references.html#ref-gelman2021regression" role="doc-biblioref">2021</a>)</span> notano come i risultati pubblicati tendono ad essere sovrastime degli effetti reali per vari motivi, tra cui il fatto che gli interventi vengono spesso testati su persone e in scenari in cui saranno più efficaci, e i risultati “statisticamente significativi” sono più probabilmente riportati e pubblicati, portando a sovrastime.</p>
-</section>
-</section>
-<section id="stimare-la-dimensione-del-campione" class="level2" data-number="54.2">
-<h2 data-number="54.2" class="anchored" data-anchor-id="stimare-la-dimensione-del-campione"><span class="header-section-number">54.2</span> Stimare la dimensione del campione</h2>
-<p>Prima di raccogliere i dati, può essere utile stimare la precisione delle inferenze che ci si aspetta di ottenere con una determinata dimensione del campione, o stimare la dimensione del campione necessaria per ottenere una certa precisione.</p>
-<p>In sintesi, per avere una potenza dell’80%, il vero valore del parametro deve essere 2.8 errori standard lontano dal punto di confronto. Tuttavia, questi calcoli sono validi solo quanto le loro assunzioni, e solitamente non si conosce il vero valore del parametro prima di eseguire lo studio.</p>
-<section id="determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato" class="level3" data-number="54.2.1">
-<h3 data-number="54.2.1" class="anchored" data-anchor-id="determinazione-della-dimensione-del-campione-per-un-errore-standard-specificato"><span class="header-section-number">54.2.1</span> Determinazione della dimensione del campione per un errore standard specificato</h3>
-<p>Supponiamo di voler stimare un valore medio della popolazione <span class="math inline">\(\theta\)</span> a partire dai dati <span class="math inline">\(y_1, \dots, y_n\)</span>, un campione casuale di dimensione <span class="math inline">\(n\)</span>. Una stima veloce di <span class="math inline">\(\theta\)</span> è la media campionaria <span class="math inline">\(\bar{y}\)</span>, che ha un errore standard pari a <span class="math inline">\(\sigma/\sqrt{n}\)</span>, dove <span class="math inline">\(\sigma\)</span> è la deviazione standard di <span class="math inline">\(y\)</span> nella popolazione.</p>
-<p>Se l’obiettivo è ottenere un errore standard specifico per <span class="math inline">\(\bar{y}\)</span>, allora la dimensione del campione deve essere almeno:</p>
+<p>La distribuzione gaussiana è estremamente utile, non solo quando i dati seguono una distribuzione normale, ma anche in situazioni dove la distribuzione dei dati non è gaussiana. Un esempio rilevante è quello delle misture di distribuzioni. Una <a href="https://it.wikipedia.org/wiki/Mistura_di_distribuzioni">mistura di distribuzioni</a> rappresenta una variabile casuale la cui funzione di probabilità (per variabili discrete) o funzione di densità di probabilità (per variabili continue) è data da una combinazione lineare ponderata di più funzioni di probabilità o densità di altre variabili casuali.</p>
+<p>Ad esempio, la densità di probabilità di una mistura di due distribuzioni normali può essere espressa come:</p>
 <p><span class="math display">\[
-n = \left(\frac{\sigma}{\text{s.e.}}\right)^2,
+f(x; \pi_1, \mu_1, \sigma_1, \mu_2, \sigma_2) = \pi_1 \phi(x; \mu_1, \sigma_1) + \pi_2 \phi(x; \mu_2, \sigma_2)
 \]</span></p>
-<p>dove <span class="math inline">\(\text{s.e.}\)</span> è l’errore standard desiderato.</p>
-<p>Per capire questo risultato, iniziamo ricordando la formula dell’errore standard della media campionaria:</p>
-<p><span class="math display">\[\text{s.e.}(\bar{y}) = \frac{\sigma}{\sqrt{n}},\]</span></p>
 <p>dove:</p>
-<ul>
-<li><span class="math inline">\(\text{s.e.}(\bar{y})\)</span> è l’errore standard della media campionaria,</li>
-<li><span class="math inline">\(\sigma\)</span> è la deviazione standard della popolazione,</li>
-<li><span class="math inline">\(n\)</span> è la dimensione del campione.</li>
-</ul>
-<p>Ora, supponiamo di voler ottenere un errore standard specifico, che chiameremo semplicemente <span class="math inline">\(\text{s.e.}\)</span>. Possiamo quindi impostare l’equazione:</p>
-<p><span class="math inline">\(\text{s.e.} = \frac{\sigma}{\sqrt{n}}\)</span></p>
-<p>Per isolare <span class="math inline">\(n\)</span>, prima moltiplichiamo entrambi i lati per <span class="math inline">\(\sqrt{n}\)</span>:</p>
-<p><span class="math inline">\(\text{s.e.} \cdot \sqrt{n} = \sigma\)</span></p>
-<p>Ora, eleviamo al quadrato entrambi i lati:</p>
-<p><span class="math inline">\((\text{s.e.} \cdot \sqrt{n})^2 = \sigma^2\)</span></p>
-<p>Semplifichiamo il lato sinistro:</p>
-<p><span class="math inline">\(\text{s.e.}^2 \cdot n = \sigma^2\)</span></p>
-<p>6Infine, dividiamo entrambi i lati per <span class="math inline">\(\text{s.e.}^2\)</span>:</p>
-<p><span class="math inline">\(n = \frac{\sigma^2}{\text{s.e.}^2}\)</span></p>
-<p>Questa può essere riscritta come:</p>
-<p><span class="math inline">\(n = \left(\frac{\sigma}{\text{s.e.}}\right)^2\)</span></p>
-<p>Quindi, se vogliamo ottenere un errore standard specifico per <span class="math inline">\(\bar{y}\)</span>, la dimensione del campione deve essere almeno pari a <span class="math inline">\(\left(\frac{\sigma}{\text{s.e.}}\right)^2\)</span>, dove <span class="math inline">\(\text{s.e.}\)</span> è l’errore standard desiderato.</p>
-<p>Questa formula ci permette di calcolare la dimensione minima del campione necessaria per ottenere un determinato livello di precisione (misurato dall’errore standard) nella stima della media della popolazione.</p>
+<p><span class="math display">\[
+\pi_2 = 1 - \pi_1
+\]</span></p>
+<p>e <span class="math inline">\(\phi(x; \mu, \sigma)\)</span> rappresenta la funzione di densità di probabilità di una variabile casuale normale con media <span class="math inline">\(\mu\)</span> e deviazione standard <span class="math inline">\(\sigma\)</span>.</p>
+<p>Un’applicazione comune delle misture di distribuzioni è il caso delle subpopolazioni. Quando una popolazione è composta da più sottopopolazioni, ciascuna con una propria distribuzione di valori, l’intera popolazione può essere modellata come una mistura di distribuzioni. Ad esempio, se si assume che l’altezza degli uomini e quella delle donne seguano entrambe una distribuzione normale, ma con medie diverse, l’altezza degli individui senza distinzione di sesso può essere rappresentata come una mistura di due distribuzioni normali.</p>
 </section>
-<section id="dimensione-del-campione-per-una-potenza-dell80" class="level3" data-number="54.2.2">
-<h3 data-number="54.2.2" class="anchored" data-anchor-id="dimensione-del-campione-per-una-potenza-dell80"><span class="header-section-number">54.2.2</span> Dimensione del campione per una potenza dell’80%</h3>
-<p>Se l’obiettivo è ottenere l’80% di potenza per distinguere <span class="math inline">\(\theta\)</span> da un valore specificato <span class="math inline">\(\theta_0\)</span>, allora la dimensione del campione richiesta può essere calcolata con una formula conservativa:</p>
-<p><span class="math display">\[
-n = \left(\frac{2.8 \sigma}{\theta - \theta_0}\right)^2.
-\]</span></p>
-<p>Qui, il valore <span class="math inline">\(2.8\)</span> deriva dalla somma dei quantili della distribuzione normale per l’80% di potenza e il 95% di confidenza.</p>
-<p>Per derivare la formula per la dimensione del campione necessaria a ottenere l’80% di potenza per distinguere <span class="math inline">\(\theta\)</span> da un valore specificato <span class="math inline">\(\theta_0\)</span>, seguiamo i passaggi seguenti.</p>
-<p>I termini che useremo sono i seguenti:</p>
-<ul>
-<li><strong><span class="math inline">\(\theta\)</span></strong>: Il valore medio della popolazione che stiamo cercando di stimare.</li>
-<li><strong><span class="math inline">\(\theta_0\)</span></strong>: Il valore specificato con cui vogliamo confrontare <span class="math inline">\(\theta\)</span>.</li>
-<li><strong><span class="math inline">\(\sigma\)</span></strong>: La deviazione standard della popolazione.</li>
-<li><strong><span class="math inline">\(\text{s.e.}\)</span></strong>: L’errore standard della media campionaria <span class="math inline">\(\bar{y}\)</span>, che è dato da <span class="math inline">\(\sigma/\sqrt{n}\)</span>.</li>
-</ul>
-<p>L’obiettivo è determinare la dimensione del campione <span class="math inline">\(n\)</span> necessaria per avere una potenza dell’80% nel distinguere <span class="math inline">\(\theta\)</span> da <span class="math inline">\(\theta_0\)</span>, con un livello di significatività del 5%.</p>
-<p>La differenza <span class="math inline">\(\theta - \theta_0\)</span> è l’effetto che stiamo cercando di rilevare. L’errore standard associato a questa differenza è dato da:</p>
-<p><span class="math display">\[
-\text{s.e.} = \frac{\sigma}{\sqrt{n}}.
-\]</span></p>
-<p>La precisione della stima della differenza <span class="math inline">\(\theta - \theta_0\)</span> dipende dalla dimensione del campione <span class="math inline">\(n\)</span>.</p>
-<p>Per una potenza dell’80%, vogliamo che la probabilità di rifiutare l’ipotesi nulla (quando in realtà <span class="math inline">\(\theta \neq \theta_0\)</span>) sia almeno dell’80%. Ciò corrisponde a un’area sotto la curva normale standard di <span class="math inline">\(0.8\)</span>.</p>
-<p>Il livello di significatività del 5% corrisponde a un valore critico di <span class="math inline">\(1.96\)</span> (dalla distribuzione normale standard), che è il valore z corrispondente al 97,5% della distribuzione (poiché stiamo lavorando con un test a due code).</p>
-<p>Per ottenere l’80% di potenza, il valore osservato deve trovarsi non solo al di fuori dell’intervallo di confidenza del 95%, ma anche a una certa distanza dalla media, tale da coprire il restante 80% della distribuzione della differenza <span class="math inline">\(\theta - \theta_0\)</span>. Questo valore z corrispondente al restante 80% è <span class="math inline">\(0.84\)</span>.</p>
-<p>Quindi, il valore z totale da considerare è:</p>
-<p><span class="math display">\[
-z_{\text{totale}} = 1.96 + 0.84 = 2.8.
-\]</span></p>
-<p>La differenza <span class="math inline">\(\theta - \theta_0\)</span> deve essere almeno <span class="math inline">\(2.8\)</span> volte l’errore standard per garantire l’80% di potenza. Pertanto, possiamo scrivere:</p>
-<p><span class="math display">\[
-\theta - \theta_0 = 2.8 \times \frac{\sigma}{\sqrt{n}}.
-\]</span></p>
-<p>Risolviamo per <span class="math inline">\(n\)</span>:</p>
-<p><span class="math display">\[
-\sqrt{n} = \frac{2.8 \sigma}{\theta - \theta_0}.
-\]</span></p>
-<p>Elevando al quadrato entrambi i lati:</p>
-<p><span class="math display">\[
-n = \left(\frac{2.8 \sigma}{\theta - \theta_0}\right)^2.
-\]</span></p>
-<p>Questa formula ci dice che, per avere l’80% di potenza nel rilevare una differenza <span class="math inline">\(\theta - \theta_0\)</span> con una deviazione standard <span class="math inline">\(\sigma\)</span>, dobbiamo avere una dimensione del campione pari a <span class="math inline">\(n = \left(\frac{2.8 \sigma}{\theta - \theta_0}\right)^2\)</span>. Il valore <span class="math inline">\(2.8\)</span> deriva dalla somma dei quantili della distribuzione normale standard: <span class="math inline">\(1.96\)</span> (per un intervallo di confidenza del 95%) e <span class="math inline">\(0.84\)</span> (per la potenza dell’80%). Questo valore assicura che l’intervallo di confidenza per <span class="math inline">\(\theta\)</span> non includa <span class="math inline">\(\theta_0\)</span> nel 80% dei casi, il che ci dà l’80% di potenza.</p>
-<section id="correzione-per-la-distribuzione-t-e-incertezze-nella-deviazione-standard" class="level4" data-number="54.2.2.1">
-<h4 data-number="54.2.2.1" class="anchored" data-anchor-id="correzione-per-la-distribuzione-t-e-incertezze-nella-deviazione-standard"><span class="header-section-number">54.2.2.1</span> Correzione per la distribuzione t e incertezze nella deviazione standard</h4>
-<p>Nelle analisi di progettazione, utilizziamo la distribuzione normale per la regressione lineare quando la deviazione standard residua <span class="math inline">\(\sigma\)</span> è conosciuta. Tuttavia, per studi molto piccoli, i gradi di libertà sono bassi, e la deviazione standard residua non è stimata con precisione dai dati. In questi casi, le incertezze inferenziali seguono la distribuzione t di Student anziché la normale. Di conseguenza, il valore <span class="math inline">\(2.8\)</span> deve essere sostituito con un numero più grande per tenere conto di questa ulteriore fonte di incertezza.</p>
-<p>Ad esempio, per uno studio che confronta due gruppi di 6 pazienti ciascuno, i gradi di libertà sono 10. In Python, la somma dei quantili della distribuzione t con 10 gradi di libertà per l’80% di potenza e il 95% di confidenza è <span class="math inline">\(3.1\)</span>, quindi <span class="math inline">\(2.8\)</span> viene sostituito da <span class="math inline">\(3.1\)</span> nei calcoli per la potenza dell’80%.</p>
-<div id="cell-6" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola i valori critici dalla distribuzione t di Student con 10 gradi di libertà</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="dv">10</span></span>
+<section id="simulazione-dei-dati" class="level2" data-number="52.1">
+<h2 data-number="52.1" class="anchored" data-anchor-id="simulazione-dei-dati"><span class="header-section-number">52.1</span> Simulazione dei Dati</h2>
+<p>I dati simulati si basano su uno studio condotto da <span class="citation" data-cites="rowland2020mindfulness">Rowland e Wenzel (<a href="../../99-references.html#ref-rowland2020mindfulness" role="doc-biblioref">2020</a>)</span> che ha esaminato gli effetti di un training di mindfulness ultra-breve sulla consapevolezza e l’autocontrollo percepito. Lo studio confronta i giudizi espressi da due gruppi: un gruppo sperimentale sottoposto a training di mindfulness e un gruppo di controllo che non ha ricevuto alcun training di mindfulness. I giudizi sono stati raccolti su diverse dimensioni attraverso un protocollo di valutazione ambulatoriale, iniziato il giorno successivo alla prima sessione di laboratorio e proseguito per 40 giorni consecutivi. Qui esamineremo i dati simulati ispirati dallo studio, concentrandoci sui giudizi relativi alla dimensione “sad”.</p>
+<div id="cell-6" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri per le distribuzioni normali</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Sad mindfulness</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mu_mindfulness <span class="op">=</span> <span class="dv">20</span>  <span class="co"># giudizi sad</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>sigma_mindfulness <span class="op">=</span> <span class="dv">10</span>  <span class="co"># deviazione standard</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola il quantile per l'80% di potenza (quindi 0.8) e il 95% di confidenza (quindi 0.975)</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>t_value_80 <span class="op">=</span> stats.t.ppf(<span class="fl">0.8</span>, df)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>t_value_95 <span class="op">=</span> stats.t.ppf(<span class="fl">0.975</span>, df)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sad control</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mu_control <span class="op">=</span> <span class="dv">60</span>  <span class="co"># giudizi sad</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>sigma_control <span class="op">=</span> <span class="dv">10</span>  <span class="co"># deviazione standard</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Somma dei due quantili</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>t_total <span class="op">=</span> t_value_80 <span class="op">+</span> t_value_95</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>t_total</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>3.1071966805155227</code></pre>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulazione di 60 casi per ciascuna sottopopolazione</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)  <span class="co"># per la riproducibilità</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>sad_mindfulness <span class="op">=</span> np.random.normal(mu_mindfulness, sigma_mindfulness, <span class="dv">60</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>sad_control <span class="op">=</span> np.random.normal(mu_control, sigma_control, <span class="dv">60</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del DataFrame per visualizzare i dati</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>dati_sad <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Sad"</span>: np.concatenate([sad_mindfulness, sad_control]),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Group"</span>: [<span class="st">"Mindfulness"</span>] <span class="op">*</span> <span class="dv">60</span> <span class="op">+</span> [<span class="st">"Control"</span>] <span class="op">*</span> <span class="dv">60</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostra i parametri di ciascuna distribuzione e i primi dati simulati</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>parametri_distribuzioni <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Sottopopolazione"</span>: [<span class="st">"Mindfulness"</span>, <span class="st">"Control"</span>],</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Media (mu)"</span>: [mu_mindfulness, mu_control],</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Deviazione Standard (sigma)"</span>: [sigma_mindfulness, sigma_control],</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>dati_sad.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Sad</th>
+<th data-quarto-table-cell-role="th">Group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>24.967142</td>
+<td>Mindfulness</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>18.617357</td>
+<td>Mindfulness</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>26.476885</td>
+<td>Mindfulness</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>35.230299</td>
+<td>Mindfulness</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>17.658466</td>
+<td>Mindfulness</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
-<p>Utilizzando Python, abbiamo calcolato i valori critici dalla distribuzione t di Student con 10 gradi di libertà. La somma dei quantili per l’80% di potenza e il 95% di confidenza è pari a <span class="math inline">\(3.107\)</span>. Questo valore sostituisce il valore <span class="math inline">\(2.8\)</span> nei calcoli per la potenza dell’80% quando si utilizzano piccoli campioni con una distribuzione t invece della distribuzione normale standard.</p>
-</section>
-</section>
-</section>
-<section id="confronto-di-medie" class="level2" data-number="54.3">
-<h2 data-number="54.3" class="anchored" data-anchor-id="confronto-di-medie"><span class="header-section-number">54.3</span> Confronto di medie</h2>
-<p>Consideriamo ora il caso del confronto tra due medie. L’errore standard della differenza tra due medie campionarie <span class="math inline">\(\bar{y}_1 - \bar{y}_2\)</span> è dato da:</p>
-<p><span class="math display">\[
-\text{s.e.} = \sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}.
-\]</span></p>
-<p>Se supponiamo che le dimensioni dei campioni nei due gruppi siano uguali (<span class="math inline">\(n_1 = n_2 = n/2\)</span>), l’errore standard diventa semplicemente:</p>
-<p><span class="math display">\[
-\text{s.e.} = \sqrt{\frac{\sigma_1^2 + \sigma_2^2}{n/2}} = \sqrt{\frac{2\sigma^2}{n}} = \frac{\sqrt{2}\sigma}{\sqrt{n}}.
-\]</span></p>
-<p>Quindi, la dimensione del campione richiesta per ottenere un errore standard specifico sarà:</p>
-<p><span class="math display">\[
-n = \frac{2(\sigma_1^2 + \sigma_2^2)}{\text{s.e.}^2}.
-\]</span></p>
-<p>Se inoltre assumiamo che la variazione all’interno di ciascun gruppo sia la stessa (<span class="math inline">\(\sigma_1 = \sigma_2 = \sigma\)</span>), allora:</p>
-<p><span class="math display">\[
-\text{s.e.} = \frac{2\sigma}{\sqrt{n}}
-\]</span></p>
-<p>e la dimensione del campione richiesta è:</p>
-<p><span class="math display">\[
-n = \left(\frac{2\sigma}{\text{s.e.}}\right)^2.
-\]</span></p>
-<section id="dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza" class="level3" data-number="54.3.1">
-<h3 data-number="54.3.1" class="anchored" data-anchor-id="dimensione-del-campione-per-una-differenza-delta-con-l80-di-potenza"><span class="header-section-number">54.3.1</span> Dimensione del campione per una differenza <span class="math inline">\(\Delta\)</span> con l’80% di potenza</h3>
-<p>Per ottenere l’80% di potenza, la differenza <span class="math inline">\(\Delta\)</span> che vogliamo rilevare deve essere abbastanza grande rispetto all’errore standard della differenza tra le medie. Dato che abbiamo già calcolato che il valore <span class="math inline">\(2.8\)</span> è la somma dei quantili per l’80% di potenza e il 95% di confidenza, possiamo scrivere:</p>
-<p><span class="math display">\[
-   \Delta = 2.8 \times \text{s.e.}.
-   \]</span></p>
-<p>Sostituendo l’espressione per <span class="math inline">\(\text{s.e.}\)</span>, otteniamo:</p>
-<p><span class="math display">\[
-   \Delta = 2.8 \times \sqrt{\frac{2(\sigma_1^2 + \sigma_2^2)}{n}}.
-   \]</span></p>
-<p>Ora, risolviamo per <span class="math inline">\(n\)</span>:</p>
-<p><span class="math display">\[
-   \sqrt{n} = \frac{2.8 \times \sqrt{2(\sigma_1^2 + \sigma_2^2)}}{\Delta}.
-   \]</span></p>
-<p>Elevando al quadrato entrambi i lati, otteniamo:</p>
-<p><span class="math display">\[
-   n = 2\left(\frac{2.8 \sqrt{\sigma_1^2 + \sigma_2^2}}{\Delta}\right)^2 = 2\left(\frac{\sigma_1^2 + \sigma_2^2}{\left(\frac{\Delta}{2.8}\right)^2}\right).
-   \]</span></p>
-<p>Se assumiamo che la variazione all’interno dei due gruppi sia la stessa (<span class="math inline">\(\sigma_1 = \sigma_2 = \sigma\)</span>), allora possiamo semplificare ulteriormente la formula. In questo caso, abbiamo:</p>
-<p><span class="math display">\[
-   n = 2\left(\frac{\sigma^2 + \sigma^2}{\left(\frac{\Delta}{2.8}\right)^2}\right) = 2\left(\frac{2\sigma^2}{\left(\frac{\Delta}{2.8}\right)^2}\right).
-   \]</span></p>
-<p>Semplificando, otteniamo:</p>
-<p><span class="math display">\[
-   n = \left(\frac{5.6 \sigma}{\Delta}\right)^2.
-   \]</span></p>
-<p>Qui, <span class="math inline">\(5.6\)</span> è semplicemente <span class="math inline">\(2 \times 2.8\)</span>.</p>
-<p>Questa formula ci dice che, per rilevare una differenza <span class="math inline">\(\Delta\)</span> tra due gruppi con una potenza dell’80%, la dimensione del campione richiesta dipende dalla deviazione standard <span class="math inline">\(\sigma\)</span> comune a entrambi i gruppi e dalla differenza <span class="math inline">\(\Delta\)</span> che vogliamo rilevare.</p>
+</div>
+</div>
+<div id="cell-7" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dati_sad.tail()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Sad</th>
+<th data-quarto-table-cell-role="th">Group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">115</td>
+<td>63.015473</td>
+<td>Control</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">116</td>
+<td>59.652882</td>
+<td>Control</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">117</td>
+<td>48.313220</td>
+<td>Control</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">118</td>
+<td>71.428228</td>
+<td>Control</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">119</td>
+<td>67.519330</td>
+<td>Control</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cell-8" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(parametri_distribuzioni)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sottopopolazione  Media (mu)  Deviazione Standard (sigma)
+0      Mindfulness          20                           10
+1          Control          60                           10</code></pre>
+</div>
+</div>
+<div id="cell-9" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardizzazione dei dati</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dati_sad[<span class="st">"Sad_z"</span>] <span class="op">=</span> (</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    dati_sad[<span class="st">"Sad"</span>] <span class="op">-</span> dati_sad[<span class="st">"Sad"</span>].mean()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">/</span> dati_sad[<span class="st">"Sad"</span>].std()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione dell'istogramma per i dati standardizzati</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    dati_sad[<span class="st">"Sad_z"</span>], bins<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">"skyblue"</span>, edgecolor<span class="op">=</span><span class="st">"black"</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Istogramma dei Giudizi Sad Standardizzati"</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Giudizi 'Sad' Standardizzati"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frequenza"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12_stan_gaussian_mixture_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il seguente codice Stan è stato ottenuto da <a href="https://betanalpha.github.io/assets/case_studies/identifying_mixture_models.html">Identifying Bayesian Mixture Models</a> di Michael Betancourt.</p>
+<div id="cell-11" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"bimodal_model.stan"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=0&gt; N;
+  vector[N] y;
+}
+parameters {
+  ordered[2] mu;
+  array[2] real&lt;lower=0&gt; sigma;
+  real&lt;lower=0, upper=1&gt; theta;
+}
+model {
+  sigma ~ normal(0, 2);
+  mu ~ normal(0, 2);
+  theta ~ beta(5, 5);
+  for (n in 1 : N) 
+    target += log_mix(theta, normal_lpdf(y[n] | mu[1], sigma[1]),
+                      normal_lpdf(y[n] | mu[2], sigma[2]));
+}
+</code></pre>
+</div>
+</div>
+<p>Questo codice Stan implementa un modello per una mistura di distribuzioni gaussiane. Ecco una spiegazione dettagliata delle varie sezioni del codice:</p>
+<ol type="1">
+<li><strong>Blocco <code>data</code></strong></li>
+</ol>
 <ul>
-<li><em>Se la deviazione standard <span class="math inline">\(\sigma\)</span> è alta</em>: Avremo bisogno di un campione più grande per rilevare una differenza <span class="math inline">\(\Delta\)</span>.</li>
-<li><em>Se la differenza <span class="math inline">\(\Delta\)</span> è piccola</em>: Anche in questo caso avremo bisogno di un campione più grande per garantire che la differenza sia rilevabile con l’80% di potenza.</li>
+<li><strong><code>int&lt;lower=0&gt; N;</code></strong>: Definisce il numero di osservazioni, <span class="math inline">\(N\)</span>, che deve essere un intero non negativo. Questo rappresenta il numero di dati osservati.</li>
+<li><strong><code>vector[N] y;</code></strong>: Definisce un vettore <span class="math inline">\(y\)</span> di lunghezza <span class="math inline">\(N\)</span> che contiene i dati osservati. Ogni elemento di <span class="math inline">\(y\)</span> rappresenta un valore osservato.</li>
 </ul>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 54.1</strong></span> Se la differenza <span class="math inline">\(\Delta\)</span> che vogliamo rilevare è pari a metà della deviazione standard (<span class="math inline">\(\Delta = 0.5\sigma\)</span>), allora la formula ci dirà quanti partecipanti sono necessari in ciascun gruppo per rilevare questa differenza con l’80% di potenza. Ad esempio, se <span class="math inline">\(\Delta = 0.5\sigma\)</span>, la dimensione totale del campione sarà:</p>
-<p><span class="math display">\[
-n = \left(\frac{5.6 \sigma}{0.5\sigma}\right)^2 = (11.2)^2 = 125.44 \approx 126.
-\]</span></p>
-<p>Quindi, servirebbero 63 partecipanti per gruppo.</p>
+<ol start="2" type="1">
+<li><strong>Blocco <code>parameters</code></strong></li>
+</ol>
+<ul>
+<li><p><strong><code>ordered[2] mu;</code></strong>: Definisce un vettore ordinato di lunghezza 2 per i parametri <span class="math inline">\(\mu\)</span>, che rappresentano le medie delle due distribuzioni gaussiane nella mistura. La proprietà <code>ordered</code> garantisce che <span class="math inline">\(\mu[1] \leq \mu[2]\)</span>, il che aiuta a evitare problemi di identificabilità del modello.</p></li>
+<li><p><strong><code>array[2] real&lt;lower=0&gt; sigma;</code></strong>: Definisce un array di 2 elementi per i parametri <span class="math inline">\(\sigma\)</span>, che rappresentano le deviazioni standard delle due distribuzioni gaussiane. Il vincolo <code>&lt;lower=0&gt;</code> garantisce che le deviazioni standard siano sempre positive.</p></li>
+<li><p><strong><code>real&lt;lower=0, upper=1&gt; theta;</code></strong>: Definisce il parametro <span class="math inline">\(\theta\)</span>, che rappresenta la proporzione della prima distribuzione gaussiana nella mistura. Essendo vincolato tra 0 e 1, <span class="math inline">\(\theta\)</span> può essere interpretato come la probabilità che un’osservazione provenga dalla prima distribuzione.</p></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Blocco <code>model</code></strong></li>
+</ol>
+<ul>
+<li><p><strong><code>sigma ~ normal(0, 2);</code></strong>: Impone una distribuzione a priori normale (<span class="math inline">\(\mathcal{N}(0, 2)\)</span>) sui parametri <span class="math inline">\(\sigma\)</span>. Questo riflette la convinzione a priori che le deviazioni standard siano distribuite normalmente attorno a 0 con deviazione standard 2.</p></li>
+<li><p><strong><code>mu ~ normal(0, 2);</code></strong>: Impone una distribuzione a priori normale (<span class="math inline">\(\mathcal{N}(0, 2)\)</span>) sui parametri <span class="math inline">\(\mu\)</span>. Questo rappresenta l’assunzione che le medie delle due gaussiane siano anch’esse distribuite normalmente attorno a 0 con deviazione standard 2.</p></li>
+<li><p><strong><code>theta ~ beta(5, 5);</code></strong>: Impone una distribuzione a priori beta (<span class="math inline">\(\text{Beta}(5, 5)\)</span>) su <span class="math inline">\(\theta\)</span>, che è una distribuzione simmetrica con valori centrati attorno a 0.5. Questo riflette l’assunzione che ciascuna delle due gaussiane abbia una probabilità iniziale del 50% di generare un dato, con un po’ di flessibilità.</p></li>
+<li><p><strong><code>for (n in 1 : N)</code></strong>: Questo ciclo <code>for</code> scorre su tutte le osservazioni <span class="math inline">\(y[n]\)</span>.</p></li>
+<li><p><strong><code>target += log_mix(...)</code></strong>: Questa riga è fondamentale per calcolare la log-verosimiglianza del modello. La funzione <code>log_mix(theta, ...)</code> calcola la log-verosimiglianza di una mistura di due distribuzioni:</p>
+<ul>
+<li><strong><code>normal_lpdf(y[n] | mu[1], sigma[1])</code></strong>: Calcola la log-verosimiglianza del dato <span class="math inline">\(y[n]\)</span> sotto la prima distribuzione normale con parametri <span class="math inline">\(\mu[1]\)</span> e <span class="math inline">\(\sigma[1]\)</span>.</li>
+<li><strong><code>normal_lpdf(y[n] | mu[2], sigma[2])</code></strong>: Calcola la log-verosimiglianza del dato <span class="math inline">\(y[n]\)</span> sotto la seconda distribuzione normale con parametri <span class="math inline">\(\mu[2]\)</span> e <span class="math inline">\(\sigma[2]\)</span>.</li>
+<li><strong><code>log_mix(theta, ..., ...)</code></strong>: Mescola queste due log-verosimiglianze pesandole con <span class="math inline">\(\theta\)</span> (per la prima gaussiana) e <span class="math inline">\(1 - \theta\)</span> (per la seconda).</li>
+</ul></li>
+</ul>
+<p>In sintesi, questo modello Stan cerca di adattare una mistura di due distribuzioni gaussiane ai dati osservati <span class="math inline">\(y\)</span>. Il modello assume che ciascun dato provenga da una delle due gaussiane e cerca di stimare i parametri delle due distribuzioni (le medie <span class="math inline">\(\mu\)</span> e le deviazioni standard <span class="math inline">\(\sigma\)</span>), insieme alla proporzione <span class="math inline">\(\theta\)</span> che indica la probabilità che un dato provenga dalla prima distribuzione. Il codice utilizza distribuzioni a priori per informare il modello sulle aspettative dei parametri, ma è abbastanza flessibile da adattarsi ai dati osservati.</p>
+<p>Creiamo il dizionario con i dati nel formato richiesto da Stan.</p>
+<div id="cell-14" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(dati_sad[<span class="st">"Sad_z"</span>]), <span class="st">"y"</span>: dati_sad[<span class="st">"Sad_z"</span>]}</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'N': 80, 'y': 0    -0.596309
+1    -0.870798
+2    -0.531045
+3    -0.152652
+4    -0.912249
+        ...   
+75    1.273390
+76    0.955725
+77    0.788841
+78    0.957763
+79    0.058908
+Name: Sad_z, Length: 80, dtype: float64}</code></pre>
 </div>
+</div>
+<p>Eseguiamo il campionamento.</p>
+<div id="cell-16" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo le distribuzioni a posteriori dei parametri del modello.</p>
+<div id="cell-18" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>az.plot_trace(fit, var_names<span class="op">=</span>[<span class="st">"mu"</span>, <span class="st">"sigma"</span>, <span class="st">"theta"</span>], figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">3</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12_stan_gaussian_mixture_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-19" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">mu[0]</td>
+<td>-0.859</td>
+<td>0.096</td>
+<td>-1.045</td>
+<td>-0.688</td>
+<td>0.002</td>
+<td>0.001</td>
+<td>3873.0</td>
+<td>3587.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mu[1]</td>
+<td>0.942</td>
+<td>0.085</td>
+<td>0.791</td>
+<td>1.103</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>6252.0</td>
+<td>4828.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma[0]</td>
+<td>0.468</td>
+<td>0.079</td>
+<td>0.334</td>
+<td>0.623</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>4663.0</td>
+<td>4282.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma[1]</td>
+<td>0.390</td>
+<td>0.076</td>
+<td>0.267</td>
+<td>0.532</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>4461.0</td>
+<td>4506.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">theta</td>
+<td>0.520</td>
+<td>0.060</td>
+<td>0.410</td>
+<td>0.633</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>5590.0</td>
+<td>5627.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Rappresentiamo graficamente la distribuzione ottenuta dai parametri medi posteriori.</p>
+<div id="cell-21" class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the provided posterior estimates</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>mu_0 <span class="op">=</span> <span class="op">-</span><span class="fl">0.859</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>mu_1 <span class="op">=</span> <span class="fl">0.942</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>sigma_0 <span class="op">=</span> <span class="fl">0.468</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>sigma_1 <span class="op">=</span> <span class="fl">0.390</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="fl">0.520</span>  <span class="co"># Probability for the first component (mu_0)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming dati_sad is your DataFrame, you need to provide the actual data</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># For this example, I'll generate some random data</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.concatenate(</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        np.random.normal(mu_0, sigma_0, <span class="bu">int</span>(<span class="dv">1000</span> <span class="op">*</span> theta)),</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        np.random.normal(mu_1, sigma_1, <span class="bu">int</span>(<span class="dv">1000</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> theta))),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the histogram from the data</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histogram with actual counts</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>counts, bins, _ <span class="op">=</span> axes.hist(data, bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">"g"</span>, density<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the KDE with a higher resolution</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(data.<span class="bu">min</span>(), data.<span class="bu">max</span>(), <span class="dv">1000</span>)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>kde <span class="op">=</span> theta <span class="op">*</span> norm.pdf(x, loc<span class="op">=</span>mu_0, scale<span class="op">=</span>sigma_0) <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> theta) <span class="op">*</span> norm.pdf(</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    x, loc<span class="op">=</span>mu_1, scale<span class="op">=</span>sigma_1</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the KDE to match the histogram's area</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>hist_area <span class="op">=</span> np.<span class="bu">sum</span>(counts) <span class="op">*</span> np.diff(bins)[<span class="dv">0</span>]</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>kde_scaled <span class="op">=</span> kde <span class="op">*</span> hist_area</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the KDE</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>axes.plot(x, kde_scaled, linewidth<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Additional plot settings</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>axes.set_title(<span class="st">"Estimated Bimodal Distribution from Posterior Parameters"</span>)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>axes.set_xlabel(<span class="st">"Sadness Score"</span>)</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>axes.set_ylabel(<span class="st">"Counts"</span>)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="12_stan_gaussian_mixture_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notiamo la buona corrispondenza tra il grafico precedente e quello sopra che rappresenta i dati in input.</p>
+<p>Possiamo anche convertire i parametri recuperati in modo che siano espressi sulla scala dei dati grezzi.</p>
+<div id="cell-23" class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I valori di media e deviazione standard della distribuzione originale</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mean_original <span class="op">=</span> dati_sad[<span class="st">"Sad"</span>].mean()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>std_original <span class="op">=</span> dati_sad[<span class="st">"Sad"</span>].std()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri posteriori delle distribuzioni standardizzate</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>mu_0_standardized <span class="op">=</span> <span class="op">-</span><span class="fl">0.859</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>mu_1_standardized <span class="op">=</span> <span class="fl">0.942</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>sigma_0_standardized <span class="op">=</span> <span class="fl">0.468</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>sigma_1_standardized <span class="op">=</span> <span class="fl">0.390</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertire i parametri alla scala originale</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>mu_0_original <span class="op">=</span> mu_0_standardized <span class="op">*</span> std_original <span class="op">+</span> mean_original</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>mu_1_original <span class="op">=</span> mu_1_standardized <span class="op">*</span> std_original <span class="op">+</span> mean_original</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>sigma_0_original <span class="op">=</span> sigma_0_standardized <span class="op">*</span> std_original</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>sigma_1_original <span class="op">=</span> sigma_1_standardized <span class="op">*</span> std_original</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-24" class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"Media a posteriori della prima sottopopolazione: </span><span class="sc">{</span>mu_0_original<span class="sc">:.2f}</span><span class="ch">\n</span><span class="ss">Media a posteriori della seconda sottopopolazione: </span><span class="sc">{</span>mu_1_original<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"Deviazione standard a poseriori della prima sottopopolazione: </span><span class="sc">{</span>sigma_0_original<span class="sc">:.2f}</span><span class="ch">\n</span><span class="ss">Deviazione standard a posteriori della seconda sottopopolazione: </span><span class="sc">{</span>sigma_1_original<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Media a posteriori della prima sottopopolazione: 18.89
+Media a posteriori della seconda sottopopolazione: 60.55
+Deviazione standard a poseriori della prima sottopopolazione: 10.83
+Deviazione standard a posteriori della seconda sottopopolazione: 9.02</code></pre>
+</div>
+</div>
+<p>Nella simulazione, i valori di <span class="math inline">\(\mu\)</span> erano <span class="math inline">\([20, 60]\)</span> e i due valori di <span class="math inline">\(\sigma\)</span> erano entrambi pari a 10. Si osserva quindi una corrispondenza molto buona tra i valori utilizzati per simulare i dati e i parametri stimati per ciascun gruppo. È importante notare che il codice Stan non includeva l’informazione che assegnava ogni osservazione a un gruppo specifico. Questo dimostra come la tecnica della mistura di gaussiane sia in grado di classificare correttamente le osservazioni dei dati campionari nelle diverse sottopopolazioni e di stimare con precisione i parametri per ciascuna di esse.</p>
 </section>
+<section id="considerazioni-conlusive" class="level2" data-number="52.2">
+<h2 data-number="52.2" class="anchored" data-anchor-id="considerazioni-conlusive"><span class="header-section-number">52.2</span> Considerazioni Conlusive</h2>
+<p>In questo capitolo, abbiamo esplorato l’applicazione dei modelli di mistura gaussiana nel contesto della ricerca psicologica, utilizzando come esempio uno studio sugli effetti del training di mindfulness sui giudizi di tristezza.</p>
+<p>Implicazioni per la ricerca psicologica:</p>
+<ul>
+<li>Questi modelli possono aiutare i ricercatori a identificare sottogruppi nascosti all’interno dei loro dati, portando a una comprensione più sfumata dei fenomeni psicologici.</li>
+<li>L’approccio bayesiano offre una flessibilità che può essere particolarmente utile quando si lavora con campioni di dimensioni ridotte o dati complessi.</li>
+</ul>
+<p>In conclusione, i modelli di mistura gaussiana rappresentano uno strumento statistico che può arricchire l’analisi dei dati in psicologia, permettendo ai ricercatori di scoprire strutture latenti e di modellare la complessità intrinseca dei fenomeni psicologici.</p>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:03:16.259171Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:03:16.203222Z&quot;}" data-execution_count="58">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>m  </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="baf42b8e-72cc-4411-8671-5ba22e629294" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Sun Aug 11 2024
+<pre><code>Last updated: Sat Jul 27 2024
 
 Python implementation: CPython
 Python version       : 3.12.4
@@ -1385,31 +1678,28 @@ IPython version      : 8.26.0
 
 Compiler    : Clang 16.0.6 
 OS          : Darwin
-Release     : 23.6.0
+Release     : 23.5.0
 Machine     : arm64
 Processor   : arm
 CPU cores   : 8
 Architecture: 64bit
 
-pandas    : 2.2.2
-cmdstanpy : 1.2.4
-seaborn   : 0.13.2
-matplotlib: 3.9.1
-pingouin  : 0.5.4
 numpy     : 1.26.4
-arviz     : 0.18.0
+cmdstanpy : 1.2.4
+matplotlib: 3.9.1
 logging   : 0.5.1.2
+arviz     : 0.18.0
+scipy     : 1.14.0
+seaborn   : 0.13.2
+pandas    : 2.2.2
 </code></pre>
 </div>
 </div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-gelman2020regression" class="csl-entry" role="listitem">
-Gelman, Andrew, Jennifer Hill, e Aki Vehtari. 2020. <em>Regression and Other Stories</em>. Cambridge University Press.
-</div>
-<div id="ref-gelman2021regression" class="csl-entry" role="listitem">
-———. 2021. <em>Regression and other stories</em>. Cambridge University Press.
+<div id="ref-rowland2020mindfulness" class="csl-entry" role="listitem">
+Rowland, Zarah, e Mario Wenzel. 2020. <span>«Mindfulness and affect-network density: Does mindfulness facilitate disengagement from affective experiences in daily life?»</span> <em>Mindfulness</em> 11: 1253–66.
 </div>
 </div>
 </section>
@@ -1826,13 +2116,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/linear_models/04_prediction.html" class="pagination-link" aria-label="Predizione e inferenza">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span>
+      <a href="../../chapters/mcmc/11_stan_poisson_model_2.html" class="pagination-link" aria-label="Modello di Poisson (2)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/linear_models/05_stan_multreg.html" class="pagination-link" aria-label="Regressione multipla con Stan">
-        <span class="nav-page-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/linear_models/introduction_linear_models.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text">Introduzione</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1844,7 +2134,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/05_design.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/12_stan_gaussian_mixture.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

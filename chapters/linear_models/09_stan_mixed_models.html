@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 51&nbsp; Zucchero sintattico</title>
+<title>Data Science per Psicologi - 61&nbsp; Modelli misti con Stan</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,8 +84,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/linear_models/03_two_means.html" rel="next">
-<link href="../../chapters/linear_models/01_reglin_bayesian.html" rel="prev">
+<link href="../../chapters/linear_models/10_specification_error.html" rel="next">
+<link href="../../chapters/linear_models/08_hier_regr.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -148,7 +168,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/02_synt_sugar.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/09_stan_mixed_models.html"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -496,7 +516,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/07_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/08_exponential_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
   </div>
 </li>
       </ul>
@@ -519,61 +545,73 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/09_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/10_stan_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  <a href="../../chapters/mcmc/10_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/11_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/12_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
   </div>
 </li>
       </ul>
@@ -596,67 +634,73 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/02_synt_sugar.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  <a href="../../chapters/linear_models/02_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/03_two_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  <a href="../../chapters/linear_models/03_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/04_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+  <a href="../../chapters/linear_models/04_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/05_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+  <a href="../../chapters/linear_models/05_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/05_stan_multreg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+  <a href="../../chapters/linear_models/06_design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/06_hier_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  <a href="../../chapters/linear_models/07_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/07_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  <a href="../../chapters/linear_models/08_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/08_specification_error.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  <a href="../../chapters/linear_models/09_stan_mixed_models.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/09_causal_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  <a href="../../chapters/linear_models/10_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/10_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  <a href="../../chapters/linear_models/11_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/12_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -679,37 +723,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -732,7 +776,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
       </ul>
@@ -755,25 +799,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/04_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -796,25 +840,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -837,37 +881,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1084,18 +1128,23 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">51.1</span> Introduzione</a></li>
-  <li><a href="#bayesian-model-building-interface" id="toc-bayesian-model-building-interface" class="nav-link" data-scroll-target="#bayesian-model-building-interface"><span class="header-section-number">51.2</span> BAyesian Model-Building Interface</a></li>
-  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">51.3</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#applicazione-pratica" id="toc-applicazione-pratica" class="nav-link" data-scroll-target="#applicazione-pratica"><span class="header-section-number">61.1</span> Applicazione Pratica</a></li>
+  <li><a href="#i-dati" id="toc-i-dati" class="nav-link" data-scroll-target="#i-dati"><span class="header-section-number">61.2</span> I Dati</a></li>
+  <li><a href="#modello-ad-effetti-fissi" id="toc-modello-ad-effetti-fissi" class="nav-link" data-scroll-target="#modello-ad-effetti-fissi"><span class="header-section-number">61.3</span> Modello ad effetti fissi</a></li>
+  <li><a href="#modello-ad-intercette-casuali" id="toc-modello-ad-intercette-casuali" class="nav-link" data-scroll-target="#modello-ad-intercette-casuali"><span class="header-section-number">61.4</span> Modello ad Intercette Casuali</a></li>
+  <li><a href="#random-intercepts-random-slopes-model" id="toc-random-intercepts-random-slopes-model" class="nav-link" data-scroll-target="#random-intercepts-random-slopes-model"><span class="header-section-number">61.5</span> Random Intercepts, Random Slopes Model</a></li>
+  <li><a href="#modello-a-effetti-misti-con-pendenze-e-intercepce-casuali-correlate" id="toc-modello-a-effetti-misti-con-pendenze-e-intercepce-casuali-correlate" class="nav-link" data-scroll-target="#modello-a-effetti-misti-con-pendenze-e-intercepce-casuali-correlate"><span class="header-section-number">61.6</span> Modello a Effetti Misti con Pendenze e Intercepce Casuali Correlate</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/02_synt_sugar.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/09_stan_mixed_models.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/02_synt_sugar.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Modelli lineari</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/09_stan_mixed_models.html"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-bambi" class="quarto-section-identifier"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></h1>
+<h1 class="title"><span id="sec-stan-mixed-models" class="quarto-section-identifier"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></h1>
 </div>
 
 
@@ -1114,158 +1163,326 @@ window.Quarto = {
 
 <p><strong>Prerequisiti</strong></p>
 <p><strong>Concetti e competenze chiave</strong></p>
-<ul>
-<li>Utilizzare Bambi per costruire e adattare modelli.</li>
-<li>Analizzare i risultati con Bambi.</li>
-</ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<div id="5bcb3677-e6ee-4b60-96e4-fef7687f8d8b" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Third-party imports</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bambi <span class="im">as</span> bmb</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-3" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"bambi"</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(home_directory, <span class="st">"_repositories"</span>, <span class="st">"psicometria"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="introduzione" class="level2" data-number="51.1">
-<h2 data-number="51.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">51.1</span> Introduzione</h2>
-<p>I modelli lineari sono così ampiamente utilizzati che sono stati sviluppati appositamente una sintassi, dei metodi e delle librerie per la regressione. Una di queste librerie è <code>bambi</code> (BAyesian Model-Building Interface). <code>bambi</code> è un pacchetto Python progettato per adattare modelli gerarchici generalizzati lineari (di cui il modello lineare bivariato è un caso particolare), utilizzando una sintassi simile a quella presente nei pacchetti R, come <code>lme4</code>, <code>nlme</code>, <code>rstanarm</code> o <code>brms</code>. <code>bambi</code> si basa su PyMC, ma offre un’API di livello superiore.</p>
-<p>In questo capitolo esploreremo come condurre un’analisi di regressione utilizzando <code>bambi</code> invece di cmdstan.</p>
-</section>
-<section id="bayesian-model-building-interface" class="level2" data-number="51.2">
-<h2 data-number="51.2" class="anchored" data-anchor-id="bayesian-model-building-interface"><span class="header-section-number">51.2</span> BAyesian Model-Building Interface</h2>
-<p>Leggiamo i dati utilizzati nel capitolo precedente.</p>
-<div id="cell-6" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"data"</span>, <span class="st">"Howell_18.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(data_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Generiamo un diagramma a dispersione:</p>
-<div id="cell-8" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">"weight"</span>], df[<span class="st">"height"</span>], <span class="st">"x"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Weight"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Height"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>Text(0, 0.5, 'Height')</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_synt_sugar_files/figure-html/cell-5-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Bambi si concentra sui modelli di regressione, e questa specializzazione permette di adottare una sintassi più semplice, conosciuta come sintassi di Wilkinson {cite:p}<code>wilkinson1973symbolic</code>.</p>
-<p>Ad esempio, il modello <span class="math inline">\(y = \alpha + \beta x + \varepsilon\)</span> si implementa come segue:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>a_model <span class="op">=</span> bmb.Model(<span class="st">"y ∼ x"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Nella sintassi di Wilkinson, il simbolo tilde (∼) separa la variabile dipendente (a sinistra) dalle variabili indipendenti (a destra). In questo caso, stiamo specificando solo la media (<span class="math inline">\(\mu\)</span> nel modello lm di PyMC). Bambi assume di default che la distribuzione di verosimiglianza sia gaussiana, ma è possibile modificarla tramite l’argomento <code>family</code>.</p>
-<p>Se desideriaamo escludere l’intercetta dal modello, possiamo farlo in questo modo:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>no_intercept_model <span class="op">=</span> bmb.Model(<span class="st">"y ∼ 0 + x"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Oppure in questo modo:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>no_intercept_model <span class="op">=</span> bmb.Model(<span class="st">"y ∼ -1 + x"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Per includere ulteriori variabili nel modello, possiamo procedere così:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model_2 <span class="op">=</span> bmb.Model(<span class="st">"y ∼ x + z"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Bambi consente anche di includere effetti a livello di gruppo (gerarchici). Ad esempio, se desideriamo un modello ad effetti misti nel quale abbiamo un effetto diverso di <span class="math inline">\(x\)</span> in ciascun gruppo <code>g</code>, possiamo usare la seguente sintassi:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_h <span class="op">=</span> bmb.Model(<span class="st">"y ∼ x + z + (x | g)"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>La sintassi delle formule non specifica le distribuzioni a priori, ma solo come le variabili dipendenti e indipendenti sono collegate. Bambi definirà automaticamente delle distribuzioni a priori debolmente informative per noi.</p>
-<p>Inoltre, Bambi implementa di default delle distribuzioni a priori debolmente informative, rendendo superflua la loro definizione esplicita. Tuttavia, se preferisci avere un maggiore controllo, possiamo specificarle manualmente.</p>
-<p>Per replicare il modello descritto nel capitolo precedente, possiamo utilizzare la seguente istruzione:</p>
-<div id="cell-10" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"weight_c"</span>] <span class="op">=</span> df[<span class="st">"weight"</span>] <span class="op">-</span> np.mean(df[<span class="st">"weight"</span>])</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> bmb.Model(<span class="st">"height ~ weight_c"</span>, df)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Sul lato sinistro della tilde (∼), abbiamo la variabile dipendente, e sul lato destro, le variabili indipendenti. Con questa sintassi, stiamo semplicemente specificando la media (μ nel modello lm di PyMC). Per impostazione predefinita, Bambi assume che la verosimiglianza sia gaussiana; è possibile modificarla con l’argomento <code>family</code>. La sintassi della formula non specifica la distribuzione delle priors, ma solo come sono associate le variabili dipendenti e indipendenti. Bambi definirà automaticamente delle priors (molto) debolmente informative per noi. Possiamo ottenere ulteriori informazioni stampando il modello Bambi.</p>
-<div id="cell-12" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit  <span class="co"># Funzione logistica</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> cmdstan_path, CmdStanModel</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"stan_mixed_models"</span>))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Print project directory to verify</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Project directory: </span><span class="sc">{</span>project_directory<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       Formula: height ~ weight_c
-        Family: gaussian
-          Link: mu = identity
-  Observations: 352
-        Priors: 
-    target = mu
-        Common-level effects
-            Intercept ~ Normal(mu: 154.5971, sigma: 19.3283)
-            weight_c ~ Normal(mu: 0.0, sigma: 2.9978)
-        
-        Auxiliary parameters
-            sigma ~ HalfStudentT(nu: 4.0, sigma: 7.7313)</code></pre>
+<pre><code>Project directory: /Users/corradocaudek/_repositories/psicometria</code></pre>
 </div>
 </div>
-<p>La descrizione inizia mostrando la formula utilizzata per definire il modello, <code>y ~ x</code>, che indica come la variabile dipendente <code>y</code> è predetta dalla variabile indipendente <code>x</code> in una relazione lineare. La seconda riga specifica che si sta utilizzando una distribuzione gaussiana (normale) come funzione di verosimiglianza per il modello, il che implica l’assunzione che i residui del modello (le differenze tra i valori osservati e i valori predetti) seguano una distribuzione normale.</p>
-<p>La terza riga menziona la funzione di collegamento, in questo caso l’identità, che non applica alcuna trasformazione al valore atteso della variabile dipendente. Questo è caratteristico dei modelli lineari, dove il valore atteso di <code>y</code> è direttamente modellato come una combinazione lineare delle variabili indipendenti (<code>E(Y) = \alpha + \beta x</code>). È importante notare che, nei modelli lineari generalizzati, la funzione di collegamento gioca un ruolo cruciale nel collegare il valore atteso della variabile risposta alla combinazione lineare delle variabili predittive.</p>
-<p>Segue il numero di osservazioni utilizzate per adattare il modello, indicando la dimensione del dataset su cui il modello è stato allenato.</p>
-<p>La parte successiva dell’output dettaglia i priors utilizzati per i parametri del modello. In Bambi, i priors sono assunzioni a priori sui valori dei parametri prima di osservare i dati. Questi priors aiutano a guidare l’inferenza, soprattutto in presenza di dati limitati o per regolarizzare il modello. L’intercetta (Intercept) ha un prior normale con media (<code>mu</code>) 2.0759 e deviazione standard (<code>sigma</code>) 3.9401, indicando la posizione iniziale attesa della linea di regressione e quanto ci si aspetta che vari. Il coefficiente della variabile <code>x</code> ha anch’esso un prior normale, centrato in zero con una deviazione standard ampia (6.8159), riflettendo incertezza su quale possa essere il vero effetto di <code>x</code> su <code>y</code> senza presupporre una direzione specifica dell’effetto.</p>
-<p>La sezione finale riguarda i parametri ausiliari del modello, in questo caso il parametro <code>sigma</code> della distribuzione gaussiana, che rappresenta la deviazione standard dei residui del modello. Questo ha un prior HalfStudentT, che è una distribuzione che ammette solo valori positivi (essendo la deviazione standard sempre positiva), con un grado di libertà (<code>nu</code>) 4.0 e una scala (<code>sigma</code>) 0.791. Questo prior è scelto per la sua flessibilità e la capacità di gestire dati con potenziali outlier.</p>
-<div id="cell-14" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model.build()</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>model.graph()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Questo capitolo descrive l’utilizzo di Stan nell’analisi dei dati mediante modelli misti. Per un approfondimento, si veda <span class="citation" data-cites="sorensen2015bayesian">Sorensen e Vasishth (<a href="../../99-references.html#ref-sorensen2015bayesian" role="doc-biblioref">2015</a>)</span>.</p>
+</section>
+<section id="applicazione-pratica" class="level2" data-number="61.1">
+<h2 data-number="61.1" class="anchored" data-anchor-id="applicazione-pratica"><span class="header-section-number">61.1</span> Applicazione Pratica</h2>
+<p>Per fornire un esempio pratico, esamineremo i dati discussi da <span class="citation" data-cites="gibson2013processing">Gibson e Wu (<a href="../../99-references.html#ref-gibson2013processing" role="doc-biblioref">2013</a>)</span> relativi a uno studio sulla comprensione delle frasi nelle proposizioni relative di soggetto e di oggetto. Una proposizione relativa di soggetto è una frase in cui un sostantivo (ad esempio, “senatore”) viene modificato da una proposizione relativa (ad esempio, “che ha interrogato il giornalista”), e il sostantivo modificato è il soggetto grammaticale della proposizione relativa. In una proposizione relativa di oggetto, il sostantivo modificato dalla proposizione relativa è l’oggetto grammaticale della proposizione (per esempio, “Il senatore che il giornalista ha interrogato si è dimesso”). In entrambi i casi, il sostantivo modificato (“senatore”) è chiamato il sostantivo principale.</p>
+<p>Un risultato comune per l’inglese è che le proposizioni relative di soggetto sono più facili da elaborare rispetto a quelle di oggetto. Le lingue naturali, in generale, includono proposizioni relative, e fino a poco tempo fa il vantaggio delle proposizioni di soggetto è stato considerato valido a livello cross-linguistico. Tuttavia, le proposizioni relative in cinese rappresentano un interessante controesempio a questa generalizzazione. Ricerche recenti condotte da Hsiao e Gibson (2003) hanno suggerito che in cinese le proposizioni relative di oggetto sono più facili da elaborare rispetto a quelle di soggetto in un punto specifico della frase (il sostantivo principale della proposizione relativa). Viene presentata un’analisi di un insieme di dati, successivamente pubblicata da <span class="citation" data-cites="gibson2013processing">Gibson e Wu (<a href="../../99-references.html#ref-gibson2013processing" role="doc-biblioref">2013</a>)</span>, che valuta questa affermazione.</p>
+</section>
+<section id="i-dati" class="level2" data-number="61.2">
+<h2 data-number="61.2" class="anchored" data-anchor-id="i-dati"><span class="header-section-number">61.2</span> I Dati</h2>
+<p>La variabile dipendente dell’esperimento di <span class="citation" data-cites="gibson2013processing">Gibson e Wu (<a href="../../99-references.html#ref-gibson2013processing" role="doc-biblioref">2013</a>)</span> era il tempo di lettura (rt) in millisecondi del sostantivo principale della proposizione relativa. Questo è stato registrato in due condizioni (proposizione relativa di soggetto e proposizione relativa di oggetto), con 37 soggetti e 15 item, presentati in un disegno standard a quadrato latino. Originariamente c’erano 16 item, ma uno è stato rimosso, risultando in 37 × 15 = 555 punti dati. Tuttavia, otto punti dati da un soggetto (id 27) erano mancanti. Di conseguenza, abbiamo un totale di 555 - 8 = 547 punti dati. La condizione (object relative / subject relative) è codificata dalla variabile <code>so</code>.</p>
+<div id="cell-4" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> os.path.join(project_directory, <span class="st">"data"</span>, <span class="st">"gibson_wu_2013.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gibson_data <span class="op">=</span> pd.read_csv(file_path)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>gibson_data.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">subj</th>
+<th data-quarto-table-cell-role="th">item</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">pos</th>
+<th data-quarto-table-cell-role="th">word</th>
+<th data-quarto-table-cell-role="th">correct</th>
+<th data-quarto-table-cell-role="th">rt</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">type2</th>
+<th data-quarto-table-cell-role="th">so</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>13</td>
+<td>obj-ext</td>
+<td>8</td>
+<td>男人</td>
+<td>-</td>
+<td>1561</td>
+<td>headnoun</td>
+<td>object relative</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>6</td>
+<td>subj-ext</td>
+<td>8</td>
+<td>女孩</td>
+<td>-</td>
+<td>959</td>
+<td>headnoun</td>
+<td>subject relative</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>5</td>
+<td>obj-ext</td>
+<td>8</td>
+<td>轎車</td>
+<td>-</td>
+<td>582</td>
+<td>headnoun</td>
+<td>object relative</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>9</td>
+<td>obj-ext</td>
+<td>8</td>
+<td>探員</td>
+<td>-</td>
+<td>294</td>
+<td>headnoun</td>
+<td>object relative</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1</td>
+<td>14</td>
+<td>subj-ext</td>
+<td>8</td>
+<td>空服員</td>
+<td>-</td>
+<td>438</td>
+<td>headnoun</td>
+<td>subject relative</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="aabcc43a-4bc9-41b5-ba57-9ca41a4a4562" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gibson_data.tail()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">subj</th>
+<th data-quarto-table-cell-role="th">item</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">pos</th>
+<th data-quarto-table-cell-role="th">word</th>
+<th data-quarto-table-cell-role="th">correct</th>
+<th data-quarto-table-cell-role="th">rt</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">type2</th>
+<th data-quarto-table-cell-role="th">so</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">542</td>
+<td>9</td>
+<td>15</td>
+<td>obj-ext</td>
+<td>8</td>
+<td>演員</td>
+<td>-</td>
+<td>406</td>
+<td>headnoun</td>
+<td>object relative</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">543</td>
+<td>9</td>
+<td>16</td>
+<td>subj-ext</td>
+<td>8</td>
+<td>記者</td>
+<td>-</td>
+<td>342</td>
+<td>headnoun</td>
+<td>subject relative</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">544</td>
+<td>9</td>
+<td>7</td>
+<td>obj-ext</td>
+<td>8</td>
+<td>狗</td>
+<td>-</td>
+<td>478</td>
+<td>headnoun</td>
+<td>object relative</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">545</td>
+<td>9</td>
+<td>8</td>
+<td>subj-ext</td>
+<td>8</td>
+<td>業餘選手</td>
+<td>-</td>
+<td>510</td>
+<td>headnoun</td>
+<td>subject relative</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">546</td>
+<td>9</td>
+<td>11</td>
+<td>obj-ext</td>
+<td>8</td>
+<td>球員</td>
+<td>-</td>
+<td>350</td>
+<td>headnoun</td>
+<td>object relative</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="d647a463-a24d-46ed-bc0c-901519bdea22" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gibson_data.shape</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>(547, 10)</code></pre>
+</div>
+</div>
+<div id="42a6497c-366e-43d3-9f5a-e7875459872c" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gibson_data[<span class="st">"RT"</span>] <span class="op">=</span> gibson_data[<span class="st">"rt"</span>] <span class="op">/</span> <span class="dv">1000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="22867415-111d-4030-a729-62626dd59f48" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> sns.kdeplot(data<span class="op">=</span>gibson_data, x<span class="op">=</span><span class="st">'RT'</span>, hue<span class="op">=</span><span class="st">'so'</span>, fill<span class="op">=</span><span class="va">True</span>, common_norm<span class="op">=</span><span class="va">False</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="09_stan_mixed_models_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="modello-ad-effetti-fissi" class="level2" data-number="61.3">
+<h2 data-number="61.3" class="anchored" data-anchor-id="modello-ad-effetti-fissi"><span class="header-section-number">61.3</span> Modello ad effetti fissi</h2>
+<p>Iniziamo facendo l’assunzione che la variabile dipendente del tempo di lettura (rt) sul sostantivo principale sia distribuita approssimativamente in modo log-normale (Rouder, 2005). Questo presuppone che il logaritmo di rt sia distribuito approssimativamente in modo normale. Il logaritmo dei tempi di lettura, <code>logrt</code>, ha una media β0 sconosciuta. La media della distribuzione log-normale di <code>rt</code> è la somma di β0 e di uno scarto β1so il cui valore dipende dal predittore categoriale <code>so</code>, che assume il valore di -1 quando rt proviene dalla condizione di proposizione relativa di soggetto, e 1 quando rt proviene dalla condizione di proposizione relativa di oggetto.</p>
+<p>Il modello del logaritmo dei tempi di lettura è dunque il seguente:</p>
+<p><span class="math display">\[
+logrt_i = \beta_0 + \beta_1 so_i + \epsilon_i.
+\]</span></p>
+<p>Questo è un modello a effetti fissi. L’indice i rappresenta la i-esima riga nel frame dati (in questo caso, i ∈ {1, . . . , 547}); il termine εi rappresenta l’errore nella i-esima riga. Con la variabile <code>so</code> codificata come indicato sopra indicato, β0 rappresenta la media di log rt, indipendentemente dal tipo di proposizione relativa. Il parametro β1 è lo scarto rispetto a β0 in modo che la media di log rt sia β0 + 1β1 quando log rt proviene dalla condizione di proposizione relativa di oggetto, e β0 - 1β1 quando log rt proviene dalla condizione di proposizione relativa di soggetto. In tali circostanze, 2β1 corrisponde alla differenza tra le medie nelle condizioni di proposizione relativa di oggetto e di soggetto. Insieme, β0 e β1 costituiscono le componenti del modello che caratterizzano l’effetto della manipolazione sperimentale (il tipo di proposizione relativa) sulla variabile dipendente rt. Questo è un modello ad effetti fissi perché i parametri β0 e β1 non variano da soggetto a soggetto o da item a item.</p>
+<p>Compiliamo il modello e stampiamo il codice Stan:</p>
+<div id="cell-10" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"fixed_effects.stan"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=1&gt; N;                // Number of data points
+  vector[N] rt;                  // Reading time
+  vector[N] so;                  // Predictor, constrained between -1 and 1
+}
+parameters {
+  vector[2] beta;                // Intercept and slope
+  real&lt;lower=0&gt; sigma_e;         // Error standard deviation
+}
+model {
+  vector[N] mu;
+
+  // Define the model for mu using vectorized operations
+  mu = beta[1] + beta[2] * so;
+
+  // Vectorized likelihood
+  rt ~ lognormal(mu, sigma_e);
+}
+</code></pre>
+</div>
+</div>
+<p>Creiamo un dizionario che include i dati nel formato atteso dal precedente codice Stan.</p>
+<div id="78667d09-e543-43ee-b0cc-ddd5e7601072" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span> : gibson_data.shape[<span class="dv">0</span>],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rt"</span> : gibson_data[<span class="st">"RT"</span>],</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"so"</span> : gibson_data[<span class="st">"so"</span>] </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo il campionamento.</p>
+<div id="64ef973c-16bc-41ea-a036-1e0174b03dc0" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(data<span class="op">=</span>stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo le tracce.</p>
+<div id="0de823e7-1923-438a-8f96-39f0150a7baf" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(fit, var_names<span class="op">=</span>([<span class="st">"beta"</span>, <span class="st">"sigma_e"</span>]), compact<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="09_stan_mixed_models_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Esaminiamo le medie a posteriori e gli intervalli di credibilità dei parametri.</p>
+<div id="00992577-8594-4525-a4f8-507158d46911" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>([<span class="st">"beta"</span>, <span class="st">"sigma_e"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.95</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
-<div>
-<figure class="figure">
-<p><img src="02_synt_sugar_files/figure-html/cell-8-output-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Se vogliamo procedere con un’ispezione visiva dei prior dei parametri del modello usiamo:</p>
-<div id="cell-16" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> model.plot_priors()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Sampling: [Intercept, sigma, weight_c]</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_synt_sugar_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Eseguiamo il campionamento MCMC.</p>
-<div id="cell-18" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> model.fit(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    nuts_sampler<span class="op">=</span><span class="st">"numpyro"</span>,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>}</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Le distribuzioni a posteriori dei parametri e i trace plot si ottengono con la seguente istruzione.</p>
-<div id="cell-20" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(idata)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_synt_sugar_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Un sommario numerico delle distribuzioni a posteriori dei parametri si ottiene con <code>az.summary</code>.</p>
-<div id="cell-22" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>az.summary(idata, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
 <div>
 <div>
 
@@ -1276,8 +1493,8 @@ window.Quarto = {
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">mean</th>
 <th data-quarto-table-cell-role="th">sd</th>
-<th data-quarto-table-cell-role="th">hdi_3%</th>
-<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">hdi_2.5%</th>
+<th data-quarto-table-cell-role="th">hdi_97.5%</th>
 <th data-quarto-table-cell-role="th">mcse_mean</th>
 <th data-quarto-table-cell-role="th">mcse_sd</th>
 <th data-quarto-table-cell-role="th">ess_bulk</th>
@@ -1287,39 +1504,39 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">Intercept</td>
-<td>154.59</td>
-<td>0.27</td>
-<td>154.07</td>
-<td>155.07</td>
+<td data-quarto-table-cell-role="th">beta[0]</td>
+<td>-0.85</td>
+<td>0.03</td>
+<td>-0.90</td>
+<td>-0.80</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>4100.84</td>
-<td>2810.35</td>
+<td>3535.32</td>
+<td>2985.81</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">sigma</td>
-<td>5.11</td>
-<td>0.20</td>
-<td>4.74</td>
-<td>5.46</td>
+<td data-quarto-table-cell-role="th">beta[1]</td>
+<td>-0.04</td>
+<td>0.03</td>
+<td>-0.09</td>
+<td>0.01</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>4391.39</td>
-<td>2834.61</td>
+<td>4901.41</td>
+<td>3327.06</td>
 <td>1.0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">weight_c</td>
-<td>0.90</td>
-<td>0.04</td>
-<td>0.82</td>
-<td>0.98</td>
+<td data-quarto-table-cell-role="th">sigma_e</td>
+<td>0.60</td>
+<td>0.02</td>
+<td>0.56</td>
+<td>0.63</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>4522.69</td>
-<td>3091.93</td>
+<td>4436.39</td>
+<td>2709.09</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1329,57 +1546,399 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>I dati replicano quelli ottenuti in precedenza.</p>
-<p>Possiamo anche generare un grafico che descrive l’incertezza a posteriori delle predizioni del modello.</p>
-<p>La funzione <code>plot_predictions</code> del pacchetto Bambi serve per facilitare l’interpretazione dei modelli di regressione attraverso la visualizzazione grafica. Il metodo appartiene al sottomodulo <code>interpret</code> di Bambi e si concentra sulla rappresentazione delle previsioni generate dal modello.</p>
-<p>Quando si esegue la funzione <code>plot_predictions</code> con i parametri specificati (<code>model</code>, <code>idata</code>, <code>["weight_c"]</code>), essa produce un grafico che sintetizza le previsioni del modello in relazione a una o più variabili indipendenti. In questo caso, il parametro <code>model</code> indica il modello di regressione Bayesiana costruito con Bambi, <code>idata</code> rappresenta i dati inferenziali (ottenuti tramite il fit del modello), e <code>["weight_c"]</code> specifica la variabile indipendente da considerare per il grafico.</p>
-<div id="cell-24" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bmb.interpret.plot_predictions(model, idata, [<span class="st">"weight_c"</span>])<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Default computed for conditional variable: weight_c</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_synt_sugar_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Il grafico generato da questa funzione illustra due aspetti principali:</p>
-<ol type="1">
-<li><p><strong>Media Posteriore di <code>y</code></strong>: Il grafico include una linea che rappresenta la media posteriore della variabile dipendente (<code>height</code>) rispetto alla variabile indipendente specificata (<code>weight_c</code>). La media posteriore è una stima centrale delle previsioni del modello, che riflette la posizione più probabile dei valori di <code>height</code> data l’evidenza fornita dai dati.</p></li>
-<li><p><strong>Intervallo di Densità più Alta del 94%</strong>: Attorno alla retta della media posteriore, il grafico mostra anche un’area evidenziata che rappresenta l’intervallo di densità più alta (HDI) del 94%. Questo intervallo è un modo per quantificare l’incertezza delle previsioni del modello. L’HDI del 94% significa che, data la distribuzione posteriore delle previsioni di <code>height</code>, c’è il 94% di probabilità che il valore vero di <code>height</code> cada all’interno di questo intervallo per un dato valore di <code>weight_c</code>. Questo fornisce una misura visiva dell’incertezza associata alle stime del modello.</p></li>
-</ol>
+<p>L’analisi della distribuzione di β1 indica che approssimativamente il 94% della densità di probabilità a posteriori è al di sotto dello zero, suggerendo che, in cinese, ci sia qualche evidenza che le proposizioni relative oggetto siano più facili da elaborare rispetto alle proposizioni relative soggetto, dati i dati di <span class="citation" data-cites="gibson2013processing">Gibson e Wu (<a href="../../99-references.html#ref-gibson2013processing" role="doc-biblioref">2013</a>)</span>. Tuttavia, poiché l’intervallo di credibilità al 95% include lo zero, potremmo essere riluttanti a trarre questa conclusione, se vogliamo adottare un approccio “quasi frequentista” di test di ipotesi.</p>
+<p>Tuttavia, è importante notare che il modello ad effetti fissi presentato qui non è comunque appropriato per i dati attuali. L’assunzione di indipendenza degli errori viene violata, perché abbiamo misure ripetute per ciascun soggetto e per ciascun item. I modelli lineari misti estendono il modello lineare per risolvere precisamente questo problema.</p>
 </section>
-<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="51.3">
-<h2 data-number="51.3" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">51.3</span> Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-27" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="modello-ad-intercette-casuali" class="level2" data-number="61.4">
+<h2 data-number="61.4" class="anchored" data-anchor-id="modello-ad-intercette-casuali"><span class="header-section-number">61.4</span> Modello ad Intercette Casuali</h2>
+<p>Il modello degli effetti fissi non è adatto per i dati di <span class="citation" data-cites="gibson2013processing">Gibson e Wu (<a href="../../99-references.html#ref-gibson2013processing" role="doc-biblioref">2013</a>)</span> poiché non tiene conto del fatto che abbiamo misurazioni multiple per ciascun soggetto e item. Come già accennato, queste misurazioni multiple portano a una violazione dell’assunzione di indipendenza degli errori. Inoltre, i coefficienti degli effetti fissi β0 e β1 rappresentano medie su tutti i soggetti e gli item, ignorando il fatto che alcuni soggetti saranno più veloci e alcuni più lenti della media; allo stesso modo, alcuni item saranno letti più rapidamente della media e altri più lentamente.</p>
+<p>Nei modelli lineari misti, prendiamo in considerazione questa variabilità per soggetto e per item aggiungendo i termini di correzione u0j e w0k, che aggiustano β0 per il soggetto j e l’item k. Questo scompone parzialmente εi in una somma di termini u0j e w0k, che sono gli aggiustamenti dell’intercetta β0 per il soggetto j e l’item k associato a rt_i. Se il soggetto j è più lento della media di tutti i soggetti, uj sarà un numero positivo, e se l’item k viene letto più velocemente della durata media di tutti gli item, allora wk sarà un numero negativo. Ogni soggetto j ha il proprio aggiustamento u0j, e ogni item ha il proprio aggiustamento w0k. Questi aggiustamenti u0j e w0k sono chiamati <em>intercette casuali</em> (<em>random intercepts</em>) da Pinheiro e Bates (2000) e <em>intercette variabili</em> (<em>varying intercepts</em>) da Gelman e Hill (2007), e aggiustando β0 con questi termini miglioriamo la nostra capacità di tener conto della variabilità per i soggetti e per gli item.</p>
+<p>Il modello statistico ad intercette casuali assume che questi aggiustamenti sono distribuiti normalmente intorno allo zero con deviazione standard sconosciuta:</p>
+<p><span class="math display">\[
+u_0 \sim N(0, \sigma_u),
+\]</span></p>
+<p><span class="math display">\[
+w_0 ∼ N(0, \sigma_w).
+\]</span></p>
+<p>Avendo specificato il modello in questo modo, ci sono tre fonti di varianza: la deviazione standard degli errori σe, la deviazione standard delle intercette casuali per i soggetti, σu, e la deviazione standard delle intercette casuali per gli item, σw. Ci riferiamo a questi valori come alle componenti della varianza.</p>
+<p>Esprimiamo ora il logaritmo del tempo di lettura, prodotto dai soggetti j ∈ {1, . . . , 37} che leggono gli item k ∈ {1,…, 15}, nelle condizioni i ∈ {1, 2} (1 si riferisce alle proposizioni soggetto, 2 alle proposizioni oggetto), come la seguente somma.</p>
+<p><span class="math display">\[
+\log rt_{ijk} = \beta_0 + \beta_{1i} + u_{0j} + w_{0k} + \varepsilon_{ijk}.
+\]</span></p>
+<p>Notiamo che stiamo utilizzando un modo leggermente diverso per descrivere il modello, rispetto al modello degli effetti fissi. Stiamo utilizzando indici per soggetto, item e condizione per identificare ciascuna riga del data frame. Inoltre, anziché scrivere <span class="math inline">\(\beta_1 so_i\)</span>, indicizziamo direttamente β1 in funzione della condizione i (essendo <code>so</code> <span class="math inline">\(\in \{-1, 1\}\)</span>).</p>
+<p>Questo è un modello è un modello ad effetti misti, e più specificamente un modello ad intercette casuali. Il coefficiente <span class="math inline">\(\beta_{1i}\)</span> è quello di maggior interesse; avrà un valore medio −β1 per le proposizioni soggetto e β1 per le proposizioni oggetto a causa della codifica del contrasto. Quindi, se la nostra media a posteriori per β1 è negativa, ciò suggerirebbe che le proposizioni oggetto vengono lette più velocemente delle proposizioni soggetto.</p>
+<div id="cell-21" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"random_intercepts.stan"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>12:33:49 - cmdstanpy - INFO - compiling stan file /Users/corradocaudek/_repositories/psicometria/stan/random_intercepts.stan to exe file /Users/corradocaudek/_repositories/psicometria/stan/random_intercepts
+12:34:01 - cmdstanpy - INFO - compiled model executable: /Users/corradocaudek/_repositories/psicometria/stan/random_intercepts</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Wed Aug 14 2024
+<pre><code>data {
+  int&lt;lower=0&gt; N;                  // Number of data points
+  vector[N] rt;                    // Reading time
+  vector[N] so;                    // Predictor, constrained between -1 and 1
+  int&lt;lower=0&gt; J;                  // Number of subjects
+  int&lt;lower=0&gt; K;                  // Number of items
+  array[N] int&lt;lower=0, upper=J&gt; subj;
+  array[N] int&lt;lower=0, upper=K&gt; item;
+}
+parameters {
+  vector[2] beta;                  // Fixed intercept and slope
+  vector[J] u;                     // Subject intercepts
+  vector[K] w;                     // Item intercepts
+  real&lt;lower=0&gt; sigma_e;           // Error standard deviation
+  real&lt;lower=0&gt; sigma_u;           // Subject standard deviation
+  real&lt;lower=0&gt; sigma_w;           // Item standard deviation
+}
+model {
+  vector[N] mu;
+
+  // Priors
+  beta ~ normal(0, 5);             // Assuming a weakly informative prior for beta
+  u ~ normal(0, sigma_u);
+  w ~ normal(0, sigma_w);
+  sigma_e ~ exponential(1);
+  sigma_u ~ exponential(1);
+  sigma_w ~ exponential(1);
+
+  // Likelihood
+  mu = beta[1] + beta[2] * so + u[subj] + w[item];  // Vectorized computation of mu
+  rt ~ lognormal(mu, sigma_e);
+}
+</code></pre>
+</div>
+</div>
+<div id="e0f438d7-a887-42d8-9978-0882f52b2925" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'subj'</span>: pd.factorize(gibson_data[<span class="st">'subj'</span>])[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'item'</span>: pd.factorize(gibson_data[<span class="st">'item'</span>])[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'rt'</span>: gibson_data[<span class="st">'RT'</span>].values,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'so'</span>: gibson_data[<span class="st">'so'</span>].values,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>: <span class="bu">len</span>(gibson_data),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'J'</span>: gibson_data[<span class="st">'subj'</span>].nunique(),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'K'</span>: gibson_data[<span class="st">'item'</span>].nunique()</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="79a6ca02-beaa-4360-936a-ad5948025204" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(data<span class="op">=</span>stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="05cfbe0c-5ea8-4a5e-b8f5-6d39d92e1c5c" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>([<span class="st">"beta"</span>, <span class="st">"sigma_e"</span>, <span class="st">"sigma_u"</span>, <span class="st">"sigma_w"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.95</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_2.5%</th>
+<th data-quarto-table-cell-role="th">hdi_97.5%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">beta[0]</td>
+<td>-0.85</td>
+<td>0.07</td>
+<td>-0.97</td>
+<td>-0.70</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1101.73</td>
+<td>1576.57</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">beta[1]</td>
+<td>-0.04</td>
+<td>0.02</td>
+<td>-0.08</td>
+<td>0.01</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>9851.81</td>
+<td>3141.84</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma_e</td>
+<td>0.52</td>
+<td>0.02</td>
+<td>0.49</td>
+<td>0.55</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>7247.72</td>
+<td>2689.88</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma_u</td>
+<td>0.25</td>
+<td>0.04</td>
+<td>0.17</td>
+<td>0.33</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>3714.95</td>
+<td>2902.11</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma_w</td>
+<td>0.20</td>
+<td>0.05</td>
+<td>0.11</td>
+<td>0.30</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>3978.74</td>
+<td>2983.07</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Si noti che rispetto al Modello ad effetti fissi, la stima di σe è più piccola; questo perché ora vengono stimate due componenti di varianza aggiuntive. Si noti inoltre che l’intervallo di credibilità al 95% per la stima di β1 include lo zero; quindi, c’è ancora qualche evidenza che le proposizioni oggetto siano più facili delle proposizioni soggetto, ma non possiamo escludere la possibilità che non ci sia una differenza credibile nei tempi di lettura tra i due tipi di proposizioni relative.</p>
+<p>Il presente modello con intercette casuali assume che l’effetto della variabile <code>so</code> sia lo stesso per ciascun soggetto.Ma questo non è necessariamente vero. Per consentire al modello di tenere conto che l’effetto della variabile <code>so</code> possa variare tra i soggetti, dobbiamo estendere il presente modello e trasformarlo in un modello che include sia intercette sia pendenze casuali.</p>
+</section>
+<section id="random-intercepts-random-slopes-model" class="level2" data-number="61.5">
+<h2 data-number="61.5" class="anchored" data-anchor-id="random-intercepts-random-slopes-model"><span class="header-section-number">61.5</span> Random Intercepts, Random Slopes Model</h2>
+<p>Per esprimere la struttura descritta sopra nel modello lineare misto, dobbiamo specificare le pendenze casuali. Il primo cambiamento consiste nel permettere che la dimensione dell’effetto per <code>so</code> varii per soggetto e per item. Consentiamo che la dimensione dell’effetto vari per soggetto e per item includendo nel modello pendenze variabili per soggetto e per item, che costituiscono degli scarti rispetto alla pendenza fissa β1, allo stesso modo in cui le intercette variabili per soggetto e per item aggiustano l’intercetta fissa β0. Questo aggiustamento della pendenza per soggetto e per item è espresso aggiustando β1 tramite due termini u1j e w1k. Questi termini rappresentano le pendenze casuali. Aggiungendo al modello tali termini aggiuntivi possiamo rendere conto del fatto che l’effetto del tipo di proposizione relativa varia per soggetto j e per item k.</p>
+<p>Esprimiamo il logaritmo del tempo di lettura, prodotto dal soggetto j che legge l’item k, come la seguente somma.</p>
+<p><span class="math display">\[
+\text{log } rt_{ijk} = \beta_0 + u_{0j} + w_{0k} + \beta_{1i} + u_{1ij} + w_{1ik} + \epsilon_{ijk},
+\]</span></p>
+<p>dove il pedice <span class="math inline">\(i\)</span> indica le condizioni. Questo è un modello di intercette variabili e pendenze variabili.</p>
+<p>Il modello è specificato in linguaggio Stan come indicato nel file <code>random_slopes.stan</code>.</p>
+<div id="cell-27" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"random_slopes.stan"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>12:35:00 - cmdstanpy - INFO - compiling stan file /Users/corradocaudek/_repositories/psicometria/stan/random_slopes.stan to exe file /Users/corradocaudek/_repositories/psicometria/stan/random_slopes
+12:35:11 - cmdstanpy - INFO - compiled model executable: /Users/corradocaudek/_repositories/psicometria/stan/random_slopes</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=0&gt; N;                  // Number of data points
+  vector[N] rt;                    // Reading time
+  vector[N] so;                    // Predictor, constrained between -1 and 1
+  int&lt;lower=0&gt; J;                  // Number of subjects
+  int&lt;lower=0&gt; K;                  // Number of items
+  array[N] int&lt;lower=0, upper=J&gt; subj;
+  array[N] int&lt;lower=0, upper=K&gt; item;
+}
+parameters {
+  vector[2] beta;                  // Fixed intercept and slope
+  real&lt;lower=0&gt; sigma_e;           // Error standard deviation
+  matrix[2,J] u;                   // Subject intercepts and slopes
+  vector&lt;lower=0&gt;[2] sigma_u;      // Subject standard deviations
+  matrix[2,K] w;                   // Item intercepts and slopes
+  vector&lt;lower=0&gt;[2] sigma_w;      // Item standard deviations
+}
+model {
+  // Priors
+  for (j in 1:J) {
+    u[1,j] ~ normal(0, sigma_u[1]); // Prior for subject intercepts
+    u[2,j] ~ normal(0, sigma_u[2]); // Prior for subject slopes
+  }
+  
+  for (k in 1:K) {
+    w[1,k] ~ normal(0, sigma_w[1]); // Prior for item intercepts
+    w[2,k] ~ normal(0, sigma_w[2]); // Prior for item slopes
+  }
+  
+  // Likelihood
+  for (i in 1:N) {
+    real mu = beta[1] + u[1, subj[i]] + w[1, item[i]]
+              + (beta[2] + u[2, subj[i]] + w[2, item[i]]) * so[i];
+    rt[i] ~ lognormal(mu, sigma_e);
+  }
+}
+
+</code></pre>
+</div>
+</div>
+<div id="33f3adfd-fda2-4f6b-b48b-e12ae29f4835" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    iter_sampling <span class="op">=</span> <span class="dv">2000</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">1000</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2739cc4b-0ccd-40a0-aa6a-c724cfdf44e2" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>([<span class="st">"beta"</span>, <span class="st">"sigma_e"</span>, <span class="st">"sigma_u"</span>, <span class="st">"sigma_w"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.95</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_2.5%</th>
+<th data-quarto-table-cell-role="th">hdi_97.5%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">beta[0]</td>
+<td>-0.85</td>
+<td>0.07</td>
+<td>-0.98</td>
+<td>-0.71</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>706.84</td>
+<td>302.85</td>
+<td>1.01</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">beta[1]</td>
+<td>-0.04</td>
+<td>0.03</td>
+<td>-0.09</td>
+<td>0.02</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>1982.52</td>
+<td>4756.68</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma_e</td>
+<td>0.52</td>
+<td>0.02</td>
+<td>0.48</td>
+<td>0.55</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>2288.99</td>
+<td>5672.93</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma_u[0]</td>
+<td>0.25</td>
+<td>0.04</td>
+<td>0.18</td>
+<td>0.34</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>712.02</td>
+<td>275.18</td>
+<td>1.01</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma_u[1]</td>
+<td>0.06</td>
+<td>0.04</td>
+<td>0.01</td>
+<td>0.12</td>
+<td>0.01</td>
+<td>0.0</td>
+<td>39.10</td>
+<td>29.54</td>
+<td>1.09</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma_w[0]</td>
+<td>0.20</td>
+<td>0.05</td>
+<td>0.11</td>
+<td>0.30</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>4099.46</td>
+<td>5332.27</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sigma_w[1]</td>
+<td>0.04</td>
+<td>0.03</td>
+<td>0.00</td>
+<td>0.11</td>
+<td>0.00</td>
+<td>0.0</td>
+<td>114.76</td>
+<td>68.32</td>
+<td>1.03</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Anche in questo caso, <span class="citation" data-cites="sorensen2015bayesian">Sorensen e Vasishth (<a href="../../99-references.html#ref-sorensen2015bayesian" role="doc-biblioref">2015</a>)</span> commentano che l’intervallo di credibilità al 95% per <span class="math inline">\(\beta_1\)</span> include lo zero.</p>
+</section>
+<section id="modello-a-effetti-misti-con-pendenze-e-intercepce-casuali-correlate" class="level2" data-number="61.6">
+<h2 data-number="61.6" class="anchored" data-anchor-id="modello-a-effetti-misti-con-pendenze-e-intercepce-casuali-correlate"><span class="header-section-number">61.6</span> Modello a Effetti Misti con Pendenze e Intercepce Casuali Correlate</h2>
+<p><span class="citation" data-cites="sorensen2015bayesian">Sorensen e Vasishth (<a href="../../99-references.html#ref-sorensen2015bayesian" role="doc-biblioref">2015</a>)</span>, nell’approfondire l’analisi dei dati presentati da <span class="citation" data-cites="gibson2013processing">Gibson e Wu (<a href="../../99-references.html#ref-gibson2013processing" role="doc-biblioref">2013</a>)</span>, propongono un avanzamento metodologico nel modello preso in considerazione, introducendo un modello a effetti misti che incorpora intercette e pendenze casuali correlate. La logica dietro questo approccio consiste nell’esaminare la possibilità che vi sia una relazione tra la velocità di lettura dei soggetti (espressa attraverso intercette casuali) e la loro reazione alle diverse tipologie di proposizioni (oggetto vs.&nbsp;soggetto), ipotizzando che soggetti con una velocità di lettura superiore alla media possano esperire un rallentamento maggiore nel leggere proposizioni oggetto rispetto alle proposizioni soggetto, e viceversa. Questa ipotesi suggerisce l’esistenza di correlazioni tra le intercette casuali (che rappresentano variazioni individuali nella velocità di base di lettura) e le pendenze casuali (che rappresentano la variazione nella risposta al tipo di proposizione).</p>
+<p>Per integrare questa struttura nel modello lineare misto (LMM), è essenziale modellare la correlazione tra intercette casuali e pendenze casuali. La formula del modello, la quale rimane inalterata rispetto alla versione precedente, è rappresentata come segue:</p>
+<p><span class="math display">\[
+\text{log } rt_{ijk} = \beta_0 + u_{0j} + w_{0k} + \beta_1 + u_{1ij} + w_{1ik} + \epsilon_{ijk}.
+\]</span></p>
+<p>L’introduzione di correlazioni tra intercette e pendenze casuali trasforma il modello in un approccio di intercette e pendenze correlate, richiedendo la definizione di una matrice di varianza-covarianza per gli effetti casuali. Questo implica la necessità di stabilire una relazione di covarianza tra le intercette casuali (per soggetto e per item) e le pendenze casuali (per soggetto e per item), suggerendo che le pendenze per soggetto (u1) potrebbero correlare con le intercette per soggetto (u0), così come le pendenze per item (w1) potrebbero correlare con le intercette per item (w0). Questo approccio offre una visione più dettagliata e accurata della dinamica tra velocità di lettura individuale e reazione alle differenti strutture sintattiche, arricchendo significativamente l’analisi statistica dei dati comportamentali.</p>
+<p>Nel contesto di questo insegnamento, non approfondiremo la formulazione del modello Stan che include la correlazione tra pendenze e intercette, data la sua complessità tecnica. Tuttavia, è importante sottolineare che è possibile ottenere risultati analoghi con un approccio più accessibile utilizzando il pacchetto Bambi per Python. Questo strumento consente di specificare modelli statistici in maniera intuitiva e diretta. Per esempio, per incorporare la correlazione tra pendenze e intercette nel nostro modello, possiamo utilizzare la seguente sintassi con Bambi:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> bmb.Model(<span class="st">"rt ~ so + (so | subject) + (so | item)"</span>, data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Questa espressione crea un modello in cui <code>rt</code> (il tempo di risposta) è modellato come una funzione del tipo di proposizione <code>so</code>, con pendenze e intercette casuali correlate sia per <code>subject</code> che per <code>item</code>. L’uso di <code>(so | subject)</code> e <code>(so | item)</code> permette di modellare specificamente le variazioni nelle risposte attribuibili a differenze individuali tra i soggetti e caratteristiche uniche degli item, rispettivamente. Questa sintassi semplifica notevolmente l’implementazione di modelli complessi, rendendo l’analisi accessibile anche a chi possiede una conoscenza di base della statistica bayesiana e della modellazione statistica.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="05615e4d-d835-4f3e-b395-435cf9909580" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m <span class="op">-</span>p cmdstanp</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Fri Jul 26 2024
 
 Python implementation: CPython
 Python version       : 3.12.4
 IPython version      : 8.26.0
 
+cmdstanp: not installed
+
 Compiler    : Clang 16.0.6 
 OS          : Darwin
-Release     : 23.6.0
+Release     : 23.5.0
 Machine     : arm64
 Processor   : arm
 CPU cores   : 8
 Architecture: 64bit
 
-seaborn   : 0.13.2
-cmdstanpy : 1.2.4
-arviz     : 0.18.0
-matplotlib: 3.9.1
 pandas    : 2.2.2
+matplotlib: 3.9.1
+scipy     : 1.14.0
+arviz     : 0.18.0
+seaborn   : 0.13.2
 numpy     : 1.26.4
-logging   : 0.5.1.2
-bambi     : 0.14.0
 
 Watermark: 2.4.3
 </code></pre>
@@ -1387,6 +1946,14 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-gibson2013processing" class="csl-entry" role="listitem">
+Gibson, Edward, e H-H Iris Wu. 2013. <span>«Processing Chinese relative clauses in context»</span>. <em>Language and Cognitive Processes</em> 28 (1-2): 125–55.
+</div>
+<div id="ref-sorensen2015bayesian" class="csl-entry" role="listitem">
+Sorensen, Tanner, e Shravan Vasishth. 2015. <span>«Bayesian linear mixed models using Stan: A tutorial for psychologists, linguists, and cognitive scientists»</span>. <em>arXiv preprint arXiv:1506.06201</em>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1801,13 +2368,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="pagination-link" aria-label="Modello bayesiano di regressione lineare bivariata">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span>
+      <a href="../../chapters/linear_models/08_hier_regr.html" class="pagination-link" aria-label="Il modello lineare gerarchico">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/linear_models/03_two_means.html" class="pagination-link" aria-label="Confronto tra le medie di due gruppi">
-        <span class="nav-page-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/linear_models/10_specification_error.html" class="pagination-link" aria-label="Errore di specificazione">
+        <span class="nav-page-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1819,7 +2386,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/02_synt_sugar.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/linear_models/09_stan_mixed_models.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
