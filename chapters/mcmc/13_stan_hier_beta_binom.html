@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 49&nbsp; Modello gerarchico beta-binomiale con Stan</title>
+<title>Data Science per Psicologi - 54&nbsp; Modello gerarchico beta-binomiale con Stan</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,8 +84,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/mcmc/10_stan_poisson_model_1.html" rel="next">
-<link href="../../chapters/mcmc/08_stan_two_groups.html" rel="prev">
+<link href="../../chapters/linear_models/introduction_linear_models.html" rel="next">
+<link href="../../chapters/mcmc/12_stan_nuisance_parameters.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -147,7 +167,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/09_stan_hier_beta_binom.html"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/13_stan_hier_beta_binom.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -310,26 +330,32 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/02_freq_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
+  <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/03_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  <a href="../../chapters/eda/03_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/04_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  <a href="../../chapters/eda/04_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/05_causality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  <a href="../../chapters/eda/05_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/06_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
   </div>
 </li>
       </ul>
@@ -352,85 +378,85 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/01_intro_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/02_prob_spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/03_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Distribuzioni di probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Fondamenti della probabilità: assiomi di Kolmogorov e sigma-algebra</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/04_conditional_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/05_bayes_theorem.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/06_random_var.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/07_expval_var.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/08_sampling_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/09_joint_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/10_density_func.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/11_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/12_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/13_likelihood.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/14_simulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Simulazioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Simulazioni</span></span></a>
   </div>
 </li>
       </ul>
@@ -453,55 +479,55 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/02_subj_prop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/02a_grid_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/03_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/04_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/05_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/06_balance_prior_post.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/07_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/08_exponential_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
   </div>
 </li>
       </ul>
@@ -524,73 +550,79 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/09_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/10_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/mcmc/09_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/11_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/mcmc/10_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/12_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/mcmc/11_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/12_stan_nuisance_parameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modelli con più di un parametro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/13_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -613,73 +645,73 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/02_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/03_synt_sugar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/04_two_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/05_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/06_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/07_stan_multreg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/08_hier_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/09_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/10_specification_error.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/11_causal_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/12_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -702,37 +734,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -755,7 +787,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
       </ul>
@@ -778,25 +810,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/04_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -819,25 +851,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -860,37 +892,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1108,32 +1140,24 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#analisi-bayesiana-della-terapia-tattile" id="toc-analisi-bayesiana-della-terapia-tattile" class="nav-link" data-scroll-target="#analisi-bayesiana-della-terapia-tattile"><span class="header-section-number">49.1</span> Analisi bayesiana della “terapia tattile”</a></li>
-  <li><a href="#modello-stan" id="toc-modello-stan" class="nav-link" data-scroll-target="#modello-stan"><span class="header-section-number">49.2</span> Modello Stan</a>
+  <li><a href="#analisi-bayesiana-della-terapia-tattile" id="toc-analisi-bayesiana-della-terapia-tattile" class="nav-link" data-scroll-target="#analisi-bayesiana-della-terapia-tattile"><span class="header-section-number">54.1</span> Analisi bayesiana della “terapia tattile”</a></li>
+  <li><a href="#modello-stan" id="toc-modello-stan" class="nav-link" data-scroll-target="#modello-stan"><span class="header-section-number">54.2</span> Modello Stan</a></li>
+  <li><a href="#compilazione-e-sampling" id="toc-compilazione-e-sampling" class="nav-link" data-scroll-target="#compilazione-e-sampling"><span class="header-section-number">54.3</span> Compilazione e sampling</a></li>
+  <li><a href="#esame-delle-distribuzioni-a-posteriori" id="toc-esame-delle-distribuzioni-a-posteriori" class="nav-link" data-scroll-target="#esame-delle-distribuzioni-a-posteriori"><span class="header-section-number">54.4</span> Esame delle distribuzioni a posteriori</a></li>
+  <li><a href="#schrinkage-bayesiano" id="toc-schrinkage-bayesiano" class="nav-link" data-scroll-target="#schrinkage-bayesiano"><span class="header-section-number">54.5</span> Schrinkage bayesiano</a>
   <ul class="collapse">
-  <li><a href="#il-concetto-di-gerarchia" id="toc-il-concetto-di-gerarchia" class="nav-link" data-scroll-target="#il-concetto-di-gerarchia"><span class="header-section-number">49.2.1</span> Il concetto di gerarchia</a></li>
-  <li><a href="#spiegazione-del-modello" id="toc-spiegazione-del-modello" class="nav-link" data-scroll-target="#spiegazione-del-modello"><span class="header-section-number">49.2.2</span> Spiegazione del modello</a></li>
-  <li><a href="#quantità-generate" id="toc-quantità-generate" class="nav-link" data-scroll-target="#quantità-generate"><span class="header-section-number">49.2.3</span> Quantità generate</a></li>
-  <li><a href="#conclusione" id="toc-conclusione" class="nav-link" data-scroll-target="#conclusione"><span class="header-section-number">49.2.4</span> Conclusione</a></li>
-  </ul></li>
-  <li><a href="#compilazione-e-sampling" id="toc-compilazione-e-sampling" class="nav-link" data-scroll-target="#compilazione-e-sampling"><span class="header-section-number">49.3</span> Compilazione e sampling</a></li>
-  <li><a href="#esame-delle-distribuzioni-a-posteriori" id="toc-esame-delle-distribuzioni-a-posteriori" class="nav-link" data-scroll-target="#esame-delle-distribuzioni-a-posteriori"><span class="header-section-number">49.4</span> Esame delle distribuzioni a posteriori</a></li>
-  <li><a href="#schrinkage-bayesiano" id="toc-schrinkage-bayesiano" class="nav-link" data-scroll-target="#schrinkage-bayesiano"><span class="header-section-number">49.5</span> Schrinkage bayesiano</a>
-  <ul class="collapse">
-  <li><a href="#cosa-significa-shrinkage-in-un-modello-gerarchico" id="toc-cosa-significa-shrinkage-in-un-modello-gerarchico" class="nav-link" data-scroll-target="#cosa-significa-shrinkage-in-un-modello-gerarchico"><span class="header-section-number">49.5.1</span> Cosa Significa Shrinkage in un Modello Gerarchico?</a></li>
-  <li><a href="#meccanismo-dello-shrinkage" id="toc-meccanismo-dello-shrinkage" class="nav-link" data-scroll-target="#meccanismo-dello-shrinkage"><span class="header-section-number">49.5.2</span> Meccanismo dello Shrinkage</a></li>
-  <li><a href="#benefici-dello-shrinkage" id="toc-benefici-dello-shrinkage" class="nav-link" data-scroll-target="#benefici-dello-shrinkage"><span class="header-section-number">49.5.3</span> Benefici dello Shrinkage</a></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">54.5.1</span> Considerazioni Conclusive</a></li>
   </ul></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/09_stan_hier_beta_binom.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/13_stan_hier_beta_binom.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/09_stan_hier_beta_binom.html"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/13_stan_hier_beta_binom.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-stan-hier_beta_binom" class="quarto-section-identifier"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></h1>
+<h1 class="title"><span id="sec-stan-hier_beta_binom" class="quarto-section-identifier"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></h1>
 </div>
 
 
@@ -1181,21 +1205,19 @@ window.Quarto = {
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduzione" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo, esploreremo il concetto di modellazione gerarchica nel contesto Bayesiano. Partiamo da un esempio semplice per introdurre la stima statistica: consideriamo un’urna con palline di colore blu e rosso. Estraendo un campione di 10 palline, possiamo stimare la proporzione di palline blu presenti nell’urna. Questo scenario classico ci introduce ai fondamenti della stima statistica.</p>
-<p>Immaginiamo ora una situazione più complessa: abbiamo a disposizione una grande urna che contiene al suo interno 10 urne più piccole, ciascuna delle quali è riempita con proprie palline blu e rosse. Supponiamo di scegliere 7 di queste urne minori ed estrarre 10 palline da ciascuna. La questione è: come analizziamo questi dati?</p>
-<p>Una possibile soluzione è trattare ogni urna piccola come un’entità completamente indipendente, ripetendo il problema statistico base per sette volte. Questo metodo, tuttavia, non è ideale perché assume che non ci sia nessuna correlazione tra le urne piccole, ignorando il fatto che tutte provengono da una urna comune più grande che potrebbe influenzarne il contenuto.</p>
-<p>Un altro metodo potrebbe essere quello di ignorare completamente la presenza delle urne minori e focalizzarsi unicamente sulla stima della proporzione totale di palline blu nell’urna grande. Questo approccio, però, trascura completamente la struttura gerarchica dei dati, ossia il fatto che le palline sono organizzate in urne separate.</p>
-<p>Il metodo più appropriato per analizzare questa situazione è attraverso la modellazione gerarchica. Con questo approccio, ci proponiamo di stimare non solo la proporzione di palline blu in ogni urna minore, ma anche di comprendere quanto le urne sono correlate tra loro. L’urna grande funge da modello generativo per le urne più piccole, e comprendere questa relazione sottostante ci consente di fare previsioni più accurate sulla proporzione di palline blu in ogni urna minore, riconoscendo e sfruttando la struttura gerarchica dei dati.</p>
+<section id="introduzione" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h3>
+<p>Nel <a href="12_stan_nuisance_parameters.html" class="quarto-xref"><span>Capitolo 53</span></a>, abbiamo analizzato un modello gerarchico che prevede la marginalizzazione dei parametri di disturbo. In questa sezione, introdurremo una nuova variante del modello gerarchico, applicata a un contesto in cui osserviamo un numero di successi per ciascun partecipante su un numero fisso di prove, trattando la probabilità di successo di ciascun partecipante come una variabile.</p>
+<p>Il modello che presentiamo qui condivide con quello precedente l’approccio gerarchico per gestire la variabilità individuale, ma differisce per il tipo di parametri di interesse e il modo in cui affronta la variabilità. Mentre il modello precedente si concentrava sulla stima di una differenza media di gruppo, con una marginalizzazione esplicita dei parametri individuali, il modello attuale è più orientato a stimare le probabilità di successo individuali.</p>
+<p>Entrambi i modelli offrono un potente quadro per l’inferenza bayesiana, ma sono progettati per essere applicati in contesti diversi e con obiettivi distinti.</p>
 </section>
-<section id="analisi-bayesiana-della-terapia-tattile" class="level2" data-number="49.1">
-<h2 data-number="49.1" class="anchored" data-anchor-id="analisi-bayesiana-della-terapia-tattile"><span class="header-section-number">49.1</span> Analisi bayesiana della “terapia tattile”</h2>
-<p>Esaminiamo un problema presentato nel lavoro di {cite:t}<code>doing_bayesian_data_an</code> riguardante la “terapia tattile” (Therapeutic Touch), una pratica infermieristica incentrata sulla manipolazione del presunto “campo energetico” di un paziente. Nonostante la sua prevalenza nelle scuole di infermieristica e negli ospedali negli Stati Uniti, come riportato da {cite:t}<code>rosa1998close</code>, evidenze empiriche a supporto della sua efficacia sono scarse o assenti.</p>
-<p>Il focus dell’indagine di {cite:t}<code>rosa1998close</code> è una delle asserzioni cardine degli operatori di terapia tattile: la presunta capacità di percepire i campi energetici senza contatto visivo. Per testare questa affermazione, è stato progettato un esperimento in cui gli operatori ponevano le loro mani attraverso un pannello che bloccava la visione. In ciascuna prova, un esaminatore, seguendo l’esito di un lancio di moneta, posizionava la sua mano sopra una delle mani dell’operatore. L’operatore doveva quindi identificare quale delle sue mani era stata “selezionata” dall’esaminatore. Ogni tentativo è stato classificato come “corretto” o “errato”.</p>
+<section id="analisi-bayesiana-della-terapia-tattile" class="level2" data-number="54.1">
+<h2 data-number="54.1" class="anchored" data-anchor-id="analisi-bayesiana-della-terapia-tattile"><span class="header-section-number">54.1</span> Analisi bayesiana della “terapia tattile”</h2>
+<p>Esaminiamo un problema presentato nel lavoro di <span class="citation" data-cites="doing_bayesian_data_an">Kruschke (<a href="../../99-references.html#ref-doing_bayesian_data_an" role="doc-biblioref">2014</a>)</span> riguardante la “terapia tattile” (Therapeutic Touch), una pratica infermieristica incentrata sulla manipolazione del presunto “campo energetico” di un paziente. Nonostante la sua prevalenza nelle scuole di infermieristica e negli ospedali negli Stati Uniti, come riportato da <span class="citation" data-cites="rosa1998close">Rosa et al. (<a href="../../99-references.html#ref-rosa1998close" role="doc-biblioref">1998</a>)</span>, evidenze empiriche a supporto della sua efficacia sono scarse o assenti.</p>
+<p>Il focus dell’indagine di <span class="citation" data-cites="rosa1998close">Rosa et al. (<a href="../../99-references.html#ref-rosa1998close" role="doc-biblioref">1998</a>)</span> è una delle asserzioni cardine degli operatori di terapia tattile: la presunta capacità di percepire i campi energetici senza contatto visivo. Per testare questa affermazione, è stato progettato un esperimento in cui gli operatori ponevano le loro mani attraverso un pannello che bloccava la visione. In ciascuna prova, un esaminatore, seguendo l’esito di un lancio di moneta, posizionava la sua mano sopra una delle mani dell’operatore. L’operatore doveva quindi identificare quale delle sue mani era stata “selezionata” dall’esaminatore. Ogni tentativo è stato classificato come “corretto” o “errato”.</p>
 <p>L’unità di osservazione in questo esperimento è costituita da un set di 10 prove per operatore. In totale, lo studio ha coinvolto 21 operatori, con sette di loro sottoposti a retest dopo circa un anno. I dati di retest sono stati trattati come entità indipendenti, portando a un campione effettivo di 28 osservazioni. La metrica di interesse è la proporzione di risposte corrette per ciascun operatore, con una proporzione attesa di 0.50 sotto l’ipotesi nulla di performance casuale.</p>
 <p>La domanda della ricerca centrale è se il campione nel suo complesso è in grado di ottenere una prestazione superiore a quella attesa in base al caso soltanto e, inoltre, se vi sono variazioni nelle prestazioni individuali.</p>
-<p>Inizieremo importando i dati forniti da {cite:t}<code>doing_bayesian_data_an</code>.</p>
+<p>Inizieremo importando i dati forniti da <span class="citation" data-cites="doing_bayesian_data_an">Kruschke (<a href="../../99-references.html#ref-doing_bayesian_data_an" role="doc-biblioref">2014</a>)</span>.</p>
 <div id="cell-6" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:03:46.252728Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:03:45.816178Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the URL of the CSV file on GitHub</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/boboppie/kruschke-doing_bayesian_data_analysis/master/2e/TherapeuticTouchData.csv"</span></span>
@@ -1499,9 +1521,9 @@ Name: y, dtype: int64</code></pre>
 </div>
 </div>
 </section>
-<section id="modello-stan" class="level2" data-number="49.2">
-<h2 data-number="49.2" class="anchored" data-anchor-id="modello-stan"><span class="header-section-number">49.2</span> Modello Stan</h2>
-<p>Leggiamo il codice Stan che implementa il modello descritto nel capitolo {ref}<code>hier_beta_binom_model</code>.</p>
+<section id="modello-stan" class="level2" data-number="54.2">
+<h2 data-number="54.2" class="anchored" data-anchor-id="modello-stan"><span class="header-section-number">54.2</span> Modello Stan</h2>
+<p>Leggiamo il codice Stan che implementa il modello gerarchico.</p>
 <div id="cell-20" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"h_beta_binom_model.stan"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1540,53 +1562,37 @@ generated quantities {
 </code></pre>
 </div>
 </div>
-<p>Nel nostro modello: - <code>N</code> è il numero totale di partecipanti - <code>y</code> è un array che contiene il numero di successi per ogni partecipante - <code>n_trials</code> è un array che contiene il numero di prove per ogni partecipante</p>
-<section id="il-concetto-di-gerarchia" class="level3" data-number="49.2.1">
-<h3 data-number="49.2.1" class="anchored" data-anchor-id="il-concetto-di-gerarchia"><span class="header-section-number">49.2.1</span> Il concetto di gerarchia</h3>
-<p>Il modello è chiamato “gerarchico” perché considera due livelli: 1. Il livello individuale: ogni partecipante ha la propria probabilità di successo 2. Il livello di gruppo: c’è una distribuzione generale che descrive come variano le probabilità di successo tra i partecipanti</p>
-</section>
-<section id="spiegazione-del-modello" class="level3" data-number="49.2.2">
-<h3 data-number="49.2.2" class="anchored" data-anchor-id="spiegazione-del-modello"><span class="header-section-number">49.2.2</span> Spiegazione del modello</h3>
-<section id="parametri" class="level4" data-number="49.2.2.1">
-<h4 data-number="49.2.2.1" class="anchored" data-anchor-id="parametri"><span class="header-section-number">49.2.2.1</span> Parametri</h4>
+<p>Nel modello:</p>
+<ul>
+<li><code>N</code> è il numero totale di partecipanti</li>
+<li><code>y</code> è un array che contiene il numero di successi per ogni partecipante</li>
+<li><code>n_trials</code> è un array che contiene il numero di prove per ogni partecipante</li>
+</ul>
+<p>Il modello è chiamato “gerarchico” perché considera due livelli:</p>
+<ol type="1">
+<li>Il livello individuale: ogni partecipante ha la propria probabilità di successo</li>
+<li>Il livello di gruppo: c’è una distribuzione generale che descrive come variano le probabilità di successo tra i partecipanti</li>
+</ol>
 <ul>
 <li><code>p</code>: È un array che contiene la vera probabilità di successo per ogni partecipante.</li>
 <li><code>alpha</code> e <code>beta</code>: Sono i parametri che definiscono la distribuzione Beta, che descrive come variano le probabilità di successo tra i partecipanti.</li>
 </ul>
-</section>
-<section id="prior" class="level4" data-number="49.2.2.2">
-<h4 data-number="49.2.2.2" class="anchored" data-anchor-id="prior"><span class="header-section-number">49.2.2.2</span> Prior</h4>
 <p>Impostiamo delle prior per <code>alpha</code> e <code>beta</code>:</p>
 <pre><code>alpha ~ gamma(8, 2);
 beta ~ gamma(27, 5);</code></pre>
 <p>Queste prior riflettono le nostre conoscenze o supposizioni iniziali sui possibili valori di questi parametri.</p>
-</section>
-<section id="il-cuore-del-modello" class="level4" data-number="49.2.2.3">
-<h4 data-number="49.2.2.3" class="anchored" data-anchor-id="il-cuore-del-modello"><span class="header-section-number">49.2.2.3</span> Il cuore del modello</h4>
 <pre><code>p ~ beta(alpha, beta);</code></pre>
 <p>Questa riga è il cuore del modello gerarchico. Dice che la probabilità di successo di ogni partecipante (<code>p</code>) segue una distribuzione Beta, i cui parametri sono <code>alpha</code> e <code>beta</code>. Questo crea un legame tra tutti i partecipanti: le loro prestazioni individuali sono considerate come variazioni attorno a una tendenza generale del gruppo.</p>
-</section>
-<section id="likelihood" class="level4" data-number="49.2.2.4">
-<h4 data-number="49.2.2.4" class="anchored" data-anchor-id="likelihood"><span class="header-section-number">49.2.2.4</span> Likelihood</h4>
 <pre><code>for (i in 1:N) {
   y[i] ~ binomial(n_trials[i], p[i]);
 }</code></pre>
 <p>Questa parte del modello descrive come i dati osservati (<code>y</code>) sono generati, dato il numero di prove (<code>n_trials</code>) e la vera probabilità di successo (<code>p</code>) per ogni partecipante.</p>
-</section>
-</section>
-<section id="quantità-generate" class="level3" data-number="49.2.3">
-<h3 data-number="49.2.3" class="anchored" data-anchor-id="quantità-generate"><span class="header-section-number">49.2.3</span> Quantità generate</h3>
 <pre><code>real overall_p = alpha / (alpha + beta);</code></pre>
 <p>Questa riga calcola la probabilità di successo media per l’intero gruppo.</p>
+<p>In conclusione, questo modello ci permette di stimare la probabilità di successo individuale per ogni partecipante, comprendere come queste probabilità variano nel gruppo e ottenere una stima della probabilità di successo media per l’intero gruppo. Il vantaggio principale di questo approccio gerarchico è che combina informazioni a livello individuale e di gruppo, permettendo stime più precise, specialmente per i partecipanti con pochi dati.</p>
 </section>
-<section id="conclusione" class="level3" data-number="49.2.4">
-<h3 data-number="49.2.4" class="anchored" data-anchor-id="conclusione"><span class="header-section-number">49.2.4</span> Conclusione</h3>
-<p>Questo modello ci permette di: 1. Stimare la probabilità di successo individuale per ogni partecipante 2. Comprendere come queste probabilità variano nel gruppo 3. Ottenere una stima della probabilità di successo media per l’intero gruppo</p>
-<p>Il vantaggio principale di questo approccio gerarchico è che combina informazioni a livello individuale e di gruppo, permettendo stime più precise, specialmente per i partecipanti con pochi dati.</p>
-</section>
-</section>
-<section id="compilazione-e-sampling" class="level2" data-number="49.3">
-<h2 data-number="49.3" class="anchored" data-anchor-id="compilazione-e-sampling"><span class="header-section-number">49.3</span> Compilazione e sampling</h2>
+<section id="compilazione-e-sampling" class="level2" data-number="54.3">
+<h2 data-number="54.3" class="anchored" data-anchor-id="compilazione-e-sampling"><span class="header-section-number">54.3</span> Compilazione e sampling</h2>
 <p>Compiliamo il modello.</p>
 <div id="cell-23" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1604,8 +1610,8 @@ beta ~ gamma(27, 5);</code></pre>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="esame-delle-distribuzioni-a-posteriori" class="level2" data-number="49.4">
-<h2 data-number="49.4" class="anchored" data-anchor-id="esame-delle-distribuzioni-a-posteriori"><span class="header-section-number">49.4</span> Esame delle distribuzioni a posteriori</h2>
+<section id="esame-delle-distribuzioni-a-posteriori" class="level2" data-number="54.4">
+<h2 data-number="54.4" class="anchored" data-anchor-id="esame-delle-distribuzioni-a-posteriori"><span class="header-section-number">54.4</span> Esame delle distribuzioni a posteriori</h2>
 <p>Esaminiamo le stime a posteriori dei parametri.</p>
 <div id="cell-27" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"p"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.95</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2003,24 +2009,21 @@ beta ~ gamma(27, 5);</code></pre>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="schrinkage-bayesiano" class="level2" data-number="49.5">
-<h2 data-number="49.5" class="anchored" data-anchor-id="schrinkage-bayesiano"><span class="header-section-number">49.5</span> Schrinkage bayesiano</h2>
-<p>Nel contesto dei modelli gerarchici bayesiani, il fenomeno dello “shrinkage” (o riduzione) è un aspetto fondamentale e desiderabile, specialmente quando si modellano dati provenienti da gruppi o sotto-popolazioni con campionature di dimensioni diverse o variazioni intrinseche. Questo fenomeno può essere particolarmente rilevante e utile nel tuo modello gerarchico per il numero di risposte corrette di ciascun operatore, modello che utilizza una distribuzione binomiale per le osservazioni e una Beta per i priori dei parametri di successo $ p_i $.</p>
-<section id="cosa-significa-shrinkage-in-un-modello-gerarchico" class="level3" data-number="49.5.1">
-<h3 data-number="49.5.1" class="anchored" data-anchor-id="cosa-significa-shrinkage-in-un-modello-gerarchico"><span class="header-section-number">49.5.1</span> Cosa Significa Shrinkage in un Modello Gerarchico?</h3>
+<section id="schrinkage-bayesiano" class="level2" data-number="54.5">
+<h2 data-number="54.5" class="anchored" data-anchor-id="schrinkage-bayesiano"><span class="header-section-number">54.5</span> Schrinkage bayesiano</h2>
+<p>Nel contesto dei modelli gerarchici bayesiani, il fenomeno dello “shrinkage” (contrazione o riduzione) è un aspetto fondamentale e desiderabile, specialmente quando si modellano dati provenienti da gruppi o sotto-popolazioni con campionature di dimensioni diverse o variazioni intrinseche. Questo fenomeno può essere particolarmente rilevante e utile nel tuo modello gerarchico per il numero di risposte corrette di ciascun operatore, modello che utilizza una distribuzione binomiale per le osservazioni e una Beta per i priori dei parametri di successo <span class="math inline">\(p_i\)</span>.</p>
 <p>Lo “shrinkage” in un modello bayesiano gerarchico si riferisce al processo per cui le stime dei parametri individuali (ad esempio, le probabilità di successo per ciascun operatore nel presente modello) sono “spostate” verso una media di gruppo. Questo accade perché il modello considera sia i dati osservati per ciascun gruppo (o individuo) sia le informazioni aggiuntive fornite dalla struttura gerarchica e dai dati degli altri gruppi.</p>
-</section>
-<section id="meccanismo-dello-shrinkage" class="level3" data-number="49.5.2">
-<h3 data-number="49.5.2" class="anchored" data-anchor-id="meccanismo-dello-shrinkage"><span class="header-section-number">49.5.2</span> Meccanismo dello Shrinkage</h3>
-<p>Nel presente modello: - Ogni operatore ha una probabilità di successo $ p_i $ che segue una distribuzione Beta $ (a, b) $, dove $ a $ e $ b $ sono iperparametri condivisi tra tutti gli operatori. - Gli iperparametri $ a $ e $ b $ sono stimati dai dati di tutti gli operatori, e quindi forniscono una base comune che riflette le caratteristiche medie di tutti gli operatori.</p>
-<p>Se un operatore ha pochi dati (ad esempio, pochi tentativi o risposte), la stima di $ p_i $ per quell’operatore sarà fortemente influenzata dai valori di $ a $ e $ b $, “spostando” la stima di $ p_i $ verso la media di gruppo. Questo riduce l’impatto delle fluttuazioni casuali nei dati di quell’operatore, che potrebbero altrimenti portare a stime eccessivamente ottimistiche o pessimistiche.</p>
-</section>
-<section id="benefici-dello-shrinkage" class="level3" data-number="49.5.3">
-<h3 data-number="49.5.3" class="anchored" data-anchor-id="benefici-dello-shrinkage"><span class="header-section-number">49.5.3</span> Benefici dello Shrinkage</h3>
+<p>Nel presente modello:</p>
+<ul>
+<li>ogni operatore ha una probabilità di successo <span class="math inline">\(p_i\)</span> che segue una distribuzione <span class="math inline">\(\text{Beta}(a, b)\)</span>, dove <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span> sono iperparametri condivisi tra tutti gli operatori;</li>
+<li>gli iperparametri <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span> sono stimati dai dati di tutti gli operatori, e quindi forniscono una base comune che riflette le caratteristiche medie di tutti gli operatori.</li>
+</ul>
+<p>Se un operatore ha pochi dati (ad esempio, pochi tentativi o risposte), la stima di <span class="math inline">\(p_i\)</span> per quell’operatore sarà fortemente influenzata dai valori di <span class="math inline">\(a\)</span> e <span class="math inline">\(b\)</span>, “spostando” la stima di <span class="math inline">\(p_i\)</span> verso la media di gruppo. Questo riduce l’impatto delle fluttuazioni casuali nei dati di quell’operatore, che potrebbero altrimenti portare a stime eccessivamente ottimistiche o pessimistiche.</p>
+<p>Lo shrinkage ha i seguenti benefici:</p>
 <ol type="1">
-<li><strong>Migliore Stima per Gruppi con Pochi Dati</strong>: Operatori con meno dati beneficiano maggiormente dello shrinkage, in quanto le loro stime sono stabilizzate attraverso l’informazione “prestata” dagli altri operatori.</li>
-<li><strong>Riduzione dell’Overfitting</strong>: Il modello evita di adattarsi troppo ai dati di un singolo operatore, specialmente quando questi sono limitati o rumorosi, risultando in generalizzazioni più robuste.</li>
-<li><strong>Incorporazione della Struttura dei Dati</strong>: Lo shrinkage riflette l’assunzione che gli operatori siano simili ma non identici, permettendo una certa individualità ma entro un quadro comune che li lega.</li>
+<li><strong>migliore Stima per Gruppi con Pochi Dati.</strong> Operatori con meno dati beneficiano maggiormente dello shrinkage, in quanto le loro stime sono stabilizzate attraverso l’informazione “prestata” dagli altri operatori;</li>
+<li><strong>riduzione dell’Overfitting.</strong> Il modello evita di adattarsi troppo ai dati di un singolo operatore, specialmente quando questi sono limitati o rumorosi, risultando in generalizzazioni più robuste;</li>
+<li><strong>incorporazione della Struttura dei Dati.</strong> Lo shrinkage riflette l’assunzione che gli operatori siano simili ma non identici, permettendo una certa individualità ma entro un quadro comune che li lega.</li>
 </ol>
 <p>Supponiamo che alcuni operatori abbiano mostrato risultati estremamente buoni o cattivi, che potrebbero essere dovuti a varianze casuali. Lo shrinkage modera queste stime estreme, specialmente se non sono supportate da una grande quantità di dati, rendendo le previsioni finali più credibili e meno soggette a errori casuali.</p>
 <p>In conclusione, lo shrinkage in un modello gerarchico aiuta a ottenere stime più accurate e credibili per tutti i membri del gruppo, sfruttando le informazioni collettive e limitando l’impatto delle anomalie nei dati individuali.</p>
@@ -2464,7 +2467,7 @@ array(0.44112334)</pre><div class="xr-wrap" style="display:none"><div class="xr-
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="09_stan_hier_beta_binom_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="13_stan_hier_beta_binom_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2476,7 +2479,7 @@ array(0.44112334)</pre><div class="xr-wrap" style="display:none"><div class="xr-
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="09_stan_hier_beta_binom_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="13_stan_hier_beta_binom_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2486,7 +2489,7 @@ array(0.44112334)</pre><div class="xr-wrap" style="display:none"><div class="xr-
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="09_stan_hier_beta_binom_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="13_stan_hier_beta_binom_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2530,18 +2533,24 @@ array(0.44112334)</pre><div class="xr-wrap" style="display:none"><div class="xr-
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="09_stan_hier_beta_binom_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="13_stan_hier_beta_binom_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>L’intervallo [0.37, 0.51] rappresenta l’intervallo di credibilità al 94% per la probabilità di risposta corretta <code>p</code>, considerando l’insieme del gruppo degli operatori. Questo intervallo ci fornisce un’indicazione sulla variabilità delle probabilità di successo tra gli operatori, considerando sia le differenze tra di loro che le somiglianze all’interno del gruppo.</p>
 <p>Poiché l’intervallo di credibilità include il valore 0.5, possiamo concludere che non ci sono evidenze credibili che gli operatori, considerati nel loro insieme, siano in grado di “percepire il campo energetico di una persona senza vedere le mani” ad un livello diverso rispetto a quello che ci si potrebbe aspettare dal caso soltanto.</p>
+<section id="considerazioni-conclusive" class="level3" data-number="54.5.1">
+<h3 data-number="54.5.1" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">54.5.1</span> Considerazioni Conclusive</h3>
+<p>In questo capitolo, abbiamo esplorato in profondità il concetto di modellazione gerarchica nell’approccio bayesiano. Per rendere più chiara questa idea, possiamo ricorrere a una semplice analogia: immaginate un’urna che contiene palline blu e rosse. Stimare la proporzione di palline blu in un campione estratto da questa urna rappresenta un problema statistico basilare, ma non riflette la complessità di scenari più realistici.</p>
+<p>Immaginiamo ora un contesto più articolato: un’urna grande che racchiude al suo interno diverse urne più piccole, ciascuna con una propria proporzione di palline blu e rosse. In questo caso, l’analisi si complica. Se consideriamo ogni urna piccola come indipendente dalle altre, ignoriamo il fatto che tutte sono contenute in un’urna più grande e quindi potenzialmente correlate. Al contrario, se ci focalizziamo solo sull’urna grande, trascuriamo le peculiarità di ciascuna urna piccola.</p>
+<p>La modellazione gerarchica offre un approccio ideale per gestire questa complessità. Attraverso di essa, possiamo stimare non solo la proporzione di palline blu in ogni urna minore, ma anche comprendere la relazione tra queste urne e l’urna principale. Questo approccio ci consente di effettuare previsioni più precise, sfruttando la struttura gerarchica dei dati per coglierne le correlazioni e le interdipendenze.</p>
+<p>Nel corso del capitolo, abbiamo applicato l’approccio gerarchico a un modello con verosimiglianza binomiale, illustrando come questa metodologia possa essere estesa per affrontare dati organizzati gerarchicamente. Ciò ci permette di affrontare problemi statistici complessi in modo più solido, migliorando la nostra comprensione delle relazioni intrinseche tra i dati.</p>
 </section>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-52" class="cell" data-execution_count="36">
+<div id="cell-53" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m <span class="op">-</span>p cmdstanpy </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2575,6 +2584,14 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-doing_bayesian_data_an" class="csl-entry" role="listitem">
+Kruschke, John. 2014. <em>Doing Bayesian data analysis: <span>A</span> tutorial with <span>R</span>, JAGS, and <span>Stan</span></em>. Academic Press.
+</div>
+<div id="ref-rosa1998close" class="csl-entry" role="listitem">
+Rosa, Linda, Emily Rosa, Larry Sarner, e Stephen Barrett. 1998. <span>«A close look at therapeutic touch»</span>. <em>Jama</em> 279 (13): 1005–10.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -2989,13 +3006,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/mcmc/08_stan_two_groups.html" class="pagination-link" aria-label="Confronto tra due gruppi">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span>
+      <a href="../../chapters/mcmc/12_stan_nuisance_parameters.html" class="pagination-link" aria-label="Modelli con più di un parametro">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modelli con più di un parametro</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/mcmc/10_stan_poisson_model_1.html" class="pagination-link" aria-label="Modello di Poisson (1)">
-        <span class="nav-page-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/linear_models/introduction_linear_models.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text">Introduzione</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -3007,7 +3024,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/09_stan_hier_beta_binom.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/13_stan_hier_beta_binom.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
