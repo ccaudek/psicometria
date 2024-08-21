@@ -1212,7 +1212,7 @@ window.Quarto = {
 <li>Capire il concetto di regressione verso la media.</li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:47.833443Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:46.436472Z&quot;}" data-execution_count="28">
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-07-13T07:00:47.833443Z&quot;,&quot;start_time&quot;:&quot;2024-07-13T07:00:46.436472Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -1230,7 +1230,7 @@ window.Quarto = {
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"bayesian_bivariate_regression"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
@@ -1261,7 +1261,7 @@ window.Quarto = {
 <section id="adattare-una-retta-di-regressione-a-dati-simulati" class="level2" data-number="55.1">
 <h2 data-number="55.1" class="anchored" data-anchor-id="adattare-una-retta-di-regressione-a-dati-simulati"><span class="header-section-number">55.1</span> Adattare una Retta di Regressione a Dati Simulati</h2>
 <p>Simuliamo 20 osservazioni di <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>, dove <span class="math inline">\(y\)</span> è generato in base a un modello di regressione teorico con i parametri specificati di seguito.</p>
-<div id="cell-6" class="cell" data-execution_count="30">
+<div id="cell-6" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1277,7 +1277,7 @@ window.Quarto = {
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>fake <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: x, <span class="st">"y"</span>: y})</span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>fake.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
 
@@ -1324,7 +1324,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Adattiamo ai dati un modello di regressione bayesiano. Compiliamo e stampiamo il codice Stan.</p>
-<div id="cell-8" class="cell" data-execution_count="20">
+<div id="cell-8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"bivariate_linreg_model.stan"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1352,11 +1352,11 @@ generated quantities {
 </div>
 </div>
 <p>Definiamo un dizionario che contiene i dati nel formato attesto da Stan.</p>
-<div id="cell-10" class="cell" data-execution_count="21">
+<div id="cell-10" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(fake[<span class="st">"x"</span>]), <span class="st">"x"</span>: fake[<span class="st">"x"</span>], <span class="st">"y"</span>: fake[<span class="st">"y"</span>]}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Eseguiamo il campionamento.</p>
-<div id="cell-12" class="cell" data-execution_count="24">
+<div id="cell-12" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
@@ -1367,9 +1367,9 @@ generated quantities {
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esaminiamo una sintesi della distribuzione a posteriori dei parametri.</p>
-<div id="cell-14" class="cell" data-execution_count="26">
+<div id="cell-14" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>([<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"sigma"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>).<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="26">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 <div>
 
@@ -1435,7 +1435,7 @@ generated quantities {
 </div>
 <p>Le prime due righe dell’output ci indicano che l’intercetta stimata è -0.15 con un’incertezza di 0.30, e la pendenza stimata è 0.34 con un’incertezza di 0.02. La deviazione standard residua <span class="math inline">\(\sigma\)</span> è stimata a 0.64 con un’incertezza di 0.12.</p>
 <p>È utile disegnare un diagramma a dispersione con la retta di regressione stimata.</p>
-<div id="cell-16" class="cell" data-execution_count="31">
+<div id="cell-16" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrarre i parametri stimati dal modello bayesiano</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>alpha_hat <span class="op">=</span> <span class="op">-</span><span class="fl">0.15</span>  <span class="co"># Stima media di alpha</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="op">=</span> <span class="fl">0.34</span>  <span class="co"># Stima media di beta</span></span>

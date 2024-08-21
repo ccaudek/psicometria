@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 74&nbsp; Divergenza KL e ELPD</title>
+<title>Data Science per Psicologi - 78&nbsp; Confronto di modelli</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,17 +55,37 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/entropy/03_stan_loo.html" rel="next">
-<link href="../../chapters/entropy/01_entropy.html" rel="prev">
+<link href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" rel="next">
+<link href="../../chapters/cognitive_models/01_rescorla_wagner.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -102,36 +122,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Ricerca"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -144,7 +138,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/02_kl.html"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/introduction_cognitive_models.html">Modelli cognitivi</a></li><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/02_cog_mod_comp.html"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -748,13 +742,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
  <span class="menu-text">Entropia</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/introduction_entropy.html" class="sidebar-item-text sidebar-link">
@@ -769,7 +763,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
   </div>
 </li>
@@ -789,13 +783,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
  <span class="menu-text">Modelli cognitivi</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
@@ -810,8 +804,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/02_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva: l’importanza del processo generativo nell’analisi bayesiana dei dati</span></span></a>
+  <a href="../../chapters/cognitive_models/02_cog_mod_comp.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></span></a>
   </div>
 </li>
       </ul>
@@ -1122,27 +1116,23 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#distribuzione-predittiva-posteriori" id="toc-distribuzione-predittiva-posteriori" class="nav-link" data-scroll-target="#distribuzione-predittiva-posteriori"><span class="header-section-number">74.1</span> Distribuzione Predittiva Posteriori</a></li>
-  <li><a href="#divergenza-di-kullback-leibler-kl" id="toc-divergenza-di-kullback-leibler-kl" class="nav-link" data-scroll-target="#divergenza-di-kullback-leibler-kl"><span class="header-section-number">74.2</span> Divergenza di Kullback-Leibler (KL)</a></li>
-  <li><a href="#expected-log-predictive-density-elpd" id="toc-expected-log-predictive-density-elpd" class="nav-link" data-scroll-target="#expected-log-predictive-density-elpd"><span class="header-section-number">74.3</span> Expected Log Predictive Density (ELPD)</a></li>
-  <li><a href="#collegamento-tra-divergenza-kl-e-elpd" id="toc-collegamento-tra-divergenza-kl-e-elpd" class="nav-link" data-scroll-target="#collegamento-tra-divergenza-kl-e-elpd"><span class="header-section-number">74.4</span> Collegamento tra Divergenza KL e ELPD</a></li>
-  <li><a href="#metodi-di-approssimazione-per-la-stima-dellelpd" id="toc-metodi-di-approssimazione-per-la-stima-dellelpd" class="nav-link" data-scroll-target="#metodi-di-approssimazione-per-la-stima-dellelpd"><span class="header-section-number">74.5</span> Metodi di Approssimazione per la Stima dell’ELPD</a>
-  <ul class="collapse">
-  <li><a href="#leave-one-out-cross-validation-loo-cv" id="toc-leave-one-out-cross-validation-loo-cv" class="nav-link" data-scroll-target="#leave-one-out-cross-validation-loo-cv"><span class="header-section-number">74.5.1</span> Leave-One-Out Cross-Validation (LOO-CV)</a></li>
-  <li><a href="#criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" id="toc-criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" class="nav-link" data-scroll-target="#criteri-di-informazione-come-approssimazioni-alla-divergenza-kl"><span class="header-section-number">74.5.2</span> Criteri di Informazione come Approssimazioni alla Divergenza KL</a></li>
-  </ul></li>
-  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">74.6</span> Considerazioni Conclusive</a></li>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">78.1</span> Introduzione</a></li>
+  <li><a href="#modello-process" id="toc-modello-process" class="nav-link" data-scroll-target="#modello-process"><span class="header-section-number">78.2</span> Modello “Process”</a></li>
+  <li><a href="#modello-simpler" id="toc-modello-simpler" class="nav-link" data-scroll-target="#modello-simpler"><span class="header-section-number">78.3</span> Modello “Simpler”</a></li>
+  <li><a href="#simulazione-dei-dati" id="toc-simulazione-dei-dati" class="nav-link" data-scroll-target="#simulazione-dei-dati"><span class="header-section-number">78.4</span> Simulazione dei Dati</a></li>
+  <li><a href="#campionamento" id="toc-campionamento" class="nav-link" data-scroll-target="#campionamento"><span class="header-section-number">78.5</span> Campionamento</a></li>
+  <li><a href="#confronto-dei-modelli" id="toc-confronto-dei-modelli" class="nav-link" data-scroll-target="#confronto-dei-modelli"><span class="header-section-number">78.6</span> Confronto dei Modelli</a></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">78.7</span> Considerazioni Conclusive</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/entropy/02_kl.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/02_cog_mod_comp.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/02_kl.html"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/introduction_cognitive_models.html">Modelli cognitivi</a></li><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/02_cog_mod_comp.html"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-kl-elpd" class="quarto-section-identifier"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></h1>
+<h1 class="title"><span id="sec-cog-models-comparison" class="quarto-section-identifier"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></span></h1>
 </div>
 
 
@@ -1161,338 +1151,480 @@ window.Quarto = {
 
 <p><strong>Prerequisiti</strong></p>
 <p><strong>Concetti e competenze chiave</strong></p>
-<ul>
-<li>Comprendere in modo dettagliato il concetto di Expected Log Predictive Density (ELPD), apprezzandone l’importanza e l’applicabilità nel contesto della valutazione predittiva dei modelli statistici.</li>
-<li>Esplorare e analizzare la relazione tra il concetto di entropia e la ELPD, identificando come l’entropia possa influenzare o riflettere la capacità predittiva di un modello attraverso la densità logaritmica predittiva prevista.</li>
-</ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="1a6aa9ee-fd35-44ce-a0e5-69f1d084dfcb" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> binom</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-2" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Third-party imports</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"cog_mod_comp"</span>))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c6520d11-c083-4b80-86b5-dcb07dab3975" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"kl"</span>))</span>
+<div id="cell-3" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"subj_prop"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduzione" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo, esamineremo in dettaglio tre concetti fondamentali per la valutazione e il confronto di modelli statistici nel contesto bayesiano: la distribuzione predittiva posteriori, la Divergenza di Kullback-Leibler (<span class="math inline">\(\mathbb{KL}\)</span>) e la Densità Predittiva Logaritmica Attesa (Expected Log Predictive Density, ELPD). Questi strumenti ci permettono di quantificare l’adattamento dei modelli ai dati e la loro capacità predittiva.</p>
+<section id="introduzione" class="level2" data-number="78.1">
+<h2 data-number="78.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">78.1</span> Introduzione</h2>
+<p>Nell’analisi dei dati psicologici, l’approccio tradizionale si basa spesso su confronti descrittivi, come la differenza tra le medie di due condizioni sperimentali. Sebbene questo approccio possa fornire informazioni utili, è limitato nella sua capacità di rivelare la complessità dei processi cognitivi sottostanti. Un’analisi che si fermi a questo livello rischia di non cogliere la ricchezza dei meccanismi psicologici che realmente generano i dati osservati. Come sottolineato da McElreath (2020) nel suo lavoro, un vero avanzamento nella comprensione dei fenomeni psicologici richiede l’adozione di modelli che siano esplicitamente formulati in termini di processi generativi ipotizzati.</p>
+<p>Un modello generativo non si limita a descrivere i dati; piuttosto, esso riflette un’ipotesi teorica su come i dati vengano effettivamente prodotti. Questo tipo di modellizzazione consente di testare ipotesi teoriche complesse e di confrontare l’adeguatezza di diversi modelli esplicativi. In questo modo, la ricerca non solo quantifica differenze osservate, ma esplora le cause e i processi che le determinano, permettendo un’interpretazione più profonda e teoricamente informata dei risultati.</p>
+<p>In questo tutorial, vengono confrontati due approcci modellistici diversi: un modello semplice e descrittivo, e un modello processuale più complesso, che incorpora una teoria esplicita del processo cognitivo sottostante. Il primo modello rappresenta un approccio tradizionale, che si limita a distinguere tra due condizioni senza tener conto del meccanismo generativo che potrebbe differenziarle. Il secondo modello, invece, è costruito su un’ipotesi teorica che descrive come il processo cognitivo operi in ciascuna delle due condizioni. Attraverso questo confronto, mostreremo come un modello che incorpora esplicitamente il processo cognitivo possa fornire un’interpretazione più ricca e accurata dei dati, rispetto a un modello che si limita a descrivere differenze superficiali.</p>
+<p>L’obiettivo di questo capitolo è quindi dimostrare l’importanza di adottare modelli generativi nella ricerca psicologica, evidenziando come essi possano superare le limitazioni degli approcci descrittivi tradizionali e fornire intuizioni più profonde sul funzionamento dei processi cognitivi.</p>
 </section>
-<section id="distribuzione-predittiva-posteriori" class="level2" data-number="74.1">
-<h2 data-number="74.1" class="anchored" data-anchor-id="distribuzione-predittiva-posteriori"><span class="header-section-number">74.1</span> Distribuzione Predittiva Posteriori</h2>
-<p>La distribuzione predittiva posteriori <span class="math inline">\(Q(\tilde{y} \mid y)\)</span> rappresenta la distribuzione dei possibili nuovi dati <span class="math inline">\(\tilde{y},\)</span> dati i dati osservati <span class="math inline">\(y\)</span>. Essa si ottiene combinando:</p>
-<ul>
-<li>la distribuzione del modello per i nuovi dati data una configurazione dei parametri <span class="math inline">\(\theta\)</span>: <span class="math inline">\(Q(\tilde{y} \mid \theta)\)</span>;</li>
-<li>la distribuzione posteriore dei parametri data i dati osservati: <span class="math inline">\(P(\theta \mid y)\)</span>.</li>
-</ul>
-<p>Matematicamente, la distribuzione predittiva posteriori può essere scritta come:</p>
-<p><span class="math display">\[
-Q(\tilde{y} \mid y) = \int Q(\tilde{y} \mid \theta) P(\theta \mid y) d\theta.
-\]</span></p>
-<p>Questa espressione si legge come l’integrale della distribuzione predittiva <span class="math inline">\(Q(\tilde{y} \mid \theta)\)</span> pesata dalla distribuzione posteriore dei parametri <span class="math inline">\(P(\theta \mid y)\)</span>. In altre parole, stiamo “mediando” le previsioni del modello su tutte le possibili configurazioni dei parametri, tenendo conto della loro probabilità posteriore. La distribuzione predittiva posteriori è stata descritta nella <a href="../mcmc/05_stan_prediction.html#sec-posterior-predictive-distribution" class="quarto-xref"><span>Sezione 46.1</span></a>.</p>
-</section>
-<section id="divergenza-di-kullback-leibler-kl" class="level2" data-number="74.2">
-<h2 data-number="74.2" class="anchored" data-anchor-id="divergenza-di-kullback-leibler-kl"><span class="header-section-number">74.2</span> Divergenza di Kullback-Leibler (KL)</h2>
-<p>La divergenza di Kullback-Leibler <span class="math inline">\(\mathbb{KL}(P \parallel Q)\)</span> misura la distanza tra due distribuzioni, <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span>. È definita come:</p>
-<p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \mathbb{E}_P[\log P(X)] - \mathbb{E}_P[\log Q(X)].
-\]</span></p>
-<p>Il termine <span class="math inline">\(\mathbb{E}_P[\log P(X)]\)</span> è il valore atteso del logaritmo della distribuzione <span class="math inline">\(P(X)\)</span> sotto <span class="math inline">\(P\)</span> stessa, cioè:</p>
-<p><span class="math display">\[
-  \mathbb{E}_P[\log P(X)] = \sum_{i=1}^n p_i \log p_i.
-  \]</span></p>
-<p>Per distribuzioni continue, l’espressione diventa:</p>
-<p><span class="math display">\[
-  \mathbb{E}_P[\log P(X)] = \int p(x) \log p(x) \, dx.
-  \]</span></p>
-<p>Questo termine rappresenta l’entropia negativa della distribuzione <span class="math inline">\(P\)</span>.</p>
-<p>Il termine <span class="math inline">\(\mathbb{E}_P[\log Q(X)]\)</span> è il valore atteso del logaritmo della distribuzione <span class="math inline">\(Q(X)\)</span> sotto la distribuzione <span class="math inline">\(P(X)\)</span>:</p>
-<p><span class="math display">\[
-  \mathbb{E}_P[\log Q(X)] = \sum_{i=1}^n p_i \log q_i.
-  \]</span></p>
-<p>Per variabili continue:</p>
-<p><span class="math display">\[
-  \mathbb{E}_P[\log Q(X)] = \int p(x) \log q(x) \, dx.
-  \]</span></p>
-<p>Questo rappresenta l’entropia incrociata tra <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span>.</p>
-<p>La divergenza KL è quindi:</p>
-<p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \sum_{i=1}^n p_i (\log p_i - \log q_i)
-\]</span></p>
-<p>o, in forma continua:</p>
-<p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \int p(x) (\log p(x) - \log q(x)) \, dx
-\]</span></p>
-<p>Un punto importante è che la divergenza KL non è simmetrica, il che significa che <span class="math inline">\(\mathbb{KL}(P \parallel Q) \neq \mathbb{KL}(Q \parallel P)\)</span>. Questa divergenza misura quanta “informazione” si perde usando <span class="math inline">\(Q\)</span> al posto di <span class="math inline">\(P\)</span>.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 74.1</strong></span> Per rendere più chiaro il concetto di divergenza di Kullback-Leibler (KL) nel caso discreto, consideriamo un esempio semplice. Immaginiamo di avere due distribuzioni di probabilità discrete, <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span>, su un insieme di eventi <span class="math inline">\(\{A, B, C\}\)</span>. Supponiamo che le probabilità associate a ciascun evento sotto le distribuzioni <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span> siano le seguenti:</p>
-<ul>
-<li>distribuzione <span class="math inline">\(P\)</span>: <span class="math inline">\(P(A) = 0.5\)</span>, <span class="math inline">\(P(B) = 0.3\)</span>, <span class="math inline">\(P(C) = 0.2\)</span>;</li>
-<li>distribuzione <span class="math inline">\(Q\)</span>: <span class="math inline">\(Q(A) = 0.4\)</span>, <span class="math inline">\(Q(B) = 0.4\)</span>, <span class="math inline">\(Q(C) = 0.2\)</span>.</li>
-</ul>
-<p>La divergenza KL <span class="math inline">\(\mathbb{KL}(P \parallel Q)\)</span> è definita come:</p>
-<p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)},
-\]</span></p>
-<p>dove <span class="math inline">\(i\)</span> scorre su tutti gli eventi possibili <span class="math inline">\(\{A, B, C\}\)</span>. Quindi, dobbiamo calcolare <span class="math inline">\(P(A) \log \frac{P(A)}{Q(A)}\)</span>, <span class="math inline">\(P(B) \log \frac{P(B)}{Q(B)}\)</span> e <span class="math inline">\(P(C) \log \frac{P(C)}{Q(C)}\)</span>, ovvero,</p>
-<p><span class="math display">\[
-   P(A) \log \frac{P(A)}{Q(A)} = 0.5 \log \frac{0.5}{0.4} 0.11155,
-   \]</span></p>
-<p><span class="math display">\[
-   P(B) \log \frac{P(B)}{Q(B)} = 0.3 \log \frac{0.3}{0.4} = -0.08631,
-   \]</span></p>
-<p><span class="math display">\[
-   P(C) \log \frac{P(C)}{Q(C)} = 0.2 \log \frac{0.2}{0.2} = 0.
-   \]</span></p>
-<p>Ora sommiamo tutti i termini:</p>
-<p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = 0.11155 + (-0.08631) + 0 = 0.02524.
-\]</span></p>
-<p>La divergenza KL <span class="math inline">\(\mathbb{KL}(P \parallel Q) \approx 0.025\)</span> indica che la distribuzione <span class="math inline">\(Q\)</span> non è troppo lontana dalla distribuzione <span class="math inline">\(P\)</span>, ma c’è una piccola discrepanza tra le due. Se il valore fosse maggiore, significherebbe che la distribuzione <span class="math inline">\(Q\)</span> si discosta maggiormente da <span class="math inline">\(P\)</span>, indicando una maggiore perdita di informazione se si usa <span class="math inline">\(Q\)</span> al posto di <span class="math inline">\(P\)</span>.</p>
-</div>
-</section>
-<section id="expected-log-predictive-density-elpd" class="level2" data-number="74.3">
-<h2 data-number="74.3" class="anchored" data-anchor-id="expected-log-predictive-density-elpd"><span class="header-section-number">74.3</span> Expected Log Predictive Density (ELPD)</h2>
-<p>L’ELPD è una misura che valuta la capacità predittiva di un modello. Si definisce come:</p>
-<p><span class="math display">\[
-\text{ELPD} = \sum_{i=1}^n \log p(y_i | \mathbf{y}_{-i})
-\]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(y_i\)</span> è l’i-esima osservazione,</li>
-<li><span class="math inline">\(\mathbf{y}_{-i}\)</span> rappresenta tutte le osservazioni eccetto <span class="math inline">\(y_i\)</span>.</li>
-</ul>
-<p>L’idea alla base dell’ELPD è di valutare quanto bene un modello prevede ciascun dato osservato utilizzando tutti gli altri dati. Questo approccio, noto come leave-one-out cross-validation, è particolarmente utile per evitare l’overfitting, perché valuta le previsioni del modello su dati che non ha “visto” durante il processo di addestramento.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 74.2</strong></span> Per illustrare il calcolo dell’Expected Log Predictive Density (ELPD), vediamo un esempio semplice con un set di dati molto piccolo. Supponiamo di avere un dataset di tre osservazioni: <span class="math inline">\(y_1, y_2, y_3\)</span>. Supponiamo che il nostro modello stimi le probabilità per ciascuna osservazione in base a tutte le altre osservazioni, cioè utilizziamo la leave-one-out cross-validation (LOO-CV) per calcolare <span class="math inline">\(p(y_i \mid \mathbf{y}_{-i})\)</span>.</p>
-<p>Immaginiamo che il modello produca le seguenti probabilità condizionali per ogni osservazione <span class="math inline">\(y_i\)</span>:</p>
-<ul>
-<li><span class="math inline">\(p(y_1 \mid y_2, y_3) = 0.6\)</span>,</li>
-<li><span class="math inline">\(p(y_2 \mid y_1, y_3) = 0.7\)</span>,</li>
-<li><span class="math inline">\(p(y_3 \mid y_1, y_2) = 0.5\)</span>.</li>
-</ul>
-<p>L’ELPD si calcola sommando i logaritmi di queste probabilità:</p>
-<p><span class="math display">\[
-\text{ELPD} = \log p(y_1 \mid y_2, y_3) + \log p(y_2 \mid y_1, y_3) + \log p(y_3 \mid y_1, y_2).
-\]</span></p>
-<p>Calcoliamo i logaritmi naturali di ciascuna probabilità:</p>
-<ul>
-<li><span class="math inline">\(\log p(y_1 \mid y_2, y_3) = \log 0.6 \approx -0.5108\)</span>,</li>
-<li><span class="math inline">\(\log p(y_2 \mid y_1, y_3) = \log 0.7 \approx -0.3567\)</span>,</li>
-<li><span class="math inline">\(\log p(y_3 \mid y_1, y_2) = \log 0.5 \approx -0.6931\)</span>.</li>
-</ul>
-<p>Sommiamo i logaritmi per ottenere l’ELPD:</p>
-<p><span class="math display">\[
-\text{ELPD} = -0.5108 + (-0.3567) + (-0.6931) = -1.5606.
-\]</span></p>
-<p>L’ELPD ottenuto è <span class="math inline">\(-1.5606\)</span>. In generale, valori più vicini a 0 o positivi indicano una migliore capacità predittiva del modello, poiché suggeriscono che le probabilità condizionali assegnate dal modello alle osservazioni lasciate fuori non sono troppo basse. Valori molto negativi indicherebbero che il modello ha assegnato probabilità molto basse alle osservazioni effettivamente osservate, suggerendo una scarsa capacità predittiva. L’ELPD è un modo efficace per valutare quanto bene un modello generalizza a nuovi dati, evitando l’overfitting.</p>
-</div>
-</section>
-<section id="collegamento-tra-divergenza-kl-e-elpd" class="level2" data-number="74.4">
-<h2 data-number="74.4" class="anchored" data-anchor-id="collegamento-tra-divergenza-kl-e-elpd"><span class="header-section-number">74.4</span> Collegamento tra Divergenza KL e ELPD</h2>
-<p>Entrambe le misure (Divergenza KL e ELPD) valutano la qualità del modello, ma da prospettive diverse:</p>
-<ul>
-<li>la divergenza KL misura quanto la distribuzione predittiva del modello <span class="math inline">\(Q\)</span> si avvicina alla “vera” distribuzione <span class="math inline">\(P\)</span>;</li>
-<li>l’ELPD valuta direttamente la capacità del modello di prevedere nuovi dati, utilizzando la tecnica leave-one-out.</li>
-</ul>
-<p>Idealmente, vorremmo calcolare la divergenza KL per confrontare i modelli, poiché fornisce una misura diretta di quanto un modello si avvicina alla vera distribuzione dei dati. Tuttavia, poiché <span class="math inline">\(P\)</span> è sconosciuta nella pratica, la divergenza KL non può essere calcolata direttamente. Per questo motivo, nella pratica si utilizza l’ELPD, che, pur fornendo una misura leggermente diversa, ha il grande vantaggio di poter essere calcolata e offre una stima della capacità predittiva di un modello.</p>
-<p>L’ELPD tende a favorire modelli che non solo si adattano bene ai dati osservati, ma che sono anche robusti rispetto all’overfitting, grazie alla sua enfasi sulla capacità predittiva su dati non osservati.</p>
-<p>In sintesi, la distribuzione predittiva posteriori, la divergenza di Kullback-Leibler e l’ELPD sono strumenti matematici che ci permettono di valutare la bontà di un modello statistico. La divergenza KL fornisce una misura teoricamente ideale di quanto un modello approssima la vera distribuzione dei dati, mentre l’ELPD offre un’alternativa praticabile che valuta la capacità del modello di fare previsioni su nuovi dati. Questi concetti sono fondamentali nell’inferenza bayesiana, dove è importante non solo adattarsi ai dati esistenti, ma anche generalizzare bene su dati futuri.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 74.3</strong></span> Consideriamo un secondo esempio per illustrare il concetto di ELPD utilizzando la distribuzione binomiale. Immaginiamo di condurre un esperimento in cui lanciamo una moneta 10 volte e contiamo il numero di volte in cui otteniamo testa. Supponiamo che la vera probabilità di ottenere testa sia 0.6.</p>
+<section id="modello-process" class="level2" data-number="78.2">
+<h2 data-number="78.2" class="anchored" data-anchor-id="modello-process"><span class="header-section-number">78.2</span> Modello “Process”</h2>
+<p>Il modello “process” ipotizza un meccanismo cognitivo in cui l’accuratezza delle risposte di un soggetto in un compito può variare in base a due condizioni sperimentali: una condizione di “alto apprendimento” e una condizione di “basso apprendimento”. L’idea di base è che nella condizione di alto apprendimento, il soggetto non solo apprende dalle risposte precedenti, migliorando gradualmente la sua accuratezza, ma subisce anche un decadimento di tale apprendimento nel tempo. Nella condizione di basso apprendimento, invece, il soggetto non migliora nel tempo, mantenendo un livello costante di accuratezza.</p>
+<p>Questa dinamica riflette un processo di apprendimento che è modulato da due forze opposte: un <em>tasso di apprendimento</em> che permette al soggetto di migliorare la sua performance in base agli errori commessi, e un <em>tasso di decadimento</em> che riduce gradualmente l’effetto dell’apprendimento nel tempo. Questo modello è più complesso rispetto a un modello descrittivo semplice perché tenta di catturare il processo dinamico di come l’accuratezza evolve durante il compito, piuttosto che limitarsi a descrivere una differenza fissa tra due condizioni.</p>
+<p><strong>Implementazione del Modello</strong></p>
 <ol type="1">
-<li><em>Distribuzione reale dei dati:</em> Segue una distribuzione binomiale con 10 lanci e probabilità di successo pari a 0.6: <span class="math inline">\(y \sim \text{Binomiale}(10, 0.6).\)</span></li>
-<li><em>Distribuzione stimata dal modello:</em> Il nostro modello ipotizza che la probabilità di ottenere testa sia 0.5, cioè considera la moneta come equa: <span class="math inline">\(p(y \mid \theta) = \text{Binomiale}(10, 0.5).\)</span></li>
-</ol>
-<p>Ora procediamo al calcolo dell’ELPD.</p>
-<div id="cell-5" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">10</span>  <span class="co"># numero di lanci</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fl">0.6</span>  <span class="co"># vera probabilità di testa</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="fl">0.5</span>  <span class="co"># probabilità stimata dal modello</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo ELPD</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>elpd <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(n <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Probabilità di y secondo la vera distribuzione</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    p_y <span class="op">=</span> binom.pmf(y, n, p)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Log della densità predittiva del modello</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    log_q_y <span class="op">=</span> binom.logpmf(y, n, q)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Somma pesata</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    elpd <span class="op">+=</span> p_y <span class="op">*</span> log_q_y</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ELPD del modello che stima p=0.5: </span><span class="sc">{</span>elpd<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Per confronto, calcoliamo l'ELPD per il modello "vero"</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>elpd_true <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(n <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    p_y <span class="op">=</span> binom.pmf(y, n, p)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    log_p_y <span class="op">=</span> binom.logpmf(y, n, p)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    elpd_true <span class="op">+=</span> p_y <span class="op">*</span> log_p_y</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ELPD del modello vero (con p=0.6): </span><span class="sc">{</span>elpd_true<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>ELPD del modello che stima p=0.5: -2.0549
-ELPD del modello vero (con p=0.6): -1.8536</code></pre>
-</div>
-</div>
-<p>La conclusione è che l’ELPD del modello vero è maggiore (meno negativo) rispetto a quello del nostro modello stimato, il che riflette una capacità predittiva superiore del modello vero.</p>
-<p>Questo esempio dimostra come l’ELPD quantifica la capacità predittiva di un modello:</p>
-<ol type="1">
-<li><p>Si considerano tutti i possibili risultati dell’esperimento (da 0 a 10 teste).</p></li>
-<li><p>Per ciascun risultato, si calcola:</p>
+<li><strong>Dati di Input</strong>
 <ul>
-<li>La probabilità di osservare quel risultato secondo la distribuzione reale.</li>
-<li>Il logaritmo della densità predittiva del modello stimato <span class="math inline">\(q\)</span> per lo stesso risultato.</li>
+<li><strong>N:</strong> Il numero totale di prove (trials) a cui il soggetto è sottoposto.</li>
+<li><strong>y:</strong> Un array binario (0 o 1) che rappresenta l’accuratezza di ciascuna risposta. Un valore di <code>1</code> indica una risposta corretta, mentre un valore di <code>0</code> indica una risposta errata.</li>
+<li><strong>condition:</strong> Un array binario che indica la condizione sperimentale per ciascuna prova: <code>1</code> se il soggetto è nella condizione di “alto apprendimento” e <code>0</code> se è nella condizione di “basso apprendimento”.</li>
 </ul></li>
-<li><p>Si moltiplicano questi due valori e si sommano i risultati per tutti i possibili esiti.</p></li>
+<li><strong>Parametri del Modello</strong>
+<ul>
+<li><strong>theta_initial:</strong> Rappresenta l’accuratezza iniziale del soggetto, prima che qualsiasi apprendimento o decadimento abbia avuto luogo.</li>
+<li><strong>learning_rate:</strong> Rappresenta il tasso di apprendimento, ovvero quanto rapidamente il soggetto migliora in risposta agli errori precedenti.</li>
+<li><strong>decay_rate:</strong> Rappresenta il tasso di decadimento, ovvero quanto velocemente l’effetto dell’apprendimento diminuisce nel tempo.</li>
+</ul></li>
+<li><strong>Distribuzioni A Priori</strong>
+<ul>
+<li>I parametri <strong>theta_initial</strong>, <strong>learning_rate</strong> e <strong>decay_rate</strong> sono tutti modellati come variabili aleatorie con distribuzioni beta. La distribuzione beta è spesso utilizzata per modellare probabilità, poiché è limitata tra 0 e 1 e può assumere varie forme in base ai parametri scelti.</li>
+</ul></li>
+<li><strong>Implementazione del Processo Cognitivo</strong>
+<ul>
+<li>Il modello si sviluppa in modo iterativo per ciascuna prova, a partire dalla seconda (la prima prova è gestita separatamente perché non ha una risposta precedente da cui apprendere).</li>
+<li>Per ogni prova successiva:
+<ul>
+<li>Viene calcolata la probabilità di risposta corretta (<code>p</code>) in base alla condizione corrente.</li>
+<li>Se la condizione è di “alto apprendimento” (<code>condition[n] == 1</code>), la probabilità di risposta corretta viene aggiornata in base a una combinazione di decadimento e apprendimento:
+<ul>
+<li>La parte <strong>(1 - decay_rate) * theta_initial</strong> riduce l’influenza dell’accuratezza iniziale, simulando il decadimento.</li>
+<li>La parte <strong>learning_rate * (1 - y[n - 1])</strong> aumenta la probabilità di una risposta corretta se la prova precedente è stata errata, simulando l’apprendimento dagli errori.</li>
+</ul></li>
+<li>La funzione <strong>fmin</strong> e <strong>fmax</strong> sono utilizzate per assicurarsi che la probabilità <code>p</code> rimanga all’interno dell’intervallo [0, 1].</li>
+</ul></li>
+<li>Se la condizione è di “basso apprendimento” (<code>condition[n] == 0</code>), la probabilità di risposta corretta rimane invariata a <strong>theta_initial</strong>.</li>
+</ul></li>
+<li><strong>Generazione dei Dati Simulati</strong>
+<ul>
+<li>Nella sezione <code>generated quantities</code>, il modello genera dati simulati (<code>y_rep</code>) e calcola la log-verosimiglianza (<code>log_lik</code>) per ciascuna prova. Questo è utile per confrontare la bontà di adattamento del modello rispetto ai dati osservati.</li>
+<li>Per ogni prova, viene calcolata la probabilità di una risposta corretta e quindi viene generato un valore simulato usando la funzione <strong>bernoulli_rng</strong>. Il valore di log-verosimiglianza viene calcolato utilizzando <strong>bernoulli_lpmf</strong>.</li>
+</ul></li>
 </ol>
-<p>In sintesi, l’ELPD permette di confrontare l’efficacia predittiva di diversi modelli: un valore più alto (meno negativo) indica una migliore capacità del modello di prevedere i dati osservati. Nell’esempio presentato, il modello vero (con <span class="math inline">\(p = 0.6\)</span>) ha un ELPD superiore rispetto al modello stimato (con <span class="math inline">\(p = 0.5\)</span>), confermando che il primo ha una capacità predittiva migliore.</p>
+<p>Il modello “process” cerca di rappresentare un meccanismo cognitivo complesso, in cui l’accuratezza delle risposte varia dinamicamente in base a un processo di apprendimento e decadimento. Questo approccio permette di testare ipotesi più articolate sui dati, andando oltre una semplice descrizione delle differenze tra condizioni e cercando di catturare la struttura cognitiva che guida il comportamento osservato.</p>
+<div id="cell-6" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"cognitive_process_model.stan"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>process_model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(process_model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=0&gt; N; // number of trials
+  array[N] int&lt;lower=0, upper=1&gt; y; // accuracy (0 or 1)
+  array[N] int&lt;lower=0, upper=1&gt; condition; // 1 if high learning, 0 if low learning
+}
+parameters {
+  real&lt;lower=0, upper=1&gt; theta_initial; // initial accuracy
+  real&lt;lower=0, upper=1&gt; learning_rate; // learning rate
+  real&lt;lower=0, upper=1&gt; decay_rate; // decay rate
+}
+model {
+  // Priors
+  theta_initial ~ beta(2, 2);
+  learning_rate ~ beta(2, 2);
+  decay_rate ~ beta(2, 2);
+  
+  for (n in 2 : N) {
+    real p = condition[n]
+             * fmin(fmax((1 - decay_rate) * theta_initial
+                         + learning_rate * (1 - y[n - 1]), 0),
+                    1)
+             + (1 - condition[n]) * theta_initial;
+    y[n] ~ bernoulli(p);
+  }
+}
+generated quantities {
+  array[N] int&lt;lower=0, upper=1&gt; y_rep;
+  array[N] real log_lik;
+  
+  y_rep[1] = bernoulli_rng(theta_initial); // First trial based on initial theta
+  log_lik[1] = bernoulli_lpmf(y[1] | theta_initial);
+  
+  for (n in 2 : N) {
+    real p = condition[n]
+             * fmin(fmax((1 - decay_rate) * theta_initial
+                         + learning_rate * (1 - y[n - 1]), 0),
+                    1)
+             + (1 - condition[n]) * theta_initial;
+    
+    y_rep[n] = bernoulli_rng(p);
+    log_lik[n] = bernoulli_lpmf(y[n] | p);
+    
+    // Optional diagnostic print statement
+    print("n: ", n, " p: ", p, " y_rep[n]: ", y_rep[n]);
+  }
+}
+</code></pre>
+</div>
 </div>
 </section>
-<section id="metodi-di-approssimazione-per-la-stima-dellelpd" class="level2" data-number="74.5">
-<h2 data-number="74.5" class="anchored" data-anchor-id="metodi-di-approssimazione-per-la-stima-dellelpd"><span class="header-section-number">74.5</span> Metodi di Approssimazione per la Stima dell’ELPD</h2>
-<p>Come la divergenza KL, anche il calcolo dell’ELPD richiede, in teoria, la conoscenza della vera distribuzione <span class="math inline">\(P\)</span>, che è ignota. Tuttavia, a differenza della divergenza KL, disponiamo di metodi pratici per approssimare l’ELPD. Uno dei metodi più robusti e comunemente utilizzati per questa stima è la Leave-One-Out Cross-Validation (LOO-CV).</p>
-<section id="leave-one-out-cross-validation-loo-cv" class="level3" data-number="74.5.1">
-<h3 data-number="74.5.1" class="anchored" data-anchor-id="leave-one-out-cross-validation-loo-cv"><span class="header-section-number">74.5.1</span> Leave-One-Out Cross-Validation (LOO-CV)</h3>
-<p>Il LOO-CV è una tecnica che consente di stimare l’ELPD senza la necessità di conoscere la vera distribuzione dei dati. Questo metodo consiste nel rimuovere una singola osservazione dal dataset, adattare il modello sui dati rimanenti, e poi valutare la densità predittiva per l’osservazione esclusa. Questa procedura viene ripetuta per ogni osservazione nel dataset, e i risultati vengono sommati per ottenere una stima complessiva dell’ELPD.</p>
-<p>Procedura:</p>
+<section id="modello-simpler" class="level2" data-number="78.3">
+<h2 data-number="78.3" class="anchored" data-anchor-id="modello-simpler"><span class="header-section-number">78.3</span> Modello “Simpler”</h2>
+<p>Il modello “simpler” è un approccio più basilare per modellare i dati, in cui si assume che l’accuratezza delle risposte in ciascuna prova dipenda esclusivamente dalla condizione sperimentale (alta o bassa) in cui si trova il soggetto. A differenza del modello “process”, che tiene conto di come l’accuratezza possa evolvere dinamicamente in funzione dell’apprendimento e del decadimento, il modello “simpler” presuppone che l’accuratezza sia costante all’interno di ciascuna condizione e non cambi nel tempo.</p>
+<p>In altre parole, il modello “simpler” cerca di cogliere solo la differenza di accuratezza tra due condizioni, senza considerare l’evoluzione della performance nel corso delle prove. Questo approccio è più limitato e descrittivo, e non tenta di spiegare il processo sottostante che potrebbe dare origine ai dati osservati.</p>
+<p><strong>Implementazione del Modello</strong></p>
 <ol type="1">
-<li>rimuovere una singola osservazione <span class="math inline">\(y_i\)</span> dal dataset;</li>
-<li>adattare il modello ai dati rimanenti <span class="math inline">\(y_{-i}\)</span>;</li>
-<li>calcolare la densità predittiva <span class="math inline">\(p(y_i \mid y_{-i})\)</span> per l’osservazione esclusa;</li>
-<li>ripetere il processo per tutte le osservazioni e sommare i logaritmi delle densità predittive per ottenere l’ELPD.</li>
+<li><strong>Dati di Input</strong>
+<ul>
+<li><strong>N:</strong> Il numero totale di prove (trials) a cui il soggetto è sottoposto.</li>
+<li><strong>y:</strong> Un array binario (0 o 1) che rappresenta l’accuratezza di ciascuna risposta. Un valore di <code>1</code> indica una risposta corretta, mentre un valore di <code>0</code> indica una risposta errata.</li>
+<li><strong>condition:</strong> Un array binario che indica la condizione sperimentale per ciascuna prova: <code>1</code> se il soggetto è nella condizione di “alto apprendimento” e <code>0</code> se è nella condizione di “basso apprendimento”.</li>
+</ul></li>
+<li><strong>Parametri del Modello</strong>
+<ul>
+<li><strong>theta_high:</strong> Rappresenta l’accuratezza nelle prove in cui il soggetto è nella condizione di “alto apprendimento”.</li>
+<li><strong>theta_low:</strong> Rappresenta l’accuratezza nelle prove in cui il soggetto è nella condizione di “basso apprendimento”.</li>
+</ul></li>
+<li><strong>Distribuzioni A Priori</strong>
+<ul>
+<li>I parametri <strong>theta_high</strong> e <strong>theta_low</strong> sono modellati come variabili aleatorie con distribuzioni beta. Come nel modello “process”, la distribuzione beta è scelta perché è limitata tra 0 e 1, rendendola adatta per modellare probabilità.</li>
+</ul></li>
+<li><strong>Implementazione del Modello</strong>
+<ul>
+<li>Il modello assume che per ogni prova ci sia una probabilità <code>p</code> di ottenere una risposta corretta, che dipende dalla condizione in cui si trova il soggetto.</li>
+<li>Se il soggetto è nella condizione di “alto apprendimento” (<code>condition[n] == 1</code>), la probabilità <code>p</code> è semplicemente uguale a <strong>theta_high</strong>.</li>
+<li>Se il soggetto è nella condizione di “basso apprendimento” (<code>condition[n] == 0</code>), la probabilità <code>p</code> è uguale a <strong>theta_low</strong>.</li>
+<li>In pratica, per ogni prova, il modello stima la probabilità di risposta corretta in base alla condizione sperimentale senza considerare alcuna evoluzione dinamica della performance.</li>
+</ul></li>
+<li><strong>Generazione dei Dati Simulati</strong>
+<ul>
+<li>Nella sezione <code>generated quantities</code>, il modello genera dati simulati (<code>y_rep</code>) e calcola la log-verosimiglianza (<code>log_lik</code>) per ciascuna prova.</li>
+<li>Per ogni prova, viene calcolata la probabilità di una risposta corretta e quindi viene generato un valore simulato usando la funzione <strong>bernoulli_rng</strong>. Il valore di log-verosimiglianza viene calcolato utilizzando <strong>bernoulli_lpmf</strong>.</li>
+</ul></li>
 </ol>
-<p>Formula:</p>
-<p><span class="math display">\[ \text{Stima dell'ELPD} = \sum_{i=1}^{N} \log p(y_i \mid y_{-i}), \]</span></p>
-<p>dove <span class="math inline">\(y_i\)</span> è il dato escluso e <span class="math inline">\(y_{-i}\)</span> rappresenta tutti gli altri dati.</p>
-<p>Vantaggi e limitazioni:</p>
-<ul>
-<li>LOO-CV fornisce una stima robusta dell’ELPD, particolarmente utile per modelli complessi e dataset di dimensioni ridotte;</li>
-<li>questo metodo è computazionalmente intensivo, specialmente per dataset molto grandi o modelli complessi.</li>
-</ul>
-</section>
-<section id="criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" class="level3" data-number="74.5.2">
-<h3 data-number="74.5.2" class="anchored" data-anchor-id="criteri-di-informazione-come-approssimazioni-alla-divergenza-kl"><span class="header-section-number">74.5.2</span> Criteri di Informazione come Approssimazioni alla Divergenza KL</h3>
-<p>Oltre al LOO-CV, sono stati proposti altri metodi per approssimare l’ELPD, che derivano direttamente dal concetto di divergenza KL. Tra questi, i più noti sono i criteri di informazione, come l’errore quadratico medio (MSE), l’Akaike Information Criterion (AIC), il Bayesian Information Criterion (BIC) e il Widely Applicable Information Criterion (WAIC).</p>
-<p>Questi criteri forniscono approcci alternativi per valutare i modelli, bilanciando la bontà di adattamento del modello ai dati osservati con la sua complessità.</p>
-<section id="errore-quadratico-medio-mse" class="level4" data-number="74.5.2.1">
-<h4 data-number="74.5.2.1" class="anchored" data-anchor-id="errore-quadratico-medio-mse"><span class="header-section-number">74.5.2.1</span> Errore Quadratico Medio (MSE)</h4>
-<p>L’Errore Quadratico Medio (Mean Squared Error o MSE) misura la discrepanza media tra le previsioni del modello e i valori reali.</p>
-<p>Formula:</p>
-<p><span class="math display">\[ MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2, \]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(n\)</span> è il numero totale di osservazioni,</li>
-<li><span class="math inline">\(y_i\)</span> sono i valori reali,</li>
-<li><span class="math inline">\(\hat{y}_i\)</span> sono i valori previsti dal modello.</li>
-</ul>
-<p>Un MSE inferiore indica un migliore adattamento del modello ai dati.</p>
-</section>
-<section id="criterio-di-informazione-di-akaike-aic" class="level4" data-number="74.5.2.2">
-<h4 data-number="74.5.2.2" class="anchored" data-anchor-id="criterio-di-informazione-di-akaike-aic"><span class="header-section-number">74.5.2.2</span> Criterio di Informazione di Akaike (AIC)</h4>
-<p>Il Criterio di Informazione di Akaike (AIC) va oltre l’MSE, considerando sia l’adattamento del modello che la sua complessità.</p>
-<p>Formula:</p>
-<p><span class="math display">\[ AIC = -2 \sum \log p(y_i \mid \hat{\theta}_{\text{mle}}) + 2k, \]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(\hat{\theta}_{\text{mle}}\)</span> sono i parametri stimati del modello,</li>
-<li><span class="math inline">\(k\)</span> è il numero di parametri del modello.</li>
-</ul>
-<p>L’AIC bilancia la bontà di adattamento (primo termine) con la complessità del modello (secondo termine). Un valore più basso di AIC indica una minor perdita di informazione, suggerendo un modello preferibile.</p>
-<p>Vantaggi e limitazioni:</p>
-<ul>
-<li>facile e veloce da calcolare;</li>
-<li>può essere meno accurato per campioni piccoli o modelli complessi;</li>
-<li>fornisce un’approssimazione asintoticamente corretta dell’ELPD per modelli regolari e campioni grandi.</li>
-</ul>
-</section>
-<section id="criterio-di-informazione-bayesiano-bic" class="level4" data-number="74.5.2.3">
-<h4 data-number="74.5.2.3" class="anchored" data-anchor-id="criterio-di-informazione-bayesiano-bic"><span class="header-section-number">74.5.2.3</span> Criterio di Informazione Bayesiano (BIC)</h4>
-<p>Il Criterio di Informazione Bayesiano (BIC) è definito come:</p>
-<p><span class="math display">\[
-BIC = \ln(n)k - 2\ln(L),
-\]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(n\)</span> è il numero di osservazioni,</li>
-<li><span class="math inline">\(k\)</span> è il numero di parametri del modello,</li>
-<li><span class="math inline">\(L\)</span> è il valore massimo della funzione di verosimiglianza del modello.</li>
-</ul>
-<p>Il termine <span class="math inline">\(\ln(L)\)</span> rappresenta il logaritmo naturale della verosimiglianza massima, che indica quanto bene il modello si adatta ai dati osservati.</p>
-<p>Il BIC impone una penalità maggiore per l’incremento dei parametri, rendendolo particolarmente adeguato per dataset di grandi dimensioni.</p>
-</section>
-<section id="widely-applicable-information-criterion-waic" class="level4" data-number="74.5.2.4">
-<h4 data-number="74.5.2.4" class="anchored" data-anchor-id="widely-applicable-information-criterion-waic"><span class="header-section-number">74.5.2.4</span> Widely Applicable Information Criterion (WAIC)</h4>
-<p>Il WAIC è una versione avanzata dell’AIC, particolarmente utile nel contesto bayesiano. Considera l’intera distribuzione a posteriori dei parametri anziché solo la stima puntuale.</p>
-<p>Formula:</p>
-<p><span class="math display">\[
-WAIC = -2\left[ \sum_{i=1}^{n} \log \left( \frac{1}{S} \sum_{s=1}^{S} p(y_i \mid \theta^{(s)}) \right) - \sum_{i=1}^{n} \text{Var}_{\theta^{(s)}} \left( \log p(y_i \mid \theta^{(s)}) \right) \right],
-\]</span></p>
-<p>dove:</p>
-<ul>
-<li><span class="math inline">\(S\)</span> è il numero di campioni dalla distribuzione a posteriori,</li>
-<li><span class="math inline">\(\text{Var}_{\theta^{(s)}}\)</span> è la varianza della log-verosimiglianza.</li>
-</ul>
-<p>Caratteristiche del WAIC:</p>
+<p>Il modello “process” e il modello “simpler” differiscono in modo sostanziale nel modo in cui cercano di spiegare i dati:</p>
 <ol type="1">
-<li>calcola il logaritmo della densità predittiva per ogni punto dati;</li>
-<li>penalizza la complessità del modello basandosi sulla variabilità delle sue predizioni;</li>
-<li>la somma delle varianze a posteriori del logaritmo della densità predittiva converge al numero effettivo di parametri del modello.</li>
-</ol>
-</section>
-</section>
-</section>
-<section id="considerazioni-conclusive" class="level2" data-number="74.6">
-<h2 data-number="74.6" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">74.6</span> Considerazioni Conclusive</h2>
-<p>La valutazione dei modelli statistici è essenziale per garantire sia la loro affidabilità che la loro capacità di generalizzazione. Quando si sviluppano modelli, è fondamentale disporre di strumenti che permettano di confrontare diverse alternative e selezionare quella più adatta ai dati, garantendo al contempo previsioni accurate. In questo contesto, la divergenza di Kullback-Leibler (KL), l’Expected Log-Predictive Density (ELPD) e i criteri di informazione come AIC, BIC e WAIC offrono un quadro completo per la valutazione delle performance dei modelli.</p>
-<p>La divergenza KL rappresenta una misura ideale per quantificare la distanza tra la distribuzione di probabilità reale dei dati e quella stimata dal modello. Tuttavia, la sua applicazione pratica è limitata poiché richiede la conoscenza della distribuzione vera dei dati, che è generalmente sconosciuta. Questa limitazione rende impossibile calcolarla direttamente nella maggior parte dei casi pratici.</p>
-<p>Per superare questo ostacolo, si utilizza l’Expected Log-Predictive Density (ELPD). L’ELPD fornisce una stima della capacità predittiva del modello su nuovi dati, ovvero la sua abilità di generalizzare oltre i dati di training. Un’approssimazione particolarmente utile dell’ELPD si ottiene tramite la Leave-One-Out Cross-Validation (LOO-CV), che consiste nel rimuovere iterativamente un’osservazione dal dataset, addestrare il modello sui dati rimanenti e prevedere il valore dell’osservazione omessa. Questo processo permette di stimare accuratamente la capacità predittiva del modello su ogni singola osservazione, fornendo così un’approssimazione precisa dell’ELPD.</p>
-<p>L’ELPD e la divergenza KL sono strumenti complementari per la valutazione dei modelli statistici:</p>
-<ol type="1">
-<li>l’ELPD misura la capacità predittiva su nuovi dati, con valori più alti che indicano previsioni migliori e una maggiore capacità di generalizzazione del modello.</li>
-<li>la divergenza KL quantifica la differenza tra la distribuzione vera dei dati e quella stimata dal modello, con valori più bassi che indicano una migliore approssimazione della distribuzione reale da parte del modello.</li>
-</ol>
-<p>Esiste una relazione diretta tra ELPD e divergenza KL: massimizzare l’ELPD equivale a minimizzare la divergenza KL. Entrambi gli approcci mirano a sviluppare modelli che catturino al meglio la realtà rappresentata dai dati.</p>
-<p>In pratica:</p>
+<li><strong>Dinamica dell’apprendimento vs.&nbsp;Accuratezza fissa:</strong>
 <ul>
-<li>la divergenza KL valuta l’adattamento del modello ai dati osservati, fornendo una misura di quanto il modello riesca a replicare la distribuzione reale;</li>
-<li>l’ELPD e i suoi metodi di approssimazione (come LOO-CV, AIC, WAIC) misurano la capacità del modello di generalizzare su dati futuri, offrendo una valutazione più completa della qualità del modello.</li>
-</ul>
-<p>Anche i criteri di informazione come AIC, BIC e WAIC sono strumenti utili per approssimare la divergenza KL. Essi permettono di valutare i modelli in termini di adattamento ai dati e complessità, facilitando la selezione di un modello che bilancia precisione predittiva e parsimonia.</p>
-<p>Ciascun metodo fornisce prospettive diverse e complementari per sostituire la divergenza KL. Il LOO-CV è particolarmente utile per modelli complessi o quando si dispone di set di dati limitati, poiché offre una valutazione robusta, sebbene computazionalmente intensiva. D’altro canto, l’AIC e il WAIC sono più veloci e meno onerosi dal punto di vista computazionale, rendendoli adatti per valutazioni preliminari o quando si lavora con grandi dataset.</p>
-<p>In conclusione, la selezione del modello ottimale richiede un equilibrio tra adattamento ai dati e semplicità. L’uso combinato di tecniche di validazione incrociata e criteri di informazione permette di costruire modelli che:</p>
-<ol type="1">
-<li>si adattano bene ai dati osservati,</li>
-<li>forniscono previsioni affidabili su nuovi dati,</li>
-<li>catturano le tendenze rilevanti senza essere eccessivamente influenzati dal rumore.</li>
+<li><strong>Process Model:</strong> Considera che l’accuratezza di un soggetto possa cambiare nel tempo in risposta agli errori commessi e a un processo di decadimento. Questo modello cattura la complessità del processo di apprendimento e come esso possa essere influenzato dalla condizione sperimentale.</li>
+<li><strong>Simpler Model:</strong> Assume che l’accuratezza sia fissa all’interno di ciascuna condizione e non cambi durante il compito. Questo modello non riesce a cogliere eventuali variazioni dinamiche della performance dovute all’apprendimento o al decadimento.</li>
+</ul></li>
+<li><strong>Complessità del Meccanismo Cognitivo:</strong>
+<ul>
+<li><strong>Process Model:</strong> Fornisce una rappresentazione più dettagliata e realistica del meccanismo cognitivo che potrebbe guidare la performance del soggetto, tenendo conto dell’evoluzione della performance in funzione delle esperienze precedenti (apprendimento).</li>
+<li><strong>Simpler Model:</strong> Offre una descrizione più statica e meno informativa, limitandosi a descrivere le differenze medie tra due condizioni senza indagare il processo che potrebbe generare tali differenze.</li>
+</ul></li>
+<li><strong>Capacità di Predizione:</strong>
+<ul>
+<li><strong>Process Model:</strong> In situazioni in cui l’apprendimento o il decadimento giocano un ruolo significativo, il modello “process” dovrebbe teoricamente offrire una migliore predizione dei dati rispetto al modello “simpler”.</li>
+<li><strong>Simpler Model:</strong> Questo modello può fallire nel catturare adeguatamente la struttura dei dati quando esistono dinamiche di apprendimento o cambiamento nel tempo, risultando in una peggiore capacità predittiva rispetto al modello “process”.</li>
+</ul></li>
 </ol>
-<p>L’obiettivo finale non è creare il modello più complesso o quello che si adatta perfettamente ai dati di addestramento, ma piuttosto trovare un equilibrio ottimale tra semplicità e accuratezza, garantendo che il modello sia robusto e generalizzabile a dati futuri.</p>
+<p>In sintesi, il modello “simpler” non è in grado di catturare i cambiamenti dinamici nell’accuratezza che possono emergere in risposta al compito, limitandosi a una descrizione media delle differenze tra condizioni. Di conseguenza, nei casi in cui i dati sono generati secondo un processo di apprendimento o decadimento, il modello “simpler” potrebbe non adattarsi altrettanto bene quanto il modello “process”.</p>
+<div id="cell-8" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stan_simpler_file <span class="op">=</span> os.path.join(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">"stan"</span>, <span class="st">"cognitive_simpler_model.stan"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>simpler_model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_simpler_file)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(simpler_model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=0&gt; N; // number of trials
+  array[N] int&lt;lower=0, upper=1&gt; y; // accuracy (0 or 1)
+  array[N] int&lt;lower=0, upper=1&gt; condition; // 1 if high learning, 0 if low learning
+}
+parameters {
+  real&lt;lower=0, upper=1&gt; theta_high; // accuracy in condition 1
+  real&lt;lower=0, upper=1&gt; theta_low; // accuracy in condition 0
+}
+model {
+  // Priors
+  theta_high ~ beta(2, 2);
+  theta_low ~ beta(2, 2);
+  
+  for (n in 1 : N) {
+    real p = condition[n] * theta_high + (1 - condition[n]) * theta_low;
+    y[n] ~ bernoulli(p);
+  }
+}
+generated quantities {
+  array[N] int&lt;lower=0, upper=1&gt; y_rep;
+  array[N] real log_lik;
+  
+  for (n in 1 : N) {
+    real p = condition[n] * theta_high + (1 - condition[n]) * theta_low;
+    y_rep[n] = bernoulli_rng(p);
+    log_lik[n] = bernoulli_lpmf(y[n] | p);
+  }
+}
+</code></pre>
+</div>
+</div>
+</section>
+<section id="simulazione-dei-dati" class="level2" data-number="78.4">
+<h2 data-number="78.4" class="anchored" data-anchor-id="simulazione-dei-dati"><span class="header-section-number">78.4</span> Simulazione dei Dati</h2>
+<p>I dati sono stati simulati in base al meccanismo generativo ipotizzato dal modello “process”. Questo modello assume che l’accuratezza delle risposte non sia costante nel tempo, ma che evolva dinamicamente in funzione dell’apprendimento e del decadimento. In altre parole, il modello “process” riflette un processo cognitivo in cui i soggetti possono migliorare la loro performance attraverso l’apprendimento, o al contrario, possono mostrare un calo di prestazioni a causa della fatica o della perdita di concentrazione.</p>
+<p>Nel processo di simulazione, quindi, i dati generati riflettono queste dinamiche: l’accuratezza non è semplicemente una funzione statica delle condizioni sperimentali, ma cambia in risposta alle prove precedenti. Questo è in contrasto con il modello “simpler”, che non tiene conto di queste dinamiche e assume che l’accuratezza sia fissa e immutabile all’interno di ciascuna condizione sperimentale. Di conseguenza, i dati simulati seguono il processo cognitivo ipotizzato dal modello “process”, che si basa su un’accuratezza variabile e influenzata dall’apprendimento e dal decadimento, fornendo una base per confrontare l’adattamento dei due modelli ai dati.</p>
+<div id="cell-10" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters for data generation</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">5000</span>  <span class="co"># Number of trials</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>condition <span class="op">=</span> np.random.binomial(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="fl">0.5</span>, N</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># 50% chance of being in the high-learning condition</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>theta_initial <span class="op">=</span> <span class="fl">0.6</span>  <span class="co"># Initial accuracy</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>learning_rate_high <span class="op">=</span> (</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span>  <span class="co"># Higher learning rate in the process model for high-learning condition</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>learning_rate_low <span class="op">=</span> (</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>  <span class="co"># Lower learning rate in the process model for low-learning condition</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>decay_rate_high <span class="op">=</span> (</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.05</span>  <span class="co"># Lower decay rate in the process model for high-learning condition</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>decay_rate_low <span class="op">=</span> (</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.15</span>  <span class="co"># Higher decay rate in the process model for low-learning condition</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>accuracies <span class="op">=</span> np.zeros(N)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> theta_initial</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N):</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> condition[n] <span class="op">==</span> <span class="dv">1</span>:  <span class="co"># High-learning condition</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Enhanced learning effect when previous trial was incorrect</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> decay_rate_high) <span class="op">*</span> value <span class="op">+</span> learning_rate_high <span class="op">*</span> (</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                <span class="dv">1</span> <span class="op">-</span> accuracies[n <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Ensure that value remains within [0, 1]</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        value <span class="op">=</span> np.clip(value, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        accuracies[n] <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, value)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:  <span class="co"># Low-learning condition</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Weaker learning effect and higher decay rate</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> decay_rate_low) <span class="op">*</span> value <span class="op">+</span> learning_rate_low <span class="op">*</span> (</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                <span class="dv">1</span> <span class="op">-</span> accuracies[n <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Ensure that value remains within [0, 1]</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        value <span class="op">=</span> np.clip(value, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        accuracies[n] <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, value)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for Stan</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: N,</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: accuracies.astype(<span class="bu">int</span>).tolist(),</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"condition"</span>: condition.astype(<span class="bu">int</span>).tolist(),</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="campionamento" class="level2" data-number="78.5">
+<h2 data-number="78.5" class="anchored" data-anchor-id="campionamento"><span class="header-section-number">78.5</span> Campionamento</h2>
+<p>Eseguiamo il campionamento per i due modelli.</p>
+<div id="cell-13" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_process <span class="op">=</span> process_model.sample(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>07:54:25 - cmdstanpy - INFO - CmdStan start processing
+07:54:25 - cmdstanpy - INFO - Chain [1] start processing
+07:54:25 - cmdstanpy - INFO - Chain [2] start processing
+07:54:25 - cmdstanpy - INFO - Chain [3] start processing
+07:54:25 - cmdstanpy - INFO - Chain [4] start processing
+07:55:41 - cmdstanpy - INFO - Chain [1] done processing
+07:55:42 - cmdstanpy - INFO - Chain [3] done processing
+07:55:42 - cmdstanpy - INFO - Chain [4] done processing
+07:55:42 - cmdstanpy - INFO - Chain [2] done processing</code></pre>
+</div>
+</div>
+<div id="cell-14" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(fit_process, var_names<span class="op">=</span>(<span class="st">"learning_rate"</span>, <span class="st">"decay_rate"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_cog_mod_comp_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-15" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit_process, var_names<span class="op">=</span>[<span class="st">"learning_rate"</span>, <span class="st">"decay_rate"</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">learning_rate</td>
+<td>0.214</td>
+<td>0.015</td>
+<td>0.187</td>
+<td>0.241</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>4908.0</td>
+<td>5214.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">decay_rate</td>
+<td>0.009</td>
+<td>0.006</td>
+<td>0.000</td>
+<td>0.020</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>4692.0</td>
+<td>3553.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit_simpler <span class="op">=</span> simpler_model.sample(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>07:57:33 - cmdstanpy - INFO - CmdStan start processing
+07:57:33 - cmdstanpy - INFO - Chain [1] start processing
+07:57:33 - cmdstanpy - INFO - Chain [2] start processing
+07:57:33 - cmdstanpy - INFO - Chain [3] start processing
+07:57:33 - cmdstanpy - INFO - Chain [4] start processing
+07:57:44 - cmdstanpy - INFO - Chain [2] done processing
+07:57:44 - cmdstanpy - INFO - Chain [4] done processing
+07:57:44 - cmdstanpy - INFO - Chain [1] done processing
+07:57:45 - cmdstanpy - INFO - Chain [3] done processing</code></pre>
+</div>
+</div>
+</section>
+<section id="confronto-dei-modelli" class="level2" data-number="78.6">
+<h2 data-number="78.6" class="anchored" data-anchor-id="confronto-dei-modelli"><span class="header-section-number">78.6</span> Confronto dei Modelli</h2>
+<p>Per confrontare i modelli, è necessario convertire l’oggetto <code>fit</code> in un formato compatibile con ArviZ.</p>
+<div id="cell-19" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>idata_process <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit_process)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>idata_simpler <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit_simpler)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calcoliamo il criterio LOO (Leave-One-Out) per confrontare i due modelli.</p>
+<div id="cell-21" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>loo_process <span class="op">=</span> az.loo(idata_process)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>loo_simpler <span class="op">=</span> az.loo(idata_simpler)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Confrontiamo i due modelli utilizzando il criterio LOO.</p>
+<div id="cell-23" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>loo_comparison <span class="op">=</span> az.compare(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Process Model"</span>: loo_process, <span class="st">"Simpler Model"</span>: loo_simpler}</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loo_comparison)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               rank     elpd_loo     p_loo  elpd_diff    weight         se  \
+Process Model     0 -3123.273484  2.008705   0.000000  0.685872  24.569185   
+Simpler Model     1 -3149.844801  1.991303  26.571317  0.314128  24.127268   
+
+                     dse  warning scale  
+Process Model   0.000000    False   log  
+Simpler Model  12.069884    False   log  </code></pre>
+</div>
+</div>
+<p>L’output di <code>loo_comparison()</code> confronta i due modelli utilizzando il criterio di Leave-One-Out Cross-Validation (LOO) basato sull’Expected Log Predictive Density (ELPD). Ogni colonna nell’output fornisce informazioni diverse sul confronto tra i modelli. Vediamo cosa significa ciascuna colonna:</p>
+<ol type="1">
+<li><p><strong>rank</strong>: Questa colonna indica la posizione del modello in base all’ELPD. Il modello con il valore più alto di ELPD è classificato al primo posto.</p></li>
+<li><p><strong>elpd_loo</strong>: Questo valore rappresenta la <em>Expected Log Pointwise Predictive Density</em> calcolata usando il metodo LOO. In parole semplici, misura quanto bene il modello predice i dati osservati, tenendo conto della complessità del modello per evitare l’overfitting. Un valore più alto indica che il modello ha una migliore capacità predittiva.</p></li>
+<li><p><strong>p_loo</strong>: Questa colonna stima il numero effettivo di parametri del modello, cioè quanti “gradi di libertà” effettivi il modello sta usando per adattarsi ai dati. Un valore più alto indica un modello più complesso.</p></li>
+<li><p><strong>elpd_diff</strong>: Questa colonna mostra la differenza di ELPD tra il modello migliore (quello al primo posto) e gli altri modelli. Per il modello migliore, questo valore è 0. Gli altri modelli avranno valori positivi, che indicano quanto peggio si comportano rispetto al modello migliore.</p></li>
+<li><p><strong>weight</strong>: Questo valore rappresenta la probabilità normalizzata che ciascun modello sia il migliore per fare previsioni su nuovi dati. I pesi sono normalizzati in modo che la somma sia pari a 1. Per esempio, un peso di 0.685872 indica che c’è il 68.6% di probabilità che quel modello sia il migliore nel predire nuovi dati.</p></li>
+<li><p><strong>se</strong>: Questo è l’errore standard dell’ELPD stimato, che rappresenta l’incertezza associata a questa stima. Un errore standard più basso indica maggiore fiducia nell’ELPD calcolato.</p></li>
+<li><p><strong>dse</strong>: Significa “errore standard della differenza dell’ELPD”. Indica l’incertezza nella differenza di ELPD tra il miglior modello e un altro modello. Un valore basso di <code>dse</code> suggerisce che siamo abbastanza sicuri che la differenza osservata non sia dovuta al caso.</p></li>
+<li><p><strong>warning</strong>: Questa colonna indica se ci sono stati avvertimenti durante il calcolo. Se il valore è <code>False</code>, significa che non ci sono stati problemi.</p></li>
+<li><p><strong>scale</strong>: Indica la scala utilizzata per il confronto tra modelli. In questo caso, si usa la scala logaritmica (<code>log</code>), che è comune quando si analizzano log-verosimiglianze.</p></li>
+</ol>
+<p><strong>Interpretazione</strong></p>
+<ul>
+<li><p><strong>Classifica dei Modelli</strong>: Il <code>Process Model</code> è classificato al primo posto, il che significa che ha l’ELPD più alto e, quindi, si adatta meglio ai dati rispetto al <code>Simpler Model</code>.</p></li>
+<li><p><strong>Differenza in ELPD (<code>elpd_diff</code>)</strong>: La differenza tra i due modelli è significativa (135,85), il che suggerisce che il <code>Process Model</code> offre una capacità predittiva notevolmente migliore.</p></li>
+<li><p><strong>Pesi</strong>: Il <code>Process Model</code> ha un peso di 0.686, il che indica che, secondo il confronto LOO, c’è una probabilità del 68.6% che sia il miglior modello per fare previsioni su nuovi dati, mentre il <code>Simpler Model</code> ha solo il 31.4% di probabilità.</p></li>
+<li><p><strong>Errore Standard della Differenza (<code>dse</code>)</strong>: La <code>dse</code> relativamente bassa rispetto all’<code>elpd_diff</code> conferma che la differenza tra i modelli è significativa e non è dovuta a variazioni casuali.</p></li>
+</ul>
+<p>In conclusione, questo output suggerisce chiaramente che il <code>Process Model</code>, che incorpora un processo cognitivo più complesso, è nettamente superiore al <code>Simpler Model</code> per quanto riguarda l’adattamento ai dati. Questa superiorità è supportata sia dal confronto delle stime di ELPD sia dai pesi associati ai modelli.</p>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="78.7">
+<h2 data-number="78.7" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">78.7</span> Considerazioni Conclusive</h2>
+<p>I risultati ottenuti dimostrano chiaramente l’importanza di implementare un modello che rifletta il processo generativo dei dati (<span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>). Il modello “process,” che cattura la complessità delle dinamiche di apprendimento e decadimento, ha mostrato una performance superiore rispetto al modello più semplice, che si limita a distinguere tra due condizioni. Questo sottolinea come un’analisi basata su un modello che incorpora le ipotesi sul processo sottostante possa portare a una migliore comprensione dei dati e, in ultima analisi, a risultati più solidi.</p>
+<p>È fondamentale eseguire simulazioni preliminari prima di raccogliere dati empirici. Queste simulazioni permettono di valutare l’adeguatezza della numerosità campionaria necessaria a rilevare gli effetti ipotizzati, tenendo conto del processo generativo dei dati. Nel caso presente, l’analisi è stata semplificata concentrandosi su un singolo campione di osservazioni indipendenti. Tuttavia, in un contesto più realistico, sarebbe opportuno considerare dati provenienti da più soggetti e riformulare il modello in modo gerarchico per catturare la variabilità tra individui. Lo scopo qui era limitato al confronto tra i due modelli per evidenziare l’importanza di modellare il processo generativo.</p>
+<p>L’approccio bayesiano, e in particolare l’uso di Stan, offre un vantaggio notevole in questo contesto, consentendo di implementare in modo relativamente semplice modelli complessi che riflettono fedelmente il processo generativo ipotizzato. Questo tipo di modellazione risulta molto più difficile, se non impossibile, utilizzando metodi non bayesiani, che spesso non permettono di catturare con la stessa flessibilità le dinamiche sottostanti ai dati.</p>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="db756413-085f-4b9c-8b14-c2b409f80046" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-26" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Fri Jul 26 2024
+<pre><code>Last updated: Wed Aug 21 2024
 
 Python implementation: CPython
 Python version       : 3.12.4
 IPython version      : 8.26.0
 
-arviz     : 0.18.0
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.6.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+seaborn   : 0.13.2
 matplotlib: 3.9.1
+arviz     : 0.18.0
 numpy     : 1.26.4
-scipy     : 1.14.0
 
 Watermark: 2.4.3
 </code></pre>
@@ -1500,6 +1632,11 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-McElreath_rethinking" class="csl-entry" role="listitem">
+McElreath, Richard. 2020. <em>Statistical rethinking: <span>A</span> <span>Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. 2nd Edition. Boca Raton, Florida: CRC Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1914,13 +2051,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/entropy/01_entropy.html" class="pagination-link" aria-label="Entropia">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Entropia</span></span>
+      <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="pagination-link" aria-label="Apprendimento per rinforzo">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/entropy/03_stan_loo.html" class="pagination-link" aria-label="Validazione Incrociata Leave-One-Out">
-        <span class="nav-page-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text">Introduzione</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1932,7 +2069,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/entropy/02_kl.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/02_cog_mod_comp.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

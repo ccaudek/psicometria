@@ -1151,12 +1151,13 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#passaggi-fondamentali-dellalgoritmo-di-metropolis" id="toc-passaggi-fondamentali-dellalgoritmo-di-metropolis" class="nav-link" data-scroll-target="#passaggi-fondamentali-dellalgoritmo-di-metropolis"><span class="header-section-number">42.5.1</span> Passaggi Fondamentali dell’Algoritmo di Metropolis</a></li>
   <li><a href="#dettagli-dellalgoritmo" id="toc-dettagli-dellalgoritmo" class="nav-link" data-scroll-target="#dettagli-dellalgoritmo"><span class="header-section-number">42.5.2</span> Dettagli dell’Algoritmo</a></li>
-  <li><a href="#implementazione-dellalgoritmo-di-metropolis" id="toc-implementazione-dellalgoritmo-di-metropolis" class="nav-link" data-scroll-target="#implementazione-dellalgoritmo-di-metropolis"><span class="header-section-number">42.5.3</span> Implementazione dell’Algoritmo di Metropolis</a></li>
+  <li><a href="#sec-metropolis-1" id="toc-sec-metropolis-1" class="nav-link" data-scroll-target="#sec-metropolis-1"><span class="header-section-number">42.5.3</span> Implementazione dell’Algoritmo di Metropolis (1)</a></li>
+  <li><a href="#implementazione-dellalgoritmo-di-metropolis-2" id="toc-implementazione-dellalgoritmo-di-metropolis-2" class="nav-link" data-scroll-target="#implementazione-dellalgoritmo-di-metropolis-2"><span class="header-section-number">42.5.4</span> Implementazione dell’Algoritmo di Metropolis (2)</a></li>
   </ul></li>
   <li><a href="#aspetti-computazionali" id="toc-aspetti-computazionali" class="nav-link" data-scroll-target="#aspetti-computazionali"><span class="header-section-number">42.6</span> Aspetti computazionali</a>
   <ul class="collapse">
   <li><a href="#warm-upburn-in" id="toc-warm-upburn-in" class="nav-link" data-scroll-target="#warm-upburn-in"><span class="header-section-number">42.6.1</span> Warm-up/Burn-in</a></li>
-  <li><a href="#sintesi-della-distribuzione-a-posteriori" id="toc-sintesi-della-distribuzione-a-posteriori" class="nav-link" data-scroll-target="#sintesi-della-distribuzione-a-posteriori"><span class="header-section-number">42.6.2</span> Sintesi della distribuzione a posteriori</a></li>
+  <li><a href="#sec-moma-post-estimates" id="toc-sec-moma-post-estimates" class="nav-link" data-scroll-target="#sec-moma-post-estimates"><span class="header-section-number">42.6.2</span> Sintesi della distribuzione a posteriori</a></li>
   </ul></li>
   <li><a href="#diagnostiche-della-soluzione-mcmc" id="toc-diagnostiche-della-soluzione-mcmc" class="nav-link" data-scroll-target="#diagnostiche-della-soluzione-mcmc"><span class="header-section-number">42.7</span> Diagnostiche della soluzione MCMC</a>
   <ul class="collapse">
@@ -1209,11 +1210,40 @@ window.Quarto = {
 <li>Riconoscere l’importanza della fase di burn-in e la necessità di più catene per verificare la stazionarietà e ridurre l’autocorrelazione.</li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:09:40.345584Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:09:40.320370Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run ..<span class="op">/</span>..<span class="op">/</span>config.py <span class="co"># Import the configuration settings</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-2" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Third-party imports</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics <span class="im">import</span> tsaplots</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> cmdstan_path, CmdStanModel</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"metropolis"</span>))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Print project directory to verify</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Project directory: </span><span class="sc">{</span>project_directory<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Project directory: /Users/corradocaudek/_repositories/psicometria</code></pre>
+</div>
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
@@ -1260,13 +1290,14 @@ P(X_{n+1} = j | X_n = i, X_{n-1} = i_{n-1}, \ldots, X_0 = i_0) = P(X_{n+1} = j |
 </ul>
 <p>A titolo esemplificativo, utilizzeremo il dataset <code>moma_sample.csv</code>, il quale costituisce un campione casuale di 100 artisti provenienti dal Museo di Arte Moderna di New York (MoMA) e contiene diverse informazioni relative a ciascun artista.</p>
 <p>Il nostro interesse è focalizzato sulla determinazione della probabilità che un artista presente nel MoMA appartenga alla generazione X o a una generazione successiva (nati dopo il 1965). Questa probabilità sarà indicata come <span class="math inline">\(\pi\)</span>. Iniziamo importando i dati.</p>
-<div id="cell-6" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:15:48.008788Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:15:47.995389Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>moma_sample <span class="op">=</span> pd.read_csv(<span class="st">"../../data/moma_sample.csv"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> os.path.join(project_directory, <span class="st">"data"</span>, <span class="st">"moma_sample.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>moma_sample <span class="op">=</span> pd.read_csv(file_path)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esaminiamo le prime cinque righe del DataFrame.</p>
-<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:09:49.939453Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:09:49.924447Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>moma_sample.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:09:49.939453Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:09:49.924447Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>moma_sample.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
 
@@ -1361,9 +1392,9 @@ P(X_{n+1} = j | X_n = i, X_{n-1} = i_{n-1}, \ldots, X_0 = i_0) = P(X_{n+1} = j |
 </div>
 </div>
 <p>Dai dati osserviamo che solo 14 artisti su 100 appartengono alla generazione X o a una generazione successiva.</p>
-<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:09:53.119523Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:09:53.086277Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> moma_sample[<span class="st">"genx"</span>].value_counts()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:09:53.119523Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:09:53.086277Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> moma_sample[<span class="st">"genx"</span>].value_counts()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>genx
 False    86
@@ -1375,23 +1406,23 @@ Name: count, dtype: int64</code></pre>
 <p>Possiamo interpretare i dati <span class="math inline">\(y = 14\)</span> come l’esito di una variabile casuale Binomiale con parametri <span class="math inline">\(N = 100\)</span> e <span class="math inline">\(\theta\)</span> sconosciuto.</p>
 <p>Supponiamo che le nostre credenze pregresse riguardo a <span class="math inline">\(\theta\)</span> possano essere modellate attraverso una distribuzione Beta(4, 6).</p>
 <p>Sfruttando le proprietà delle distribuzioni coniugate, possiamo calcolare la distribuzione a posteriori esatta:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Y <span class="op">~</span> Binomiale(<span class="dv">100</span>, π)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>θ <span class="op">=</span> Beta(<span class="dv">4</span>, <span class="dv">6</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>θ <span class="op">|</span> (Y <span class="op">=</span> <span class="dv">14</span>) <span class="op">~</span> Beta(<span class="dv">4</span> <span class="op">+</span> <span class="dv">14</span>, <span class="dv">6</span> <span class="op">+</span> <span class="dv">100</span> <span class="op">-</span> <span class="dv">14</span>) → Beta(<span class="dv">18</span>, <span class="dv">92</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Y <span class="op">~</span> Binomiale(<span class="dv">100</span>, π)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>θ <span class="op">=</span> Beta(<span class="dv">4</span>, <span class="dv">6</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>θ <span class="op">|</span> (Y <span class="op">=</span> <span class="dv">14</span>) <span class="op">~</span> Beta(<span class="dv">4</span> <span class="op">+</span> <span class="dv">14</span>, <span class="dv">6</span> <span class="op">+</span> <span class="dv">100</span> <span class="op">-</span> <span class="dv">14</span>) → Beta(<span class="dv">18</span>, <span class="dv">92</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Nella figura successiva è rappresentata la distribuzione a posteriori del parametro <span class="math inline">\(\theta\)</span>, insieme alla distribuzione a priori scelta.</p>
-<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:00.582390Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:00.377742Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>prior_density <span class="op">=</span> stats.beta.pdf(x, <span class="dv">4</span>, <span class="dv">6</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>posterior_density <span class="op">=</span> stats.beta.pdf(x, <span class="dv">18</span>, <span class="dv">92</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, prior_density, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Prior: Beta(4, 6)"</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, posterior_density, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Posterior: Beta(18, 92)"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Parameter Value"</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Prior and Posterior Densities"</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:00.582390Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:00.377742Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>prior_density <span class="op">=</span> stats.beta.pdf(x, <span class="dv">4</span>, <span class="dv">6</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>posterior_density <span class="op">=</span> stats.beta.pdf(x, <span class="dv">18</span>, <span class="dv">92</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, prior_density, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Prior: Beta(4, 6)"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, posterior_density, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Posterior: Beta(18, 92)"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Parameter Value"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Prior and Posterior Densities"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1408,25 +1439,25 @@ Name: count, dtype: int64</code></pre>
 <h3 data-number="42.4.1" class="anchored" data-anchor-id="simulazione-con-distribuzione-target-nota"><span class="header-section-number">42.4.1</span> Simulazione con distribuzione target nota</h3>
 <p>Usiamo ora una simulazione numerica per stimare la media a posteriori di <span class="math inline">\(\theta\)</span>. Conoscendo la forma della distribuzione a posteriori <span class="math inline">\(Beta(18, 92)\)</span>, possiamo generare un campione di osservazioni casuali da questa distribuzione. Successivamente, calcoliamo la media delle osservazioni ottenute per ottenere un’approssimazione della media a posteriori.</p>
 <p>Se vogliamo ottenere un risultato approssimato con poche osservazioni (ad esempio, 10), possiamo procedere con la seguente simulazione:</p>
-<div id="cell-15" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:13.375419Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:13.359907Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> stats.beta(<span class="dv">18</span>, <span class="dv">92</span>).rvs(<span class="dv">10</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-15" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:13.375419Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:13.359907Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> stats.beta(<span class="dv">18</span>, <span class="dv">92</span>).rvs(<span class="dv">10</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[0.18694021 0.12067309 0.17576971 0.1608302  0.12912987 0.20527983
- 0.14209658 0.15057358 0.12001648 0.13024873]</code></pre>
+<pre><code>[0.14016127 0.08832897 0.17334772 0.1572305  0.11142873 0.1810981
+ 0.15692468 0.1674944  0.16207672 0.10429501]</code></pre>
 </div>
 </div>
-<div id="cell-16" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:16.372388Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:16.367267Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>np.mean(y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>0.1521558285153169</code></pre>
+<div id="cell-16" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:16.372388Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:16.367267Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.mean(y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>0.14423860913930076</code></pre>
 </div>
 </div>
 <p>Tuttavia, con solo 10 campioni l’approssimazione potrebbe non essere molto accurata. Più aumentiamo il numero di campioni (cioè il numero di osservazioni casuali generate), più precisa sarà l’approssimazione. Aumentando il numero di campioni, ad esempio a 10000, otteniamo un risultato più preciso:</p>
-<div id="cell-18" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:18.652167Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:18.635620Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>stats.beta(<span class="dv">18</span>, <span class="dv">92</span>).rvs(<span class="dv">10000</span>).mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>0.16380917953899665</code></pre>
+<div id="cell-18" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:10:18.652167Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:10:18.635620Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>stats.beta(<span class="dv">18</span>, <span class="dv">92</span>).rvs(<span class="dv">10000</span>).mean()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>0.16323788047779372</code></pre>
 </div>
 </div>
 <p>Quando il numero di campioni a posteriori diventa molto grande, la distribuzione campionaria <em>converge</em> alla densità della popolazione. Questo concetto si applica non solo alla media, ma anche ad altre statistiche descrittive, come la moda e la varianza.</p>
@@ -1442,6 +1473,28 @@ p(\theta \mid y) = \frac{\mathrm{e}^{-(\theta - 1 / 2)^2} \theta^y (1 - \theta)^
 <section id="algoritmo-di-metropolis" class="level2" data-number="42.5">
 <h2 data-number="42.5" class="anchored" data-anchor-id="algoritmo-di-metropolis"><span class="header-section-number">42.5</span> Algoritmo di Metropolis</h2>
 <p>L’algoritmo di Metropolis è un metodo avanzato per il campionamento da distribuzioni probabilistiche complesse. Appartiene alla famiglia dei metodi Monte Carlo Markov Chain (MCMC) e combina strategie di campionamento Monte Carlo con catene di Markov per navigare nello spazio dei parametri in modo intelligente. Questo consente di ottenere campioni rappresentativi della distribuzione di interesse indipendentemente dal punto di partenza, riducendo il rischio di bias nei risultati.</p>
+<section id="passaggi-fondamentali-dellalgoritmo-di-metropolis" class="level3" data-number="42.5.1">
+<h3 data-number="42.5.1" class="anchored" data-anchor-id="passaggi-fondamentali-dellalgoritmo-di-metropolis"><span class="header-section-number">42.5.1</span> Passaggi Fondamentali dell’Algoritmo di Metropolis</h3>
+<ol type="1">
+<li><strong>Scegli un valore iniziale <span class="math inline">\(\theta_1\)</span>. Imposta <span class="math inline">\(t = 1\)</span>.</strong></li>
+<li><strong>Campiona un possibile nuovo valore <span class="math inline">\(\theta_p\)</span> basato su una distribuzione di proposta <span class="math inline">\(g(\theta_p \mid \theta_t)\)</span></strong>. Di solito, si usa una distribuzione normale <span class="math inline">\(N(\theta_t, \tau)\)</span> come distribuzione di proposta, dove <span class="math inline">\(\tau\)</span> funge da parametro di regolazione che controlla la dimensione del passo.</li>
+<li><strong>Calcola il rapporto <span class="math inline">\(\alpha = \frac{p(\theta_p \mid y)}{p(\theta_t \mid y)}\)</span>.</strong></li>
+<li><strong>Se <span class="math inline">\(\alpha \geq 1\)</span>, imposta <span class="math inline">\(\theta_{t+1} = \theta_p\)</span>.</strong></li>
+<li><strong>Se <span class="math inline">\(\alpha &lt; 1\)</span>, imposta <span class="math inline">\(\theta_{t+1} = \theta_p\)</span> con probabilità <span class="math inline">\(\alpha\)</span>.</strong> Altrimenti, imposta <span class="math inline">\(\theta_{t+1} = \theta_t\)</span>.</li>
+<li><strong>Ripeti dal passo 2 per campionare un nuovo valore <span class="math inline">\(\theta_p\)</span>.</strong></li>
+</ol>
+</section>
+<section id="dettagli-dellalgoritmo" class="level3" data-number="42.5.2">
+<h3 data-number="42.5.2" class="anchored" data-anchor-id="dettagli-dellalgoritmo"><span class="header-section-number">42.5.2</span> Dettagli dell’Algoritmo</h3>
+<ul>
+<li><p><strong>Distribuzione di Proposta</strong>: La distribuzione di proposta <span class="math inline">\(g(\theta_p \mid \theta_t)\)</span> è usata per generare nuovi campioni di <span class="math inline">\(\theta_p\)</span> basati sul valore corrente <span class="math inline">\(\theta_t\)</span>. Una scelta comune è la distribuzione normale <span class="math inline">\(N(\theta_t, \tau)\)</span>, dove <span class="math inline">\(\tau\)</span> è un parametro di tuning che controlla la dimensione dei passi del campionamento. Un valore di <span class="math inline">\(\tau\)</span> troppo grande o troppo piccolo può influenzare negativamente l’efficienza del campionamento.</p></li>
+<li><p><strong>Calcolo del Rapporto <span class="math inline">\(\alpha\)</span></strong>: Il rapporto <span class="math inline">\(\alpha\)</span> è dato dalla probabilità a posteriori del nuovo valore <span class="math inline">\(\theta_p\)</span> rispetto alla probabilità a posteriori del valore corrente <span class="math inline">\(\theta_t\)</span>. Questo rapporto determina l’accettazione o il rifiuto del nuovo campione.</p></li>
+<li><p><strong>Decisione di Accettazione</strong>:</p>
+<ul>
+<li>Se <span class="math inline">\(\alpha \geq 1\)</span>, il nuovo valore <span class="math inline">\(\theta_p\)</span> è sempre accettato.</li>
+<li>Se <span class="math inline">\(\alpha &lt; 1\)</span>, il nuovo valore <span class="math inline">\(\theta_p\)</span> è accettato con probabilità <span class="math inline">\(\alpha\)</span>. Se non viene accettato, il valore corrente <span class="math inline">\(\theta_t\)</span> è mantenuto per il prossimo passo.</li>
+</ul></li>
+</ul>
 <pre class="code"><code>ALGORITHM Metropolis(nsamp, xinit)
     // Initialize samples as an empty array of size nsamp
     x_prev = xinit
@@ -1480,120 +1533,142 @@ FUNCTION POSTERIOR(x)
     // This function should be defined elsewhere
     // It represents the product of the prior and likelihood
 END FUNCTION</code></pre>
-<section id="passaggi-fondamentali-dellalgoritmo-di-metropolis" class="level3" data-number="42.5.1">
-<h3 data-number="42.5.1" class="anchored" data-anchor-id="passaggi-fondamentali-dellalgoritmo-di-metropolis"><span class="header-section-number">42.5.1</span> Passaggi Fondamentali dell’Algoritmo di Metropolis</h3>
-<ol type="1">
-<li><strong>Scegli un valore iniziale <span class="math inline">\(\theta_1\)</span>. Imposta <span class="math inline">\(t = 1\)</span>.</strong></li>
-<li><strong>Campiona un possibile nuovo valore <span class="math inline">\(\theta_p\)</span> basato su una distribuzione di proposta <span class="math inline">\(g(\theta_p \mid \theta_t)\)</span></strong>. Di solito, si usa una distribuzione normale <span class="math inline">\(N(\theta_t, \tau)\)</span> come distribuzione di proposta, dove <span class="math inline">\(\tau\)</span> funge da parametro di regolazione che controlla la dimensione del passo.</li>
-<li><strong>Calcola il rapporto <span class="math inline">\(\alpha = \frac{p(\theta_p \mid y)}{p(\theta_t \mid y)}\)</span>.</strong></li>
-<li><strong>Se <span class="math inline">\(\alpha \geq 1\)</span>, imposta <span class="math inline">\(\theta_{t+1} = \theta_p\)</span>.</strong></li>
-<li><strong>Se <span class="math inline">\(\alpha &lt; 1\)</span>, imposta <span class="math inline">\(\theta_{t+1} = \theta_p\)</span> con probabilità <span class="math inline">\(\alpha\)</span>.</strong> Altrimenti, imposta <span class="math inline">\(\theta_{t+1} = \theta_t\)</span>.</li>
-<li><strong>Ripeti dal passo 2 per campionare un nuovo valore <span class="math inline">\(\theta_p\)</span>.</strong></li>
-</ol>
-</section>
-<section id="dettagli-dellalgoritmo" class="level3" data-number="42.5.2">
-<h3 data-number="42.5.2" class="anchored" data-anchor-id="dettagli-dellalgoritmo"><span class="header-section-number">42.5.2</span> Dettagli dell’Algoritmo</h3>
-<ul>
-<li><p><strong>Distribuzione di Proposta</strong>: La distribuzione di proposta <span class="math inline">\(g(\theta_p \mid \theta_t)\)</span> è usata per generare nuovi campioni di <span class="math inline">\(\theta_p\)</span> basati sul valore corrente <span class="math inline">\(\theta_t\)</span>. Una scelta comune è la distribuzione normale <span class="math inline">\(N(\theta_t, \tau)\)</span>, dove <span class="math inline">\(\tau\)</span> è un parametro di tuning che controlla la dimensione dei passi del campionamento. Un valore di <span class="math inline">\(\tau\)</span> troppo grande o troppo piccolo può influenzare negativamente l’efficienza del campionamento.</p></li>
-<li><p><strong>Calcolo del Rapporto <span class="math inline">\(\alpha\)</span></strong>: Il rapporto <span class="math inline">\(\alpha\)</span> è dato dalla probabilità a posteriori del nuovo valore <span class="math inline">\(\theta_p\)</span> rispetto alla probabilità a posteriori del valore corrente <span class="math inline">\(\theta_t\)</span>. Questo rapporto determina l’accettazione o il rifiuto del nuovo campione.</p></li>
-<li><p><strong>Decisione di Accettazione</strong>:</p>
-<ul>
-<li>Se <span class="math inline">\(\alpha \geq 1\)</span>, il nuovo valore <span class="math inline">\(\theta_p\)</span> è sempre accettato.</li>
-<li>Se <span class="math inline">\(\alpha &lt; 1\)</span>, il nuovo valore <span class="math inline">\(\theta_p\)</span> è accettato con probabilità <span class="math inline">\(\alpha\)</span>. Se non viene accettato, il valore corrente <span class="math inline">\(\theta_t\)</span> è mantenuto per il prossimo passo.</li>
-</ul></li>
-</ul>
 <p>Questo processo permette di esplorare lo spazio dei parametri <span class="math inline">\(\theta\)</span> generando una catena di Markov che, nel tempo, converge verso la distribuzione a posteriori <span class="math inline">\(p(\theta \mid y)\)</span>. Utilizzando questa catena, possiamo stimare empiricamente le proprietà della distribuzione a posteriori.</p>
 <p>La procedura continua con l’iterazione dei passi dal 2 al 5, permettendo alla catena di campioni di convergere alla distribuzione target. Inizialmente, i campioni potrebbero non essere rappresentativi, ma dopo un sufficiente numero di iterazioni (il cosiddetto “burn-in”), la distribuzione dei punti accettati dovrebbe avvicinarsi a quella che si intende esplorare.</p>
 <p>L’efficienza di questo algoritmo deriva dalla sua abilità nel mantenere un equilibrio tra l’esplorazione di nuove possibilità e l’utilizzo di quelle già note. Questo viene realizzato attraverso l’adozione di un meccanismo che accetta i punti suggeriti in modo probabilistico, facilitando così la raccolta di un campione che riflette accuratamente la distribuzione di probabilità complessa sotto indagine.</p>
 <p>Per una visualizzazione del comportamento dell’algoritmo di Metropolis nell’esplorare lo spazio dei parametri, si può consultare <a href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/">questo post</a>. La distinzione tra i diversi metodi MCMC si basa principalmente sul tipo di distribuzione proposta e sul criterio di accettazione dei punti nel campionamento.</p>
 </section>
-<section id="implementazione-dellalgoritmo-di-metropolis" class="level3" data-number="42.5.3">
-<h3 data-number="42.5.3" class="anchored" data-anchor-id="implementazione-dellalgoritmo-di-metropolis"><span class="header-section-number">42.5.3</span> Implementazione dell’Algoritmo di Metropolis</h3>
-<p>Iniziamo col definire la distribuzione a priori. In questo esempio, la distribuzione a priori è una distribuzione Beta(4, 6).</p>
-<div id="cell-23" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:12.051103Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:12.046959Z&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prior(p):</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    beta <span class="op">=</span> <span class="dv">6</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stats.beta.pdf(p, alpha, beta)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="sec-metropolis-1" class="level3" data-number="42.5.3">
+<h3 data-number="42.5.3" class="anchored" data-anchor-id="sec-metropolis-1"><span class="header-section-number">42.5.3</span> Implementazione dell’Algoritmo di Metropolis (1)</h3>
+<p>Per comprendere il funzionamento dell’algoritmo di Metropolis, iniziamo con un esempio semplice. Consideriamo un piccolo set di dati simulati che rappresentano 6 successi su 9 prove in un test Go-No Go, come discusso nella sezione <a href="../bayesian_inference/02_subj_prop.html" class="quarto-xref"><span>Capitolo 34</span></a>. In questo contesto, la verosimiglianza segue una distribuzione binomiale.</p>
+<p>Supponiamo che la distribuzione a priori per la probabilità <span class="math inline">\(\theta\)</span> (la probabilità di inibire correttamente la risposta in una prova No Go) sia uniforme. In queste condizioni, la distribuzione a posteriori coincide con la verosimiglianza, fatta eccezione per un fattore di scala che è irrilevante per l’algoritmo. Pertanto, l’algoritmo di Metropolis può essere implementato come segue.</p>
+<div id="cell-23" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">10_000</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> np.full(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    n_samples, np.nan</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># Inizializza un array di dimensione n_samples con valori NaN</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>p[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.5</span>  <span class="co"># Imposta il primo elemento dell'array a 0.5</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>ncor <span class="op">=</span> <span class="dv">6</span> <span class="co"># Numero di prove corrette</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>nerr <span class="op">=</span> <span class="dv">3</span> <span class="co"># Numero di errori</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_samples):</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    p_new <span class="op">=</span> np.random.normal(loc<span class="op">=</span>p[i <span class="op">-</span> <span class="dv">1</span>], scale<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p_new <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        p_new <span class="op">=</span> <span class="bu">abs</span>(p_new)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p_new <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        p_new <span class="op">=</span> <span class="dv">2</span> <span class="op">-</span> p_new</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    q0 <span class="op">=</span> stats.binom.pmf(k<span class="op">=</span>ncor, n<span class="op">=</span>ncor <span class="op">+</span> nerr, p<span class="op">=</span>p[i <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    q1 <span class="op">=</span> stats.binom.pmf(k<span class="op">=</span>ncor, n<span class="op">=</span>ncor <span class="op">+</span> nerr, p<span class="op">=</span>p_new)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    p[i] <span class="op">=</span> p_new <span class="cf">if</span> np.random.uniform() <span class="op">&lt;</span> q1 <span class="op">/</span> q0 <span class="cf">else</span> p[i <span class="op">-</span> <span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Definiamo la verosimiglianza. Il problema presente richiede una verosimiglianza binomiale.</p>
-<div id="cell-25" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:13.814524Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:13.809362Z&quot;}" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> likelihood(p):</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="dv">14</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stats.binom.pmf(y, n, p)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Di seguito è riportato un grafico che mostra un campione casuale estratto dalla distribuzione a posteriori utilizzando l’algoritmo di Metropolis per i dati dell’esperimento Go-No Go.</p>
+<div id="cell-25" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del DataFrame</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"p"</span>: p})</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico di densità</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> sns.kdeplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"p"</span>, fill<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">"black"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_metropolis_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
-<p>La distribuzione a posteriori non normalizzata è il prodotto della distribuzione a priori e della verosimiglianza. Si noti che, per il motivo spiegato prima, non è necessario normalizzare la distribuzione a posteriori.</p>
-<div id="cell-27" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:16.160214Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:16.148084Z&quot;}" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> posterior(p):</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> likelihood(p) <span class="op">*</span> prior(p)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Nell’implementazione di un algoritmo di Metropolis in ambito bayesiano, vi sono diversi aspetti da considerare attentamente. Ecco alcuni punti cruciali:</p>
+</div>
+</section>
+<section id="implementazione-dellalgoritmo-di-metropolis-2" class="level3" data-number="42.5.4">
+<h3 data-number="42.5.4" class="anchored" data-anchor-id="implementazione-dellalgoritmo-di-metropolis-2"><span class="header-section-number">42.5.4</span> Implementazione dell’Algoritmo di Metropolis (2)</h3>
+<p>Procediamo ora con un’implementazione più generale dell’algoritmo di Metropolis, considerando i dati relativi agli artisti della Generazione X presenti al MoMA. In questo scenario, la verosimiglianza segue ancora una distribuzione binomiale, con 14 successi su 100 osservazioni. Tuttavia, diversamente dal caso precedente, adottiamo una distribuzione a priori non uniforme per <span class="math inline">\(\theta\)</span> (la probabilità di appartenere alla Generazione X), modellata secondo una distribuzione Beta(4, 6).</p>
+<p>Per implementare questo approccio, definiamo una funzione <code>prior</code> che accetta come argomento il valore di <span class="math inline">\(\theta\)</span> e restituisce la densità della distribuzione Beta(4, 6).</p>
+<div id="cell-27" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:12.051103Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:12.046959Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prior(p):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    alpha <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    beta <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stats.beta.pdf(p, alpha, beta)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Definiamo la funzione <code>likelihood</code>, che accetta come argomento il valore di <span class="math inline">\(\theta\)</span> e restituisce la densità della funzione di verosimiglianza binomiale per il caso di 14 successi su 100 prove.</p>
+<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:13.814524Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:13.809362Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> likelihood(p):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="dv">14</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stats.binom.pmf(y, n, p)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Infine, definiamo la funzione <code>posterior</code>, che accetta come argomento il valore di <span class="math inline">\(\theta\)</span> e restituisce la densità della distribuzione a posteriori non normalizzata, calcolata come il prodotto della distribuzione a priori e della verosimiglianza. È importante notare che, come spiegato in precedenza, non è necessario normalizzare la distribuzione a posteriori per il nostro scopo.</p>
+<div id="cell-31" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:16.160214Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:16.148084Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> posterior(p):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> likelihood(p) <span class="op">*</span> prior(p)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nell’implementazione dell’algoritmo di Metropolis vi sono diversi aspetti da considerare attentamente. Ecco alcuni punti cruciali:</p>
 <ol type="1">
 <li><p><strong>Simmetria della Distribuzione Proposta</strong>: È fondamentale che la distribuzione proposta sia simmetrica. Questa è una condizione necessaria per il funzionamento dell’algoritmo di Metropolis, ma non per quello di Metropolis-Hastings.</p></li>
 <li><p><strong>Valore Iniziale</strong>: Il valore iniziale scelto dovrebbe essere plausibile in base alla distribuzione a priori, in modo da facilitare la convergenza dell’algoritmo.</p></li>
 <li><p><strong>Probabilità Zero</strong>: Nel caso in cui la verosimiglianza o il prior assumano un valore di zero, il rapporto tra le densità di probabilità (<code>pdfratio</code>) all’interno dell’algoritmo di Metropolis risulterà indefinito. Pertanto, è importante garantire che il valore <code>x_star</code>, generato dalla distribuzione proposta, cada sempre entro i limiti del supporto sia del prior che della verosimiglianza.</p></li>
 </ol>
-<p>Di seguito è presentato il codice dell’algoritmo di Metropolis.</p>
-<div id="cell-29" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definizione della funzione dell'algoritmo di Metropolis.</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># nsamp: Numero di campioni da generare.</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># xinit: Valore iniziale da cui iniziare il sampling.</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metropolis(nsamp, xinit):</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizializza un array vuoto per conservare i campioni generati.</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> np.empty(nsamp)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Imposta il primo valore (valore iniziale) da cui partire per la generazione dei campioni.</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> xinit</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizia un ciclo che si ripeterà per il numero di volte specificato da nsamp (numero di campioni da generare).</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nsamp):</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Genera un nuovo punto (x_star) usando una distribuzione normale (gaussiana).</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Questo nuovo punto è generato in modo da essere "vicino" al punto precedente (x_prev),</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># con una deviazione standard di 0.1. Questo significa che la maggior parte dei punti</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># sarà entro 0.1 unità da x_prev, ma alcuni potrebbero essere più lontani.</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>        x_star <span class="op">=</span> np.random.normal(x_prev, <span class="fl">0.1</span>)</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Verifica che il nuovo punto (x_star) sia un valore plausibile nel contesto del problema.</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Qui, l'assunzione è che x_star debba essere tra 0 e 1. Se non lo è, il punto è rifiutato.</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;=</span> x_star <span class="op">&lt;=</span> <span class="dv">1</span>:</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calcola il valore della funzione di densità di probabilità posterior per il nuovo punto e il punto precedente.</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># La funzione posterior è definita altrove e rappresenta il prodotto del prior e della likelihood.</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>            p_star <span class="op">=</span> posterior(x_star)</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>            p_prev <span class="op">=</span> posterior(x_prev)</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calcola il rapporto tra le densità posterior del nuovo punto e del punto precedente.</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Questo rapporto determina la probabilità di accettare il nuovo punto.</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se p_prev è 0, per evitare la divisione per zero, il rapporto è impostato a 1.</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>            pdfratio <span class="op">=</span> p_star <span class="op">/</span> p_prev <span class="cf">if</span> p_prev <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">1</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Genera un numero casuale tra 0 e 1.</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>            random_chance <span class="op">=</span> np.random.uniform()</span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calcola il rapporto tra la densità posteriore del nuovo punto e quella del punto precedente.</span></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se il nuovo punto è migliore o uguale, questo rapporto sarà &gt;= 1.</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se il nuovo punto è peggiore, il rapporto sarà un numero fra 0 e 1.</span></span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>            acceptance_probability <span class="op">=</span> <span class="bu">min</span>(<span class="dv">1</span>, pdfratio)</span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se il numero casuale è minore dell'acceptance_probability, accettiamo il nuovo punto.</span></span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Ciò significa che un punto migliore o uguale viene sempre accettato (perché random_chance sarà sempre &lt; 1),</span></span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># mentre un punto peggiore ha una possibilità basata sul quanto è peggiore.</span></span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> random_chance <span class="op">&lt;</span> acceptance_probability:</span>
-<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>                samples[i] <span class="op">=</span> x_star  <span class="co"># Accetta il nuovo punto.</span></span>
-<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>                x_prev <span class="op">=</span> (</span>
-<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>                    x_star  <span class="co"># Aggiorna il punto precedente con il nuovo punto accettato.</span></span>
-<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
-<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>                samples[i] <span class="op">=</span> (</span>
-<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>                    x_prev  <span class="co"># Mantiene il punto precedente se il nuovo punto non è accettato.</span></span>
-<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>                )</span>
-<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>            samples[i] <span class="op">=</span> (</span>
-<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>                x_prev  <span class="co"># Se x_star non è nel supporto, conserva il punto precedente.</span></span>
-<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dopo aver generato il numero desiderato di campioni, ritorna l'array dei campioni.</span></span>
-<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> samples</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Di seguito è presentato il codice dell’algoritmo di Metropolis per il caso presente.</p>
+<div id="cell-33" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definizione della funzione dell'algoritmo di Metropolis.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># nsamp: Numero di campioni da generare.</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># xinit: Valore iniziale da cui iniziare il sampling.</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metropolis(nsamp, xinit):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizializza un array vuoto per conservare i campioni generati.</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> np.empty(nsamp)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Imposta il primo valore (valore iniziale) da cui partire per la generazione dei campioni.</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> xinit</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inizia un ciclo che si ripeterà per il numero di volte specificato da nsamp (numero di campioni da generare).</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nsamp):</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Genera un nuovo punto (x_star) usando una distribuzione normale (gaussiana).</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Questo nuovo punto è generato in modo da essere "vicino" al punto precedente (x_prev),</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># con una deviazione standard di 0.1. Questo significa che la maggior parte dei punti</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># sarà entro 0.1 unità da x_prev, ma alcuni potrebbero essere più lontani.</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        x_star <span class="op">=</span> np.random.normal(x_prev, <span class="fl">0.1</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Verifica che il nuovo punto (x_star) sia un valore plausibile nel contesto del problema.</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Qui, l'assunzione è che x_star debba essere tra 0 e 1. Se non lo è, il punto è rifiutato.</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;=</span> x_star <span class="op">&lt;=</span> <span class="dv">1</span>:</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calcola il valore della funzione di densità di probabilità posterior per il nuovo punto e il punto precedente.</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># La funzione posterior è definita altrove e rappresenta il prodotto del prior e della likelihood.</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>            p_star <span class="op">=</span> posterior(x_star)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>            p_prev <span class="op">=</span> posterior(x_prev)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calcola il rapporto tra le densità posterior del nuovo punto e del punto precedente.</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Questo rapporto determina la probabilità di accettare il nuovo punto.</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se p_prev è 0, per evitare la divisione per zero, il rapporto è impostato a 1.</span></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>            pdfratio <span class="op">=</span> p_star <span class="op">/</span> p_prev <span class="cf">if</span> p_prev <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">1</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Genera un numero casuale tra 0 e 1.</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>            random_chance <span class="op">=</span> np.random.uniform()</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calcola il rapporto tra la densità posteriore del nuovo punto e quella del punto precedente.</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se il nuovo punto è migliore o uguale, questo rapporto sarà &gt;= 1.</span></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se il nuovo punto è peggiore, il rapporto sarà un numero fra 0 e 1.</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>            acceptance_probability <span class="op">=</span> <span class="bu">min</span>(<span class="dv">1</span>, pdfratio)</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Se il numero casuale è minore dell'acceptance_probability, accettiamo il nuovo punto.</span></span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Ciò significa che un punto migliore o uguale viene sempre accettato (perché random_chance sarà sempre &lt; 1),</span></span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># mentre un punto peggiore ha una possibilità basata sul quanto è peggiore.</span></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> random_chance <span class="op">&lt;</span> acceptance_probability:</span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>                samples[i] <span class="op">=</span> x_star  <span class="co"># Accetta il nuovo punto.</span></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>                x_prev <span class="op">=</span> (</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>                    x_star  <span class="co"># Aggiorna il punto precedente con il nuovo punto accettato.</span></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>                samples[i] <span class="op">=</span> (</span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>                    x_prev  <span class="co"># Mantiene il punto precedente se il nuovo punto non è accettato.</span></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>            samples[i] <span class="op">=</span> (</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>                x_prev  <span class="co"># Se x_star non è nel supporto, conserva il punto precedente.</span></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dopo aver generato il numero desiderato di campioni, ritorna l'array dei campioni.</span></span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> samples</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>L’idea fondamentale dietro la fase dell’algoritmo di Metropolis successiva al calcolo di <code>p_star</code> e <code>p_prev</code> è decidere se “muoversi” verso un nuovo punto basandosi su quanto è probabile (o “buono”) quel punto rispetto al punto attuale, in termini della densità posteriore. Qui, la “probabilità” di un punto è data dalla sua densità posteriore, che è un modo per misurare quanto bene un certo valore del parametro si adatta ai dati osservati, dato un modello.</p>
 <p>Ecco come funziona:</p>
@@ -1607,37 +1682,37 @@ END FUNCTION</code></pre>
 </ul></li>
 </ol>
 <p>In termini di codice, questa logica si traduce così:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genera un numero casuale tra 0 e 1.</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>random_chance <span class="op">=</span> np.random.uniform()</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola il rapporto tra la densità posteriore del nuovo punto e quella del punto precedente.</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Se il nuovo punto è migliore o uguale, questo rapporto sarà &gt;= 1.</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Se il nuovo punto è peggiore, il rapporto sarà un numero fra 0 e 1.</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>acceptance_probability <span class="op">=</span> <span class="bu">min</span>(<span class="dv">1</span>, pdfratio)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Se il numero casuale è minore dell'acceptance_probability, accettiamo il nuovo punto.</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Ciò significa che un punto migliore o uguale viene sempre accettato (perché random_chance sarà sempre &lt; 1),</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># mentre un punto peggiore ha una possibilità basata sul quanto è peggiore.</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> random_chance <span class="op">&lt;</span> acceptance_probability:</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    samples[i] <span class="op">=</span> x_star  <span class="co"># Accetta il nuovo punto.</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> x_star      <span class="co"># Aggiorna il punto precedente con il nuovo punto accettato.</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    samples[i] <span class="op">=</span> x_prev  <span class="co"># Mantiene il punto precedente se il nuovo punto non è accettato.</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Genera un numero casuale tra 0 e 1.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>random_chance <span class="op">=</span> np.random.uniform()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcola il rapporto tra la densità posteriore del nuovo punto e quella del punto precedente.</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Se il nuovo punto è migliore o uguale, questo rapporto sarà &gt;= 1.</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Se il nuovo punto è peggiore, il rapporto sarà un numero fra 0 e 1.</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>acceptance_probability <span class="op">=</span> <span class="bu">min</span>(<span class="dv">1</span>, pdfratio)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Se il numero casuale è minore dell'acceptance_probability, accettiamo il nuovo punto.</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Ciò significa che un punto migliore o uguale viene sempre accettato (perché random_chance sarà sempre &lt; 1),</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co"># mentre un punto peggiore ha una possibilità basata sul quanto è peggiore.</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> random_chance <span class="op">&lt;</span> acceptance_probability:</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    samples[i] <span class="op">=</span> x_star  <span class="co"># Accetta il nuovo punto.</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> x_star      <span class="co"># Aggiorna il punto precedente con il nuovo punto accettato.</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    samples[i] <span class="op">=</span> x_prev  <span class="co"># Mantiene il punto precedente se il nuovo punto non è accettato.</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In sintesi, questo meccanismo consente all’algoritmo di esplorare lo spazio dei parametri in modo efficiente, accettando sempre miglioramenti e, occasionalmente, facendo passi in direzioni non ottimali per evitare di rimanere intrappolati in “minimi locali”, ovvero in soluzioni che sembrano buone rispetto a quelle vicine ma non sono le migliori globalmente.</p>
 <p>Si osservi un punto importante: nel calcolo di <code>pdfratio</code>, il rapporto tra la densità a posteriori del parametro proposto <code>x_star</code> e quella del parametro corrente <code>x_prev</code>, la costante di normalizzazione si annulla grazie alla regola di Bayes. Questo lascia nel rapporto solamente le componenti relative alla verosimiglianza e alla distribuzione a priori, che sono entrambe facilmente calcolabili. Matematicamente, questo si esprime come:</p>
-<p><span class="math display">\[
+<p><span id="eq-ratio-metropolis"><span class="math display">\[
 \begin{equation}
 \text{pdfratio} = \frac{p(\theta^* \mid y)}{p(\theta^{\text{prev}} \mid y)} = \frac{\frac{p(y \mid \theta^*) p(\theta^*)}{p(y)}}{\frac{p(y \mid \theta^{\text{prev}}) p(\theta^{\text{prev}})}{p(y)}}
-= \frac{p(y \mid \theta^*) p(\theta^*)}{p(y \mid \theta^{\text{prev}}) p(\theta^{\text{prev}})}
+= \frac{p(y \mid \theta^*) p(\theta^*)}{p(y \mid \theta^{\text{prev}}) p(\theta^{\text{prev}})}.
 \end{equation}
-\]</span> (eq-ratio-metropolis)</p>
+\tag{42.1}\]</span></span></p>
 <p>Eseguiamo dunque il campionamento usando l’algoritmo che abbiamo definito.</p>
-<div id="cell-32" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:39.577063Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:24.866146Z&quot;}" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">100_000</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>samps <span class="op">=</span> metropolis(n_samples, <span class="fl">0.5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-36" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:39.577063Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:24.866146Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">100_000</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>samps <span class="op">=</span> metropolis(n_samples, <span class="fl">0.5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In somma, l’algoritmo Metropolis accetta come input il numero <code>nsamp</code> di passi da simulare e il punto di partenza. Come output, l’algoritmo restituisce una catena di valori del parametro, specificamente la sequenza <span class="math inline">\(\theta^{(1)}, \theta^{(2)}, \ldots, \theta^{\text{nsamp}}\)</span>. Uno degli aspetti cruciali per la riuscita dell’algoritmo è il raggiungimento della stazionarietà da parte della catena. In genere, i primi 1000-5000 valori vengono scartati in quanto rappresentano il periodo di “burn-in” della catena. Dopo un determinato numero di passi <span class="math inline">\(k\)</span>, la catena converge e i valori diventano campioni effettivi dalla distribuzione a posteriori <span class="math inline">\(p(\theta \mid y)\)</span>.</p>
-<p>Il modello descritto è stato inizialmente proposto da Metropolis et al.&nbsp;nel 1953 <span class="citation" data-cites="metropolist_etal_1953">(<a href="../../99-references.html#ref-metropolist_etal_1953" role="doc-biblioref">Metropolis et al. 1953</a>)</span>. Hastings nel 1970 introdusse un’estensione nota come algoritmo Metropolis-Hastings <span class="citation" data-cites="hastings_1970">(<a href="../../99-references.html#ref-hastings_1970" role="doc-biblioref">Hastings 1970</a>)</span>. Altre varianti includono il campionatore di Gibbs, introdotto da Geman e Geman nel 1984 <span class="citation" data-cites="geman_geman_1984">(<a href="../../99-references.html#ref-geman_geman_1984" role="doc-biblioref">Geman e Geman 1984</a>)</span>, l’Hamiltonian Monte Carlo <span class="citation" data-cites="duane1987hybrid">(<a href="../../99-references.html#ref-duane1987hybrid" role="doc-biblioref">Duane et al. 1987</a>)</span>, e il No-U-Turn Sampler (NUTS) utilizzato in pacchetti come PyMC e Stan <span class="citation" data-cites="hoffman2014no">(<a href="../../99-references.html#ref-hoffman2014no" role="doc-biblioref">Hoffman, Gelman, et al. 2014</a>)</span>. Per un’analisi più dettagliata e intuitiva dell’algoritmo Metropolis, si rimanda a <span class="citation" data-cites="doingbayesian">Kruschke (<a href="../../99-references.html#ref-doingbayesian" role="doc-biblioref">2014</a>)</span>.</p>
+<p>Il modello descritto è stato inizialmente proposto da Metropolis et al.&nbsp;nel 1953 <span class="citation" data-cites="metropolist_etal_1953">(<a href="../../99-references.html#ref-metropolist_etal_1953" role="doc-biblioref">Metropolis et al. 1953</a>)</span>. Hastings nel 1970 introdusse un’estensione nota come algoritmo Metropolis-Hastings <span class="citation" data-cites="hastings_1970">(<a href="../../99-references.html#ref-hastings_1970" role="doc-biblioref">Hastings 1970</a>)</span>. Altre varianti includono il campionatore di Gibbs, introdotto da Geman e Geman nel 1984 <span class="citation" data-cites="geman_geman_1984">(<a href="../../99-references.html#ref-geman_geman_1984" role="doc-biblioref">Geman e Geman 1984</a>)</span>, l’Hamiltonian Monte Carlo <span class="citation" data-cites="duane1987hybrid">(<a href="../../99-references.html#ref-duane1987hybrid" role="doc-biblioref">Duane et al. 1987</a>)</span>, e il No-U-Turn Sampler (NUTS) utilizzato in pacchetti come PyMC e Stan <span class="citation" data-cites="hoffman2014no">(<a href="../../99-references.html#ref-hoffman2014no" role="doc-biblioref">Hoffman, Gelman, et al. 2014</a>)</span>. Per un’analisi più dettagliata e intuitiva dell’algoritmo Metropolis, si rimanda a <span class="citation" data-cites="doingbayesian">(<a href="../../99-references.html#ref-doingbayesian" role="doc-biblioref"><strong>doingbayesian?</strong></a>)</span>.</p>
 <p>Un elemento chiave da considerare nell’uso dell’algoritmo Metropolis è il tasso di accettazione, che è il rapporto tra il numero di valori del parametro proposti e il numero di quei valori che vengono effettivamente accettati. Un limite di questo algoritmo è la sua inefficienza relativa: rispetto alle sue varianti più moderne, l’algoritmo Metropolis tende ad essere meno efficiente.</p>
 </section>
 </section>
@@ -1647,66 +1722,36 @@ END FUNCTION</code></pre>
 <h3 data-number="42.6.1" class="anchored" data-anchor-id="warm-upburn-in"><span class="header-section-number">42.6.1</span> Warm-up/Burn-in</h3>
 <p>Una catena di Markov ha bisogno di alcune iterazioni per raggiungere la distribuzione stazionaria. Queste iterazioni sono comunemente chiamate iterazioni di warm-up o burn-in (a seconda dell’algoritmo e del software utilizzato) e vengono di solito scartate. In molti programmi software, la prima metà delle iterazioni viene considerata come iterazioni di warm-up, quindi, nel caso presente, anche se abbiamo ottenuto 100000 iterazioni, ne utilizzeremo solo 50000.</p>
 </section>
-<section id="sintesi-della-distribuzione-a-posteriori" class="level3" data-number="42.6.2">
-<h3 data-number="42.6.2" class="anchored" data-anchor-id="sintesi-della-distribuzione-a-posteriori"><span class="header-section-number">42.6.2</span> Sintesi della distribuzione a posteriori</h3>
+<section id="sec-moma-post-estimates" class="level3" data-number="42.6.2">
+<h3 data-number="42.6.2" class="anchored" data-anchor-id="sec-moma-post-estimates"><span class="header-section-number">42.6.2</span> Sintesi della distribuzione a posteriori</h3>
 <p>L’array <code>samps</code> contiene 100000 valori di una catena di Markov. Escludiamo i primi 50000 valori considerati come burn-in e consideriamo i restanti 50000 valori come un campione casuale estratto dalla distribuzione a posteriori <span class="math inline">\(p(\theta \mid y)\)</span>.</p>
 <p>Mediante i valori della catena così ottenuta è facile trovare una stima a posteriori del parametro <span class="math inline">\(\theta\)</span>. Per esempio, possiamo trovare la stima della media a posteriori.</p>
-<div id="cell-35" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:44.227523Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:44.222391Z&quot;}" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>burnin <span class="op">=</span> <span class="bu">int</span>(n_samples <span class="op">*</span> <span class="fl">0.5</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>burnin</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-39" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:44.227523Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:44.222391Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>burnin <span class="op">=</span> <span class="bu">int</span>(n_samples <span class="op">*</span> <span class="fl">0.5</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>burnin</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>50000</code></pre>
 </div>
 </div>
-<div id="cell-36" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:46.060202Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:46.047272Z&quot;}" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>np.mean(samps[burnin:])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-40" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:46.060202Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:46.047272Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>np.mean(samps[burnin:])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>0.16408968344081415</code></pre>
 </div>
 </div>
 <p>Oppure possiamo stimare la deviazione standard della distribuzione a posteriori.</p>
-<div id="cell-38" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:47.966732Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:47.958107Z&quot;}" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>np.std(samps[burnin:])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-42" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:47.966732Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:47.958107Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>np.std(samps[burnin:])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="21">
 <pre><code>0.03513787973422409</code></pre>
 </div>
 </div>
 <p>Visualizziamo un <em>trace plot</em> dei valori della catena di Markov dopo il periodo di burn-in.</p>
-<div id="cell-40" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:50.867938Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:50.519308Z&quot;}" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.plot(samps[burnin:])</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"sample"</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"theta"</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Il trace plot indica che la catena inizia con un valore casuale per poi spostarsi rapidamente nell’area intorno a 0.16, che è l’area con alta densità a posteriori. Successivamente, oscilla intorno a quel valore per le iterazioni successive.</p>
-<div id="cell-42" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:54.187856Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:54.034529Z&quot;}" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>plt.plot(samps[:<span class="dv">500</span>])</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"sample"</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"theta"</span>)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>L’istogramma mostrato di seguito, sul quale è stata sovrapposta la distribuzione a posteriori derivata analiticamente – specificamente una <span class="math inline">\(\text{Beta}(25, 17)\)</span> – dimostra che la catena converge effettivamente alla distribuzione a posteriori desiderata.</p>
-<div id="cell-44" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:58.593324Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:58.427645Z&quot;}" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plt.hist(samps[burnin:], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, label<span class="op">=</span><span class="st">"MCMC distribution"</span>, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the true function</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, stats.beta.pdf(x, <span class="dv">18</span>, <span class="dv">92</span>), <span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True distribution"</span>)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-44" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:50.867938Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:50.519308Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plt.plot(samps[burnin:])</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"sample"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"theta"</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1715,9 +1760,39 @@ END FUNCTION</code></pre>
 </div>
 </div>
 </div>
+<p>Il trace plot indica che la catena inizia con un valore casuale per poi spostarsi rapidamente nell’area intorno a 0.16, che è l’area con alta densità a posteriori. Successivamente, oscilla intorno a quel valore per le iterazioni successive.</p>
+<div id="cell-46" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:54.187856Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:54.034529Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>plt.plot(samps[:<span class="dv">500</span>])</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"sample"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"theta"</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_metropolis_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>L’istogramma mostrato di seguito, sul quale è stata sovrapposta la distribuzione a posteriori derivata analiticamente – specificamente una <span class="math inline">\(\text{Beta}(25, 17)\)</span> – dimostra che la catena converge effettivamente alla distribuzione a posteriori desiderata.</p>
+<div id="cell-48" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:12:58.593324Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:12:58.427645Z&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>plt.hist(samps[burnin:], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, label<span class="op">=</span><span class="st">"MCMC distribution"</span>, density<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the true function</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, stats.beta.pdf(x, <span class="dv">18</span>, <span class="dv">92</span>), <span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True distribution"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_metropolis_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>È possibile usare la funzione <code>summary</code> del pacchetto AriviZ per calolare l’intervallo di credibilità, ovvero l’intervallo che contiene la proporzione indicata dei valori estratti a caso dalla distribuzione a posteriori.</p>
-<div id="cell-46" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:01.815307Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:01.783434Z&quot;}" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>az.summary(samps[burnin:], kind<span class="op">=</span><span class="st">"stats"</span>, hdi_prob<span class="op">=</span><span class="fl">0.94</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-50" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:01.815307Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:01.783434Z&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>az.summary(samps[burnin:], kind<span class="op">=</span><span class="st">"stats"</span>, hdi_prob<span class="op">=</span><span class="fl">0.94</span>, round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <div>
 <div>
@@ -1749,13 +1824,13 @@ END FUNCTION</code></pre>
 </div>
 </div>
 <p>Un KDE plot corrispondente all’istogramma precedente si può generare usando <code>az.plot_posterior()</code>. La curva rappresenta l’intera distribuzione a posteriori e viene calcolata utilizzando la stima della densità del kernel (KDE) che serve a “lisciare” l’istogramma.</p>
-<div id="cell-48" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:05.281861Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:05.140042Z&quot;}" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>az.plot_posterior(samps[burnin:])</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-52" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:05.281861Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:05.140042Z&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>az.plot_posterior(samps[burnin:])</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-22-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="01_metropolis_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1785,9 +1860,9 @@ END FUNCTION</code></pre>
 \end{align}
 \]</span> (eq-autocor)</p>
 <p>Per fare un esempio pratico, simuliamo dei dati autocorrelati.</p>
-<div id="cell-50" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:14.103239Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:14.088762Z&quot;}" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> pd.array([<span class="dv">22</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">25</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">34</span>, <span class="dv">37</span>, <span class="dv">40</span>, <span class="dv">44</span>, <span class="dv">51</span>, <span class="dv">48</span>, <span class="dv">47</span>, <span class="dv">50</span>, <span class="dv">51</span>])</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-54" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:14.103239Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:14.088762Z&quot;}" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> pd.array([<span class="dv">22</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">25</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">34</span>, <span class="dv">37</span>, <span class="dv">40</span>, <span class="dv">44</span>, <span class="dv">51</span>, <span class="dv">48</span>, <span class="dv">47</span>, <span class="dv">50</span>, <span class="dv">51</span>])</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;IntegerArray&gt;
 [22, 24, 25, 25, 28, 29, 34, 37, 40, 44, 51, 48, 47, 50, 51]
@@ -1795,8 +1870,8 @@ Length: 15, dtype: Int64</code></pre>
 </div>
 </div>
 <p>L’autocorrelazione di ordine 1 è semplicemente la correlazione tra ciascun elemento e quello successivo nella sequenza.</p>
-<div id="cell-52" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:19.851915Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:19.838140Z&quot;}" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sm.tsa.acf(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-56" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:19.851915Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:19.838140Z&quot;}" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>sm.tsa.acf(x)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="41">
 <pre><code>array([ 1.        ,  0.83174224,  0.65632458,  0.49105012,  0.27863962,
         0.03102625, -0.16527446, -0.30369928, -0.40095465, -0.45823389,
@@ -1812,32 +1887,32 @@ Length: 15, dtype: Int64</code></pre>
 <li>ecc.</li>
 </ul>
 <p>È possibile specificare il numero di ritardi (<em>lag</em>) da utilizzare con l’argomento <code>nlags</code>:</p>
-<div id="cell-54" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:23.261460Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:23.237239Z&quot;}" data-execution_count="42">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sm.tsa.acf(x, nlags<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-58" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:23.261460Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:23.237239Z&quot;}" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sm.tsa.acf(x, nlags<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="42">
 <pre><code>array([1.        , 0.83174224, 0.65632458, 0.49105012, 0.27863962])</code></pre>
 </div>
 </div>
 <p>In Python possiamo creare un grafico della funzione di autocorrelazione (correlogramma) per una serie temporale usando la funzione <code>tsaplots.plot_acf()</code> dalla libreria <code>statsmodels</code>.</p>
-<div id="cell-56" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:25.740566Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:25.579637Z&quot;}" data-execution_count="43">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>tsaplots.plot_acf(x, lags<span class="op">=</span><span class="dv">9</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-60" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:25.740566Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:25.579637Z&quot;}" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>tsaplots.plot_acf(x, lags<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="01_metropolis_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Per i dati dell’esempio in discussione otteniamo la situazione seguente.</p>
-<div id="cell-58" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:32.510199Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:30.039818Z&quot;}" data-execution_count="44">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tsaplots.plot_acf(samps[burnin:], lags<span class="op">=</span><span class="dv">9</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-62" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:32.510199Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:30.039818Z&quot;}" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>tsaplots.plot_acf(samps[burnin:], lags<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="01_metropolis_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1845,15 +1920,15 @@ Length: 15, dtype: Int64</code></pre>
 <p>Il correlogramma è uno strumento grafico usato per la valutazione della tendenza di una catena di Markov nel tempo. Il correlogramma si costruisce a partire dall’autocorrelazione <span class="math inline">\(\rho_k\)</span> di una catena di Markov in funzione del ritardo <span class="math inline">\(k\)</span> con cui l’autocorrelazione è calcolata: nel grafico ogni barretta verticale riporta il valore dell’autocorrelazione (sull’asse delle ordinate) in funzione del ritardo (sull’asse delle ascisse).</p>
 <p>In situazioni ottimali l’autocorrelazione diminuisce rapidamente ed è effettivamente pari a 0 per piccoli lag. Ciò indica che i valori della catena di Markov che si trovano a più di soli pochi passi di distanza gli uni dagli altri non risultano associati tra loro, il che fornisce una conferma del “mixing” della catena di Markov, ossia della convergenza alla distribuzione stazionaria. Nelle analisi bayesiane, una delle strategie che consentono di ridurre l’autocorrelazione è quella di assottigliare l’output immagazzinando solo ogni <span class="math inline">\(m\)</span>-esimo punto dopo il periodo di burn-in. Una tale strategia va sotto il nome di <em>thinning</em>.</p>
 <p>Nel seguente correlogramma, analizziamo la medesima catena di Markov. Tuttavia, in questa occasione applichiamo un “thinning” (sottocampionamento) con un fattore di 5.</p>
-<div id="cell-60" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:37.102817Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:36.966176Z&quot;}" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>thin <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sampsthin <span class="op">=</span> samps[burnin::thin]</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>tsaplots.plot_acf(sampsthin, lags<span class="op">=</span><span class="dv">9</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-64" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:37.102817Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:36.966176Z&quot;}" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>thin <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>sampsthin <span class="op">=</span> samps[burnin::thin]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>tsaplots.plot_acf(sampsthin, lags<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="01_metropolis_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1902,38 +1977,38 @@ Length: 15, dtype: Int64</code></pre>
 <section id="caso-normale-normale" class="level2" data-number="42.8">
 <h2 data-number="42.8" class="anchored" data-anchor-id="caso-normale-normale"><span class="header-section-number">42.8</span> Caso Normale-Normale</h2>
 <p>Consideriamo ora il caso Normale-Normale di cui è possibile trovare una soluzione analitica. Supponiamo, come prior, una <span class="math inline">\(\mathcal{N}(30, 5\)</span>.</p>
-<div id="cell-64" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:44.508917Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:44.503276Z&quot;}" data-execution_count="46">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prior(mu):</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stats.norm.pdf(mu, <span class="dv">30</span>, <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-68" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:44.508917Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:44.503276Z&quot;}" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prior(mu):</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> stats.norm.pdf(mu, <span class="dv">30</span>, <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Per la verosimiglianza del parametro <span class="math inline">\(\mu\)</span>, supponiamo <span class="math inline">\(\sigma\)</span> nota e uguale alla deviazione standard del campione.</p>
-<div id="cell-66" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:46.627729Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:46.624746Z&quot;}" data-execution_count="47">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> likelihood(mu, data):</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    std_data <span class="op">=</span> np.std(data)  <span class="co"># Calcola la deviazione standard dei dati</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.prod(stats.norm.pdf(data, mu, std_data))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-70" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:46.627729Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:46.624746Z&quot;}" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> likelihood(mu, data):</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    std_data <span class="op">=</span> np.std(data)  <span class="co"># Calcola la deviazione standard dei dati</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.prod(stats.norm.pdf(data, mu, std_data))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Definiamo il posterior non normalizzato:</p>
-<div id="cell-68" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:48.769380Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:48.764214Z&quot;}" data-execution_count="48">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> posterior(mu, data):</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> likelihood(mu, data) <span class="op">*</span> prior(mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-72" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:48.769380Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:48.764214Z&quot;}" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> posterior(mu, data):</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> likelihood(mu, data) <span class="op">*</span> prior(mu)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Modifichiamo ora l’algoritmo di Metropolis descritto sopra per adattarlo al caso presente.</p>
-<div id="cell-70" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:51.026747Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:51.021109Z&quot;}" data-execution_count="49">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Algoritmo di Metropolis per il caso normale-normale</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metropolis_for_normal(nsamp, xinit, data):</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> np.empty(nsamp)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> xinit</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nsamp):</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        x_star <span class="op">=</span> np.random.normal(x_prev, <span class="fl">0.5</span>)  <span class="co"># Genera un nuovo punto dalla proposta</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola il rapporto di accettazione e accetta il nuovo punto con una certa probabilità</span></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> posterior(x_star, data) <span class="op">/</span> posterior(x_prev, data) <span class="op">&gt;</span> np.random.uniform():</span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>            x_prev <span class="op">=</span> x_star</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>        samples[i] <span class="op">=</span> x_prev</span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> samples</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-74" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:51.026747Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:51.021109Z&quot;}" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Algoritmo di Metropolis per il caso normale-normale</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metropolis_for_normal(nsamp, xinit, data):</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> np.empty(nsamp)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> xinit</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nsamp):</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>        x_star <span class="op">=</span> np.random.normal(x_prev, <span class="fl">0.5</span>)  <span class="co"># Genera un nuovo punto dalla proposta</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calcola il rapporto di accettazione e accetta il nuovo punto con una certa probabilità</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> posterior(x_star, data) <span class="op">/</span> posterior(x_prev, data) <span class="op">&gt;</span> np.random.uniform():</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>            x_prev <span class="op">=</span> x_star</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>        samples[i] <span class="op">=</span> x_prev</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> samples</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vediamo cosa fa la presente versione dell’algoritmo di Metropolis passo dopo passo:</p>
 <ol type="1">
@@ -1953,16 +2028,16 @@ Length: 15, dtype: Int64</code></pre>
 <li><p><strong>Salvataggio del Campione</strong>: <code>samples[i] = x_prev</code> salva il punto corrente (che può essere il nuovo punto accettato o il punto precedente se il nuovo punto è stato rifiutato) nell’array <code>samples</code>. Questo processo si ripete fino a quando non si raggiunge il numero desiderato di campioni.</p></li>
 </ol>
 <p>Come dati, usiamo il campione di 30 valori BDI-II ottenuti dai soggetti clinici esaminati da {cite}<code>zetsche_2019future</code>.</p>
-<div id="cell-73" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:55.370275Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:55.362498Z&quot;}" data-execution_count="50">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="fl">26.0</span>, <span class="fl">35.0</span>, <span class="dv">30</span>, <span class="dv">25</span>, <span class="dv">44</span>, <span class="dv">30</span>, <span class="dv">33</span>, <span class="dv">43</span>, <span class="dv">22</span>, <span class="dv">43</span>, <span class="dv">24</span>, <span class="dv">19</span>, <span class="dv">39</span>, <span class="dv">31</span>, <span class="dv">25</span>, <span class="dv">28</span>, <span class="dv">35</span>, <span class="dv">30</span>, <span class="dv">26</span>, <span class="dv">31</span>,</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">41</span>, <span class="dv">36</span>, <span class="dv">26</span>, <span class="dv">35</span>, <span class="dv">33</span>, <span class="dv">28</span>, <span class="dv">27</span>, <span class="dv">34</span>, <span class="dv">27</span>, <span class="dv">22</span>,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-77" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:13:55.370275Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:55.362498Z&quot;}" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fl">26.0</span>, <span class="fl">35.0</span>, <span class="dv">30</span>, <span class="dv">25</span>, <span class="dv">44</span>, <span class="dv">30</span>, <span class="dv">33</span>, <span class="dv">43</span>, <span class="dv">22</span>, <span class="dv">43</span>, <span class="dv">24</span>, <span class="dv">19</span>, <span class="dv">39</span>, <span class="dv">31</span>, <span class="dv">25</span>, <span class="dv">28</span>, <span class="dv">35</span>, <span class="dv">30</span>, <span class="dv">26</span>, <span class="dv">31</span>,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">41</span>, <span class="dv">36</span>, <span class="dv">26</span>, <span class="dv">35</span>, <span class="dv">33</span>, <span class="dv">28</span>, <span class="dv">27</span>, <span class="dv">34</span>, <span class="dv">27</span>, <span class="dv">22</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Procediamo con l’esecuzione dell’algoritmo di Metropolis.</p>
-<div id="cell-75" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:14:13.286088Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:57.908754Z&quot;}" data-execution_count="51">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> metropolis_for_normal(<span class="dv">100_000</span>, np.mean(y), y)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>samples.shape</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-79" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:14:13.286088Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:13:57.908754Z&quot;}" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> metropolis_for_normal(<span class="dv">100_000</span>, np.mean(y), y)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>samples.shape</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="51">
 <pre><code>(100000,)</code></pre>
 </div>
@@ -1985,37 +2060,37 @@ Length: 15, dtype: Int64</code></pre>
 <section id="codice-per-il-grafico" class="level3" data-number="42.8.2">
 <h3 data-number="42.8.2" class="anchored" data-anchor-id="codice-per-il-grafico"><span class="header-section-number">42.8.2</span> Codice per il Grafico</h3>
 <p>Per produrre il grafico con l’istogramma dei campioni dal posterior (usando l’algoritmo di Metropolis) e la curva della distribuzione posteriore analitica, usiamo i parametri calcolati:</p>
-<div id="cell-77" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:14:27.238252Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:14:27.043718Z&quot;}" data-execution_count="52">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri del prior</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>mu_prior <span class="op">=</span> <span class="dv">30</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>std_prior <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>var_prior <span class="op">=</span> std_prior <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Dati osservati</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(y)</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>sum_y <span class="op">=</span> np.<span class="bu">sum</span>(y)</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>var_data <span class="op">=</span> np.var(y, ddof<span class="op">=</span><span class="dv">1</span>)  <span class="co"># ddof=1 for sample variance</span></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dei parametri posterior</span></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>mu_post <span class="op">=</span> (mu_prior <span class="op">/</span> var_prior <span class="op">+</span> sum_y <span class="op">/</span> var_data) <span class="op">/</span> (<span class="dv">1</span> <span class="op">/</span> var_prior <span class="op">+</span> n <span class="op">/</span> var_data)</span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>var_post <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">/</span> var_prior <span class="op">+</span> n <span class="op">/</span> var_data)</span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>std_post <span class="op">=</span> np.sqrt(var_post)</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Generazione dei punti x per il grafico</span></span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(mu_post <span class="op">-</span> <span class="dv">4</span> <span class="op">*</span> std_post, mu_post <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> std_post, <span class="dv">1000</span>)</span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Istogramma dei campioni dal posterior</span></span>
-<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>plt.hist(samples[burnin:], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, density<span class="op">=</span><span class="va">True</span>, label<span class="op">=</span><span class="st">"MCMC Samples Distribution"</span>)</span>
-<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Curva della distribuzione posteriore analitica</span></span>
-<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>plt.plot(x, stats.norm.pdf(x, mu_post, std_post), <span class="st">"C1"</span>, label<span class="op">=</span><span class="st">"Analytical Posterior Distribution"</span>)</span>
-<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-81" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:14:27.238252Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:14:27.043718Z&quot;}" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri del prior</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>mu_prior <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>std_prior <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>var_prior <span class="op">=</span> std_prior <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Dati osservati</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(y)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>sum_y <span class="op">=</span> np.<span class="bu">sum</span>(y)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>var_data <span class="op">=</span> np.var(y, ddof<span class="op">=</span><span class="dv">1</span>)  <span class="co"># ddof=1 for sample variance</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dei parametri posterior</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>mu_post <span class="op">=</span> (mu_prior <span class="op">/</span> var_prior <span class="op">+</span> sum_y <span class="op">/</span> var_data) <span class="op">/</span> (<span class="dv">1</span> <span class="op">/</span> var_prior <span class="op">+</span> n <span class="op">/</span> var_data)</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>var_post <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">/</span> var_prior <span class="op">+</span> n <span class="op">/</span> var_data)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>std_post <span class="op">=</span> np.sqrt(var_post)</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Generazione dei punti x per il grafico</span></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(mu_post <span class="op">-</span> <span class="dv">4</span> <span class="op">*</span> std_post, mu_post <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> std_post, <span class="dv">1000</span>)</span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Istogramma dei campioni dal posterior</span></span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>plt.hist(samples[burnin:], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, density<span class="op">=</span><span class="va">True</span>, label<span class="op">=</span><span class="st">"MCMC Samples Distribution"</span>)</span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Curva della distribuzione posteriore analitica</span></span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a>plt.plot(x, stats.norm.pdf(x, mu_post, std_post), <span class="st">"C1"</span>, label<span class="op">=</span><span class="st">"Analytical Posterior Distribution"</span>)</span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb51-26"><a href="#cb51-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_metropolis_files/figure-html/cell-35-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="01_metropolis_files/figure-html/cell-37-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -2029,9 +2104,9 @@ Length: 15, dtype: Int64</code></pre>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-81" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:14:34.256099Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:14:34.201359Z&quot;}" data-execution_count="53">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-85" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:14:34.256099Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:14:34.201359Z&quot;}" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Last updated: Sat Jun 15 2024
 
@@ -2075,9 +2150,6 @@ Hastings, W. Keith. 1970. <span>«<span>Monte</span> <span>Carlo</span> sampling
 </div>
 <div id="ref-hoffman2014no" class="csl-entry" role="listitem">
 Hoffman, Matthew D, Andrew Gelman, et al. 2014. <span>«The No-U-Turn sampler: adaptively setting path lengths in Hamiltonian Monte Carlo.»</span> <em>Journal of Machine Learning Research</em> 15 (1): 1593–623.
-</div>
-<div id="ref-doingbayesian" class="csl-entry" role="listitem">
-Kruschke, John. 2014. <em>Doing Bayesian data analysis: <span>A</span> tutorial with <span>R</span>, JAGS, and <span>Stan</span></em>. Academic Press.
 </div>
 <div id="ref-metropolist_etal_1953" class="csl-entry" role="listitem">
 Metropolis, Nicholas, Arianna W. Rosenbluth, Marshall N. Rosenbluth, Augusta H. Teller, e Edward Teller. 1953. <span>«Equation of state calculations by fast computing machines»</span>. <em>The Journal of Chemical Physics</em> 21 (6): 1087–92.
