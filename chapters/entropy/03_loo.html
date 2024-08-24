@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 78&nbsp; Confronto di modelli</title>
+<title>Data Science per Psicologi - 76&nbsp; Validazione Incrociata Leave-One-Out</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,27 +55,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -84,8 +64,8 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" rel="next">
-<link href="../../chapters/cognitive_models/01_rescorla_wagner.html" rel="prev">
+<link href="../../chapters/entropy/04_cognitive_modeling.html" rel="next">
+<link href="../../chapters/entropy/02_kl.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -126,6 +106,35 @@ div.csl-indent {
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -138,7 +147,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/introduction_cognitive_models.html">Modelli cognitivi</a></li><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/02_cog_mod_comp.html"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/03_loo.html"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -435,7 +444,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
- <span class="menu-text">Inferenza bayesiana</span></a>
+ <span class="menu-text">Inferenza</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -601,7 +610,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
- <span class="menu-text">Modelli lineari</span></a>
+ <span class="menu-text">Regressione</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -681,8 +690,14 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/12_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  <a href="../../chapters/linear_models/12_ate_att_atu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/13_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -705,50 +720,50 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
  <span class="menu-text">Entropia</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/introduction_entropy.html" class="sidebar-item-text sidebar-link">
@@ -758,54 +773,66 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  <a href="../../chapters/entropy/03_loo.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/entropy/04_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+  <a href="../../chapters/entropy/04_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/05_inductive_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
- <span class="menu-text">Modelli cognitivi</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
+ <span class="menu-text">Dinamiche</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/dynamic_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduzione</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  <a href="../../chapters/dynamic_models/01_canoeing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/02_cog_mod_comp.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></span></a>
+  <a href="../../chapters/dynamic_models/02_change_across_time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/03_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
       </ul>
@@ -813,7 +840,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
- <span class="menu-text">Inferenza frequentista</span></a>
+ <span class="menu-text">Frequentismo</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -828,25 +855,25 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -854,7 +881,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
- <span class="menu-text">Crisi della replicazione</span></a>
+ <span class="menu-text">Crisi</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -869,37 +896,37 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1023,32 +1050,38 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a47_first_order_markov.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Processo di Markov di primo ordine</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a51_r_squared.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a55_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
@@ -1063,43 +1096,43 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_causality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Regressione multipla</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_entropia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_replication_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">^</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -1116,23 +1149,30 @@ div.csl-indent {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">78.1</span> Introduzione</a></li>
-  <li><a href="#modello-process" id="toc-modello-process" class="nav-link" data-scroll-target="#modello-process"><span class="header-section-number">78.2</span> Modello “Process”</a></li>
-  <li><a href="#modello-simpler" id="toc-modello-simpler" class="nav-link" data-scroll-target="#modello-simpler"><span class="header-section-number">78.3</span> Modello “Simpler”</a></li>
-  <li><a href="#simulazione-dei-dati" id="toc-simulazione-dei-dati" class="nav-link" data-scroll-target="#simulazione-dei-dati"><span class="header-section-number">78.4</span> Simulazione dei Dati</a></li>
-  <li><a href="#campionamento" id="toc-campionamento" class="nav-link" data-scroll-target="#campionamento"><span class="header-section-number">78.5</span> Campionamento</a></li>
-  <li><a href="#confronto-dei-modelli" id="toc-confronto-dei-modelli" class="nav-link" data-scroll-target="#confronto-dei-modelli"><span class="header-section-number">78.6</span> Confronto dei Modelli</a></li>
-  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">78.7</span> Considerazioni Conclusive</a></li>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#il-problema-del-sovra-adattamento" id="toc-il-problema-del-sovra-adattamento" class="nav-link" data-scroll-target="#il-problema-del-sovra-adattamento"><span class="header-section-number">76.1</span> Il Problema del Sovra-adattamento</a>
+  <ul class="collapse">
+  <li><a href="#perché-il-sovra-adattamento-è-un-problema" id="toc-perché-il-sovra-adattamento-è-un-problema" class="nav-link" data-scroll-target="#perché-il-sovra-adattamento-è-un-problema"><span class="header-section-number">76.1.1</span> Perché il Sovra-adattamento è un Problema?</a></li>
+  <li><a href="#tecniche-di-validazione" id="toc-tecniche-di-validazione" class="nav-link" data-scroll-target="#tecniche-di-validazione"><span class="header-section-number">76.1.2</span> Tecniche di Validazione</a></li>
+  <li><a href="#validazione-incrociata-cross-validation" id="toc-validazione-incrociata-cross-validation" class="nav-link" data-scroll-target="#validazione-incrociata-cross-validation"><span class="header-section-number">76.1.3</span> Validazione Incrociata (Cross-Validation)</a></li>
+  </ul></li>
+  <li><a href="#applicazioni-pratiche" id="toc-applicazioni-pratiche" class="nav-link" data-scroll-target="#applicazioni-pratiche"><span class="header-section-number">76.2</span> Applicazioni Pratiche</a></li>
+  <li><a href="#valori-diagnostici-pareto-k" id="toc-valori-diagnostici-pareto-k" class="nav-link" data-scroll-target="#valori-diagnostici-pareto-k"><span class="header-section-number">76.3</span> Valori Diagnostici Pareto <span class="math inline">\(k\)</span></a></li>
+  <li><a href="#il-ruolo-dellelpd-nella-valutazione-comparativa-dei-modelli" id="toc-il-ruolo-dellelpd-nella-valutazione-comparativa-dei-modelli" class="nav-link" data-scroll-target="#il-ruolo-dellelpd-nella-valutazione-comparativa-dei-modelli"><span class="header-section-number">76.4</span> Il Ruolo dell’ELPD nella Valutazione Comparativa dei Modelli</a>
+  <ul class="collapse">
+  <li><a href="#simulazione" id="toc-simulazione" class="nav-link" data-scroll-target="#simulazione"><span class="header-section-number">76.4.1</span> Simulazione</a></li>
+  </ul></li>
+  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">76.5</span> Riflessioni Conclusive</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/02_cog_mod_comp.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/entropy/03_loo.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/introduction_cognitive_models.html">Modelli cognitivi</a></li><li class="breadcrumb-item"><a href="../../chapters/cognitive_models/02_cog_mod_comp.html"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/03_loo.html"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-cog-models-comparison" class="quarto-section-identifier"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Confronto di modelli</span></span></h1>
+<h1 class="title"><span id="sec-loo" class="quarto-section-identifier"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></h1>
 </div>
 
 
@@ -1151,328 +1191,161 @@ div.csl-indent {
 
 <p><strong>Prerequisiti</strong></p>
 <p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Comprendere il concetto di validazione incrociata Leave-One-Out.</li>
+<li>Calcolare LOO-CV usando ArviZ.</li>
+<li>Usare LOO-CV nel confronto tra modelli.</li>
+<li>Comprendere e calcolare i valori diagnostici Pareto <span class="math inline">\(k\)</span>.</li>
+</ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Third-party imports</span></span>
+<div id="1f7e8373-5106-49b7-8158-9333e9f8a2e7" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"cog_mod_comp"</span>))</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pingouin <span class="im">as</span> pg</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"subj_prop"</span>))</span>
+<div id="c3bb4024-72a5-4b17-badf-153ef30671bd" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"stan_loo"</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduzione" class="level2" data-number="78.1">
-<h2 data-number="78.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">78.1</span> Introduzione</h2>
-<p>Nell’analisi dei dati psicologici, l’approccio tradizionale si basa spesso su confronti descrittivi, come la differenza tra le medie di due condizioni sperimentali. Sebbene questo approccio possa fornire informazioni utili, è limitato nella sua capacità di rivelare la complessità dei processi cognitivi sottostanti. Un’analisi che si fermi a questo livello rischia di non cogliere la ricchezza dei meccanismi psicologici che realmente generano i dati osservati. Come sottolineato da McElreath (2020) nel suo lavoro, un vero avanzamento nella comprensione dei fenomeni psicologici richiede l’adozione di modelli che siano esplicitamente formulati in termini di processi generativi ipotizzati.</p>
-<p>Un modello generativo non si limita a descrivere i dati; piuttosto, esso riflette un’ipotesi teorica su come i dati vengano effettivamente prodotti. Questo tipo di modellizzazione consente di testare ipotesi teoriche complesse e di confrontare l’adeguatezza di diversi modelli esplicativi. In questo modo, la ricerca non solo quantifica differenze osservate, ma esplora le cause e i processi che le determinano, permettendo un’interpretazione più profonda e teoricamente informata dei risultati.</p>
-<p>In questo tutorial, vengono confrontati due approcci modellistici diversi: un modello semplice e descrittivo, e un modello processuale più complesso, che incorpora una teoria esplicita del processo cognitivo sottostante. Il primo modello rappresenta un approccio tradizionale, che si limita a distinguere tra due condizioni senza tener conto del meccanismo generativo che potrebbe differenziarle. Il secondo modello, invece, è costruito su un’ipotesi teorica che descrive come il processo cognitivo operi in ciascuna delle due condizioni. Attraverso questo confronto, mostreremo come un modello che incorpora esplicitamente il processo cognitivo possa fornire un’interpretazione più ricca e accurata dei dati, rispetto a un modello che si limita a descrivere differenze superficiali.</p>
-<p>L’obiettivo di questo capitolo è quindi dimostrare l’importanza di adottare modelli generativi nella ricerca psicologica, evidenziando come essi possano superare le limitazioni degli approcci descrittivi tradizionali e fornire intuizioni più profonde sul funzionamento dei processi cognitivi.</p>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>La capacità di generalizzazione di un modello statistico, ossia la sua abilità di fare previsioni accurate su nuovi dati, è un aspetto cruciale nella modellazione statistica. Per valutare quantitativamente questa capacità, sono state sviluppate diverse metriche. Tra queste, la Densità Predittiva Logaritmica Attesa (Expected Log Predictive Density, ELPD) è particolarmente apprezzata per la sua efficacia. L’ELPD fornisce una stima diretta della capacità di un modello di prevedere nuovi dati, rendendola un indicatore fondamentale della sua capacità di generalizzazione.</p>
+<p>Uno dei metodi più efficaci e comunemente utilizzati per stimare l’ELPD è la validazione incrociata Leave-One-Out (LOO-CV), come discusso nella sezione <a href="02_kl.html" class="quarto-xref"><span>Capitolo 75</span></a>. Questo metodo simula uno scenario di previsione su nuovi dati escludendo sistematicamente ogni singola osservazione dal set di addestramento e valutando la capacità del modello di predire l’osservazione esclusa. In questo capitolo, approfondiremo la metodologia LOO-CV e mostreremo come essa venga applicata per valutare e selezionare modelli statistici in base alla loro capacità di generalizzare.</p>
+<p>Negli esempio successivi, mostreremo come applicare questi concetti utilizzando <code>cmdstan</code>. Questo approccio pratico illustrerà l’intero processo di selezione e valutazione del modello, fornendo un metodo robusto per scegliere il modello più appropriato, tenendo conto sia della sua capacità predittiva che della sua adeguatezza ai dati osservati.</p>
 </section>
-<section id="modello-process" class="level2" data-number="78.2">
-<h2 data-number="78.2" class="anchored" data-anchor-id="modello-process"><span class="header-section-number">78.2</span> Modello “Process”</h2>
-<p>Il modello “process” ipotizza un meccanismo cognitivo in cui l’accuratezza delle risposte di un soggetto in un compito può variare in base a due condizioni sperimentali: una condizione di “alto apprendimento” e una condizione di “basso apprendimento”. L’idea di base è che nella condizione di alto apprendimento, il soggetto non solo apprende dalle risposte precedenti, migliorando gradualmente la sua accuratezza, ma subisce anche un decadimento di tale apprendimento nel tempo. Nella condizione di basso apprendimento, invece, il soggetto non migliora nel tempo, mantenendo un livello costante di accuratezza.</p>
-<p>Questa dinamica riflette un processo di apprendimento che è modulato da due forze opposte: un <em>tasso di apprendimento</em> che permette al soggetto di migliorare la sua performance in base agli errori commessi, e un <em>tasso di decadimento</em> che riduce gradualmente l’effetto dell’apprendimento nel tempo. Questo modello è più complesso rispetto a un modello descrittivo semplice perché tenta di catturare il processo dinamico di come l’accuratezza evolve durante il compito, piuttosto che limitarsi a descrivere una differenza fissa tra due condizioni.</p>
-<p><strong>Implementazione del Modello</strong></p>
+<section id="il-problema-del-sovra-adattamento" class="level2" data-number="76.1">
+<h2 data-number="76.1" class="anchored" data-anchor-id="il-problema-del-sovra-adattamento"><span class="header-section-number">76.1</span> Il Problema del Sovra-adattamento</h2>
+<p>Uno dei problemi più comuni che emerge durante la costruzione di un modello statistico è il sovra-adattamento, o overfitting. Questo fenomeno si verifica quando un modello si adatta eccessivamente ai dati di addestramento, catturando non solo le tendenze generali, ma anche le fluttuazioni casuali e gli errori presenti nei dati.</p>
+<section id="perché-il-sovra-adattamento-è-un-problema" class="level3" data-number="76.1.1">
+<h3 data-number="76.1.1" class="anchored" data-anchor-id="perché-il-sovra-adattamento-è-un-problema"><span class="header-section-number">76.1.1</span> Perché il Sovra-adattamento è un Problema?</h3>
+<p>Un modello sovra-adattato può mostrare prestazioni eccellenti sui dati di addestramento, ma tende a fallire quando applicato a nuovi dati. In altre parole, il modello “impara a memoria” i dati di addestramento piuttosto che apprendere le regole generali che li governano. Questo compromette la sua capacità di generalizzazione, rendendolo inaffidabile per previsioni future.</p>
+<p>Per evitare il sovra-adattamento, è necessario bilanciare la capacità del modello di adattarsi ai dati di addestramento con la sua capacità di generalizzare a nuovi dati. Questo equilibrio è noto come il “trade-off” tra bias e varianza.</p>
+</section>
+<section id="tecniche-di-validazione" class="level3" data-number="76.1.2">
+<h3 data-number="76.1.2" class="anchored" data-anchor-id="tecniche-di-validazione"><span class="header-section-number">76.1.2</span> Tecniche di Validazione</h3>
+<p>Per prevenire il sovra-adattamento, si utilizzano tecniche di validazione, che permettono di valutare quanto bene un modello si comporterà su dati non visti. Una delle tecniche più importanti in questo contesto è la <em>validazione incrociata</em> (cross-validation).</p>
+</section>
+<section id="validazione-incrociata-cross-validation" class="level3" data-number="76.1.3">
+<h3 data-number="76.1.3" class="anchored" data-anchor-id="validazione-incrociata-cross-validation"><span class="header-section-number">76.1.3</span> Validazione Incrociata (Cross-Validation)</h3>
+<p>La validazione incrociata è una metodologia che consente di testare il modello su dati che non ha mai visto durante l’addestramento. Esistono diverse varianti di validazione incrociata, tra cui:</p>
 <ol type="1">
-<li><strong>Dati di Input</strong>
+<li><p><strong>K-fold cross-validation</strong>:</p>
 <ul>
-<li><strong>N:</strong> Il numero totale di prove (trials) a cui il soggetto è sottoposto.</li>
-<li><strong>y:</strong> Un array binario (0 o 1) che rappresenta l’accuratezza di ciascuna risposta. Un valore di <code>1</code> indica una risposta corretta, mentre un valore di <code>0</code> indica una risposta errata.</li>
-<li><strong>condition:</strong> Un array binario che indica la condizione sperimentale per ciascuna prova: <code>1</code> se il soggetto è nella condizione di “alto apprendimento” e <code>0</code> se è nella condizione di “basso apprendimento”.</li>
-</ul></li>
-<li><strong>Parametri del Modello</strong>
+<li>I dati vengono divisi in K gruppi (o “fold”).</li>
+<li>Si addestra il modello su K-1 gruppi e si testa sull’ultimo gruppo.</li>
+<li>Questo processo viene ripetuto K volte, utilizzando ogni volta un gruppo diverso per il test.</li>
+<li>I risultati vengono poi mediati per ottenere una stima complessiva della performance del modello.</li>
+</ul>
+<p>Ad esempio, con K = 5, i dati vengono suddivisi in 5 parti; il modello viene addestrato su 4 parti e testato sulla quinta, ripetendo il processo 5 volte.</p></li>
+<li><p><strong>Leave-one-out cross-validation (LOO-CV)</strong>:</p>
 <ul>
-<li><strong>theta_initial:</strong> Rappresenta l’accuratezza iniziale del soggetto, prima che qualsiasi apprendimento o decadimento abbia avuto luogo.</li>
-<li><strong>learning_rate:</strong> Rappresenta il tasso di apprendimento, ovvero quanto rapidamente il soggetto migliora in risposta agli errori precedenti.</li>
-<li><strong>decay_rate:</strong> Rappresenta il tasso di decadimento, ovvero quanto velocemente l’effetto dell’apprendimento diminuisce nel tempo.</li>
-</ul></li>
-<li><strong>Distribuzioni A Priori</strong>
-<ul>
-<li>I parametri <strong>theta_initial</strong>, <strong>learning_rate</strong> e <strong>decay_rate</strong> sono tutti modellati come variabili aleatorie con distribuzioni beta. La distribuzione beta è spesso utilizzata per modellare probabilità, poiché è limitata tra 0 e 1 e può assumere varie forme in base ai parametri scelti.</li>
-</ul></li>
-<li><strong>Implementazione del Processo Cognitivo</strong>
-<ul>
-<li>Il modello si sviluppa in modo iterativo per ciascuna prova, a partire dalla seconda (la prima prova è gestita separatamente perché non ha una risposta precedente da cui apprendere).</li>
-<li>Per ogni prova successiva:
-<ul>
-<li>Viene calcolata la probabilità di risposta corretta (<code>p</code>) in base alla condizione corrente.</li>
-<li>Se la condizione è di “alto apprendimento” (<code>condition[n] == 1</code>), la probabilità di risposta corretta viene aggiornata in base a una combinazione di decadimento e apprendimento:
-<ul>
-<li>La parte <strong>(1 - decay_rate) * theta_initial</strong> riduce l’influenza dell’accuratezza iniziale, simulando il decadimento.</li>
-<li>La parte <strong>learning_rate * (1 - y[n - 1])</strong> aumenta la probabilità di una risposta corretta se la prova precedente è stata errata, simulando l’apprendimento dagli errori.</li>
-</ul></li>
-<li>La funzione <strong>fmin</strong> e <strong>fmax</strong> sono utilizzate per assicurarsi che la probabilità <code>p</code> rimanga all’interno dell’intervallo [0, 1].</li>
-</ul></li>
-<li>Se la condizione è di “basso apprendimento” (<code>condition[n] == 0</code>), la probabilità di risposta corretta rimane invariata a <strong>theta_initial</strong>.</li>
-</ul></li>
-<li><strong>Generazione dei Dati Simulati</strong>
-<ul>
-<li>Nella sezione <code>generated quantities</code>, il modello genera dati simulati (<code>y_rep</code>) e calcola la log-verosimiglianza (<code>log_lik</code>) per ciascuna prova. Questo è utile per confrontare la bontà di adattamento del modello rispetto ai dati osservati.</li>
-<li>Per ogni prova, viene calcolata la probabilità di una risposta corretta e quindi viene generato un valore simulato usando la funzione <strong>bernoulli_rng</strong>. Il valore di log-verosimiglianza viene calcolato utilizzando <strong>bernoulli_lpmf</strong>.</li>
-</ul></li>
+<li>È una forma estrema di K-fold in cui K è pari al numero totale di osservazioni.</li>
+<li>Ogni volta, si esclude una singola osservazione dal set di addestramento e si utilizza il modello per prevedere quell’osservazione.</li>
+<li>Questo processo viene ripetuto per ogni osservazione nel dataset.</li>
+</ul>
+<p>Il LOO-CV è particolarmente utile per ottenere una stima precisa della capacità del modello di generalizzare, ma può essere computazionalmente intensivo.</p></li>
 </ol>
-<p>Il modello “process” cerca di rappresentare un meccanismo cognitivo complesso, in cui l’accuratezza delle risposte varia dinamicamente in base a un processo di apprendimento e decadimento. Questo approccio permette di testare ipotesi più articolate sui dati, andando oltre una semplice descrizione delle differenze tra condizioni e cercando di catturare la struttura cognitiva che guida il comportamento osservato.</p>
-<div id="cell-6" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"cognitive_process_model.stan"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>process_model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(process_model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Queste tecniche di validazione forniscono una misura accurata della capacità di un modello di generalizzare su nuovi dati.</p>
+</section>
+</section>
+<section id="applicazioni-pratiche" class="level2" data-number="76.2">
+<h2 data-number="76.2" class="anchored" data-anchor-id="applicazioni-pratiche"><span class="header-section-number">76.2</span> Applicazioni Pratiche</h2>
+<p>Nel contesto dell’inferenza bayesiana, la selezione del modello si basa principalmente sul confronto delle stime dell’ELPD ottenute tramite la Leave-One-Out Cross-Validation (LOO-CV). Questo processo può essere implementato in modo efficiente utilizzando le funzioni del pacchetto ArviZ.</p>
+<p>È importante notare che l’affidabilità di questi confronti dipende dalla qualità dei dati e dall’adeguatezza dei modelli. Per ottenere valutazioni accurate, è essenziale che i modelli si adattino in modo appropriato ai dati disponibili. Un aspetto cruciale di questa valutazione è rappresentato dal calcolo dei valori diagnostici di Pareto <span class="math inline">\(k\)</span>.</p>
+</section>
+<section id="valori-diagnostici-pareto-k" class="level2" data-number="76.3">
+<h2 data-number="76.3" class="anchored" data-anchor-id="valori-diagnostici-pareto-k"><span class="header-section-number">76.3</span> Valori Diagnostici Pareto <span class="math inline">\(k\)</span></h2>
+<p>I valori diagnostici di Pareto <span class="math inline">\(k\)</span> sono fondamentali per valutare la stabilità e l’affidabilità delle stime ottenute tramite la Leave-One-Out Cross-Validation (LOO-CV). In particolare, essi misurano l’influenza di singoli punti dati sulle stime del modello. Valori di <span class="math inline">\(k\)</span> elevati possono indicare che alcune osservazioni hanno un’influenza eccessiva, il che può compromettere la validità delle stime fornite dalla LOO-CV.</p>
+<p>Il valore di Pareto <span class="math inline">\(k\)</span> fornisce un’indicazione dell’affidabilità della stima:</p>
+<ul>
+<li><span class="math inline">\(k &lt; 0.5\)</span>: L’approssimazione è eccellente e l’errore nella stima dell’ELPD è trascurabile.</li>
+<li><span class="math inline">\(0.5 \leq k &lt; 0.7\)</span>: L’approssimazione è accettabile, ma potrebbe essere utile esaminare più attentamente il modello e i dati.</li>
+<li><span class="math inline">\(0.7 \leq k &lt; 1\)</span>: L’approssimazione diventa mediocre, rendendo i risultati della LOO-CV meno affidabili e potenzialmente inadeguati.</li>
+<li><span class="math inline">\(k \geq 1\)</span>: Un valore così elevato segnala un’approssimazione inadeguata, suggerendo che i risultati ottenuti potrebbero essere significativamente distorti, evidenziando problemi nel modello o nella metodologia.</li>
+</ul>
+<p>Il valore di Pareto <span class="math inline">\(k\)</span> si basa sulla distribuzione di Pareto per valutare le discrepanze nelle log-verosimiglianze, cioè le differenze tra la log-verosimiglianza calcolata escludendo un dato e quella ottenuta utilizzando l’intero dataset. Valori alti di <span class="math inline">\(k\)</span> indicano code più pesanti del previsto nella distribuzione delle discrepanze, suggerendo che l’approssimazione potrebbe non essere accurata.</p>
+<p>In sintesi, i valori di Pareto <span class="math inline">\(k\)</span> forniscono un indicatore chiave dell’accuratezza dell’approssimazione fornita dalla LOO-CV e aiutano a identificare eventuali problemi nel modello statistico o nella metodologia utilizzata.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 76.1</strong></span> Per fare un esempio relativo al calcolo dei valore di Pareto <span class="math inline">\(k\)</span>, generiamo un set di dati artificiali seguendo una distribuzione normale con una media di 5 e una deviazione standard di 2. Scegliamo una dimensione del campione di 100.</p>
+<div id="f6ab5d6a-14ec-4c81-9fa5-bc56400f99e6" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(loc<span class="op">=</span><span class="dv">5</span>, scale<span class="op">=</span><span class="dv">2</span>, size<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[<span class="dv">0</span>:<span class="dv">10</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 3.55144618  7.24614848  3.17600124 10.48005661  0.24404946  3.9483861
+  3.47263944  1.50310884  4.7620044   6.45235628]</code></pre>
+</div>
+</div>
+<p>Inseriamo i dati in un dizionario nel formato atteso da Stan.</p>
+<div id="cell-8" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(y), <span class="st">"y"</span>: y}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo ai dati un modello normale stimando la media (<code>mu</code>) e la deviazione standard (<code>sigma</code>) del modello attraverso il campionamento MCMC.</p>
+<div id="cell-10" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">'stan'</span>, <span class="st">'gaussian-mod-log-lik.stan'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>data {
-  int&lt;lower=0&gt; N; // number of trials
-  array[N] int&lt;lower=0, upper=1&gt; y; // accuracy (0 or 1)
-  array[N] int&lt;lower=0, upper=1&gt; condition; // 1 if high learning, 0 if low learning
+  int&lt;lower=0&gt; N;
+  vector[N] y;
 }
 parameters {
-  real&lt;lower=0, upper=1&gt; theta_initial; // initial accuracy
-  real&lt;lower=0, upper=1&gt; learning_rate; // learning rate
-  real&lt;lower=0, upper=1&gt; decay_rate; // decay rate
+  real mu;
+  real&lt;lower=0&gt; sigma;
 }
 model {
   // Priors
-  theta_initial ~ beta(2, 2);
-  learning_rate ~ beta(2, 2);
-  decay_rate ~ beta(2, 2);
+  mu ~ normal(5, 2);         // Prior for mu, centered around the known mean with some uncertainty
+  sigma ~ normal(0, 2);      // Half-normal prior for sigma (implying positive values)
   
-  for (n in 2 : N) {
-    real p = condition[n]
-             * fmin(fmax((1 - decay_rate) * theta_initial
-                         + learning_rate * (1 - y[n - 1]), 0),
-                    1)
-             + (1 - condition[n]) * theta_initial;
-    y[n] ~ bernoulli(p);
-  }
+  // Likelihood
+  y ~ normal(mu, sigma);
 }
 generated quantities {
-  array[N] int&lt;lower=0, upper=1&gt; y_rep;
-  array[N] real log_lik;
-  
-  y_rep[1] = bernoulli_rng(theta_initial); // First trial based on initial theta
-  log_lik[1] = bernoulli_lpmf(y[1] | theta_initial);
-  
-  for (n in 2 : N) {
-    real p = condition[n]
-             * fmin(fmax((1 - decay_rate) * theta_initial
-                         + learning_rate * (1 - y[n - 1]), 0),
-                    1)
-             + (1 - condition[n]) * theta_initial;
-    
-    y_rep[n] = bernoulli_rng(p);
-    log_lik[n] = bernoulli_lpmf(y[n] | p);
-    
-    // Optional diagnostic print statement
-    print("n: ", n, " p: ", p, " y_rep[n]: ", y_rep[n]);
-  }
+  vector[N] log_lik;
+  for (n in 1:N)
+    log_lik[n] = normal_lpdf(y[n] | mu, sigma);
 }
 </code></pre>
 </div>
 </div>
-</section>
-<section id="modello-simpler" class="level2" data-number="78.3">
-<h2 data-number="78.3" class="anchored" data-anchor-id="modello-simpler"><span class="header-section-number">78.3</span> Modello “Simpler”</h2>
-<p>Il modello “simpler” è un approccio più basilare per modellare i dati, in cui si assume che l’accuratezza delle risposte in ciascuna prova dipenda esclusivamente dalla condizione sperimentale (alta o bassa) in cui si trova il soggetto. A differenza del modello “process”, che tiene conto di come l’accuratezza possa evolvere dinamicamente in funzione dell’apprendimento e del decadimento, il modello “simpler” presuppone che l’accuratezza sia costante all’interno di ciascuna condizione e non cambi nel tempo.</p>
-<p>In altre parole, il modello “simpler” cerca di cogliere solo la differenza di accuratezza tra due condizioni, senza considerare l’evoluzione della performance nel corso delle prove. Questo approccio è più limitato e descrittivo, e non tenta di spiegare il processo sottostante che potrebbe dare origine ai dati osservati.</p>
-<p><strong>Implementazione del Modello</strong></p>
-<ol type="1">
-<li><strong>Dati di Input</strong>
-<ul>
-<li><strong>N:</strong> Il numero totale di prove (trials) a cui il soggetto è sottoposto.</li>
-<li><strong>y:</strong> Un array binario (0 o 1) che rappresenta l’accuratezza di ciascuna risposta. Un valore di <code>1</code> indica una risposta corretta, mentre un valore di <code>0</code> indica una risposta errata.</li>
-<li><strong>condition:</strong> Un array binario che indica la condizione sperimentale per ciascuna prova: <code>1</code> se il soggetto è nella condizione di “alto apprendimento” e <code>0</code> se è nella condizione di “basso apprendimento”.</li>
-</ul></li>
-<li><strong>Parametri del Modello</strong>
-<ul>
-<li><strong>theta_high:</strong> Rappresenta l’accuratezza nelle prove in cui il soggetto è nella condizione di “alto apprendimento”.</li>
-<li><strong>theta_low:</strong> Rappresenta l’accuratezza nelle prove in cui il soggetto è nella condizione di “basso apprendimento”.</li>
-</ul></li>
-<li><strong>Distribuzioni A Priori</strong>
-<ul>
-<li>I parametri <strong>theta_high</strong> e <strong>theta_low</strong> sono modellati come variabili aleatorie con distribuzioni beta. Come nel modello “process”, la distribuzione beta è scelta perché è limitata tra 0 e 1, rendendola adatta per modellare probabilità.</li>
-</ul></li>
-<li><strong>Implementazione del Modello</strong>
-<ul>
-<li>Il modello assume che per ogni prova ci sia una probabilità <code>p</code> di ottenere una risposta corretta, che dipende dalla condizione in cui si trova il soggetto.</li>
-<li>Se il soggetto è nella condizione di “alto apprendimento” (<code>condition[n] == 1</code>), la probabilità <code>p</code> è semplicemente uguale a <strong>theta_high</strong>.</li>
-<li>Se il soggetto è nella condizione di “basso apprendimento” (<code>condition[n] == 0</code>), la probabilità <code>p</code> è uguale a <strong>theta_low</strong>.</li>
-<li>In pratica, per ogni prova, il modello stima la probabilità di risposta corretta in base alla condizione sperimentale senza considerare alcuna evoluzione dinamica della performance.</li>
-</ul></li>
-<li><strong>Generazione dei Dati Simulati</strong>
-<ul>
-<li>Nella sezione <code>generated quantities</code>, il modello genera dati simulati (<code>y_rep</code>) e calcola la log-verosimiglianza (<code>log_lik</code>) per ciascuna prova.</li>
-<li>Per ogni prova, viene calcolata la probabilità di una risposta corretta e quindi viene generato un valore simulato usando la funzione <strong>bernoulli_rng</strong>. Il valore di log-verosimiglianza viene calcolato utilizzando <strong>bernoulli_lpmf</strong>.</li>
-</ul></li>
-</ol>
-<p>Il modello “process” e il modello “simpler” differiscono in modo sostanziale nel modo in cui cercano di spiegare i dati:</p>
-<ol type="1">
-<li><strong>Dinamica dell’apprendimento vs.&nbsp;Accuratezza fissa:</strong>
-<ul>
-<li><strong>Process Model:</strong> Considera che l’accuratezza di un soggetto possa cambiare nel tempo in risposta agli errori commessi e a un processo di decadimento. Questo modello cattura la complessità del processo di apprendimento e come esso possa essere influenzato dalla condizione sperimentale.</li>
-<li><strong>Simpler Model:</strong> Assume che l’accuratezza sia fissa all’interno di ciascuna condizione e non cambi durante il compito. Questo modello non riesce a cogliere eventuali variazioni dinamiche della performance dovute all’apprendimento o al decadimento.</li>
-</ul></li>
-<li><strong>Complessità del Meccanismo Cognitivo:</strong>
-<ul>
-<li><strong>Process Model:</strong> Fornisce una rappresentazione più dettagliata e realistica del meccanismo cognitivo che potrebbe guidare la performance del soggetto, tenendo conto dell’evoluzione della performance in funzione delle esperienze precedenti (apprendimento).</li>
-<li><strong>Simpler Model:</strong> Offre una descrizione più statica e meno informativa, limitandosi a descrivere le differenze medie tra due condizioni senza indagare il processo che potrebbe generare tali differenze.</li>
-</ul></li>
-<li><strong>Capacità di Predizione:</strong>
-<ul>
-<li><strong>Process Model:</strong> In situazioni in cui l’apprendimento o il decadimento giocano un ruolo significativo, il modello “process” dovrebbe teoricamente offrire una migliore predizione dei dati rispetto al modello “simpler”.</li>
-<li><strong>Simpler Model:</strong> Questo modello può fallire nel catturare adeguatamente la struttura dei dati quando esistono dinamiche di apprendimento o cambiamento nel tempo, risultando in una peggiore capacità predittiva rispetto al modello “process”.</li>
-</ul></li>
-</ol>
-<p>In sintesi, il modello “simpler” non è in grado di catturare i cambiamenti dinamici nell’accuratezza che possono emergere in risposta al compito, limitandosi a una descrizione media delle differenze tra condizioni. Di conseguenza, nei casi in cui i dati sono generati secondo un processo di apprendimento o decadimento, il modello “simpler” potrebbe non adattarsi altrettanto bene quanto il modello “process”.</p>
-<div id="cell-8" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stan_simpler_file <span class="op">=</span> os.path.join(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">"stan"</span>, <span class="st">"cognitive_simpler_model.stan"</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>simpler_model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_simpler_file)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(simpler_model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>data {
-  int&lt;lower=0&gt; N; // number of trials
-  array[N] int&lt;lower=0, upper=1&gt; y; // accuracy (0 or 1)
-  array[N] int&lt;lower=0, upper=1&gt; condition; // 1 if high learning, 0 if low learning
-}
-parameters {
-  real&lt;lower=0, upper=1&gt; theta_high; // accuracy in condition 1
-  real&lt;lower=0, upper=1&gt; theta_low; // accuracy in condition 0
-}
-model {
-  // Priors
-  theta_high ~ beta(2, 2);
-  theta_low ~ beta(2, 2);
-  
-  for (n in 1 : N) {
-    real p = condition[n] * theta_high + (1 - condition[n]) * theta_low;
-    y[n] ~ bernoulli(p);
-  }
-}
-generated quantities {
-  array[N] int&lt;lower=0, upper=1&gt; y_rep;
-  array[N] real log_lik;
-  
-  for (n in 1 : N) {
-    real p = condition[n] * theta_high + (1 - condition[n]) * theta_low;
-    y_rep[n] = bernoulli_rng(p);
-    log_lik[n] = bernoulli_lpmf(y[n] | p);
-  }
-}
-</code></pre>
-</div>
-</div>
-</section>
-<section id="simulazione-dei-dati" class="level2" data-number="78.4">
-<h2 data-number="78.4" class="anchored" data-anchor-id="simulazione-dei-dati"><span class="header-section-number">78.4</span> Simulazione dei Dati</h2>
-<p>I dati sono stati simulati in base al meccanismo generativo ipotizzato dal modello “process”. Questo modello assume che l’accuratezza delle risposte non sia costante nel tempo, ma che evolva dinamicamente in funzione dell’apprendimento e del decadimento. In altre parole, il modello “process” riflette un processo cognitivo in cui i soggetti possono migliorare la loro performance attraverso l’apprendimento, o al contrario, possono mostrare un calo di prestazioni a causa della fatica o della perdita di concentrazione.</p>
-<p>Nel processo di simulazione, quindi, i dati generati riflettono queste dinamiche: l’accuratezza non è semplicemente una funzione statica delle condizioni sperimentali, ma cambia in risposta alle prove precedenti. Questo è in contrasto con il modello “simpler”, che non tiene conto di queste dinamiche e assume che l’accuratezza sia fissa e immutabile all’interno di ciascuna condizione sperimentale. Di conseguenza, i dati simulati seguono il processo cognitivo ipotizzato dal modello “process”, che si basa su un’accuratezza variabile e influenzata dall’apprendimento e dal decadimento, fornendo una base per confrontare l’adattamento dei due modelli ai dati.</p>
-<div id="cell-10" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters for data generation</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">5000</span>  <span class="co"># Number of trials</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>condition <span class="op">=</span> np.random.binomial(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="fl">0.5</span>, N</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># 50% chance of being in the high-learning condition</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>theta_initial <span class="op">=</span> <span class="fl">0.6</span>  <span class="co"># Initial accuracy</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>learning_rate_high <span class="op">=</span> (</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span>  <span class="co"># Higher learning rate in the process model for high-learning condition</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>learning_rate_low <span class="op">=</span> (</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>  <span class="co"># Lower learning rate in the process model for low-learning condition</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>decay_rate_high <span class="op">=</span> (</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.05</span>  <span class="co"># Lower decay rate in the process model for high-learning condition</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>decay_rate_low <span class="op">=</span> (</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.15</span>  <span class="co"># Higher decay rate in the process model for low-learning condition</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>accuracies <span class="op">=</span> np.zeros(N)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> theta_initial</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N):</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> condition[n] <span class="op">==</span> <span class="dv">1</span>:  <span class="co"># High-learning condition</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Enhanced learning effect when previous trial was incorrect</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> decay_rate_high) <span class="op">*</span> value <span class="op">+</span> learning_rate_high <span class="op">*</span> (</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                <span class="dv">1</span> <span class="op">-</span> accuracies[n <span class="op">-</span> <span class="dv">1</span>]</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Ensure that value remains within [0, 1]</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        value <span class="op">=</span> np.clip(value, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        accuracies[n] <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, value)</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:  <span class="co"># Low-learning condition</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> n <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Weaker learning effect and higher decay rate</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> decay_rate_low) <span class="op">*</span> value <span class="op">+</span> learning_rate_low <span class="op">*</span> (</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                <span class="dv">1</span> <span class="op">-</span> accuracies[n <span class="op">-</span> <span class="dv">1</span>]</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Ensure that value remains within [0, 1]</span></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        value <span class="op">=</span> np.clip(value, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        accuracies[n] <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, value)</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for Stan</span></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: N,</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: accuracies.astype(<span class="bu">int</span>).tolist(),</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"condition"</span>: condition.astype(<span class="bu">int</span>).tolist(),</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="campionamento" class="level2" data-number="78.5">
-<h2 data-number="78.5" class="anchored" data-anchor-id="campionamento"><span class="header-section-number">78.5</span> Campionamento</h2>
-<p>Eseguiamo il campionamento per i due modelli.</p>
-<div id="cell-13" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_process <span class="op">=</span> process_model.sample(</span>
+<p>Eseguiamo il campionamento.</p>
+<div id="cell-12" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>07:54:25 - cmdstanpy - INFO - CmdStan start processing
-07:54:25 - cmdstanpy - INFO - Chain [1] start processing
-07:54:25 - cmdstanpy - INFO - Chain [2] start processing
-07:54:25 - cmdstanpy - INFO - Chain [3] start processing
-07:54:25 - cmdstanpy - INFO - Chain [4] start processing
-07:55:41 - cmdstanpy - INFO - Chain [1] done processing
-07:55:42 - cmdstanpy - INFO - Chain [3] done processing
-07:55:42 - cmdstanpy - INFO - Chain [4] done processing
-07:55:42 - cmdstanpy - INFO - Chain [2] done processing</code></pre>
 </div>
-</div>
-<div id="cell-14" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(fit_process, var_names<span class="op">=</span>(<span class="st">"learning_rate"</span>, <span class="st">"decay_rate"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02_cog_mod_comp_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-15" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit_process, var_names<span class="op">=</span>[<span class="st">"learning_rate"</span>, <span class="st">"decay_rate"</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<p>Esaminiamo le distribuzioni a posteriori.</p>
+<div id="cell-14" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span>[<span class="st">'mu'</span>, <span class="st">'sigma'</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 <div>
 
@@ -1494,27 +1367,27 @@ generated quantities {
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">learning_rate</td>
-<td>0.214</td>
-<td>0.015</td>
-<td>0.187</td>
-<td>0.241</td>
+<td data-quarto-table-cell-role="th">mu</td>
+<td>4.73</td>
+<td>0.21</td>
+<td>4.33</td>
+<td>5.12</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>4908.0</td>
-<td>5214.0</td>
+<td>6461.15</td>
+<td>5090.21</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">decay_rate</td>
-<td>0.009</td>
-<td>0.006</td>
-<td>0.000</td>
-<td>0.020</td>
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>2.12</td>
+<td>0.15</td>
+<td>1.84</td>
+<td>2.40</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>4692.0</td>
-<td>3553.0</td>
+<td>6389.72</td>
+<td>5247.38</td>
 <td>1.0</td>
 </tr>
 </tbody>
@@ -1524,107 +1397,436 @@ generated quantities {
 </div>
 </div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit_simpler <span class="op">=</span> simpler_model.sample(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>07:57:33 - cmdstanpy - INFO - CmdStan start processing
-07:57:33 - cmdstanpy - INFO - Chain [1] start processing
-07:57:33 - cmdstanpy - INFO - Chain [2] start processing
-07:57:33 - cmdstanpy - INFO - Chain [3] start processing
-07:57:33 - cmdstanpy - INFO - Chain [4] start processing
-07:57:44 - cmdstanpy - INFO - Chain [2] done processing
-07:57:44 - cmdstanpy - INFO - Chain [4] done processing
-07:57:44 - cmdstanpy - INFO - Chain [1] done processing
-07:57:45 - cmdstanpy - INFO - Chain [3] done processing</code></pre>
+<p>Convertiamo l’oggetto creato da cmdstanpy nella classe InferenceData richiesta da ArviZ:</p>
+<div id="cell-16" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit_az <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</section>
-<section id="confronto-dei-modelli" class="level2" data-number="78.6">
-<h2 data-number="78.6" class="anchored" data-anchor-id="confronto-dei-modelli"><span class="header-section-number">78.6</span> Confronto dei Modelli</h2>
-<p>Per confrontare i modelli, è necessario convertire l’oggetto <code>fit</code> in un formato compatibile con ArviZ.</p>
-<div id="cell-19" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>idata_process <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit_process)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>idata_simpler <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit_simpler)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Calcoliamo il criterio LOO (Leave-One-Out) per confrontare i due modelli.</p>
-<div id="cell-21" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>loo_process <span class="op">=</span> az.loo(idata_process)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>loo_simpler <span class="op">=</span> az.loo(idata_simpler)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Confrontiamo i due modelli utilizzando il criterio LOO.</p>
-<div id="cell-23" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>loo_comparison <span class="op">=</span> az.compare(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Process Model"</span>: loo_process, <span class="st">"Simpler Model"</span>: loo_simpler}</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loo_comparison)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Eseguiamo la LOO-CV usando ArviZ:</p>
+<div id="cell-18" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>loo_result <span class="op">=</span> az.loo(fit_az)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loo_result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>               rank     elpd_loo     p_loo  elpd_diff    weight         se  \
-Process Model     0 -3123.273484  2.008705   0.000000  0.685872  24.569185   
-Simpler Model     1 -3149.844801  1.991303  26.571317  0.314128  24.127268   
+<pre><code>Computed from 8000 posterior samples and 100 observations log-likelihood matrix.
 
-                     dse  warning scale  
-Process Model   0.000000    False   log  
-Simpler Model  12.069884    False   log  </code></pre>
+         Estimate       SE
+elpd_loo  -217.79     6.76
+p_loo        1.92        -
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.5]   (good)      100  100.0%
+ (0.5, 0.7]   (ok)          0    0.0%
+   (0.7, 1]   (bad)         0    0.0%
+   (1, Inf)   (very bad)    0    0.0%
+</code></pre>
 </div>
 </div>
-<p>L’output di <code>loo_comparison()</code> confronta i due modelli utilizzando il criterio di Leave-One-Out Cross-Validation (LOO) basato sull’Expected Log Predictive Density (ELPD). Ogni colonna nell’output fornisce informazioni diverse sul confronto tra i modelli. Vediamo cosa significa ciascuna colonna:</p>
-<ol type="1">
-<li><p><strong>rank</strong>: Questa colonna indica la posizione del modello in base all’ELPD. Il modello con il valore più alto di ELPD è classificato al primo posto.</p></li>
-<li><p><strong>elpd_loo</strong>: Questo valore rappresenta la <em>Expected Log Pointwise Predictive Density</em> calcolata usando il metodo LOO. In parole semplici, misura quanto bene il modello predice i dati osservati, tenendo conto della complessità del modello per evitare l’overfitting. Un valore più alto indica che il modello ha una migliore capacità predittiva.</p></li>
-<li><p><strong>p_loo</strong>: Questa colonna stima il numero effettivo di parametri del modello, cioè quanti “gradi di libertà” effettivi il modello sta usando per adattarsi ai dati. Un valore più alto indica un modello più complesso.</p></li>
-<li><p><strong>elpd_diff</strong>: Questa colonna mostra la differenza di ELPD tra il modello migliore (quello al primo posto) e gli altri modelli. Per il modello migliore, questo valore è 0. Gli altri modelli avranno valori positivi, che indicano quanto peggio si comportano rispetto al modello migliore.</p></li>
-<li><p><strong>weight</strong>: Questo valore rappresenta la probabilità normalizzata che ciascun modello sia il migliore per fare previsioni su nuovi dati. I pesi sono normalizzati in modo che la somma sia pari a 1. Per esempio, un peso di 0.685872 indica che c’è il 68.6% di probabilità che quel modello sia il migliore nel predire nuovi dati.</p></li>
-<li><p><strong>se</strong>: Questo è l’errore standard dell’ELPD stimato, che rappresenta l’incertezza associata a questa stima. Un errore standard più basso indica maggiore fiducia nell’ELPD calcolato.</p></li>
-<li><p><strong>dse</strong>: Significa “errore standard della differenza dell’ELPD”. Indica l’incertezza nella differenza di ELPD tra il miglior modello e un altro modello. Un valore basso di <code>dse</code> suggerisce che siamo abbastanza sicuri che la differenza osservata non sia dovuta al caso.</p></li>
-<li><p><strong>warning</strong>: Questa colonna indica se ci sono stati avvertimenti durante il calcolo. Se il valore è <code>False</code>, significa che non ci sono stati problemi.</p></li>
-<li><p><strong>scale</strong>: Indica la scala utilizzata per il confronto tra modelli. In questo caso, si usa la scala logaritmica (<code>log</code>), che è comune quando si analizzano log-verosimiglianze.</p></li>
-</ol>
-<p><strong>Interpretazione</strong></p>
-<ul>
-<li><p><strong>Classifica dei Modelli</strong>: Il <code>Process Model</code> è classificato al primo posto, il che significa che ha l’ELPD più alto e, quindi, si adatta meglio ai dati rispetto al <code>Simpler Model</code>.</p></li>
-<li><p><strong>Differenza in ELPD (<code>elpd_diff</code>)</strong>: La differenza tra i due modelli è significativa (135,85), il che suggerisce che il <code>Process Model</code> offre una capacità predittiva notevolmente migliore.</p></li>
-<li><p><strong>Pesi</strong>: Il <code>Process Model</code> ha un peso di 0.686, il che indica che, secondo il confronto LOO, c’è una probabilità del 68.6% che sia il miglior modello per fare previsioni su nuovi dati, mentre il <code>Simpler Model</code> ha solo il 31.4% di probabilità.</p></li>
-<li><p><strong>Errore Standard della Differenza (<code>dse</code>)</strong>: La <code>dse</code> relativamente bassa rispetto all’<code>elpd_diff</code> conferma che la differenza tra i modelli è significativa e non è dovuta a variazioni casuali.</p></li>
-</ul>
-<p>In conclusione, questo output suggerisce chiaramente che il <code>Process Model</code>, che incorpora un processo cognitivo più complesso, è nettamente superiore al <code>Simpler Model</code> per quanto riguarda l’adattamento ai dati. Questa superiorità è supportata sia dal confronto delle stime di ELPD sia dai pesi associati ai modelli.</p>
+<p>Poiché il modello si adatta bene a questi dati, tutti i valori di Pareto <span class="math inline">\(k\)</span> sono molto bassi, indicando che nessuna osservazione ha un’influenza eccessiva sulle stime del modello. Di conseguenza, non vi è alcuna evidenza che la stima dell’ELPD, che in questo caso è pari a -217.79, possa essere distorta. Questo suggerisce che la stima è affidabile e rappresenta accuratamente la capacità predittiva del modello.</p>
+</div>
 </section>
-<section id="considerazioni-conclusive" class="level2" data-number="78.7">
-<h2 data-number="78.7" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">78.7</span> Considerazioni Conclusive</h2>
-<p>I risultati ottenuti dimostrano chiaramente l’importanza di implementare un modello che rifletta il processo generativo dei dati (<span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>). Il modello “process,” che cattura la complessità delle dinamiche di apprendimento e decadimento, ha mostrato una performance superiore rispetto al modello più semplice, che si limita a distinguere tra due condizioni. Questo sottolinea come un’analisi basata su un modello che incorpora le ipotesi sul processo sottostante possa portare a una migliore comprensione dei dati e, in ultima analisi, a risultati più solidi.</p>
-<p>È fondamentale eseguire simulazioni preliminari prima di raccogliere dati empirici. Queste simulazioni permettono di valutare l’adeguatezza della numerosità campionaria necessaria a rilevare gli effetti ipotizzati, tenendo conto del processo generativo dei dati. Nel caso presente, l’analisi è stata semplificata concentrandosi su un singolo campione di osservazioni indipendenti. Tuttavia, in un contesto più realistico, sarebbe opportuno considerare dati provenienti da più soggetti e riformulare il modello in modo gerarchico per catturare la variabilità tra individui. Lo scopo qui era limitato al confronto tra i due modelli per evidenziare l’importanza di modellare il processo generativo.</p>
-<p>L’approccio bayesiano, e in particolare l’uso di Stan, offre un vantaggio notevole in questo contesto, consentendo di implementare in modo relativamente semplice modelli complessi che riflettono fedelmente il processo generativo ipotizzato. Questo tipo di modellazione risulta molto più difficile, se non impossibile, utilizzando metodi non bayesiani, che spesso non permettono di catturare con la stessa flessibilità le dinamiche sottostanti ai dati.</p>
+<section id="il-ruolo-dellelpd-nella-valutazione-comparativa-dei-modelli" class="level2" data-number="76.4">
+<h2 data-number="76.4" class="anchored" data-anchor-id="il-ruolo-dellelpd-nella-valutazione-comparativa-dei-modelli"><span class="header-section-number">76.4</span> Il Ruolo dell’ELPD nella Valutazione Comparativa dei Modelli</h2>
+<p>L’ELPD svolge un ruolo cruciale nel confronto tra diversi modelli statistici. Grazie a metodologie come la Leave-One-Out Cross-Validation (LOO-CV), è possibile stimare l’ELPD e ottenere una valutazione oggettiva dell’adeguatezza di ciascun modello rispetto ai dati. Questo è particolarmente importante quando si tratta di scegliere il modello più appropriato tra diverse opzioni o di valutare se un modello più complesso offre un vantaggio significativo rispetto a uno più semplice.</p>
+<p>In sintesi, l’ELPD fornisce un indicatore affidabile della capacità predittiva di un modello. La LOO-CV, a sua volta, rappresenta un metodo efficace per stimare questa metrica, consentendo un’analisi precisa e robusta delle prestazioni dei diversi modelli. L’automazione di queste procedure attraverso software come PyMC e Arviz rende l’intero processo ancora più pratico e accessibile, consolidando l’ELPD come uno strumento essenziale per la selezione e la validazione dei modelli statistici.</p>
+<section id="simulazione" class="level3" data-number="76.4.1">
+<h3 data-number="76.4.1" class="anchored" data-anchor-id="simulazione"><span class="header-section-number">76.4.1</span> Simulazione</h3>
+<p>Per dimostrare come confrontare i modelli utilizzando la LOO-CV, procediamo con una simulazione. Genereremo dati sintetici in cui esiste una relazione lineare tra le variabili <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>. In questo contesto, confronteremo un modello lineare con un modello più semplice che considera solo il termine dell’intercetta. Utilizzeremo la LOO-CV per determinare quale dei due modelli si adatta meglio ai dati. La stima dell’ELPD sarà il criterio quantitativo che guiderà la scelta del modello più appropriato.</p>
+<div id="0320358f-313d-48f9-b017-22d5e704f522" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic data</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">100</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>y_true <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>y_obs <span class="op">=</span> y_true <span class="op">+</span> np.random.normal(scale<span class="op">=</span><span class="dv">3</span>, size<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>zx <span class="op">=</span> stats.zscore(x)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>zy <span class="op">=</span> stats.zscore(y_obs)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.mean(zy), np.std(zy))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>-2.19824158875781e-16 1.0</code></pre>
+</div>
+</div>
+<p>Adattiamo ai dati un modello che rispecchia il vero meccanismo generativo dei dati.</p>
+<p>Si noti che, per calcolare LOO e WAIC, ArviZ ha bisogno di accedere alla log-likelihood per ogni campione posteriore. Possiamo trovarla tramite <code>compute_log_likelihood()</code>. In alternativa, possiamo passare <code>idata_kwargs={"log_likelihood": True}</code> a <code>sample()</code> per farla calcolare automaticamente alla fine del campionamento.</p>
+<div id="cell-23" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>stan_lin_reg_file <span class="op">=</span> os.path.join(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">'stan'</span>, <span class="st">'linear-regression.stan'</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>model_lin_reg <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_lin_reg_file)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_lin_reg.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>// all data should be scaled to mean 0 and std 1:
+data {
+  int&lt;lower=1&gt; N;
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  real alpha;
+  real beta;
+  real&lt;lower=0&gt; sigma;
+}
+model {
+  y ~ normal(alpha + beta * x, sigma);
+  alpha ~ normal(0, 2.5);
+  beta ~ normal(0, 2.5);
+  sigma ~ cauchy(0, 2.5);
+}
+generated quantities {
+  vector[N] log_lik;
+  vector[N] y_rep;
+  for (n in 1:N) {
+    log_lik[n] = normal_lpdf(y[n] | alpha + beta * x[n], sigma);
+    y_rep[n] = normal_rng(alpha + beta * x[n], sigma);
+  }
+}
+</code></pre>
+</div>
+</div>
+<p>Inseriamo i dati simulati in un dizionario.</p>
+<div id="cell-25" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the stan_data dictionary</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>: <span class="bu">len</span>(zx),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'x'</span>: zx,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y'</span>: zy</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo il campionamento.</p>
+<div id="cell-27" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="op">=</span> model_lin_reg.sample(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo le stime a posteriori dei parametri del modello.</p>
+<div id="cell-29" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit2, var_names<span class="op">=</span>[<span class="st">'beta'</span>, <span class="st">'sigma'</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">beta</td>
+<td>0.91</td>
+<td>0.04</td>
+<td>0.83</td>
+<td>0.99</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>7484.76</td>
+<td>6278.45</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>0.42</td>
+<td>0.03</td>
+<td>0.37</td>
+<td>0.48</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>7021.01</td>
+<td>5523.71</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Replichiamo i risultati usando le funzioni di pingouin:</p>
+<div id="cell-31" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DataFrame</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: zx,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: zy</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform linear regression using pingouin</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>regression_results <span class="op">=</span> pg.linear_regression(df[[<span class="st">'x'</span>]], df[<span class="st">'y'</span>])</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the regression results</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(regression_results)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       names          coef        se             T          pval        r2  \
+0  Intercept -2.220446e-16  0.041834 -5.307754e-15  1.000000e+00  0.828492   
+1          x  9.102152e-01  0.041834  2.175778e+01  2.661609e-39  0.828492   
+
+     adj_r2  CI[2.5%]  CI[97.5%]  
+0  0.826742 -0.083018   0.083018  
+1  0.826742  0.827197   0.993233  </code></pre>
+</div>
+</div>
+<p>Calcoliamo l’ELPD con il metodo LOO-CV.</p>
+<div id="cell-33" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert CmdStanPy fit to ArviZ InferenceData</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>fit2_az <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit2)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform LOO-CV using ArviZ</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>loo2_result <span class="op">=</span> az.loo(fit2_az)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loo2_result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Computed from 8000 posterior samples and 100 observations log-likelihood matrix.
+
+         Estimate       SE
+elpd_loo   -56.70     6.89
+p_loo        2.78        -
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.5]   (good)      100  100.0%
+ (0.5, 0.7]   (ok)          0    0.0%
+   (0.7, 1]   (bad)         0    0.0%
+   (1, Inf)   (very bad)    0    0.0%
+</code></pre>
+</div>
+</div>
+<p>Adattiamo ora ai dati un secondo modello che non tiene conto della relazione lineare tra <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>, ovvero contiene solo l’intercetta.</p>
+<div id="cell-35" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>stan_lin_reg_file_only_alpha <span class="op">=</span> os.path.join(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">'stan'</span>, <span class="st">'linear-regression-only-alpha.stan'</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>model_lin_reg_only_alpha <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_lin_reg_file_only_alpha)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_lin_reg_only_alpha.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>// all data should be scaled to mean 0 and std 1:
+data {
+  int&lt;lower=1&gt; N;
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  real alpha;
+  real&lt;lower=0&gt; sigma;
+}
+model {
+  y ~ normal(alpha, sigma);
+  alpha ~ normal(0, 2.5);
+  sigma ~ cauchy(0, 2.5);
+}
+generated quantities {
+  vector[N] log_lik;
+  vector[N] y_rep;
+  for (n in 1:N) {
+    log_lik[n] = normal_lpdf(y[n] | alpha, sigma);
+    y_rep[n] = normal_rng(alpha, sigma);
+  }
+}
+</code></pre>
+</div>
+</div>
+<p>Eseguiamo il campionamento.</p>
+<div id="cell-37" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="op">=</span> model_lin_reg_only_alpha.sample(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">2_000</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling <span class="op">=</span> <span class="dv">2_000</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    seed <span class="op">=</span> <span class="dv">123</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    show_progress <span class="op">=</span> <span class="va">False</span>, </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    show_console <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-38" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit3, var_names<span class="op">=</span>[<span class="st">'alpha'</span>, <span class="st">'sigma'</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_3%</th>
+<th data-quarto-table-cell-role="th">hdi_97%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">alpha</td>
+<td>-0.00</td>
+<td>0.10</td>
+<td>-0.19</td>
+<td>0.20</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>5474.54</td>
+<td>4913.19</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma</td>
+<td>1.02</td>
+<td>0.07</td>
+<td>0.89</td>
+<td>1.16</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>5742.53</td>
+<td>4496.71</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Stimiamo l’ELPD con il metodo LOO-CV per il modello che ignora la relazione lineare.</p>
+<div id="cell-40" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert CmdStanPy fit to ArviZ InferenceData</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>fit3_az <span class="op">=</span> az.from_cmdstanpy(posterior<span class="op">=</span>fit3)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform LOO-CV using ArviZ</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>loo3_result <span class="op">=</span> az.loo(fit3_az)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loo3_result)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Computed from 8000 posterior samples and 100 observations log-likelihood matrix.
+
+         Estimate       SE
+elpd_loo  -143.65     4.52
+p_loo        1.43        -
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.5]   (good)      100  100.0%
+ (0.5, 0.7]   (ok)          0    0.0%
+   (0.7, 1]   (bad)         0    0.0%
+   (1, Inf)   (very bad)    0    0.0%
+</code></pre>
+</div>
+</div>
+<p>Infine, calcoliamo la differenza tra le stime dell’ELPD (<code>elpd_diff</code>) dei due modelli. L’incertezza associata a questa differenza è espressa dal suo errore standard (<code>dse</code>). Se il rapporto tra <code>elpd_diff</code> e <code>dse</code> è pari o superiore a 2, possiamo concludere che esiste una differenza significativa e credibile tra i due modelli.</p>
+<p>Nell’output del comando <code>az.compare()</code>, il modello con il valore di <code>elpd_loo</code> più alto (indicativo di una migliore capacità predittiva) viene elencato per primo.</p>
+<div id="3b62bb9b-9c39-4310-a793-bffe742cb5bd" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df_comp_loo <span class="op">=</span> az.compare({<span class="st">"linear_model"</span>: loo2_result, <span class="st">"intercept_model"</span>: loo3_result})</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>df_comp_loo</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">elpd_loo</th>
+<th data-quarto-table-cell-role="th">p_loo</th>
+<th data-quarto-table-cell-role="th">elpd_diff</th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">dse</th>
+<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">scale</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">linear_model</td>
+<td>0</td>
+<td>-56.814716</td>
+<td>2.873961</td>
+<td>0.000000</td>
+<td>1.000000e+00</td>
+<td>6.890641</td>
+<td>0.000000</td>
+<td>False</td>
+<td>log</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">intercept_model</td>
+<td>1</td>
+<td>-143.633507</td>
+<td>1.403145</td>
+<td>86.818792</td>
+<td>2.428635e-11</td>
+<td>4.516124</td>
+<td>7.956892</td>
+<td>False</td>
+<td>log</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Nel caso attuale, il modello <code>linear_model</code> riflette accuratamente il modo in cui i dati sono stati generati. Questo è confermato dal fatto che viene preferito in base al valore di <code>elpd_loo</code>. Inoltre, il rapporto tra <code>elpd_diff</code> e il suo errore standard è notevolmente superiore a 2, il che indica chiaramente che, per questi dati, il modello lineare è nettamente preferibile rispetto al modello che include solo l’intercetta.</p>
+<div id="4ce8b961-d93d-4f8b-8a5b-1cab1dccab6c" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_compare(df_comp_loo, insample_dev<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_loo_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="riflessioni-conclusive" class="level2" data-number="76.5">
+<h2 data-number="76.5" class="anchored" data-anchor-id="riflessioni-conclusive"><span class="header-section-number">76.5</span> Riflessioni Conclusive</h2>
+<p>In questo capitolo, abbiamo esplorato in dettaglio il metodo della Validazione Incrociata Leave-One-Out (LOO-CV) e il suo utilizzo nel framework <code>cmdstan</code>, sottolineando la sua importanza nella pratica della modellazione statistica.</p>
+<p>Un punto centrale della discussione è stato il ruolo fondamentale della LOO-CV nel confronto tra diversi modelli. Questo metodo non solo consente di valutare la capacità predittiva di un singolo modello, ma si rivela anche indispensabile quando si tratta di scegliere il modello più adeguato tra diverse alternative. La LOO-CV fornisce infatti una base di confronto oggettiva e affidabile, permettendo di identificare il modello che meglio si adatta ai dati e che possiede la maggiore capacità di generalizzazione.</p>
+<p>Inoltre, abbiamo approfondito l’importanza dei valori diagnostici Pareto <span class="math inline">\(k\)</span> nell’interpretazione delle stime ottenute tramite LOO-CV. Questi valori diagnostici sono cruciali per valutare l’affidabilità delle stime dell’ELPD derivate dalla LOO-CV, poiché forniscono un’indicazione sulla precisione e robustezza di queste stime. Valori di Pareto <span class="math inline">\(k\)</span> elevati possono segnalare che alcune osservazioni influenzano eccessivamente le stime, indicando possibili problemi di modellizzazione che potrebbero compromettere la validità delle conclusioni.</p>
+<p>In sintesi, la combinazione di LOO-CV e dei valori diagnostici Pareto <span class="math inline">\(k\)</span> offre un approccio robusto e affidabile per la valutazione e selezione dei modelli statistici, garantendo che le scelte effettuate siano basate su criteri solidi e verificabili. Questo metodo si dimostra quindi essenziale non solo per valutare la qualità di un singolo modello, ma anche per assicurare che la selezione del modello ottimale sia supportata da una rigorosa analisi quantitativa.</p>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-26" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f8e66e80-23a6-444f-9107-c91518f69c09" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Wed Aug 21 2024
+<pre><code>Last updated: Sat Jul 13 2024
 
 Python implementation: CPython
-Python version       : 3.12.4
-IPython version      : 8.26.0
+Python version       : 3.12.3
+IPython version      : 8.25.0
 
-Compiler    : Clang 16.0.6 
-OS          : Darwin
-Release     : 23.6.0
-Machine     : arm64
-Processor   : arm
-CPU cores   : 8
-Architecture: 64bit
-
-seaborn   : 0.13.2
-matplotlib: 3.9.1
-arviz     : 0.18.0
+pingouin  : 0.5.4
+logging   : 0.5.1.2
 numpy     : 1.26.4
+arviz     : 0.18.0
+cmdstanpy : 1.2.3
+matplotlib: 3.8.4
+pandas    : 2.2.2
+scipy     : 1.13.1
 
 Watermark: 2.4.3
 </code></pre>
@@ -1632,11 +1834,6 @@ Watermark: 2.4.3
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-McElreath_rethinking" class="csl-entry" role="listitem">
-McElreath, Richard. 2020. <em>Statistical rethinking: <span>A</span> <span>Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. 2nd Edition. Boca Raton, Florida: CRC Press.
-</div>
-</div>
 </section>
 
 </main> <!-- /main -->
@@ -2051,13 +2248,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="pagination-link" aria-label="Apprendimento per rinforzo">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span>
+      <a href="../../chapters/entropy/02_kl.html" class="pagination-link" aria-label="Divergenza KL, LPPD, ELPD e LOO-CV">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" class="pagination-link" aria-label="Introduzione">
-        <span class="nav-page-text">Introduzione</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/entropy/04_cognitive_modeling.html" class="pagination-link" aria-label="Dall'analisi descrittiva alla modellazione cognitiva">
+        <span class="nav-page-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -2069,7 +2266,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/cognitive_models/02_cog_mod_comp.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/entropy/03_loo.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

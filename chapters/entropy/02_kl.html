@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 74&nbsp; Divergenza KL e ELPD</title>
+<title>Data Science per Psicologi - 75&nbsp; Divergenza KL, LPPD, ELPD e LOO-CV</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/entropy/03_stan_loo.html" rel="next">
+<link href="../../chapters/entropy/03_loo.html" rel="next">
 <link href="../../chapters/entropy/01_entropy.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -144,7 +164,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/02_kl.html"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/02_kl.html"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -441,7 +461,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
- <span class="menu-text">Inferenza bayesiana</span></a>
+ <span class="menu-text">Inferenza</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -607,7 +627,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
- <span class="menu-text">Modelli lineari</span></a>
+ <span class="menu-text">Regressione</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -687,8 +707,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/linear_models/12_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  <a href="../../chapters/linear_models/12_ate_att_atu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/13_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -711,37 +737,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -764,25 +790,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/entropy/03_stan_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  <a href="../../chapters/entropy/03_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/entropy/04_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+  <a href="../../chapters/entropy/04_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/05_inductive_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -790,7 +822,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false">
- <span class="menu-text">Modelli cognitivi</span></a>
+ <span class="menu-text">Dinamiche</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -798,20 +830,26 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/dynamic_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduzione</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/01_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  <a href="../../chapters/dynamic_models/01_canoeing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/cognitive_models/02_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva: l’importanza del processo generativo nell’analisi bayesiana dei dati</span></span></a>
+  <a href="../../chapters/dynamic_models/02_change_across_time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/03_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
       </ul>
@@ -819,7 +857,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
- <span class="menu-text">Inferenza frequentista</span></a>
+ <span class="menu-text">Frequentismo</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -834,25 +872,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -860,7 +898,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
- <span class="menu-text">Crisi della replicazione</span></a>
+ <span class="menu-text">Crisi</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -875,37 +913,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1029,32 +1067,38 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a47_first_order_markov.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Processo di Markov di primo ordine</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a51_r_squared.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a55_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
@@ -1069,43 +1113,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_causality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Regressione multipla</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_entropia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_replication_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">^</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -1123,16 +1167,22 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#distribuzione-predittiva-posteriori" id="toc-distribuzione-predittiva-posteriori" class="nav-link" data-scroll-target="#distribuzione-predittiva-posteriori"><span class="header-section-number">74.1</span> Distribuzione Predittiva Posteriori</a></li>
-  <li><a href="#divergenza-di-kullback-leibler-kl" id="toc-divergenza-di-kullback-leibler-kl" class="nav-link" data-scroll-target="#divergenza-di-kullback-leibler-kl"><span class="header-section-number">74.2</span> Divergenza di Kullback-Leibler (KL)</a></li>
-  <li><a href="#expected-log-predictive-density-elpd" id="toc-expected-log-predictive-density-elpd" class="nav-link" data-scroll-target="#expected-log-predictive-density-elpd"><span class="header-section-number">74.3</span> Expected Log Predictive Density (ELPD)</a></li>
-  <li><a href="#collegamento-tra-divergenza-kl-e-elpd" id="toc-collegamento-tra-divergenza-kl-e-elpd" class="nav-link" data-scroll-target="#collegamento-tra-divergenza-kl-e-elpd"><span class="header-section-number">74.4</span> Collegamento tra Divergenza KL e ELPD</a></li>
-  <li><a href="#metodi-di-approssimazione-per-la-stima-dellelpd" id="toc-metodi-di-approssimazione-per-la-stima-dellelpd" class="nav-link" data-scroll-target="#metodi-di-approssimazione-per-la-stima-dellelpd"><span class="header-section-number">74.5</span> Metodi di Approssimazione per la Stima dell’ELPD</a>
+  <li><a href="#distribuzione-predittiva-posteriore" id="toc-distribuzione-predittiva-posteriore" class="nav-link" data-scroll-target="#distribuzione-predittiva-posteriore"><span class="header-section-number">75.1</span> Distribuzione Predittiva Posteriore</a></li>
+  <li><a href="#divergenza-di-kullback-leibler-kl" id="toc-divergenza-di-kullback-leibler-kl" class="nav-link" data-scroll-target="#divergenza-di-kullback-leibler-kl"><span class="header-section-number">75.2</span> Divergenza di Kullback-Leibler (KL)</a>
   <ul class="collapse">
-  <li><a href="#leave-one-out-cross-validation-loo-cv" id="toc-leave-one-out-cross-validation-loo-cv" class="nav-link" data-scroll-target="#leave-one-out-cross-validation-loo-cv"><span class="header-section-number">74.5.1</span> Leave-One-Out Cross-Validation (LOO-CV)</a></li>
-  <li><a href="#criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" id="toc-criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" class="nav-link" data-scroll-target="#criteri-di-informazione-come-approssimazioni-alla-divergenza-kl"><span class="header-section-number">74.5.2</span> Criteri di Informazione come Approssimazioni alla Divergenza KL</a></li>
+  <li><a href="#problema-con-p-sconosciuto" id="toc-problema-con-p-sconosciuto" class="nav-link" data-scroll-target="#problema-con-p-sconosciuto"><span class="header-section-number">75.2.1</span> Problema con <span class="math inline">\(p\)</span> sconosciuto</a></li>
+  <li><a href="#lidea-della-divergenza-relativa" id="toc-lidea-della-divergenza-relativa" class="nav-link" data-scroll-target="#lidea-della-divergenza-relativa"><span class="header-section-number">75.2.2</span> L’idea della divergenza relativa</a></li>
+  <li><a href="#log-probability-score-log-score" id="toc-log-probability-score-log-score" class="nav-link" data-scroll-target="#log-probability-score-log-score"><span class="header-section-number">75.2.3</span> Log-Probability Score (Log-Score)</a></li>
+  <li><a href="#log-pointwise-predictive-density-lppd" id="toc-log-pointwise-predictive-density-lppd" class="nav-link" data-scroll-target="#log-pointwise-predictive-density-lppd"><span class="header-section-number">75.2.4</span> Log-Pointwise-Predictive-Density (LPPD)</a></li>
   </ul></li>
-  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">74.6</span> Considerazioni Conclusive</a></li>
+  <li><a href="#expected-log-predictive-density-elpd" id="toc-expected-log-predictive-density-elpd" class="nav-link" data-scroll-target="#expected-log-predictive-density-elpd"><span class="header-section-number">75.3</span> Expected Log Predictive Density (ELPD)</a></li>
+  <li><a href="#collegamento-tra-divergenza-kl-e-elpd" id="toc-collegamento-tra-divergenza-kl-e-elpd" class="nav-link" data-scroll-target="#collegamento-tra-divergenza-kl-e-elpd"><span class="header-section-number">75.4</span> Collegamento tra Divergenza KL e ELPD</a>
+  <ul class="collapse">
+  <li><a href="#collegamento-tra-lppd-e-elpd" id="toc-collegamento-tra-lppd-e-elpd" class="nav-link" data-scroll-target="#collegamento-tra-lppd-e-elpd"><span class="header-section-number">75.4.1</span> Collegamento tra LPPD e ELPD</a></li>
+  <li><a href="#leave-one-out-cross-validation-loo-cv" id="toc-leave-one-out-cross-validation-loo-cv" class="nav-link" data-scroll-target="#leave-one-out-cross-validation-loo-cv"><span class="header-section-number">75.4.2</span> Leave-One-Out Cross-Validation (LOO-CV)</a></li>
+  <li><a href="#criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" id="toc-criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" class="nav-link" data-scroll-target="#criteri-di-informazione-come-approssimazioni-alla-divergenza-kl"><span class="header-section-number">75.4.3</span> Criteri di Informazione come Approssimazioni alla Divergenza KL</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">75.5</span> Considerazioni Conclusive</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/entropy/02_kl.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
@@ -1140,9 +1190,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/02_kl.html"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/entropy/introduction_entropy.html">Entropia</a></li><li class="breadcrumb-item"><a href="../../chapters/entropy/02_kl.html"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-kl-elpd" class="quarto-section-identifier"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Divergenza KL e ELPD</span></span></h1>
+<h1 class="title"><span id="sec-kl-elpd" class="quarto-section-identifier"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></h1>
 </div>
 
 
@@ -1160,10 +1210,12 @@ window.Quarto = {
 
 
 <p><strong>Prerequisiti</strong></p>
+<ul>
+<li>Leggere il capitolo 7 <em>Ulysses’ Compass</em> di <em>Statistical Rethinking</em> (<span class="citation" data-cites="McElreath_rethinking">McElreath (<a href="../../99-references.html#ref-McElreath_rethinking" role="doc-biblioref">2020</a>)</span>).</li>
+</ul>
 <p><strong>Concetti e competenze chiave</strong></p>
 <ul>
-<li>Comprendere in modo dettagliato il concetto di Expected Log Predictive Density (ELPD), apprezzandone l’importanza e l’applicabilità nel contesto della valutazione predittiva dei modelli statistici.</li>
-<li>Esplorare e analizzare la relazione tra il concetto di entropia e la ELPD, identificando come l’entropia possa influenzare o riflettere la capacità predittiva di un modello attraverso la densità logaritmica predittiva prevista.</li>
+<li>Comprendere in modo dettagliato la distribuzione predittiva posteriore, la Divergenza di Kullback-Leibler (<span class="math inline">\(\mathbb{KL}\)</span>), il Log-Pointwise-Predictive-Density (LPPD) e la Densità Predittiva Logaritmica Attesa (ELPD).</li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
 <div id="1a6aa9ee-fd35-44ce-a0e5-69f1d084dfcb" class="cell" data-execution_count="2">
@@ -1182,95 +1234,165 @@ window.Quarto = {
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo, esamineremo in dettaglio tre concetti fondamentali per la valutazione e il confronto di modelli statistici nel contesto bayesiano: la distribuzione predittiva posteriori, la Divergenza di Kullback-Leibler (<span class="math inline">\(\mathbb{KL}\)</span>) e la Densità Predittiva Logaritmica Attesa (Expected Log Predictive Density, ELPD). Questi strumenti ci permettono di quantificare l’adattamento dei modelli ai dati e la loro capacità predittiva.</p>
+<p>In questo capitolo, esamineremo in dettaglio quattro concetti fondamentali per la valutazione e il confronto di modelli statistici nel contesto bayesiano: la distribuzione predittiva posteriore, la Divergenza di Kullback-Leibler (<span class="math inline">\(\mathbb{KL}\)</span>), il Log-Pointwise-Predictive-Density (LPPD) e la Densità Predittiva Logaritmica Attesa (Expected Log Predictive Density, ELPD). Questi strumenti ci permettono di quantificare l’adattamento dei modelli ai dati e la loro capacità predittiva.</p>
 </section>
-<section id="distribuzione-predittiva-posteriori" class="level2" data-number="74.1">
-<h2 data-number="74.1" class="anchored" data-anchor-id="distribuzione-predittiva-posteriori"><span class="header-section-number">74.1</span> Distribuzione Predittiva Posteriori</h2>
-<p>La distribuzione predittiva posteriori <span class="math inline">\(Q(\tilde{y} \mid y)\)</span> rappresenta la distribuzione dei possibili nuovi dati <span class="math inline">\(\tilde{y},\)</span> dati i dati osservati <span class="math inline">\(y\)</span>. Essa si ottiene combinando:</p>
+<section id="distribuzione-predittiva-posteriore" class="level2" data-number="75.1">
+<h2 data-number="75.1" class="anchored" data-anchor-id="distribuzione-predittiva-posteriore"><span class="header-section-number">75.1</span> Distribuzione Predittiva Posteriore</h2>
+<p>La distribuzione predittiva posteriore <span class="math inline">\(q(\tilde{y} \mid y)\)</span> rappresenta la distribuzione dei possibili nuovi dati <span class="math inline">\(\tilde{y}\)</span>, alla luce dei dati osservati <span class="math inline">\(y\)</span>. Essa si ottiene combinando:</p>
 <ul>
-<li>la distribuzione del modello per i nuovi dati data una configurazione dei parametri <span class="math inline">\(\theta\)</span>: <span class="math inline">\(Q(\tilde{y} \mid \theta)\)</span>;</li>
-<li>la distribuzione posteriore dei parametri data i dati osservati: <span class="math inline">\(P(\theta \mid y)\)</span>.</li>
+<li>la distribuzione del modello per i nuovi dati data una configurazione dei parametri <span class="math inline">\(\theta\)</span>: <span class="math inline">\(q(\tilde{y} \mid \theta)\)</span>;</li>
+<li>la distribuzione posteriore dei parametri dati i dati osservati: <span class="math inline">\(p(\theta \mid y)\)</span>.</li>
 </ul>
-<p>Matematicamente, la distribuzione predittiva posteriori può essere scritta come:</p>
+<p>Matematicamente, la distribuzione predittiva posteriore può essere scritta come:</p>
 <p><span class="math display">\[
-Q(\tilde{y} \mid y) = \int Q(\tilde{y} \mid \theta) P(\theta \mid y) d\theta.
+q(\tilde{y} \mid y) = \int q(\tilde{y} \mid \theta) p(\theta \mid y) d\theta.
 \]</span></p>
-<p>Questa espressione si legge come l’integrale della distribuzione predittiva <span class="math inline">\(Q(\tilde{y} \mid \theta)\)</span> pesata dalla distribuzione posteriore dei parametri <span class="math inline">\(P(\theta \mid y)\)</span>. In altre parole, stiamo “mediando” le previsioni del modello su tutte le possibili configurazioni dei parametri, tenendo conto della loro probabilità posteriore. La distribuzione predittiva posteriori è stata descritta nella <a href="../mcmc/05_stan_prediction.html#sec-posterior-predictive-distribution" class="quarto-xref"><span>Sezione 46.1</span></a>.</p>
+<p>Questa espressione si legge come l’integrale della distribuzione predittiva <span class="math inline">\(q(\tilde{y} \mid \theta)\)</span> pesata dalla distribuzione posteriore dei parametri <span class="math inline">\(p(\theta \mid y)\)</span>. In altre parole, stiamo “mediando” le previsioni del modello su tutte le possibili configurazioni dei parametri, tenendo conto della loro probabilità posteriore. La distribuzione predittiva posteriore è stata descritta nella <a href="../mcmc/05_stan_prediction.html#sec-posterior-predictive-distribution" class="quarto-xref"><span>Sezione 46.1</span></a>.</p>
 </section>
-<section id="divergenza-di-kullback-leibler-kl" class="level2" data-number="74.2">
-<h2 data-number="74.2" class="anchored" data-anchor-id="divergenza-di-kullback-leibler-kl"><span class="header-section-number">74.2</span> Divergenza di Kullback-Leibler (KL)</h2>
-<p>La divergenza di Kullback-Leibler <span class="math inline">\(\mathbb{KL}(P \parallel Q)\)</span> misura la distanza tra due distribuzioni, <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span>. È definita come:</p>
+<section id="divergenza-di-kullback-leibler-kl" class="level2" data-number="75.2">
+<h2 data-number="75.2" class="anchored" data-anchor-id="divergenza-di-kullback-leibler-kl"><span class="header-section-number">75.2</span> Divergenza di Kullback-Leibler (KL)</h2>
+<p>La divergenza di Kullback-Leibler <span class="math inline">\(\mathbb{KL}(p \parallel q)\)</span> misura la distanza tra due distribuzioni, <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span>. È definita come:</p>
 <p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \mathbb{E}_P[\log P(X)] - \mathbb{E}_P[\log Q(X)].
+\mathbb{KL}(p \parallel q) = \mathbb{E}_p[\log p(X)] - \mathbb{E}_p[\log q(X)].
 \]</span></p>
-<p>Il termine <span class="math inline">\(\mathbb{E}_P[\log P(X)]\)</span> è il valore atteso del logaritmo della distribuzione <span class="math inline">\(P(X)\)</span> sotto <span class="math inline">\(P\)</span> stessa, cioè:</p>
+<p>Il termine <span class="math inline">\(\mathbb{E}_p[\log p(X)]\)</span> è il valore atteso del logaritmo della distribuzione <span class="math inline">\(p(X)\)</span> sotto <span class="math inline">\(p\)</span> stessa, cioè:</p>
 <p><span class="math display">\[
-  \mathbb{E}_P[\log P(X)] = \sum_{i=1}^n p_i \log p_i.
-  \]</span></p>
+\mathbb{E}_p[\log p(X)] = \sum_{i=1}^n p_i \log p_i.
+\]</span></p>
 <p>Per distribuzioni continue, l’espressione diventa:</p>
 <p><span class="math display">\[
-  \mathbb{E}_P[\log P(X)] = \int p(x) \log p(x) \, dx.
-  \]</span></p>
-<p>Questo termine rappresenta l’entropia negativa della distribuzione <span class="math inline">\(P\)</span>.</p>
-<p>Il termine <span class="math inline">\(\mathbb{E}_P[\log Q(X)]\)</span> è il valore atteso del logaritmo della distribuzione <span class="math inline">\(Q(X)\)</span> sotto la distribuzione <span class="math inline">\(P(X)\)</span>:</p>
+\mathbb{E}_p[\log p(X)] = \int p(x) \log p(x) \, dx.
+\]</span></p>
+<p>Questo termine rappresenta l’entropia negativa della distribuzione <span class="math inline">\(p\)</span>.</p>
+<p>Il termine <span class="math inline">\(\mathbb{E}_p[\log q(X)]\)</span> è il valore atteso del logaritmo della distribuzione <span class="math inline">\(q(X)\)</span> sotto la distribuzione <span class="math inline">\(p(X)\)</span>:</p>
 <p><span class="math display">\[
-  \mathbb{E}_P[\log Q(X)] = \sum_{i=1}^n p_i \log q_i.
-  \]</span></p>
+\mathbb{E}_p[\log q(X)] = \sum_{i=1}^n p_i \log q_i.
+\]</span></p>
 <p>Per variabili continue:</p>
 <p><span class="math display">\[
-  \mathbb{E}_P[\log Q(X)] = \int p(x) \log q(x) \, dx.
-  \]</span></p>
-<p>Questo rappresenta l’entropia incrociata tra <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span>.</p>
+\mathbb{E}_p[\log q(X)] = \int p(x) \log q(x) \, dx.
+\]</span></p>
+<p>Questo rappresenta l’entropia incrociata tra <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span>.</p>
 <p>La divergenza KL è quindi:</p>
 <p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \sum_{i=1}^n p_i (\log p_i - \log q_i)
+\mathbb{KL}(p \parallel q) = \sum_{i=1}^n p_i (\log p_i - \log q_i)
 \]</span></p>
 <p>o, in forma continua:</p>
 <p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \int p(x) (\log p(x) - \log q(x)) \, dx
+\mathbb{KL}(p \parallel q) = \int p(x) (\log p(x) - \log q(x)) \, dx
 \]</span></p>
-<p>Un punto importante è che la divergenza KL non è simmetrica, il che significa che <span class="math inline">\(\mathbb{KL}(P \parallel Q) \neq \mathbb{KL}(Q \parallel P)\)</span>. Questa divergenza misura quanta “informazione” si perde usando <span class="math inline">\(Q\)</span> al posto di <span class="math inline">\(P\)</span>.</p>
+<p>Un punto importante è che la divergenza KL non è simmetrica, il che significa che <span class="math inline">\(\mathbb{KL}(q \parallel q) \neq \mathbb{KL}(q \parallel p)\)</span>. Questa divergenza misura quanta “informazione” si perde usando <span class="math inline">\(q\)</span> al posto di <span class="math inline">\(p\)</span>.</p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 74.1</strong></span> Per rendere più chiaro il concetto di divergenza di Kullback-Leibler (KL) nel caso discreto, consideriamo un esempio semplice. Immaginiamo di avere due distribuzioni di probabilità discrete, <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span>, su un insieme di eventi <span class="math inline">\(\{A, B, C\}\)</span>. Supponiamo che le probabilità associate a ciascun evento sotto le distribuzioni <span class="math inline">\(P\)</span> e <span class="math inline">\(Q\)</span> siano le seguenti:</p>
+<p><span class="theorem-title"><strong>Esempio 75.1</strong></span> Per rendere più chiaro il concetto di divergenza KL nel caso discreto, consideriamo un esempio semplice. Immaginiamo di avere due distribuzioni di probabilità discrete, <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span>, su un insieme di eventi <span class="math inline">\(\{A, B, C\}\)</span>. Supponiamo che le probabilità associate a ciascun evento sotto le distribuzioni <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span> siano le seguenti:</p>
 <ul>
-<li>distribuzione <span class="math inline">\(P\)</span>: <span class="math inline">\(P(A) = 0.5\)</span>, <span class="math inline">\(P(B) = 0.3\)</span>, <span class="math inline">\(P(C) = 0.2\)</span>;</li>
-<li>distribuzione <span class="math inline">\(Q\)</span>: <span class="math inline">\(Q(A) = 0.4\)</span>, <span class="math inline">\(Q(B) = 0.4\)</span>, <span class="math inline">\(Q(C) = 0.2\)</span>.</li>
+<li>distribuzione <span class="math inline">\(p\)</span>: <span class="math inline">\(p(A) = 0.5\)</span>, <span class="math inline">\(p(B) = 0.3\)</span>, <span class="math inline">\(p(C) = 0.2\)</span>;</li>
+<li>distribuzione <span class="math inline">\(q\)</span>: <span class="math inline">\(q(A) = 0.4\)</span>, <span class="math inline">\(q(B) = 0.4\)</span>, <span class="math inline">\(q(C) = 0.2\)</span>.</li>
 </ul>
-<p>La divergenza KL <span class="math inline">\(\mathbb{KL}(P \parallel Q)\)</span> è definita come:</p>
+<p>La divergenza KL <span class="math inline">\(\mathbb{KL}(p \parallel q)\)</span> è definita come:</p>
 <p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)},
+\mathbb{KL}(p \parallel q) = \sum_{i} p(i) \log \frac{p(i)}{q(i)},
 \]</span></p>
-<p>dove <span class="math inline">\(i\)</span> scorre su tutti gli eventi possibili <span class="math inline">\(\{A, B, C\}\)</span>. Quindi, dobbiamo calcolare <span class="math inline">\(P(A) \log \frac{P(A)}{Q(A)}\)</span>, <span class="math inline">\(P(B) \log \frac{P(B)}{Q(B)}\)</span> e <span class="math inline">\(P(C) \log \frac{P(C)}{Q(C)}\)</span>, ovvero,</p>
+<p>dove <span class="math inline">\(i\)</span> scorre su tutti gli eventi possibili <span class="math inline">\(\{A, B, C\}\)</span>. Quindi, dobbiamo calcolare <span class="math inline">\(p(A) \log \frac{p(A)}{q(A)}\)</span>, <span class="math inline">\(p(B) \log \frac{p(B)}{q(B)}\)</span> e <span class="math inline">\(p(C) \log \frac{p(C)}{q(C)}\)</span>, ovvero,</p>
 <p><span class="math display">\[
-   P(A) \log \frac{P(A)}{Q(A)} = 0.5 \log \frac{0.5}{0.4} 0.11155,
+   p(A) \log \frac{p(A)}{q(A)} = 0.5 \log \frac{0.5}{0.4} 0.11155,
    \]</span></p>
 <p><span class="math display">\[
-   P(B) \log \frac{P(B)}{Q(B)} = 0.3 \log \frac{0.3}{0.4} = -0.08631,
+   p(B) \log \frac{p(B)}{q(B)} = 0.3 \log \frac{0.3}{0.4} = -0.08631,
    \]</span></p>
 <p><span class="math display">\[
-   P(C) \log \frac{P(C)}{Q(C)} = 0.2 \log \frac{0.2}{0.2} = 0.
+   p(C) \log \frac{p(C)}{q(C)} = 0.2 \log \frac{0.2}{0.2} = 0.
    \]</span></p>
 <p>Ora sommiamo tutti i termini:</p>
 <p><span class="math display">\[
-\mathbb{KL}(P \parallel Q) = 0.11155 + (-0.08631) + 0 = 0.02524.
+\mathbb{KL}(p \parallel q) = 0.11155 + (-0.08631) + 0 = 0.02524.
 \]</span></p>
-<p>La divergenza KL <span class="math inline">\(\mathbb{KL}(P \parallel Q) \approx 0.025\)</span> indica che la distribuzione <span class="math inline">\(Q\)</span> non è troppo lontana dalla distribuzione <span class="math inline">\(P\)</span>, ma c’è una piccola discrepanza tra le due. Se il valore fosse maggiore, significherebbe che la distribuzione <span class="math inline">\(Q\)</span> si discosta maggiormente da <span class="math inline">\(P\)</span>, indicando una maggiore perdita di informazione se si usa <span class="math inline">\(Q\)</span> al posto di <span class="math inline">\(P\)</span>.</p>
+<p>La divergenza KL <span class="math inline">\(\mathbb{KL}(p \parallel q) \approx 0.025\)</span> indica che la distribuzione <span class="math inline">\(q\)</span> non è troppo lontana dalla distribuzione <span class="math inline">\(p\)</span>, ma c’è una piccola discrepanza tra le due. Se il valore fosse maggiore, significherebbe che la distribuzione <span class="math inline">\(q\)</span> si discosta maggiormente da <span class="math inline">\(p\)</span>, indicando una maggiore perdita di informazione se si usa <span class="math inline">\(q\)</span> al posto di <span class="math inline">\(p\)</span>.</p>
+</div>
+<section id="problema-con-p-sconosciuto" class="level3" data-number="75.2.1">
+<h3 data-number="75.2.1" class="anchored" data-anchor-id="problema-con-p-sconosciuto"><span class="header-section-number">75.2.1</span> Problema con <span class="math inline">\(p\)</span> sconosciuto</h3>
+<p>Il problema è che in pratica non conosciamo <span class="math inline">\(p\)</span>, la “verità” sottostante. Se conoscessimo <span class="math inline">\(p\)</span>, non avremmo bisogno di fare inferenza statistica. Tuttavia, vogliamo comunque confrontare diversi modelli <span class="math inline">\(q\)</span> e <span class="math inline">\(r\)</span> per capire quale si avvicina di più a <span class="math inline">\(p\)</span>.</p>
+</section>
+<section id="lidea-della-divergenza-relativa" class="level3" data-number="75.2.2">
+<h3 data-number="75.2.2" class="anchored" data-anchor-id="lidea-della-divergenza-relativa"><span class="header-section-number">75.2.2</span> L’idea della divergenza relativa</h3>
+<p>Fortunatamente, per confrontare due modelli <span class="math inline">\(q\)</span> e <span class="math inline">\(r\)</span>, non è necessario conoscere <span class="math inline">\(p\)</span> esattamente. Possiamo confrontare i modelli in termini di divergenza relativa da <span class="math inline">\(p\)</span>. In pratica, molte delle componenti di <span class="math inline">\(p\)</span> si annullano quando confrontiamo <span class="math inline">\(q\)</span> e <span class="math inline">\(r\)</span>, perché la differenza tra le divergenze <span class="math inline">\(\mathbb{KL}(p \parallel q)\)</span> e <span class="math inline">\(\mathbb{KL}(p \parallel r)\)</span> non dipende da <span class="math inline">\(p\)</span> in sé, ma solo dalla differenza tra <span class="math inline">\(q\)</span> e <span class="math inline">\(r\)</span>.</p>
+</section>
+<section id="log-probability-score-log-score" class="level3" data-number="75.2.3">
+<h3 data-number="75.2.3" class="anchored" data-anchor-id="log-probability-score-log-score"><span class="header-section-number">75.2.3</span> Log-Probability Score (Log-Score)</h3>
+<p>Il <em>log-probability score</em> (o <em>log-score</em>) è una misura pratica che possiamo usare per valutare modelli in assenza della conoscenza di <span class="math inline">\(p\)</span>. Per ogni modello <span class="math inline">\(q\)</span>, si calcola:</p>
+<p><span class="math display">\[
+S(q) = \sum_{i} \log(q_i).
+\]</span></p>
+<p>Questo score rappresenta una stima di <span class="math inline">\(\mathbb{E}[\log(q_i)]\)</span>, ovvero dell’aspettativa del logaritmo delle probabilità predette dal modello <span class="math inline">\(q\)</span> rispetto ai dati osservati. Più alto è il log-score, migliore è il modello in termini di accuratezza predittiva.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 75.2</strong></span> Consideriamo un semplice esempio numerico per illustrare il calcolo del <em>log-probability score</em> (o <em>log-score</em>) per un modello <span class="math inline">\(q\)</span>. Immaginiamo di avere un piccolo dataset con 3 osservazioni, e che il modello <span class="math inline">\(q\)</span> predica le probabilità per ciascuna osservazione come segue:</p>
+<ul>
+<li>Osservazione 1: <span class="math inline">\(q_1 = 0.8\)</span>,</li>
+<li>Osservazione 2: <span class="math inline">\(q_2 = 0.6\)</span>,</li>
+<li>Osservazione 3: <span class="math inline">\(q_3 = 0.7\)</span>.</li>
+</ul>
+<p>Il <em>log-score</em> si calcola sommando i logaritmi delle probabilità predette:</p>
+<p><span class="math display">\[
+S(q) = \log(0.8) + \log(0.6) + \log(0.7) \approx -0.2231 + (-0.5108) + (-0.3567) = -1.0906.
+\]</span></p>
+<p>Il log-score totale per questo modello <span class="math inline">\(q\)</span> è <span class="math inline">\(-1.0906\)</span>. Poiché un log-score più alto (meno negativo) indica una migliore accuratezza predittiva, questo risultato suggerisce che <span class="math inline">\(q\)</span> ha una discreta accuratezza per le osservazioni date. Un modello <span class="math inline">\(r\)</span> con un log-score più alto sarebbe preferibile in termini di accuratezza predittiva rispetto a <span class="math inline">\(q\)</span>.</p>
+</div>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 75.3</strong></span> Per chiarire ulteriormente il concetto di <em>log-probability score</em>, possiamo applicarlo al caso di un modello di regressione. In questo contesto, il calcolo del <em>log-probability score</em> implica la valutazione della probabilità che il modello assegna a ciascuna osservazione, considerando la distribuzione degli errori associata al modello.</p>
+<p>Consideriamo un modello di regressione lineare semplice:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i,
+\]</span></p>
+<p>dove <span class="math inline">\(y_i\)</span> è la variabile dipendente, <span class="math inline">\(x_i\)</span> è la variabile indipendente, <span class="math inline">\(\beta_0\)</span> e <span class="math inline">\(\beta_1\)</span> sono i coefficienti del modello, e <span class="math inline">\(\epsilon_i\)</span> è l’errore, tipicamente assunto come distribuito secondo una normale <span class="math inline">\(\mathcal{N}(0, \sigma^2)\)</span>.</p>
+<p>Per calcolare la probabilità di ciascuna osservazione <span class="math inline">\(y_i\)</span> data la predizione del modello, usiamo la distribuzione degli errori. Se <span class="math inline">\(y_i\)</span> è distribuito secondo una normale con media <span class="math inline">\(\hat{y}_i = \beta_0 + \beta_1 x_i\)</span> e varianza <span class="math inline">\(\sigma^2\)</span>, allora la probabilità di osservare <span class="math inline">\(y_i\)</span> è:</p>
+<p><span class="math display">\[
+p(y_i \mid x_i) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_i - \hat{y}_i)^2}{2\sigma^2}\right).
+\]</span></p>
+<p>Il <em>log-score</em> per ciascuna osservazione è il logaritmo della probabilità predetta:</p>
+<p><span class="math display">\[
+\log p(y_i \mid x_i) = -\frac{1}{2} \log(2\pi\sigma^2) - \frac{(y_i - \hat{y}_i)^2}{2\sigma^2}.
+\]</span></p>
+<p>Il log-score totale del modello è la somma dei log-score su tutte le osservazioni:</p>
+<p><span class="math display">\[
+S(q) = \sum_{i=1}^n \log p(y_i \mid x_i) = -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \hat{y}_i)^2.
+\]</span></p>
+<ul>
+<li><em>Primo termine</em>: <span class="math inline">\(-\frac{n}{2} \log(2\pi\sigma^2)\)</span> è una costante che dipende dal numero di osservazioni <span class="math inline">\(n\)</span> e dalla varianza degli errori <span class="math inline">\(\sigma^2\)</span>.</li>
+<li><em>Secondo termine</em>: <span class="math inline">\(-\frac{1}{2\sigma^2} \sum_{i=1}^n (y_i - \hat{y}_i)^2\)</span> è proporzionale alla somma dei quadrati degli errori (SSE), che misura quanto le predizioni si discostano dai valori osservati.</li>
+</ul>
+<p>Il log-score fornisce quindi una misura dell’accuratezza del modello di regressione, con valori più alti (meno negativi) che indicano un modello migliore. In pratica, poiché il primo termine è una costante, la differenza nei log-score tra modelli diversi sarà determinata principalmente dal secondo termine, legato alla SSE.</p>
+<p>In sintesi, nel contesto di un modello di regressione, la probabilità di ciascuna osservazione si basa sulla distribuzione normale degli errori, e il log-score riflette quanto bene il modello predice i dati osservati, penalizzando modelli con errori più grandi.</p>
 </div>
 </section>
-<section id="expected-log-predictive-density-elpd" class="level2" data-number="74.3">
-<h2 data-number="74.3" class="anchored" data-anchor-id="expected-log-predictive-density-elpd"><span class="header-section-number">74.3</span> Expected Log Predictive Density (ELPD)</h2>
-<p>L’ELPD è una misura che valuta la capacità predittiva di un modello. Si definisce come:</p>
+<section id="log-pointwise-predictive-density-lppd" class="level3" data-number="75.2.4">
+<h3 data-number="75.2.4" class="anchored" data-anchor-id="log-pointwise-predictive-density-lppd"><span class="header-section-number">75.2.4</span> Log-Pointwise-Predictive-Density (LPPD)</h3>
+<p>Il <em>Log-Pointwise-Predictive-Density</em> (LPPD) è una versione bayesiana del log-score, che tiene conto dell’incertezza sui parametri del modello. In un contesto bayesiano, non abbiamo un solo set di parametri <span class="math inline">\(\theta_s\)</span>, ma una distribuzione posteriore su di essi. Pertanto, il log-score viene calcolato come una media logaritmica su questa distribuzione. Il LPPD è una misura che deriva direttamente dalla distribuzione predittiva posteriore e rappresenta la somma delle densità predittive logaritmiche calcolate per ogni osservazione, mediate sulla distribuzione posteriore dei parametri. Formalmente, si definisce come:</p>
 <p><span class="math display">\[
-\text{ELPD} = \sum_{i=1}^n \log p(y_i | \mathbf{y}_{-i})
+\text{LPPD} = \sum_{i=1}^n \log \left(\frac{1}{S} \sum_{s=1}^{S} p(y_i \mid \theta_s)\right),
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(y_i\)</span> è l’i-esima osservazione,</li>
+<li><span class="math inline">\(S\)</span> è il numero di campioni dalla distribuzione posteriore,</li>
+<li><span class="math inline">\(\theta_s\)</span> è un campione di parametri dalla distribuzione posteriore.</li>
+</ul>
+<p>Il LPPD tiene conto dell’incertezza nei parametri, calcolando il logaritmo della densità predittiva media per ogni punto dati, mediata su tutte le possibili configurazioni dei parametri posteriore. Questo approccio è fondamentale per catturare la reale capacità predittiva di un modello, tenendo conto della variabilità nei parametri.</p>
+<p>In conclusione, il log-score e il LPPD sono metodi per stimare la bontà di un modello rispetto ai dati osservati, senza richiedere la conoscenza esatta di <span class="math inline">\(p\)</span>. Anche se non possiamo calcolare direttamente la divergenza di KL perché <span class="math inline">\(p\)</span> è sconosciuto, possiamo comunque confrontare diversi modelli basandoci su queste misure. La differenza tra i log-score (o LPPD) di due modelli <span class="math inline">\(q\)</span> e <span class="math inline">\(r\)</span> ci dà un’informazione su quale modello è “più vicino” alla verità, analogamente a come useremmo la divergenza di KL se conoscessimo <span class="math inline">\(p\)</span>.</p>
+</section>
+</section>
+<section id="expected-log-predictive-density-elpd" class="level2" data-number="75.3">
+<h2 data-number="75.3" class="anchored" data-anchor-id="expected-log-predictive-density-elpd"><span class="header-section-number">75.3</span> Expected Log Predictive Density (ELPD)</h2>
+<p>L’<em>Expected Log Predictive Density</em> (ELPD) è una misura che valuta la capacità predittiva di un modello utilizzando la tecnica della cross-validation. Si definisce come:</p>
+<p><span class="math display">\[
+\text{ELPD} = \sum_{i=1}^n \log p(y_i \mid \mathbf{y}_{-i}),
 \]</span></p>
 <p>dove:</p>
 <ul>
 <li><span class="math inline">\(y_i\)</span> è l’i-esima osservazione,</li>
 <li><span class="math inline">\(\mathbf{y}_{-i}\)</span> rappresenta tutte le osservazioni eccetto <span class="math inline">\(y_i\)</span>.</li>
 </ul>
-<p>L’idea alla base dell’ELPD è di valutare quanto bene un modello prevede ciascun dato osservato utilizzando tutti gli altri dati. Questo approccio, noto come leave-one-out cross-validation, è particolarmente utile per evitare l’overfitting, perché valuta le previsioni del modello su dati che non ha “visto” durante il processo di addestramento.</p>
+<p>L’ELPD utilizza la <em>Leave-One-Out Cross-Validation</em> (LOO-CV) per stimare la densità predittiva logaritmica di ogni osservazione, escludendo quella stessa osservazione dal training. Questo metodo permette di evitare l’overfitting, valutando la performance del modello su dati non visti.</p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 74.2</strong></span> Per illustrare il calcolo dell’Expected Log Predictive Density (ELPD), vediamo un esempio semplice con un set di dati molto piccolo. Supponiamo di avere un dataset di tre osservazioni: <span class="math inline">\(y_1, y_2, y_3\)</span>. Supponiamo che il nostro modello stimi le probabilità per ciascuna osservazione in base a tutte le altre osservazioni, cioè utilizziamo la leave-one-out cross-validation (LOO-CV) per calcolare <span class="math inline">\(p(y_i \mid \mathbf{y}_{-i})\)</span>.</p>
+<p><span class="theorem-title"><strong>Esempio 75.4</strong></span> Per illustrare il calcolo dell’ELPD, vediamo un esempio semplice con un set di dati molto piccolo. Supponiamo di avere un dataset di tre osservazioni: <span class="math inline">\(y_1, y_2, y_3\)</span>. Supponiamo che il nostro modello stimi le probabilità per ciascuna osservazione in base a tutte le altre osservazioni, cioè utilizziamo la leave-one-out cross-validation (LOO-CV) per calcolare <span class="math inline">\(p(y_i \mid \mathbf{y}_{-i})\)</span>.</p>
 <p>Immaginiamo che il modello produca le seguenti probabilità condizionali per ogni osservazione <span class="math inline">\(y_i\)</span>:</p>
 <ul>
 <li><span class="math inline">\(p(y_1 \mid y_2, y_3) = 0.6\)</span>,</li>
@@ -1294,18 +1416,17 @@ Q(\tilde{y} \mid y) = \int Q(\tilde{y} \mid \theta) P(\theta \mid y) d\theta.
 <p>L’ELPD ottenuto è <span class="math inline">\(-1.5606\)</span>. In generale, valori più vicini a 0 o positivi indicano una migliore capacità predittiva del modello, poiché suggeriscono che le probabilità condizionali assegnate dal modello alle osservazioni lasciate fuori non sono troppo basse. Valori molto negativi indicherebbero che il modello ha assegnato probabilità molto basse alle osservazioni effettivamente osservate, suggerendo una scarsa capacità predittiva. L’ELPD è un modo efficace per valutare quanto bene un modello generalizza a nuovi dati, evitando l’overfitting.</p>
 </div>
 </section>
-<section id="collegamento-tra-divergenza-kl-e-elpd" class="level2" data-number="74.4">
-<h2 data-number="74.4" class="anchored" data-anchor-id="collegamento-tra-divergenza-kl-e-elpd"><span class="header-section-number">74.4</span> Collegamento tra Divergenza KL e ELPD</h2>
+<section id="collegamento-tra-divergenza-kl-e-elpd" class="level2" data-number="75.4">
+<h2 data-number="75.4" class="anchored" data-anchor-id="collegamento-tra-divergenza-kl-e-elpd"><span class="header-section-number">75.4</span> Collegamento tra Divergenza KL e ELPD</h2>
 <p>Entrambe le misure (Divergenza KL e ELPD) valutano la qualità del modello, ma da prospettive diverse:</p>
 <ul>
 <li>la divergenza KL misura quanto la distribuzione predittiva del modello <span class="math inline">\(Q\)</span> si avvicina alla “vera” distribuzione <span class="math inline">\(P\)</span>;</li>
 <li>l’ELPD valuta direttamente la capacità del modello di prevedere nuovi dati, utilizzando la tecnica leave-one-out.</li>
 </ul>
-<p>Idealmente, vorremmo calcolare la divergenza KL per confrontare i modelli, poiché fornisce una misura diretta di quanto un modello si avvicina alla vera distribuzione dei dati. Tuttavia, poiché <span class="math inline">\(P\)</span> è sconosciuta nella pratica, la divergenza KL non può essere calcolata direttamente. Per questo motivo, nella pratica si utilizza l’ELPD, che, pur fornendo una misura leggermente diversa, ha il grande vantaggio di poter essere calcolata e offre una stima della capacità predittiva di un modello.</p>
 <p>L’ELPD tende a favorire modelli che non solo si adattano bene ai dati osservati, ma che sono anche robusti rispetto all’overfitting, grazie alla sua enfasi sulla capacità predittiva su dati non osservati.</p>
 <p>In sintesi, la distribuzione predittiva posteriori, la divergenza di Kullback-Leibler e l’ELPD sono strumenti matematici che ci permettono di valutare la bontà di un modello statistico. La divergenza KL fornisce una misura teoricamente ideale di quanto un modello approssima la vera distribuzione dei dati, mentre l’ELPD offre un’alternativa praticabile che valuta la capacità del modello di fare previsioni su nuovi dati. Questi concetti sono fondamentali nell’inferenza bayesiana, dove è importante non solo adattarsi ai dati esistenti, ma anche generalizzare bene su dati futuri.</p>
 <div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 74.3</strong></span> Consideriamo un secondo esempio per illustrare il concetto di ELPD utilizzando la distribuzione binomiale. Immaginiamo di condurre un esperimento in cui lanciamo una moneta 10 volte e contiamo il numero di volte in cui otteniamo testa. Supponiamo che la vera probabilità di ottenere testa sia 0.6.</p>
+<p><span class="theorem-title"><strong>Esempio 75.5</strong></span> Consideriamo un secondo esempio per illustrare il concetto di ELPD utilizzando la distribuzione binomiale. Immaginiamo di condurre un esperimento in cui lanciamo una moneta 10 volte e contiamo il numero di volte in cui otteniamo testa. Supponiamo che la vera probabilità di ottenere testa sia 0.6.</p>
 <ol type="1">
 <li><em>Distribuzione reale dei dati:</em> Segue una distribuzione binomiale con 10 lanci e probabilità di successo pari a 0.6: <span class="math inline">\(y \sim \text{Binomiale}(10, 0.6).\)</span></li>
 <li><em>Distribuzione stimata dal modello:</em> Il nostro modello ipotizza che la probabilità di ottenere testa sia 0.5, cioè considera la moneta come equa: <span class="math inline">\(p(y \mid \theta) = \text{Binomiale}(10, 0.5).\)</span></li>
@@ -1357,37 +1478,24 @@ ELPD del modello vero (con p=0.6): -1.8536</code></pre>
 </ol>
 <p>In sintesi, l’ELPD permette di confrontare l’efficacia predittiva di diversi modelli: un valore più alto (meno negativo) indica una migliore capacità del modello di prevedere i dati osservati. Nell’esempio presentato, il modello vero (con <span class="math inline">\(p = 0.6\)</span>) ha un ELPD superiore rispetto al modello stimato (con <span class="math inline">\(p = 0.5\)</span>), confermando che il primo ha una capacità predittiva migliore.</p>
 </div>
+<section id="collegamento-tra-lppd-e-elpd" class="level3" data-number="75.4.1">
+<h3 data-number="75.4.1" class="anchored" data-anchor-id="collegamento-tra-lppd-e-elpd"><span class="header-section-number">75.4.1</span> Collegamento tra LPPD e ELPD</h3>
+<p>Il LPPD e l’ELPD sono strettamente collegati e forniscono una valutazione robusta della capacità predittiva di un modello statistico. Il LPPD fornisce una stima del log-score basata sull’intera distribuzione posteriore dei parametri, mentre l’ELPD utilizza la cross-validation per stimare la capacità predittiva del modello su nuovi dati.</p>
+<p>Sebbene il LPPD sia una buona misura, esso tende a migliorare con l’aumentare della complessità del modello, a causa del fenomeno dell’overfitting. Il modello, infatti, potrebbe adattarsi perfettamente ai dati di addestramento, ma non generalizzare bene ai nuovi dati, catturando il “rumore” presente nei dati piuttosto che il vero segnale sottostante.</p>
 </section>
-<section id="metodi-di-approssimazione-per-la-stima-dellelpd" class="level2" data-number="74.5">
-<h2 data-number="74.5" class="anchored" data-anchor-id="metodi-di-approssimazione-per-la-stima-dellelpd"><span class="header-section-number">74.5</span> Metodi di Approssimazione per la Stima dell’ELPD</h2>
-<p>Come la divergenza KL, anche il calcolo dell’ELPD richiede, in teoria, la conoscenza della vera distribuzione <span class="math inline">\(P\)</span>, che è ignota. Tuttavia, a differenza della divergenza KL, disponiamo di metodi pratici per approssimare l’ELPD. Uno dei metodi più robusti e comunemente utilizzati per questa stima è la Leave-One-Out Cross-Validation (LOO-CV).</p>
-<section id="leave-one-out-cross-validation-loo-cv" class="level3" data-number="74.5.1">
-<h3 data-number="74.5.1" class="anchored" data-anchor-id="leave-one-out-cross-validation-loo-cv"><span class="header-section-number">74.5.1</span> Leave-One-Out Cross-Validation (LOO-CV)</h3>
-<p>Il LOO-CV è una tecnica che consente di stimare l’ELPD senza la necessità di conoscere la vera distribuzione dei dati. Questo metodo consiste nel rimuovere una singola osservazione dal dataset, adattare il modello sui dati rimanenti, e poi valutare la densità predittiva per l’osservazione esclusa. Questa procedura viene ripetuta per ogni osservazione nel dataset, e i risultati vengono sommati per ottenere una stima complessiva dell’ELPD.</p>
-<p>Procedura:</p>
-<ol type="1">
-<li>rimuovere una singola osservazione <span class="math inline">\(y_i\)</span> dal dataset;</li>
-<li>adattare il modello ai dati rimanenti <span class="math inline">\(y_{-i}\)</span>;</li>
-<li>calcolare la densità predittiva <span class="math inline">\(p(y_i \mid y_{-i})\)</span> per l’osservazione esclusa;</li>
-<li>ripetere il processo per tutte le osservazioni e sommare i logaritmi delle densità predittive per ottenere l’ELPD.</li>
-</ol>
-<p>Formula:</p>
-<p><span class="math display">\[ \text{Stima dell'ELPD} = \sum_{i=1}^{N} \log p(y_i \mid y_{-i}), \]</span></p>
-<p>dove <span class="math inline">\(y_i\)</span> è il dato escluso e <span class="math inline">\(y_{-i}\)</span> rappresenta tutti gli altri dati.</p>
-<p>Vantaggi e limitazioni:</p>
-<ul>
-<li>LOO-CV fornisce una stima robusta dell’ELPD, particolarmente utile per modelli complessi e dataset di dimensioni ridotte;</li>
-<li>questo metodo è computazionalmente intensivo, specialmente per dataset molto grandi o modelli complessi.</li>
-</ul>
+<section id="leave-one-out-cross-validation-loo-cv" class="level3" data-number="75.4.2">
+<h3 data-number="75.4.2" class="anchored" data-anchor-id="leave-one-out-cross-validation-loo-cv"><span class="header-section-number">75.4.2</span> Leave-One-Out Cross-Validation (LOO-CV)</h3>
+<p>La <em>cross-validation</em>, in particolare la <em>Leave-One-Out Cross-Validation (LOO-CV)</em>, è una tecnica per affrontare questo problema. La LOO-CV valuta un modello lasciando fuori una sola osservazione dal dataset, addestrando il modello sul resto dei dati e poi testandolo sull’osservazione esclusa. Questo processo viene ripetuto per ogni osservazione nel dataset, e il risultato finale è una media delle prestazioni del modello su tutte le osservazioni lasciate fuori.</p>
+<p>Come la divergenza KL, anche il calcolo dell’ELPD richiede, in teoria, la conoscenza della vera distribuzione <span class="math inline">\(p\)</span>, che è ignota. Tuttavia, a differenza della divergenza KL, disponiamo di metodi pratici per approssimare l’ELPD senza la necessità di conoscere la vera distribuzione dei dati. Uno dei metodi più robusti e comunemente utilizzati per questa stima è la Leave-One-Out Cross-Validation (LOO-CV). Questo metodo consiste nel rimuovere una singola osservazione dal dataset, adattare il modello sui dati rimanenti, e poi valutare la densità predittiva per l’osservazione esclusa. Questa procedura viene ripetuta per ogni osservazione, e i risultati vengono sommati per ottenere una stima complessiva dell’ELPD.</p>
+<p>La LOO-CV è considerata uno dei metodi migliori per la selezione del modello perché fornisce una stima dell’accuratezza predittiva del modello su dati che non sono stati utilizzati per addestrarlo. Questo approccio riduce il rischio di overfitting, poiché misura come il modello si comporta su dati effettivamente “nuovi”.</p>
+<p>Quindi, sebbene il log-probability score sia una buona misura, il suo miglioramento con l’aumentare della complessità del modello può essere mitigato utilizzando tecniche di cross-validation, come la LOO-CV. Questo metodo fornisce una stima accurata della performance del modello su dati non visti, evitando così il problema dell’overfitting.</p>
 </section>
-<section id="criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" class="level3" data-number="74.5.2">
-<h3 data-number="74.5.2" class="anchored" data-anchor-id="criteri-di-informazione-come-approssimazioni-alla-divergenza-kl"><span class="header-section-number">74.5.2</span> Criteri di Informazione come Approssimazioni alla Divergenza KL</h3>
-<p>Oltre al LOO-CV, sono stati proposti altri metodi per approssimare l’ELPD, che derivano direttamente dal concetto di divergenza KL. Tra questi, i più noti sono i criteri di informazione, come l’errore quadratico medio (MSE), l’Akaike Information Criterion (AIC), il Bayesian Information Criterion (BIC) e il Widely Applicable Information Criterion (WAIC).</p>
-<p>Questi criteri forniscono approcci alternativi per valutare i modelli, bilanciando la bontà di adattamento del modello ai dati osservati con la sua complessità.</p>
-<section id="errore-quadratico-medio-mse" class="level4" data-number="74.5.2.1">
-<h4 data-number="74.5.2.1" class="anchored" data-anchor-id="errore-quadratico-medio-mse"><span class="header-section-number">74.5.2.1</span> Errore Quadratico Medio (MSE)</h4>
-<p>L’Errore Quadratico Medio (Mean Squared Error o MSE) misura la discrepanza media tra le previsioni del modello e i valori reali.</p>
-<p>Formula:</p>
+<section id="criteri-di-informazione-come-approssimazioni-alla-divergenza-kl" class="level3" data-number="75.4.3">
+<h3 data-number="75.4.3" class="anchored" data-anchor-id="criteri-di-informazione-come-approssimazioni-alla-divergenza-kl"><span class="header-section-number">75.4.3</span> Criteri di Informazione come Approssimazioni alla Divergenza KL</h3>
+<p>Oltre al LOO-CV, sono stati proposti altri metodi per approssimare l’ELPD, che derivano direttamente dal concetto di divergenza KL. Tra questi, i più noti sono i criteri di informazione, come l’errore quadratico medio (MSE), l’Akaike Information Criterion (AIC), il Bayesian Information Criterion (BIC) e il Widely Applicable Information Criterion (WAIC). Questi criteri forniscono approcci alternativi per valutare i modelli, bilanciando la bontà di adattamento del modello ai dati osservati con la sua complessità.</p>
+<section id="errore-quadratico-medio-mse" class="level4" data-number="75.4.3.1">
+<h4 data-number="75.4.3.1" class="anchored" data-anchor-id="errore-quadratico-medio-mse"><span class="header-section-number">75.4.3.1</span> Errore Quadratico Medio (MSE)</h4>
+<p>L’Errore Quadratico Medio (Mean Squared Error o MSE) misura la discrepanza media tra le previsioni del modello e i valori reali:</p>
 <p><span class="math display">\[ MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2, \]</span></p>
 <p>dove:</p>
 <ul>
@@ -1397,10 +1505,9 @@ ELPD del modello vero (con p=0.6): -1.8536</code></pre>
 </ul>
 <p>Un MSE inferiore indica un migliore adattamento del modello ai dati.</p>
 </section>
-<section id="criterio-di-informazione-di-akaike-aic" class="level4" data-number="74.5.2.2">
-<h4 data-number="74.5.2.2" class="anchored" data-anchor-id="criterio-di-informazione-di-akaike-aic"><span class="header-section-number">74.5.2.2</span> Criterio di Informazione di Akaike (AIC)</h4>
-<p>Il Criterio di Informazione di Akaike (AIC) va oltre l’MSE, considerando sia l’adattamento del modello che la sua complessità.</p>
-<p>Formula:</p>
+<section id="criterio-di-informazione-di-akaike-aic" class="level4" data-number="75.4.3.2">
+<h4 data-number="75.4.3.2" class="anchored" data-anchor-id="criterio-di-informazione-di-akaike-aic"><span class="header-section-number">75.4.3.2</span> Criterio di Informazione di Akaike (AIC)</h4>
+<p>Il Criterio di Informazione di Akaike (AIC) va oltre l’MSE, considerando sia l’adattamento del modello che la sua complessità:</p>
 <p><span class="math display">\[ AIC = -2 \sum \log p(y_i \mid \hat{\theta}_{\text{mle}}) + 2k, \]</span></p>
 <p>dove:</p>
 <ul>
@@ -1415,8 +1522,8 @@ ELPD del modello vero (con p=0.6): -1.8536</code></pre>
 <li>fornisce un’approssimazione asintoticamente corretta dell’ELPD per modelli regolari e campioni grandi.</li>
 </ul>
 </section>
-<section id="criterio-di-informazione-bayesiano-bic" class="level4" data-number="74.5.2.3">
-<h4 data-number="74.5.2.3" class="anchored" data-anchor-id="criterio-di-informazione-bayesiano-bic"><span class="header-section-number">74.5.2.3</span> Criterio di Informazione Bayesiano (BIC)</h4>
+<section id="criterio-di-informazione-bayesiano-bic" class="level4" data-number="75.4.3.3">
+<h4 data-number="75.4.3.3" class="anchored" data-anchor-id="criterio-di-informazione-bayesiano-bic"><span class="header-section-number">75.4.3.3</span> Criterio di Informazione Bayesiano (BIC)</h4>
 <p>Il Criterio di Informazione Bayesiano (BIC) è definito come:</p>
 <p><span class="math display">\[
 BIC = \ln(n)k - 2\ln(L),
@@ -1430,10 +1537,9 @@ BIC = \ln(n)k - 2\ln(L),
 <p>Il termine <span class="math inline">\(\ln(L)\)</span> rappresenta il logaritmo naturale della verosimiglianza massima, che indica quanto bene il modello si adatta ai dati osservati.</p>
 <p>Il BIC impone una penalità maggiore per l’incremento dei parametri, rendendolo particolarmente adeguato per dataset di grandi dimensioni.</p>
 </section>
-<section id="widely-applicable-information-criterion-waic" class="level4" data-number="74.5.2.4">
-<h4 data-number="74.5.2.4" class="anchored" data-anchor-id="widely-applicable-information-criterion-waic"><span class="header-section-number">74.5.2.4</span> Widely Applicable Information Criterion (WAIC)</h4>
-<p>Il WAIC è una versione avanzata dell’AIC, particolarmente utile nel contesto bayesiano. Considera l’intera distribuzione a posteriori dei parametri anziché solo la stima puntuale.</p>
-<p>Formula:</p>
+<section id="widely-applicable-information-criterion-waic" class="level4" data-number="75.4.3.4">
+<h4 data-number="75.4.3.4" class="anchored" data-anchor-id="widely-applicable-information-criterion-waic"><span class="header-section-number">75.4.3.4</span> Widely Applicable Information Criterion (WAIC)</h4>
+<p>Il WAIC è una versione avanzata dell’AIC, particolarmente utile nel contesto bayesiano. Considera l’intera distribuzione a posteriori dei parametri anziché solo la stima puntuale:</p>
 <p><span class="math display">\[
 WAIC = -2\left[ \sum_{i=1}^{n} \log \left( \frac{1}{S} \sum_{s=1}^{S} p(y_i \mid \theta^{(s)}) \right) - \sum_{i=1}^{n} \text{Var}_{\theta^{(s)}} \left( \log p(y_i \mid \theta^{(s)}) \right) \right],
 \]</span></p>
@@ -1451,31 +1557,15 @@ WAIC = -2\left[ \sum_{i=1}^{n} \log \left( \frac{1}{S} \sum_{s=1}^{S} p(y_i \mid
 </section>
 </section>
 </section>
-<section id="considerazioni-conclusive" class="level2" data-number="74.6">
-<h2 data-number="74.6" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">74.6</span> Considerazioni Conclusive</h2>
-<p>La valutazione dei modelli statistici è essenziale per garantire sia la loro affidabilità che la loro capacità di generalizzazione. Quando si sviluppano modelli, è fondamentale disporre di strumenti che permettano di confrontare diverse alternative e selezionare quella più adatta ai dati, garantendo al contempo previsioni accurate. In questo contesto, la divergenza di Kullback-Leibler (KL), l’Expected Log-Predictive Density (ELPD) e i criteri di informazione come AIC, BIC e WAIC offrono un quadro completo per la valutazione delle performance dei modelli.</p>
-<p>La divergenza KL rappresenta una misura ideale per quantificare la distanza tra la distribuzione di probabilità reale dei dati e quella stimata dal modello. Tuttavia, la sua applicazione pratica è limitata poiché richiede la conoscenza della distribuzione vera dei dati, che è generalmente sconosciuta. Questa limitazione rende impossibile calcolarla direttamente nella maggior parte dei casi pratici.</p>
-<p>Per superare questo ostacolo, si utilizza l’Expected Log-Predictive Density (ELPD). L’ELPD fornisce una stima della capacità predittiva del modello su nuovi dati, ovvero la sua abilità di generalizzare oltre i dati di training. Un’approssimazione particolarmente utile dell’ELPD si ottiene tramite la Leave-One-Out Cross-Validation (LOO-CV), che consiste nel rimuovere iterativamente un’osservazione dal dataset, addestrare il modello sui dati rimanenti e prevedere il valore dell’osservazione omessa. Questo processo permette di stimare accuratamente la capacità predittiva del modello su ogni singola osservazione, fornendo così un’approssimazione precisa dell’ELPD.</p>
-<p>L’ELPD e la divergenza KL sono strumenti complementari per la valutazione dei modelli statistici:</p>
-<ol type="1">
-<li>l’ELPD misura la capacità predittiva su nuovi dati, con valori più alti che indicano previsioni migliori e una maggiore capacità di generalizzazione del modello.</li>
-<li>la divergenza KL quantifica la differenza tra la distribuzione vera dei dati e quella stimata dal modello, con valori più bassi che indicano una migliore approssimazione della distribuzione reale da parte del modello.</li>
-</ol>
-<p>Esiste una relazione diretta tra ELPD e divergenza KL: massimizzare l’ELPD equivale a minimizzare la divergenza KL. Entrambi gli approcci mirano a sviluppare modelli che catturino al meglio la realtà rappresentata dai dati.</p>
-<p>In pratica:</p>
-<ul>
-<li>la divergenza KL valuta l’adattamento del modello ai dati osservati, fornendo una misura di quanto il modello riesca a replicare la distribuzione reale;</li>
-<li>l’ELPD e i suoi metodi di approssimazione (come LOO-CV, AIC, WAIC) misurano la capacità del modello di generalizzare su dati futuri, offrendo una valutazione più completa della qualità del modello.</li>
-</ul>
-<p>Anche i criteri di informazione come AIC, BIC e WAIC sono strumenti utili per approssimare la divergenza KL. Essi permettono di valutare i modelli in termini di adattamento ai dati e complessità, facilitando la selezione di un modello che bilancia precisione predittiva e parsimonia.</p>
-<p>Ciascun metodo fornisce prospettive diverse e complementari per sostituire la divergenza KL. Il LOO-CV è particolarmente utile per modelli complessi o quando si dispone di set di dati limitati, poiché offre una valutazione robusta, sebbene computazionalmente intensiva. D’altro canto, l’AIC e il WAIC sono più veloci e meno onerosi dal punto di vista computazionale, rendendoli adatti per valutazioni preliminari o quando si lavora con grandi dataset.</p>
-<p>In conclusione, la selezione del modello ottimale richiede un equilibrio tra adattamento ai dati e semplicità. L’uso combinato di tecniche di validazione incrociata e criteri di informazione permette di costruire modelli che:</p>
-<ol type="1">
-<li>si adattano bene ai dati osservati,</li>
-<li>forniscono previsioni affidabili su nuovi dati,</li>
-<li>catturano le tendenze rilevanti senza essere eccessivamente influenzati dal rumore.</li>
-</ol>
-<p>L’obiettivo finale non è creare il modello più complesso o quello che si adatta perfettamente ai dati di addestramento, ma piuttosto trovare un equilibrio ottimale tra semplicità e accuratezza, garantendo che il modello sia robusto e generalizzabile a dati futuri.</p>
+<section id="considerazioni-conclusive" class="level2" data-number="75.5">
+<h2 data-number="75.5" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">75.5</span> Considerazioni Conclusive</h2>
+<p>La valutazione dei modelli statistici è fondamentale per garantirne l’affidabilità e la capacità di generalizzazione. Quando si sviluppano modelli, è essenziale disporre di strumenti che permettano di confrontare diverse alternative e selezionare quella più adatta ai dati, assicurando previsioni accurate.</p>
+<p>Il LPPD (Log Pointwise Predictive Density) e l’ELPD (Expected Log Pointwise Predictive Density) sono due importanti strumenti per la valutazione dei modelli statistici in ambito bayesiano. Sebbene la divergenza KL (Kullback-Leibler) rappresenti una misura ideale per quantificare la distanza tra la distribuzione di probabilità reale dei dati e quella stimata dal modello, la sua applicazione pratica è limitata in quanto richiede la conoscenza della distribuzione vera dei dati, che è generalmente sconosciuta.</p>
+<p>A differenza della divergenza KL, il LPPD offre un approccio praticabile per valutare la capacità predittiva dei modelli. Tuttavia, il LPPD soffre del problema dell’overfitting. Per superare questo ostacolo, si utilizza l’ELPD, che stima la capacità predittiva del modello su nuovi dati, ovvero la sua abilità di generalizzare oltre i dati di addestramento.</p>
+<p>L’ELPD e la divergenza KL sono pertanto strumenti complementari per la valutazione dei modelli statistici. L’ELPD misura la capacità predittiva su nuovi dati, con valori più alti che indicano previsioni migliori e una maggiore capacità di generalizzazione. La divergenza KL, invece, quantifica la differenza tra la distribuzione vera dei dati e quella stimata dal modello, con valori più bassi che indicano una migliore approssimazione della distribuzione reale da parte del modello.</p>
+<p>Esiste una relazione diretta tra ELPD e divergenza KL: massimizzare l’ELPD equivale a minimizzare la divergenza KL. Entrambi gli approcci mirano a sviluppare modelli in grado di catturare al meglio la realtà rappresentata dai dati.</p>
+<p>In pratica, la divergenza KL valuta l’adattamento del modello ai dati osservati, mentre l’ELPD e i suoi metodi di approssimazione (come LOO-CV) misurano la capacità del modello di generalizzare su dati futuri, offrendo una valutazione più completa della qualità del modello.</p>
+<p>La selezione del modello ottimale richiede quindi un equilibrio tra adattamento ai dati e semplicità. L’uso combinato di tecniche di validazione incrociata (come il LOO-CV) e criteri di informazione (come AIC, BIC e WAIC) permette di costruire modelli che si adattano bene ai dati osservati, forniscono previsioni affidabili su nuovi dati e catturano le tendenze rilevanti senza essere eccessivamente influenzati dal rumore.</p>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
@@ -1500,6 +1590,11 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-McElreath_rethinking" class="csl-entry" role="listitem">
+McElreath, Richard. 2020. <em>Statistical rethinking: <span>A</span> <span>Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. 2nd Edition. Boca Raton, Florida: CRC Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1915,12 +2010,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../chapters/entropy/01_entropy.html" class="pagination-link" aria-label="Entropia">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Entropia</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Entropia</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/entropy/03_stan_loo.html" class="pagination-link" aria-label="Validazione Incrociata Leave-One-Out">
-        <span class="nav-page-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/entropy/03_loo.html" class="pagination-link" aria-label="Validazione Incrociata Leave-One-Out">
+        <span class="nav-page-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
