@@ -11,9 +11,9 @@
 
 ### Introduzione alle Probabilità: Origine e Definizione
 
-Dal punto di vista matematico, da dove derivano i numeri che chiamiamo "probabilità"? Per rispondere a questa domanda, ci baseremo sulla trattazione proposta da [Michael Betancourt](https://github.com/betanalpha/quarto_chapters/tree/main), che ha l'obiettivo di spiegare in maniera chiara e precisa cosa sia una *distribuzione di probabilità*. Questo capitolo presenta una versione leggermente semplificata del suo lavoro, mantenendone però la notazione e le figure originali, per garantire coerenza con la trattazione originale.
+Da dove derivano matematicamente i numeri che chiamiamo "probabilità"? Per rispondere, ci riferiamo alla trattazione di [Michael Betancourt](https://github.com/betanalpha/quarto_chapters/tree/main), che chiarisce il concetto di *distribuzione di probabilità*. Questo capitolo offre una versione semplificata del suo lavoro, mantenendo la notazione e le figure originali.
 
-Betancourt sostiene che le basi della teoria della probabilità siano piuttosto semplici. Le difficoltà matematiche emergono principalmente quando si applica la teoria della probabilità a insiemi complessi, come i numeri reali. Per evitare queste complicazioni, Betancourt introduce i fondamenti della teoria della probabilità astratta utilizzando uno spazio campionario semplice, costituito da una collezione di un numero finito di elementi.
+Betancourt afferma che i principi della teoria della probabilità sono semplici; le difficoltà matematiche emergono principalmente nell'applicazione a insiemi complessi come i numeri reali. Per semplificare, Betancourt introduce i fondamenti della teoria della probabilità utilizzando uno spazio campionario composto da un numero finito di elementi.
 
 ## Insiemi Finiti
 
