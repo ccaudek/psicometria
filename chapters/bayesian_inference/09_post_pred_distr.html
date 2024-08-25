@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - Appendice Y — Inferenza bayesiana</title>
+<title>Data Science per Psicologi - 42&nbsp; Distribuzione predittiva a posteriori</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,37 +55,17 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/appendix/solutions_causality.html" rel="next">
-<link href="../../chapters/appendix/solutions_probability.html" rel="prev">
+<link href="../../chapters/mcmc/introduction_mcmc.html" rel="next">
+<link href="../../chapters/bayesian_inference/08_exponential_model.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -122,9 +102,6 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -167,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/appendix/a00_installation.html">Appendici</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/solutions_probability.html">Soluzioni degli esercizi</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/solutions_bayesian_inference.html"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/introduction_bayes_inference.html">Inferenza</a></li><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/09_post_pred_distr.html"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -463,13 +440,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
  <span class="menu-text">Inferenza</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/introduction_bayes_inference.html" class="sidebar-item-text sidebar-link">
@@ -532,7 +509,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/bayesian_inference/09_post_pred_distr.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/bayesian_inference/09_post_pred_distr.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></span></a>
   </div>
 </li>
@@ -965,13 +942,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
  <span class="menu-text">Appendici</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a00_installation.html" class="sidebar-item-text sidebar-link">
@@ -1112,13 +1089,13 @@ window.Quarto = {
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false">
  <span class="menu-text">Soluzioni degli esercizi</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
@@ -1127,7 +1104,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
   </div>
 </li>
@@ -1175,19 +1152,29 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="../bayesian_inference/02_subj_prop.html" id="toc-sec-subj-prop" class="nav-link active" data-scroll-target="#sec-subj-prop"><span>Capitolo 34</span></a></li>
-  <li><a href="../bayesian_inference/03_conjugate_families_1.html" id="toc-sec-congiugate-families-1" class="nav-link" data-scroll-target="#sec-congiugate-families-1"><span>Capitolo 36</span></a></li>
-  <li><a href="#sec_stan" id="toc-sec_stan" class="nav-link" data-scroll-target="#sec_stan"><span class="citation" data-cites="sec_stan">(<strong>sec_stan?</strong>)</span></a></li>
-  <li><a href="../bayesian_inference/09_post_pred_distr.html" id="toc-sec-post-pred-distr-discrete" class="nav-link" data-scroll-target="#sec-post-pred-distr-discrete"><span>Capitolo 42</span></a></li>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">42.1</span> Introduzione</a></li>
+  <li><a href="#previsioni-su-eventi-futuri" id="toc-previsioni-su-eventi-futuri" class="nav-link" data-scroll-target="#previsioni-su-eventi-futuri"><span class="header-section-number">42.2</span> Previsioni su Eventi Futuri</a></li>
+  <li><a href="#definizione" id="toc-definizione" class="nav-link" data-scroll-target="#definizione"><span class="header-section-number">42.3</span> Definizione</a></li>
+  <li><a href="#il-sacchetto-di-monete" id="toc-il-sacchetto-di-monete" class="nav-link" data-scroll-target="#il-sacchetto-di-monete"><span class="header-section-number">42.4</span> Il Sacchetto di Monete</a>
+  <ul class="collapse">
+  <li><a href="#passo-1-probabilità-iniziali" id="toc-passo-1-probabilità-iniziali" class="nav-link" data-scroll-target="#passo-1-probabilità-iniziali"><span class="header-section-number">42.4.1</span> Passo 1: Probabilità Iniziali</a></li>
+  <li><a href="#passo-2-osservare-i-risultati-e-aggiornare-le-probabilità" id="toc-passo-2-osservare-i-risultati-e-aggiornare-le-probabilità" class="nav-link" data-scroll-target="#passo-2-osservare-i-risultati-e-aggiornare-le-probabilità"><span class="header-section-number">42.4.2</span> Passo 2: Osservare i Risultati e Aggiornare le Probabilità</a></li>
+  <li><a href="#passo-3-calcolare-le-probabilità-posteriori" id="toc-passo-3-calcolare-le-probabilità-posteriori" class="nav-link" data-scroll-target="#passo-3-calcolare-le-probabilità-posteriori"><span class="header-section-number">42.4.3</span> Passo 3: Calcolare le Probabilità Posteriori</a></li>
+  <li><a href="#passo-4-predire-il-risultato-del-quinto-lancio" id="toc-passo-4-predire-il-risultato-del-quinto-lancio" class="nav-link" data-scroll-target="#passo-4-predire-il-risultato-del-quinto-lancio"><span class="header-section-number">42.4.4</span> Passo 4: Predire il Risultato del Quinto Lancio</a></li>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">42.4.5</span> Interpretazione</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">42.5</span> Considerazioni Conclusive</a></li>
+  <li><a href="#esercizi" id="toc-esercizi" class="nav-link" data-scroll-target="#esercizi"><span class="header-section-number">42.6</span> Esercizi</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">42.7</span> Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/appendix/solutions_bayesian_inference.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/bayesian_inference/09_post_pred_distr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/appendix/a00_installation.html">Appendici</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/solutions_probability.html">Soluzioni degli esercizi</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/solutions_bayesian_inference.html"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/introduction_bayes_inference.html">Inferenza</a></li><li class="breadcrumb-item"><a href="../../chapters/bayesian_inference/09_post_pred_distr.html"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-solutions-bayesian-inference" class="quarto-section-identifier">Appendice Y — Inferenza bayesiana</span></h1>
+<h1 class="title"><span id="sec-post-pred-distr-discrete" class="quarto-section-identifier"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></span></h1>
 </div>
 
 
@@ -1204,636 +1191,234 @@ window.Quarto = {
 </header>
 
 
-<div id="cell-1" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard library imports</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Third-party imports</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit  <span class="co"># Funzione logistica</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> cmdstan_path, CmdStanModel</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"stan_poisson_regression"</span>))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Define directories</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>home_directory<span class="sc">}</span><span class="ss">/_repositories/psicometria"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="sec-subj-prop" class="level1 unnumbered">
-<h1 class="unnumbered"><a href="../bayesian_inference/02_subj_prop.html" class="quarto-xref"><span>Capitolo 34</span></a></h1>
-<p><a href="../bayesian_inference/02_subj_prop.html#exr-subj-prop-1" class="quarto-xref">Esercizio&nbsp;<span>34.1</span></a></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> binom</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Definire i parametri del problema</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">100</span>  <span class="co"># numero di studi</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="dv">20</span>   <span class="co"># numero di studi che hanno condiviso i materiali</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Discretizzazione della probabilità theta</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>theta_grid <span class="op">=</span> np.array([<span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.25</span>, <span class="fl">0.35</span>, <span class="fl">0.45</span>, <span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.75</span>, <span class="fl">0.85</span>, <span class="fl">0.95</span>])</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribuzione a priori</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>prior_probs <span class="op">=</span> np.array([<span class="fl">0.05</span>, <span class="fl">0.20</span>, <span class="fl">0.30</span>, <span class="fl">0.15</span>, <span class="fl">0.10</span>, <span class="fl">0.08</span>, <span class="fl">0.05</span>, <span class="fl">0.03</span>, <span class="fl">0.02</span>, <span class="fl">0.02</span>])</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della verosimiglianza per ciascuna theta</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>likelihood <span class="op">=</span> binom.pmf(k, n, theta_grid)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribuzione a posteriori (non normalizzata)</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>posterior_unnorm <span class="op">=</span> likelihood <span class="op">*</span> prior_probs</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalizzazione della distribuzione a posteriori</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>posterior_probs <span class="op">=</span> posterior_unnorm <span class="op">/</span> np.<span class="bu">sum</span>(posterior_unnorm)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della media a posteriori</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>posterior_mean <span class="op">=</span> np.<span class="bu">sum</span>(posterior_probs <span class="op">*</span> theta_grid)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Estrazione di un campione casuale dalla distribuzione a posteriori</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)  <span class="co"># per la riproducibilità</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>posterior_sample <span class="op">=</span> np.random.choice(theta_grid, size<span class="op">=</span><span class="dv">10000</span>, p<span class="op">=</span>posterior_probs)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dell'intervallo di credibilità al 89%</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>cred_interval <span class="op">=</span> np.percentile(posterior_sample, [<span class="fl">5.5</span>, <span class="fl">94.5</span>])</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>posterior_mean, cred_interval</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>La soluzione dell’esercizio basato sul metodo della griglia fornisce i seguenti risultati:</p>
+<p><strong>Prerequisiti</strong></p>
 <ul>
-<li><strong>Media della distribuzione a posteriori</strong>: 0.2152</li>
-<li><strong>Intervallo di credibilità al 89%</strong>: [0.15, 0.25]</li>
+<li>Leggere il capitolo <a href="https://www.bayesrulesbook.com/chapter-8#ch8-post-pred">Posterior Inference &amp; Prediction</a> di <a href="https://www.bayesrulesbook.com">Bayes Rules!</a>.</li>
 </ul>
-<p>Questi risultati indicano che, dopo aver osservato i dati e aver considerato la distribuzione a priori, la probabilità stimata che uno studio condivida i materiali di ricerca è circa il 21.5%, con un intervallo di credibilità all’89% che va dal 15% al 25%.</p>
+<p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Imparare a combinare le probabilità a posteriori con le probabilità condizionali di un nuovo evento (come ottenere “croce” in un ulteriore lancio) per fare previsioni future. La distribuzione predittiva a posteriori ci permette di calcolare la probabilità di nuovi dati, tenendo conto delle evidenze osservate.</li>
+<li>Capire come la modellazione probabilistica aiuti a formalizzare l’incertezza e a fare previsioni basate su evidenze aggiornate, un concetto chiave nel ragionamento statistico e inferenziale.</li>
+</ul>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="aaefec91-baba-477c-a241-dc11fde0f447" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="59c508b7-b9ea-43e7-8587-3cb01f83066f" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed to make the results fully reproducible</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"poisson-model"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="42.1">
+<h2 data-number="42.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">42.1</span> Introduzione</h2>
+<p>In questo capitolo esploreremo il concetto di <em>distribuzione predittiva a posteriori</em>, concentrandoci sul caso discreto. Per illustrare questo concetto in modo chiaro e intuitivo, utilizzeremo il problema del “bag of coins” come esempio esplicativo.</p>
 </section>
-<section id="sec-congiugate-families-1" class="level1 unnumbered">
-<h1 class="unnumbered"><a href="../bayesian_inference/03_conjugate_families_1.html" class="quarto-xref"><span>Capitolo 36</span></a></h1>
-<p><a href="../bayesian_inference/03_conjugate_families_1.html#exr-conjugate-families-1" class="quarto-xref">Esercizio&nbsp;<span>36.1</span></a></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Dati forniti</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>alpha_prior <span class="op">=</span> <span class="fl">31.91</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>beta_prior <span class="op">=</span> <span class="dv">100</span> <span class="op">-</span> <span class="fl">31.91</span>  <span class="co"># 100 - successo = insuccesso</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri per la distribuzione a priori</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>a_prior <span class="op">=</span> alpha_prior</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>b_prior <span class="op">=</span> beta_prior</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri per il calcolo della distribuzione a posteriori</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>n_observations <span class="op">=</span> <span class="dv">152</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Scenario (a): tasso di successo del 60%</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>successes_a <span class="op">=</span> <span class="fl">0.60</span> <span class="op">*</span> n_observations</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Scenario (b): tasso di successo del 96%</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>successes_b <span class="op">=</span> <span class="fl">0.96</span> <span class="op">*</span> n_observations</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo della distribuzione a posteriori</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>a_posterior_a <span class="op">=</span> a_prior <span class="op">+</span> successes_a</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>b_posterior_a <span class="op">=</span> b_prior <span class="op">+</span> (n_observations <span class="op">-</span> successes_a)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>a_posterior_b <span class="op">=</span> a_prior <span class="op">+</span> successes_b</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>b_posterior_b <span class="op">=</span> b_prior <span class="op">+</span> (n_observations <span class="op">-</span> successes_b)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Distribuzioni beta a posteriori</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>posterior_a <span class="op">=</span> stats.beta.pdf(x, a_posterior_a, b_posterior_a)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>posterior_b <span class="op">=</span> stats.beta.pdf(x, a_posterior_b, b_posterior_b)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>a_posterior_a, b_posterior_a, a_posterior_b, b_posterior_b</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>La risoluzione del problema ha portato al calcolo delle distribuzioni a posteriori nei due scenari specificati, utilizzando il metodo delle famiglie coniugate.</p>
-<p><strong>Scenario (a): Tasso di successo del 60%</strong></p>
-<ul>
-<li><strong>Parametri della distribuzione a posteriori:</strong>
-<ul>
-<li><span class="math inline">\(\alpha_{\text{post}} = 123.11\)</span></li>
-<li><span class="math inline">\(\beta_{\text{post}} = 128.89\)</span></li>
-</ul></li>
-</ul>
-<p><strong>Scenario (b): Tasso di successo del 96%</strong></p>
-<ul>
-<li><strong>Parametri della distribuzione a posteriori:</strong>
-<ul>
-<li><span class="math inline">\(\alpha_{\text{post}} = 177.83\)</span></li>
-<li><span class="math inline">\(\beta_{\text{post}} = 74.17\)</span></li>
-</ul></li>
-</ul>
-<p>In entrambi gli scenari, i parametri <span class="math inline">\(\alpha_{\text{post}}\)</span> e <span class="math inline">\(\beta_{\text{post}}\)</span> determinano le forme delle distribuzioni a posteriori, che ci forniscono informazioni aggiornate su <span class="math inline">\(\theta\)</span> (il tasso di successo) dopo aver osservato i dati.</p>
-<p><strong>Commento sui Risultati</strong></p>
-<ul>
-<li><p><strong>Scenario (a)</strong>: Con un tasso di successo osservato del 60%, la distribuzione a posteriori riflette una moderata concentrazione attorno a <span class="math inline">\(\theta = 0.49\)</span>, suggerendo una certa incertezza nella stima del vero tasso di successo, ma comunque compatibile con la distribuzione a priori basata sugli studi preregistrati.</p></li>
-<li><p><strong>Scenario (b)</strong>: Con un tasso di successo osservato del 96%, la distribuzione a posteriori è fortemente concentrata verso l’alto, con un valore medio di <span class="math inline">\(\theta\)</span> che si avvicina a 0.71. Questo scenario riflette una maggiore confidenza in un tasso di successo elevato, pur risultando in una distribuzione molto diversa rispetto alla distribuzione a priori.</p></li>
-</ul>
-<p>Questi risultati mostrano come i dati osservati influenzino la nostra stima del tasso di successo, con la distribuzione a priori che viene “aggiornata” in base alle osservazioni fatte. In particolare, lo scenario con il 96% di successo evidenzia una netta discrepanza rispetto alla distribuzione a priori, suggerendo che i risultati ottenuti potrebbero essere molto più ottimistici rispetto alla base di riferimento data dagli studi preregistrati.</p>
-<p><a href="../bayesian_inference/03_conjugate_families_1.html#exr-conjugate-families-2" class="quarto-xref">Esercizio&nbsp;<span>36.2</span></a></p>
-<p>Sia <span class="math inline">\(\theta\)</span> la probabilità di nascita di una femmina dato il caso di placenta previa. Se utilizziamo una distribuzione a priori uniforme per <span class="math inline">\(\theta\)</span> (Beta(1, 1)), allora il problema si riduce a trovare la distribuzione a posteriori per <span class="math inline">\(\theta\)</span> nel contesto di un modello beta-binomiale. La distribuzione a posteriori risulta essere una Beta(y + <span class="math inline">\(\alpha_{\text{prior}}\)</span>, N - y + <span class="math inline">\(\beta_{\text{prior}}\)</span>), ovvero una Beta(438, 544). Possiamo calcolare la media a posteriori di <span class="math inline">\(\theta\)</span> nel modo seguente:</p>
-<div id="cell-4" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>births <span class="op">=</span> <span class="dv">987</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fem_births <span class="op">=</span> <span class="dv">437</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>stats.beta.mean(fem_births <span class="op">+</span> <span class="dv">1</span>, births <span class="op">-</span> fem_births <span class="op">+</span> <span class="dv">1</span>).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>0.443</code></pre>
-</div>
-</div>
-<p>Possiamo anche simulare un campione dalla distribuzione a posteriori per fare inferenze.</p>
-<div id="cell-6" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>posterior_sample <span class="op">=</span> stats.beta.rvs(size<span class="op">=</span><span class="dv">10000</span>, a<span class="op">=</span>fem_births <span class="op">+</span> <span class="dv">1</span>, b<span class="op">=</span>births <span class="op">-</span> fem_births <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sns.histplot(posterior_sample, alpha<span class="op">=</span><span class="fl">0.5</span>, stat<span class="op">=</span><span class="st">"density"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.xlabel(<span class="vs">r"$\theta$"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="fl">0.485</span>, color<span class="op">=</span><span class="st">"gray"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.annotate(</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Proporzione di nascite femminili</span><span class="ch">\n</span><span class="st">nella popolazione generale"</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    xy<span class="op">=</span>(<span class="fl">0.485</span>, <span class="dv">20</span>),  <span class="co"># Posizione dell'annotazione (x, y)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    xytext<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.95</span>),  <span class="co"># Posizione del testo dell'annotazione</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    textcoords<span class="op">=</span><span class="st">"axes fraction"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    arrowprops<span class="op">=</span><span class="bu">dict</span>(facecolor<span class="op">=</span><span class="st">"black"</span>, arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>),</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    horizontalalignment<span class="op">=</span><span class="st">"left"</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
-<pre><code>Text(0.5, 0.95, 'Proporzione di nascite femminili\nnella popolazione generale')</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="solutions_bayesian_inference_files/figure-html/cell-4-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-7" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>np.quantile(posterior_sample, [<span class="fl">0.025</span>, <span class="fl">0.975</span>]).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
-<pre><code>array([0.411, 0.473])</code></pre>
-</div>
-</div>
-<p>Riassunti precisi della distribuzione a posteriori possono essere ottenuti dalle proprietà della distribuzione beta. I quantili esatti della distribuzione a posteriori possono essere calcolati tramite integrazione numerica della densità beta; la mediana risulta essere 0.446 e l’intervallo centrale di credibilità al 95% è [0.415, 0.477].</p>
-<p>In conclusione, possiamo affermare con un livello di certezza soggettiva del 95% che la proporzione di nascite femminili nella popolazione con placenta previa è inferiore alla proporzione di nascite femminili nella popolazione generale.</p>
-<p><a href="../bayesian_inference/03_conjugate_families_1.html#exr-conjugate-families-3" class="quarto-xref">Esercizio&nbsp;<span>36.3</span></a></p>
-<div id="cell-10" class="cell" data-execution_count="55">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri della distribuzione Beta</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>alpha_prior <span class="op">=</span> <span class="fl">48.5</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>beta_prior <span class="op">=</span> <span class="fl">51.5</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione dei valori x su cui valutare la distribuzione Beta</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1000</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Valutazione della densità di probabilità Beta su x</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> stats.beta.pdf(x, alpha_prior, beta_prior)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del grafico</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, color<span class="op">=</span><span class="st">"rebeccapurple"</span>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, y, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="bu">max</span>(y) <span class="op">+</span> <span class="fl">0.05</span>)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$\theta$"</span>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribuzione Beta(48.5, 51.5)"</span>)</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_10074/1642415141.py:19: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-  plt.legend()</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="solutions_bayesian_inference_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-11" class="cell" data-execution_count="53">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>births <span class="op">=</span> <span class="dv">987</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fem_births <span class="op">=</span> <span class="dv">437</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>posterior_sample <span class="op">=</span> stats.beta.rvs(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span><span class="dv">10000</span>, a<span class="op">=</span>fem_births <span class="op">+</span> alpha_prior, b<span class="op">=</span>births <span class="op">-</span> fem_births <span class="op">+</span> beta_prior</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>sns.histplot(posterior_sample, alpha<span class="op">=</span><span class="fl">0.5</span>, stat<span class="op">=</span><span class="st">"density"</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.xlabel(<span class="vs">r"$\theta$"</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="fl">0.485</span>, color<span class="op">=</span><span class="st">"gray"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>plt.annotate(</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Proporzione di nascite femminili</span><span class="ch">\n</span><span class="st">nella popolazione generale"</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    xy<span class="op">=</span>(<span class="fl">0.485</span>, <span class="dv">20</span>),  <span class="co"># Posizione dell'annotazione (x, y)</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    xytext<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.95</span>),  <span class="co"># Posizione del testo dell'annotazione</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    textcoords<span class="op">=</span><span class="st">"axes fraction"</span>,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    arrowprops<span class="op">=</span><span class="bu">dict</span>(facecolor<span class="op">=</span><span class="st">"black"</span>, arrowstyle<span class="op">=</span><span class="st">"-&gt;"</span>),</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    horizontalalignment<span class="op">=</span><span class="st">"left"</span>,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="53">
-<pre><code>Text(0.5, 0.95, 'Proporzione di nascite femminili\nnella popolazione generale')</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="solutions_bayesian_inference_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-12" class="cell" data-execution_count="54">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>np.quantile(posterior_sample, [<span class="fl">0.025</span>, <span class="fl">0.975</span>]).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="54">
-<pre><code>array([0.417, 0.476])</code></pre>
-</div>
-</div>
-<p>I risultati replicano sostanzialmente quelli ottenuti nell’<a href="../bayesian_inference/03_conjugate_families_1.html#exr-conjugate-families-2" class="quarto-xref">Esercizio&nbsp;<span>36.2</span></a>.</p>
-<p><a href="../bayesian_inference/03_conjugate_families_1.html#exr-conjugate-families-4" class="quarto-xref">Esercizio&nbsp;<span>36.4</span></a></p>
-<p>Per risolvere il problema utilizzando il modello beta-binomiale e calcolare la distribuzione a posteriori, seguiamo i seguenti passaggi.</p>
-<ul>
-<li>Abbiamo un campione di 202 soggetti adulti italiani, e 6.4% di questi sono mancini. Ciò significa che il numero di mancini osservati è <span class="math inline">\(y = 0.064 \times 202 = 12.928\)</span>, che approssimiamo a <span class="math inline">\(y = 13\)</span>.</li>
-<li>La prior informativa basata sullo studio di <span class="citation" data-cites="papadatou2020human">Papadatou-Pastou et al. (<a href="../../99-references.html#ref-papadatou2020human" role="doc-biblioref">2020</a>)</span> è espressa come una distribuzione Beta(8, 60).</li>
-</ul>
-<p>Nel modello beta-binomiale, se abbiamo una prior <span class="math inline">\(\text{Beta}(\alpha_{\text{prior}}, \beta_{\text{prior}})\)</span>, e osserviamo <span class="math inline">\(y\)</span> successi su <span class="math inline">\(N\)</span> tentativi, la distribuzione a posteriori sarà:</p>
-<p><span class="math display">\[
-\text{Beta}(\alpha_{\text{post}} = \alpha_{\text{prior}} + y, \, \beta_{\text{post}} = \beta_{\text{prior}} + N - y)
-\]</span></p>
-<p>In questo caso:</p>
-<ul>
-<li><span class="math inline">\(\alpha_{\text{prior}} = 8\)</span></li>
-<li><span class="math inline">\(\beta_{\text{prior}} = 60\)</span></li>
-<li><span class="math inline">\(y = 13\)</span></li>
-<li><span class="math inline">\(N = 202\)</span></li>
-</ul>
-<p>Quindi i parametri della distribuzione a posteriori saranno:</p>
-<p><span class="math display">\[
-\alpha_{\text{post}} = 8 + 13 = 21
-\]</span></p>
-<p><span class="math display">\[
-\beta_{\text{post}} = 60 + 202 - 13 = 249
-\]</span></p>
-<p>La distribuzione a posteriori è dunque una Beta(21, 249).</p>
-<p>Questa distribuzione a posteriori riflette la nostra credenza aggiornata sulla proporzione di mancini nella popolazione italiana, tenendo conto sia delle evidenze dello studio di <span class="citation" data-cites="gori2024italian">Gori et al. (<a href="../../99-references.html#ref-gori2024italian" role="doc-biblioref">2024</a>)</span> che delle informazioni pregresse della meta-analisi di <span class="citation" data-cites="papadatou2020human">Papadatou-Pastou et al. (<a href="../../99-references.html#ref-papadatou2020human" role="doc-biblioref">2020</a>)</span>.</p>
-<p>Per visualizzare questa distribuzione a posteriori, possiamo utilizzare Python:</p>
-<div id="cell-15" class="cell" data-execution_count="63">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametri della distribuzione Beta a posteriori</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>alpha_post <span class="op">=</span> <span class="dv">21</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>beta_post <span class="op">=</span> <span class="dv">249</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione dei valori x su cui valutare la distribuzione Beta</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="fl">0.2</span>, <span class="dv">1000</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># Si concentra la visualizzazione nell'intervallo plausibile</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Valutazione della densità di probabilità Beta su x</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> stats.beta.pdf(x, alpha_post, beta_post)</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del grafico</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, y, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">0</span>, <span class="fl">0.2</span>)</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="bu">max</span>(y) <span class="op">+</span> <span class="fl">0.5</span>)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$\theta$"</span>)</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribuzione a Posteriori Beta(21, 249)"</span>)</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_10074/519876995.py:21: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-  plt.legend()</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="solutions_bayesian_inference_files/figure-html/cell-9-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Possiamo anche calcolare la media e la varianza della distribuzione a posteriori:</p>
-<ul>
-<li>Media a posteriori:</li>
-</ul>
-<p><span class="math display">\[
-\mu_{\text{post}} = \frac{\alpha_{\text{post}}}{\alpha_{\text{post}} + \beta_{\text{post}}} = \frac{21}{21 + 249} = 0.077
-\]</span></p>
-<ul>
-<li>Varianza a posteriori:</li>
-</ul>
-<p><span class="math display">\[
-\text{Var}_{\text{post}} = \frac{\alpha_{\text{post}} \beta_{\text{post}}}{(\alpha_{\text{post}} + \beta_{\text{post}})^2 (\alpha_{\text{post}} + \beta_{\text{post}} + 1)} \approx 0.00026
-\]</span></p>
-<p>La distribuzione a posteriori Beta(21, 249) suggerisce che la proporzione di mancini nella popolazione italiana è molto probabilmente vicina al 7.7%, con un intervallo di incertezza che riflette sia i dati attuali che le informazioni pregresse.</p>
+<section id="previsioni-su-eventi-futuri" class="level2" data-number="42.2">
+<h2 data-number="42.2" class="anchored" data-anchor-id="previsioni-su-eventi-futuri"><span class="header-section-number">42.2</span> Previsioni su Eventi Futuri</h2>
+<p>La <em>distribuzione predittiva a posteriori</em> è un concetto chiave nell’inferenza bayesiana. In parole semplici, rappresenta le probabilità degli eventi futuri basate su ciò che abbiamo già osservato. In altre parole, è come fare previsioni su quello che potrebbe succedere, utilizzando le informazioni raccolte fino a quel momento e le nostre convinzioni aggiornate (a posteriori).</p>
 </section>
-<section id="sec_stan" class="level1 unnumbered">
-<h1 class="unnumbered"><span class="citation" data-cites="sec_stan">(<a href="../../99-references.html#ref-sec_stan" role="doc-biblioref"><strong>sec_stan?</strong></a>)</span></h1>
-<p><a href="../mcmc/02_stan_beta_binomial.html#exr-stan-beta-binomial-1" class="quarto-xref">Esercizio&nbsp;<span>44.1</span></a></p>
-<p>Laplace adottò la seguente distribuzione campionaria per modellare il numero di maschi nati su un totale di <span class="math inline">\(N\)</span> nascite:</p>
+<section id="definizione" class="level2" data-number="42.3">
+<h2 data-number="42.3" class="anchored" data-anchor-id="definizione"><span class="header-section-number">42.3</span> Definizione</h2>
+<p>Immagina di avere un insieme di dati che hai già osservato, chiamato <span class="math inline">\(y = \{y_1, y_2, \ldots, y_n\}\)</span>. Supponiamo che questi dati siano stati generati da un modello con un parametro sconosciuto <span class="math inline">\(\theta\)</span>, e che tu abbia una qualche idea iniziale (detta <em>a priori</em>) su quale possa essere il valore di <span class="math inline">\(\theta\)</span>, rappresentata dalla distribuzione <span class="math inline">\(p(\theta)\)</span>.</p>
+<p>Dopo aver osservato i dati, possiamo aggiornare la nostra idea iniziale per ottenere una nuova distribuzione per <span class="math inline">\(\theta\)</span>, chiamata <em>distribuzione a posteriori</em>, indicata come <span class="math inline">\(p(\theta | y)\)</span>. Questa distribuzione riflette quello che abbiamo imparato sui parametri del modello dopo aver visto i dati.</p>
+<p>La formula per la distribuzione a posteriori è:</p>
 <p><span class="math display">\[
-y \sim \text{binomiale}(N, \theta),
+p(\theta | y) = \frac{p(y | \theta) p(\theta)}{p(y)},
 \]</span></p>
-<p>dove <span class="math inline">\(N\)</span> è il numero totale di nascite, <span class="math inline">\(\theta\)</span> è la probabilità di nascita di un maschio e <span class="math inline">\(y\)</span> è il numero di nascite maschili.</p>
-<p>Laplace utilizzò la seguente distribuzione a priori per <span class="math inline">\(\theta\)</span>:</p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(p(\theta | y)\)</span> è la distribuzione a posteriori del parametro <span class="math inline">\(\theta\)</span>;</li>
+<li><span class="math inline">\(p(y | \theta)\)</span> è la probabilità di osservare i dati dati i parametri, chiamata <em>verosimiglianza</em>;</li>
+<li><span class="math inline">\(p(\theta)\)</span> è la distribuzione a priori del parametro <span class="math inline">\(\theta\)</span>;</li>
+<li><span class="math inline">\(p(y)\)</span> è la probabilità di osservare quei dati, chiamata anche <em>evidenza</em>.</li>
+</ul>
+<p>Per fare previsioni su un nuovo dato <span class="math inline">\(\tilde{y}\)</span>, usiamo la <em>distribuzione predittiva a posteriori</em>. Questa si ottiene combinando tutte le possibili ipotesi sui parametri del modello, pesandole per quanto le riteniamo probabili in base ai dati osservati:</p>
 <p><span class="math display">\[
-\theta \sim \text{beta}(1, 1),
+p(\tilde{y} | y) = \int p(\tilde{y} | \theta) p(\theta | y) \, d\theta.
 \]</span></p>
-<p>dove la distribuzione <span class="math inline">\(\text{beta}(1, 1)\)</span> è uniforme sull’intervallo <span class="math inline">\(\theta \in (0, 1)\)</span>.</p>
-<p>Ecco come possiamo specificare il modello Stan:</p>
-<div id="cell-18" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"sex-ratio.stan"</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(stan_file, <span class="st">"r"</span>) <span class="im">as</span> f:</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(f.read())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Se il parametro <span class="math inline">\(\theta\)</span> può assumere solo alcuni valori discreti, invece di un integrale si usa una somma:</p>
+<p><span class="math display">\[
+p(\tilde{y} | y) = \sum_{\theta} p(\tilde{y} | \theta) p(\theta | y).
+\]</span></p>
+<p>Questa distribuzione combina la nostra convinzione aggiornata sui parametri <span class="math inline">\(\theta\)</span> con la probabilità di osservare un nuovo dato <span class="math inline">\(\tilde{y}\)</span>, dato un certo valore di <span class="math inline">\(\theta\)</span>. In questo modo, possiamo fare previsioni considerando tutte le incertezze che abbiamo sui parametri del modello.</p>
+</section>
+<section id="il-sacchetto-di-monete" class="level2" data-number="42.4">
+<h2 data-number="42.4" class="anchored" data-anchor-id="il-sacchetto-di-monete"><span class="header-section-number">42.4</span> Il Sacchetto di Monete</h2>
+<p>In questo esempio discutiamo un problema che consente di presentare il concetto di distribuzione predittiva a posteriori in un modo intuivito. Immaginiamo di avere un sacchetto contenente tre tipi diversi di monete. Questi tre tipi di monete hanno caratteristiche uniche riguardo la probabilità di ottenere “testa” o “croce” quando vengono lanciate:</p>
+<ol type="1">
+<li>Moneta di Tipo 0: Questa moneta dà sempre “croce”. La probabilità di ottenere “testa” è 0.</li>
+<li>Moneta di Tipo 1: Questa è una moneta equa. La probabilità di ottenere “testa” è 0.5, e quindi anche la probabilità di ottenere “croce” è 0.5.</li>
+<li>Moneta di Tipo 2: Questa moneta dà sempre “testa”. La probabilità di ottenere “testa” è 1.</li>
+</ol>
+<p>Supponiamo di scegliere una moneta a caso dal sacchetto e di lanciarla quattro volte. In tutte e quattro le volte otteniamo “croce”. Ora vogliamo calcolare la probabilità di ottenere “croce” al quinto lancio.</p>
+<section id="passo-1-probabilità-iniziali" class="level3" data-number="42.4.1">
+<h3 data-number="42.4.1" class="anchored" data-anchor-id="passo-1-probabilità-iniziali"><span class="header-section-number">42.4.1</span> Passo 1: Probabilità Iniziali</h3>
+<p>Prima di lanciare la moneta, non sappiamo quale tipo di moneta abbiamo estratto dal sacchetto. Poiché ogni moneta ha la stessa probabilità di essere scelta, attribuiamo una probabilità iniziale (prior) uguale a ciascun tipo di moneta:</p>
+<ul>
+<li>Probabilità di avere la Moneta di Tipo 0: <span class="math inline">\(\frac{1}{3}\)</span>.</li>
+<li>Probabilità di avere la Moneta di Tipo 1: <span class="math inline">\(\frac{1}{3}\)</span>.</li>
+<li>Probabilità di avere la Moneta di Tipo 2: <span class="math inline">\(\frac{1}{3}\)</span>.</li>
+</ul>
+</section>
+<section id="passo-2-osservare-i-risultati-e-aggiornare-le-probabilità" class="level3" data-number="42.4.2">
+<h3 data-number="42.4.2" class="anchored" data-anchor-id="passo-2-osservare-i-risultati-e-aggiornare-le-probabilità"><span class="header-section-number">42.4.2</span> Passo 2: Osservare i Risultati e Aggiornare le Probabilità</h3>
+<p>Dopo aver osservato quattro lanci che hanno dato tutti “croce”, possiamo aggiornare le nostre probabilità di avere un certo tipo di moneta utilizzando queste informazioni.</p>
+<ul>
+<li>Moneta di Tipo 0: Se avessimo questa moneta, ottenere “croce” in tutti i lanci è ciò che ci aspetteremmo, dato che dà sempre “croce”.</li>
+<li>Moneta di Tipo 1: Con questa moneta, ottenere quattro “croce” di fila è possibile ma piuttosto improbabile, dato che la probabilità di “croce” in ciascun lancio è solo 0.5.</li>
+<li>Moneta di Tipo 2: Con questa moneta, ottenere “croce” è impossibile perché dà sempre “testa”.</li>
+</ul>
+<p>Basandoci su queste osservazioni, è molto più probabile che la moneta scelta sia di Tipo 0. La probabilità di avere la Moneta di Tipo 1 è bassa, mentre la probabilità di avere la Moneta di Tipo 2 è zero.</p>
+</section>
+<section id="passo-3-calcolare-le-probabilità-posteriori" class="level3" data-number="42.4.3">
+<h3 data-number="42.4.3" class="anchored" data-anchor-id="passo-3-calcolare-le-probabilità-posteriori"><span class="header-section-number">42.4.3</span> Passo 3: Calcolare le Probabilità Posteriori</h3>
+<p>Per calcolare le nuove probabilità (posteriori) per ogni tipo di moneta dopo aver visto quattro “croce”, utilizziamo la formula di Bayes. Supponiamo che <span class="math inline">\(D\)</span> rappresenti il dato “croce, croce, croce, croce”. Dopo i calcoli (che qui non dettagliamo, ma che presenteremo in seguito), otteniamo le seguenti probabilità posteriori:</p>
+<ul>
+<li>Probabilità a posteriori di avere la Moneta di Tipo 0: circa 0.941.</li>
+<li>Probabilità a posteriori di avere la Moneta di Tipo 1: circa 0.059.</li>
+<li>Probabilità a posteriori di avere la Moneta di Tipo 2: 0.</li>
+</ul>
+</section>
+<section id="passo-4-predire-il-risultato-del-quinto-lancio" class="level3" data-number="42.4.4">
+<h3 data-number="42.4.4" class="anchored" data-anchor-id="passo-4-predire-il-risultato-del-quinto-lancio"><span class="header-section-number">42.4.4</span> Passo 4: Predire il Risultato del Quinto Lancio</h3>
+<p>Per prevedere la probabilità di ottenere “croce” al quinto lancio, combiniamo le probabilità posteriori di ogni tipo di moneta con la probabilità di ottenere “croce” specifica a ciascun tipo:</p>
+<ul>
+<li>Moneta di Tipo 0: Probabilità di “croce” = 1.</li>
+<li>Moneta di Tipo 1: Probabilità di “croce” = 0.5.</li>
+<li>Moneta di Tipo 2: Probabilità di “croce” = 0.</li>
+</ul>
+<p>Calcoliamo ora la probabilità totale di ottenere “croce” al quinto lancio:</p>
+<ol type="1">
+<li>Contributo della Moneta di Tipo 0: <span class="math inline">\(0.941 \times 1 = 0.941\)</span>.</li>
+<li>Contributo della Moneta di Tipo 1: <span class="math inline">\(0.059 \times 0.5 = 0.0295\)</span>.</li>
+<li>Contributo della Moneta di Tipo 2: <span class="math inline">\(0 \times 0 = 0\)</span>.</li>
+</ol>
+<p>Sommando queste probabilità:</p>
+<p><span class="math display">\[
+0.941 + 0.0295 + 0 = 0.9705.
+\]</span></p>
+<p>Nel seguito considereremo come svolgere tutti i calcoli.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 42.1</strong></span> Iniziamo con una distribuzione a priori uniforme per ciascun tipo di moneta, poiché inizialmente non sappiamo quale sia stata scelta:</p>
+<p><span class="math display">\[
+P(X = 0) = P(X = 1) = P(X = 2) = \frac{1}{3}.
+\]</span></p>
+<p>Dopo aver osservato una sequenza di lanci, ad esempio quattro “croce” (0, 0, 0, 0), possiamo aggiornare le nostre credenze sulla base dei dati.</p>
+<p>Calcoliamo la distribuzione a posteriori per ciascun tipo di moneta dopo aver osservato i risultati dei lanci.</p>
+<p>Verosimiglianza per ciascun tipo di moneta:</p>
+<ul>
+<li>Moneta tipo 0: Poiché dà sempre “croce”, la verosimiglianza di osservare quattro “croce” è <span class="math inline">\(P(D | X = 0) = 1\)</span>.</li>
+<li>Moneta tipo 1: Poiché è equa, la verosimiglianza di osservare quattro “croce” è <span class="math inline">\(P(D | X = 1) = (0.5)^4 = 0.0625\)</span>.</li>
+<li>Moneta tipo 2: Poiché dà sempre “testa”, la verosimiglianza di osservare quattro “croce” è <span class="math inline">\(P(D | X = 2) = 0\)</span>.</li>
+</ul>
+<p>Calcolo della distribuzione a posteriori per ciascun tipo di moneta:</p>
+<p><span class="math display">\[
+P(X = 0 | D) = \frac{P(D | X = 0)P(X = 0)}{P(D)},
+\]</span></p>
+<p><span class="math display">\[
+P(X = 1 | D) = \frac{P(D | X = 1)P(X = 1)}{P(D)},
+\]</span></p>
+<p><span class="math display">\[
+P(X = 2 | D) = \frac{P(D | X = 2)P(X = 2)}{P(D)},
+\]</span></p>
+<p>dove <span class="math inline">\(P(D) = P(D | X = 0)P(X = 0) + P(D | X = 1)P(X = 1) + P(D | X = 2)P(X = 2)\)</span>.</p>
+<p>Sostituendo i valori:</p>
+<p><span class="math display">\[
+P(D) = \frac{1}{3} \times 1 + \frac{1}{3} \times 0.0625 + \frac{1}{3} \times 0 = \frac{1 + 0.0625}{3} = \frac{1.0625}{3}.
+\]</span></p>
+<p>Quindi, le distribuzioni a posteriori diventano:</p>
+<p><span class="math display">\[
+P(X = 0 | D) = \frac{\frac{1}{3}}{\frac{1.0625}{3}} = \frac{1}{1.0625} \approx 0.941,
+\]</span></p>
+<p><span class="math display">\[
+P(X = 1 | D) = \frac{\frac{1}{3} \times 0.0625}{\frac{1.0625}{3}} = \frac{0.0625}{1.0625} \approx 0.059,
+\]</span></p>
+<p><span class="math display">\[
+P(X = 2 | D) = 0.
+\]</span></p>
+<p>Ora possiamo calcolare la distribuzione predittiva a posteriori per il prossimo lancio di moneta.</p>
+<p>La probabilità che il prossimo lancio sia “croce” è data dalla somma delle probabilità ponderate da ciascun tipo di moneta, basate sulle distribuzioni a posteriori:</p>
+<p><span class="math display">\[
+P(\text{croce nel prossimo lancio} | D) = P(X = 0 | D) \times 1 + P(X = 1 | D) \times 0.5 + P(X = 2 | D) \times 0.
+\]</span></p>
+<p>Inserendo i valori calcolati:</p>
+<p><span class="math display">\[
+P(\text{croce nel prossimo lancio} | D) = 0.941 \times 1 + 0.059 \times 0.5 + 0 \times 0 = 0.9705.
+\]</span></p>
+<p>Quindi, la distribuzione predittiva a posteriori ci dice che, dato che abbiamo osservato quattro “croce”, la probabilità che il prossimo lancio sia “croce” è circa <span class="math inline">\(0.9705\)</span>.</p>
+</div>
+</section>
+<section id="interpretazione" class="level3" data-number="42.4.5">
+<h3 data-number="42.4.5" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">42.4.5</span> Interpretazione</h3>
+<p>In questo esempio, abbiamo utilizzato la <em>distribuzione predittiva a posteriori</em> per fare una stima sulla probabilità di ottenere “croce” al quinto lancio. La distribuzione predittiva a posteriori rappresenta una combinazione delle nostre credenze aggiornate (probabilità posteriori) riguardo a quale moneta abbiamo selezionato, basate sui dati osservati (i primi quattro lanci), e le probabilità di ottenere “croce” associate a ciascun tipo di moneta. In altre parole, ci dice qual è la probabilità di un nuovo dato (il quinto lancio che dia “croce”) tenendo conto delle evidenze raccolte fino a quel punto.</p>
+<p>Nel contesto dell’esempio, la distribuzione predittiva a posteriori è data dalla combinazione delle probabilità posteriori di avere ciascun tipo di moneta con le probabilità di ottenere “croce” con quella moneta. Questa distribuzione ci permette di fare previsioni future (come il risultato del quinto lancio) basandoci sulle informazioni aggiornate dalle osservazioni precedenti. Il risultato finale di 0.9705 rappresenta la probabilità di ottenere “croce” al prossimo lancio, tenendo conto delle evidenze osservate.</p>
+<p>La distribuzione predittiva a posteriori è fondamentale nell’inferenza bayesiana perché permette di fare previsioni che considerano tutte le incertezze riguardo ai parametri del modello. Non ci basiamo solo sul valore stimato dei parametri, ma teniamo conto anche della nostra incertezza su questi valori.</p>
+</section>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="42.5">
+<h2 data-number="42.5" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">42.5</span> Considerazioni Conclusive</h2>
+<p>Utilizzando il modello “bag of coins”, possiamo vedere come le osservazioni passate influenzano le previsioni future attraverso la distribuzione predittiva a posteriori. Questo esempio mostra come, anche con una conoscenza iniziale limitata, possiamo aggiornare le nostre credenze in modo sistematico e fare previsioni ragionevoli basate sui dati raccolti.</p>
+</section>
+<section id="esercizi" class="level2" data-number="42.6">
+<h2 data-number="42.6" class="anchored" data-anchor-id="esercizi"><span class="header-section-number">42.6</span> Esercizi</h2>
+<div id="exr-bag-of-coins-1" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 42.1</strong></span> Utilizzando un set di dati diverso, ovvero tre “testa” seguite da una “croce”, calcola la distribuzione predittiva a posteriori per il prossimo lancio.</p>
+</div>
+<div id="exr-bag-of-coins-2" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 42.2</strong></span> Consideriamo un modello in cui ci sono tre tipi di monete, ognuna con una probabilità diversa di dare “testa” o “croce”:</p>
+<ol type="1">
+<li>Moneta di Tipo 0: Questa moneta dà sempre “croce”. La probabilità di ottenere “testa” è 0.</li>
+<li>Moneta di Tipo 1: Questa moneta ha una probabilità di 0.7 di ottenere “testa” e 0.3 di ottenere “croce”.</li>
+<li>Moneta di Tipo 2: Questa moneta dà sempre “testa”. La probabilità di ottenere “testa” è 1.</li>
+</ol>
+<p>Nel sacchetto ci sono: 2 monete di tipo 0, 1 moneta di tipo 1 e 1 moneta di tipo 2. Supponiamo di osservare la sequenza <em>croce, testa, croce</em>. Vogliamo calcolare la probabilità di ottenere “croce” al quarto lancio.</p>
+</div>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="42.7">
+<h2 data-number="42.7" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">42.7</span> Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="951fcb24-3999-4504-906d-8c29e10e1b90" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>data {
-  int&lt;lower = 0&gt; N;
-  int&lt;lower = 0, upper = N&gt; y;
-  int&lt;lower = 0&gt; alpha_prior;
-  int&lt;lower = 0&gt; beta_prior;
-}
-parameters {
-  real&lt;lower=0, upper=1&gt; theta;
-}
-model {
-  theta ~ beta(alpha_prior, beta_prior);
-  y ~ binomial(N, theta);
-}
-generated quantities {
-  int&lt;lower=0, upper=1&gt; boys_gt_girls = theta &gt; 0.5;
-}
+<pre><code>Last updated: Sun Jun 02 2024
+
+Python implementation: CPython
+Python version       : 3.12.3
+IPython version      : 8.24.0
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.4.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+numpy     : 1.26.4
+pymc      : 5.15.0
+scipy     : 1.13.0
+arviz     : 0.18.0
+matplotlib: 3.8.4
+pandas    : 2.2.2
+
+Watermark: 2.4.3
 </code></pre>
 </div>
 </div>
-<p>In questo programma Stan, vediamo che sia il numero totale di nascite (<span class="math inline">\(N\)</span>) sia il numero di nascite maschili (<span class="math inline">\(y\)</span>) sono forniti come dati. Poi ci sono due blocchi aggiuntivi: un <em>blocco dei parametri</em>, usato per dichiarare valori sconosciuti (qui, solo il tasso di nascite maschili <span class="math inline">\(\theta\)</span>), e un <em>blocco del modello</em>, dove specifichiamo la distribuzione a priori e la verosimiglianza. La distribuzione a posteriori viene calcolata da Stan combinando queste due componenti. Inoltre, c’è un <em>blocco delle quantità generate</em> dove viene calcolata una variabile booleana che indica se la probabilità di nascita dei maschi <span class="math inline">\(\theta\)</span> è maggiore di 0.5.</p>
-<p>Il modello di Laplace ci consente di calcolare non solo la probabilità di nascita di un maschio, ma anche la probabilità che nascano più maschi che femmine.</p>
-<div id="cell-20" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-21" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>boys <span class="op">=</span> <span class="dv">110312</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>girls <span class="op">=</span> <span class="dv">105287</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {<span class="st">"N"</span>: boys <span class="op">+</span> girls, <span class="st">"y"</span>: boys, <span class="st">"alpha_prior"</span>: <span class="dv">1</span>, <span class="st">"beta_prior"</span>: <span class="dv">1</span>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-22" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> model.sample(</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>data,</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1000</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">10_000</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>11:19:03 - cmdstanpy - INFO - CmdStan start processing
-11:19:03 - cmdstanpy - INFO - Chain [1] start processing
-11:19:03 - cmdstanpy - INFO - Chain [2] start processing
-11:19:03 - cmdstanpy - INFO - Chain [3] start processing
-11:19:03 - cmdstanpy - INFO - Chain [4] start processing
-11:19:03 - cmdstanpy - INFO - Chain [1] done processing
-11:19:03 - cmdstanpy - INFO - Chain [2] done processing
-11:19:03 - cmdstanpy - INFO - Chain [3] done processing
-11:19:03 - cmdstanpy - INFO - Chain [4] done processing</code></pre>
-</div>
-</div>
-<p>Procediamo quindi a estrarre i campioni a posteriori per le variabili <code>theta</code> e <code>boys_gt_girls</code>.</p>
-<div id="cell-24" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>theta_draws <span class="op">=</span> sample.stan_variable(<span class="st">"theta"</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>boys_gt_girls_draws <span class="op">=</span> sample.stan_variable(<span class="st">"boys_gt_girls"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-25" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    theta_draws,</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">30</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Istogramma della distribizione a posteriori di theta"</span>)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Valori"</span>)</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frequenza"</span>)</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="solutions_bayesian_inference_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Per il modello di Laplace, la stima per il tasso di nascite maschili <span class="math inline">\(\theta\)</span> condizionata sui dati di nascita <span class="math inline">\(y\)</span> è calcolata come la media campionaria delle estrazioni per <code>theta</code>.</p>
-<div id="cell-27" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="op">=</span> np.mean(theta_draws)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"estimated theta = </span><span class="sc">{</span>theta_hat<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>estimated theta = 0.512</code></pre>
-</div>
-</div>
-<div id="cell-28" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>quantile_05 <span class="op">=</span> np.quantile(theta_draws, <span class="fl">0.05</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>quantile_95 <span class="op">=</span> np.quantile(theta_draws, <span class="fl">0.95</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""0.05 quantile = </span><span class="sc">{</span>quantile_05<span class="sc">:.3f}</span><span class="ss">;</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="ss">0.95 quantile = </span><span class="sc">{</span>quantile_95<span class="sc">:.3f}</span><span class="ss">"""</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.05 quantile = 0.510;
-0.95 quantile = 0.513</code></pre>
-</div>
-</div>
-<div id="cell-29" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Pr_boy_gt_girl <span class="op">=</span> np.mean(boys_gt_girls_draws)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"estimated Pr[boy more likely] = </span><span class="sc">{</span>Pr_boy_gt_girl<span class="sc">:.15f}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>estimated Pr[boy more likely] = 1.000000000000000</code></pre>
-</div>
-</div>
-<p>Come possiamo vedere di seguito, tutti i nostri campioni per <span class="math inline">\(\theta\)</span> sono maggiori di <span class="math inline">\(\frac{1}{2}\)</span>, ovvero <code>boys_gt_girls_draws</code> è sempre uguale a 1:</p>
-<div id="cell-31" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>np.unique(boys_gt_girls_draws)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>array([1.])</code></pre>
-</div>
-</div>
-<p>Il valore 1 restituito come stima solleva l’importante problema della precisione numerica. Laplace calcolò il risultato analiticamente, che è</p>
-<p><span class="math display">\[
-\Pr\!\left[\Theta &gt; \frac{1}{2} \ \bigg| \ N, y\right] \approx 1 - 10^{-27}.
-\]</span></p>
-<p>Quindi avremmo bisogno di un numero astronomico di campioni a posteriori prima di generare un valore di <span class="math inline">\(\theta\)</span> inferiore a <span class="math inline">\(\frac{1}{2}\)</span>. La risposta di 1.0 trovata da Stan è molto vicina alla risposta vera e ben entro l’errore Monte Carlo atteso.</p>
-<div id="cell-33" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sample.summary(sig_figs<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Mean</th>
-<th data-quarto-table-cell-role="th">MCSE</th>
-<th data-quarto-table-cell-role="th">StdDev</th>
-<th data-quarto-table-cell-role="th">5%</th>
-<th data-quarto-table-cell-role="th">50%</th>
-<th data-quarto-table-cell-role="th">95%</th>
-<th data-quarto-table-cell-role="th">N_Eff</th>
-<th data-quarto-table-cell-role="th">N_Eff/s</th>
-<th data-quarto-table-cell-role="th">R_hat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">lp__</td>
-<td>-149000.000</td>
-<td>0.004770</td>
-<td>6.720000e-01</td>
-<td>-149000.00</td>
-<td>-149000.000</td>
-<td>-149000.000</td>
-<td>19800.0</td>
-<td>39900.0</td>
-<td>1.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">theta</td>
-<td>0.512</td>
-<td>0.000009</td>
-<td>1.090000e-03</td>
-<td>0.51</td>
-<td>0.512</td>
-<td>0.513</td>
-<td>13700.0</td>
-<td>27600.0</td>
-<td>1.0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">boys_gt_girls</td>
-<td>1.000</td>
-<td>NaN</td>
-<td>9.380000e-14</td>
-<td>1.00</td>
-<td>1.000</td>
-<td>1.000</td>
-<td>NaN</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="sec-post-pred-distr-discrete" class="level1 unnumbered">
-<h1 class="unnumbered"><a href="../bayesian_inference/09_post_pred_distr.html" class="quarto-xref"><span>Capitolo 42</span></a></h1>
-<p><a href="../bayesian_inference/09_post_pred_distr.html#exr-bag-of-coins-1" class="quarto-xref">Esercizio&nbsp;<span>42.1</span></a></p>
-<p>Per risolvere questo problema, calcoleremo la distribuzione predittiva a posteriori per il prossimo lancio utilizzando un nuovo set di dati: tre “testa” seguite da una “croce”. Procederemo passo dopo passo:</p>
-<p><strong>Passo 1: Definire il Problema e i Dati</strong></p>
-<p>Abbiamo tre tipi di monete nel sacchetto:</p>
-<ol type="1">
-<li><strong>Moneta di Tipo 0</strong>: Dà sempre “croce” (probabilità di “testa” = 0).</li>
-<li><strong>Moneta di Tipo 1</strong>: È una moneta equa (probabilità di “testa” = 0.5).</li>
-<li><strong>Moneta di Tipo 2</strong>: Dà sempre “testa” (probabilità di “testa” = 1).</li>
-</ol>
-<p>Supponiamo di avere un nuovo set di dati composto da tre “testa” seguite da una “croce”. Indichiamo questo set di dati come <span class="math inline">\(D' = (\text{"testa"}, \text{"testa"}, \text{"testa"}, \text{"croce"})\)</span>.</p>
-<p><strong>Passo 2: Calcolare le Probabilità a Posteriori</strong></p>
-<p>Prima di calcolare la distribuzione predittiva a posteriori, dobbiamo aggiornare le probabilità a posteriori per ciascun tipo di moneta utilizzando il nuovo set di dati <span class="math inline">\(D'\)</span>.</p>
-<p>Prima di osservare i dati, le probabilità iniziali (priori) per ciascun tipo di moneta sono uguali:</p>
-<p><span class="math display">\[
-P(X = 0) = \frac{1}{3}, \quad P(X = 1) = \frac{1}{3}, \quad P(X = 2) = \frac{1}{3}.
-\]</span></p>
-<p>Ora calcoliamo la verosimiglianza di ottenere il set di dati <span class="math inline">\(D'\)</span> per ciascun tipo di moneta:</p>
-<ul>
-<li><p><strong>Moneta di Tipo 0 (X = 0)</strong>:<br>
-Probabilità di ottenere “testa” = 0, quindi ottenere tre “testa” seguite da una “croce” è impossibile:</p>
-<p><span class="math display">\[
-P(D' | X = 0) = 0.
-\]</span></p></li>
-<li><p><strong>Moneta di Tipo 1 (X = 1)</strong>:<br>
-Probabilità di ottenere “testa” o “croce” = 0.5. La probabilità di ottenere tre “testa” seguite da una “croce” è:</p>
-<p><span class="math display">\[
-P(D' | X = 1) = 0.5^3 \times 0.5 = 0.5^4 = 0.0625.
-\]</span></p></li>
-<li><p><strong>Moneta di Tipo 2 (X = 2)</strong>:<br>
-Probabilità di ottenere “testa” = 1, quindi ottenere tre “testa” seguite da una “croce” è impossibile:</p>
-<p><span class="math display">\[
-P(D' | X = 2) = 0.
-\]</span></p></li>
-</ul>
-<p>Le probabilità a posteriori sono calcolate usando la formula di Bayes:</p>
-<p><span class="math display">\[
-P(X = i | D') = \frac{P(D' | X = i) \times P(X = i)}{P(D')},
-\]</span></p>
-<p>dove <span class="math inline">\(P(D')\)</span> è la probabilità totale di osservare il set di dati <span class="math inline">\(D'\)</span>, calcolata come:</p>
-<p><span class="math display">\[
-P(D') = P(D' | X = 0) \times P(X = 0) + P(D' | X = 1) \times P(X = 1) + P(D' | X = 2) \times P(X = 2).
-\]</span></p>
-<p>Sostituendo i valori:</p>
-<p><span class="math display">\[
-P(D') = 0 \times \frac{1}{3} + 0.0625 \times \frac{1}{3} + 0 \times \frac{1}{3} = \frac{0.0625}{3} = 0.020833.
-\]</span></p>
-<p>Ora possiamo calcolare le probabilità a posteriori:</p>
-<ul>
-<li><p><strong>Per la Moneta di Tipo 0 (X = 0)</strong>: <span class="math display">\[
-P(X = 0 | D') = \frac{0 \times \frac{1}{3}}{0.020833} = 0.
-\]</span></p></li>
-<li><p><strong>Per la Moneta di Tipo 1 (X = 1)</strong>: <span class="math display">\[
-P(X = 1 | D') = \frac{0.0625 \times \frac{1}{3}}{0.020833} = \frac{0.020833}{0.020833} = 1.
-\]</span></p></li>
-<li><p><strong>Per la Moneta di Tipo 2 (X = 2)</strong>: <span class="math display">\[
-P(X = 2 | D') = \frac{0 \times \frac{1}{3}}{0.020833} = 0.
-\]</span></p></li>
-</ul>
-<p><strong>Passo 3: Calcolare la Distribuzione Predittiva a Posteriori</strong></p>
-<p>La distribuzione predittiva a posteriori per il prossimo lancio è data dalla combinazione delle probabilità a posteriori con le probabilità di ottenere “croce” con ciascun tipo di moneta:</p>
-<p><span class="math display">\[
-P(\text{croce nel prossimo lancio} | D') = P(X = 0 | D') \times 0 + P(X = 1 | D') \times 0.5 + P(X = 2 | D') \times 0.
-\]</span></p>
-<p>Sostituendo i valori calcolati:</p>
-<p><span class="math display">\[
-P(\text{croce nel prossimo lancio} | D') = 0 \times 0 + 1 \times 0.5 + 0 \times 0 = 0.5.
-\]</span></p>
-<p>La distribuzione predittiva a posteriori per il prossimo lancio, dato che abbiamo osservato tre “testa” seguite da una “croce”, è 0.5.</p>
-<p><a href="../bayesian_inference/09_post_pred_distr.html#exr-bag-of-coins-2" class="quarto-xref">Esercizio&nbsp;<span>42.2</span></a></p>
-<p>Passo 1: Prior.</p>
-<p>Le probabilità preliminari sono:</p>
-<p><span class="math display">\[
-P(X = 0) = 0.5, \quad P(X = 1) = 0.25, \quad P(X = 2) = 0.25.
-\]</span></p>
-<p>Passo 2: Verosimiglianza.</p>
-<ul>
-<li>Moneta di Tipo 0 (X = 0): <span class="math inline">\(P(D | X = 0) = 0.\)</span></li>
-<li>Moneta di Tipo 1 (X = 1): <span class="math inline">\(P(D | X = 1) = 0.3 \times 0.7 \times 0.3 = 0.063.\)</span></li>
-<li>Moneta di Tipo 2 (X = 2): <span class="math inline">\(P(D | X = 2) = 0.\)</span></li>
-</ul>
-<p>Passo 3: Calcolo delle Probabilità a Posteriori.</p>
-<p><span class="math display">\[
-P(D) = 0 \times 0.5 + 0.063 \times 0.25 + 0 \times 0.25 = 0.01575.
-\]</span></p>
-<p><span class="math display">\[
-P(X = 0 | D) = 0, \quad P(X = 1 | D) = 1, \quad P(X = 2 | D) = 0.
-\]</span></p>
-<p>Passo 4: Distribuzione Predittiva a Posteriori.</p>
-<p><span class="math display">\[
-\begin{align}
-P(\text{croce nel quarto lancio} | D) &amp;= P(X = 0 | D) \times 1 + P(X = 1 | D) \times 0.3 + P(X = 2 | D) \times 0\notag\\
-&amp;= 0 \times 1 + 1 \times 0.3 + 0 \times 0\notag\\
-&amp;= 0.3.\notag
-\end{align}
-\]</span></p>
-<p>In conclusione, la probabilità di ottenere “croce” al quarto lancio, dopo aver osservato la sequenza <em>croce, testa, croce</em>, è 0.3.</p>
-
-
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-gori2024italian" class="csl-entry" role="listitem">
-Gori, Benedetta, Antonello Grippo, Martina Focardi, e Francesco Lolli. 2024. <span>«The Italian version of Edinburgh Handedness Inventory: Translation, transcultural adaptation, and validation in healthy subjects»</span>. <em>Laterality</em> 29 (2): 151–68.
-</div>
-<div id="ref-papadatou2020human" class="csl-entry" role="listitem">
-Papadatou-Pastou, Marietta, Eleni Ntolka, Judith Schmitz, Maryanne Martin, Marcus R Munafò, Sebastian Ocklenburg, e Silvia Paracchini. 2020. <span>«Human handedness: A meta-analysis.»</span> <em>Psychological bulletin</em> 146 (6): 481–524.
-</div>
-</div>
 </section>
 
 </main> <!-- /main -->
@@ -2248,13 +1833,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/appendix/solutions_probability.html" class="pagination-link" aria-label="Probabilità">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Probabilità</span></span>
+      <a href="../../chapters/bayesian_inference/08_exponential_model.html" class="pagination-link" aria-label="Modello Esponenziale">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/appendix/solutions_causality.html" class="pagination-link" aria-label="Causalità">
-        <span class="nav-page-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Causalità</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/mcmc/introduction_mcmc.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text">Introduzione</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -2266,7 +1851,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/appendix/solutions_bayesian_inference.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/bayesian_inference/09_post_pred_distr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
