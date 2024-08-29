@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - Appendice P — Catene di Markov</title>
+<title>Data Science per Psicologi - 56&nbsp; Modello categoriale</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,17 +21,71 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/appendix/a46_stan.html" rel="next">
-<link href="../../chapters/appendix/a44_montecarlo.html" rel="prev">
+<link href="../../chapters/linear_models/introduction_linear_models.html" rel="next">
+<link href="../../chapters/mcmc/13_stan_hier_beta_binom.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -68,6 +122,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Ricerca"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -110,7 +167,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/appendix/a00_installation.html">Appendici</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/a45_mcmc.html"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Catene di Markov</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/14_stan_categorical.html"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello categoriale</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -483,13 +540,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
  <span class="menu-text">MCMC</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/introduction_mcmc.html" class="sidebar-item-text sidebar-link">
@@ -574,6 +631,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/14_stan_categorical.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello categoriale</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -594,91 +657,91 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/02_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/03_synt_sugar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/04_two_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/05_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/06_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/06_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/07_linear_algebra.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Algebra lineare</span></span></a>
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/08_stan_multreg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Regressione multipla con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/09_hier_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/10_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/11_specification_error.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/12_causal_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/13_ate_att_atu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/14_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -701,37 +764,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Regressione binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/glm/05_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  <a href="../../chapters/glm/05_simchon_2023.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Tweets</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/glm/06_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+  <a href="../../chapters/glm/06_stan_rct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/07_stan_mediation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -754,31 +823,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/03_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/04_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/05_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -794,32 +863,38 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/dynamic_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../../chapters/dynamic_models/introduction_dynamic_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduzione</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/01_canoeing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/02_change_across_time.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/03_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/04_affect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Le emozioni influenzano le emozioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Le emozioni influenzano le emozioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/05_sequential_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Analisi dinamica delle sequenze di apprendimento</span></span></a>
   </div>
 </li>
       </ul>
@@ -827,12 +902,35 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
- <span class="menu-text">Frequentismo</span></a>
+ <span class="menu-text">Modelli cognitivi</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cognitive_models/01_ddm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Drift Diffusion Model</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
+ <span class="menu-text">Frequentismo</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" class="sidebar-item-text sidebar-link">
@@ -842,38 +940,38 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">92</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
  <span class="menu-text">Crisi</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/introduction_replication_crisis.html" class="sidebar-item-text sidebar-link">
@@ -883,37 +981,54 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">94</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">95</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">92</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">96</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">97</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">94</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">98</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">95</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">99</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false">
+ <span class="menu-text">Epilogo</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Considerazioni Conclusive</span></a>
   </div>
 </li>
       </ul>
@@ -926,13 +1041,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" aria-expanded="false">
  <span class="menu-text">Appendici</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a00_installation.html" class="sidebar-item-text sidebar-link">
@@ -1025,101 +1140,95 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/appendix/a45_mcmc.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a46_stan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a47_first_order_markov.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Processo di Markov di primo ordine</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a51_r_squared.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a55_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" aria-expanded="false">
  <span class="menu-text">Soluzioni degli esercizi</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_causality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"></span></a>
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Regressione multipla</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
+ <span class="menu-text"></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_entropia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_replication_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">^</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -1136,17 +1245,28 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#struttura-e-dinamica-delle-catene-di-markov" id="toc-struttura-e-dinamica-delle-catene-di-markov" class="nav-link active" data-scroll-target="#struttura-e-dinamica-delle-catene-di-markov"><span class="header-section-number">P.1</span> Struttura e Dinamica delle Catene di Markov</a></li>
-  <li><a href="#terminologia" id="toc-terminologia" class="nav-link" data-scroll-target="#terminologia"><span class="header-section-number">P.2</span> Terminologia</a></li>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#distribuzioni-bernoulliana-e-binomiale" id="toc-distribuzioni-bernoulliana-e-binomiale" class="nav-link" data-scroll-target="#distribuzioni-bernoulliana-e-binomiale"><span class="header-section-number">56.1</span> Distribuzioni Bernoulliana e Binomiale</a></li>
+  <li><a href="#distribuzioni-categoriale-e-multinomiale" id="toc-distribuzioni-categoriale-e-multinomiale" class="nav-link" data-scroll-target="#distribuzioni-categoriale-e-multinomiale"><span class="header-section-number">56.2</span> Distribuzioni Categoriale e Multinomiale</a></li>
+  <li><a href="#relazioni-tra-distribuzioni" id="toc-relazioni-tra-distribuzioni" class="nav-link" data-scroll-target="#relazioni-tra-distribuzioni"><span class="header-section-number">56.3</span> Relazioni tra Distribuzioni</a></li>
+  <li><a href="#esempio-con-la-distribuzione-binomiale" id="toc-esempio-con-la-distribuzione-binomiale" class="nav-link" data-scroll-target="#esempio-con-la-distribuzione-binomiale"><span class="header-section-number">56.4</span> Esempio con la Distribuzione Binomiale</a></li>
+  <li><a href="#esempio-con-la-distribuzione-categoriale" id="toc-esempio-con-la-distribuzione-categoriale" class="nav-link" data-scroll-target="#esempio-con-la-distribuzione-categoriale"><span class="header-section-number">56.5</span> Esempio con la Distribuzione Categoriale</a></li>
+  <li><a href="#simulazione" id="toc-simulazione" class="nav-link" data-scroll-target="#simulazione"><span class="header-section-number">56.6</span> Simulazione</a></li>
+  <li><a href="#interpretazione-dei-risultati" id="toc-interpretazione-dei-risultati" class="nav-link" data-scroll-target="#interpretazione-dei-risultati"><span class="header-section-number">56.7</span> Interpretazione dei Risultati</a>
+  <ul class="collapse">
+  <li><a href="#interpretazione-specifica-dei-parametri" id="toc-interpretazione-specifica-dei-parametri" class="nav-link" data-scroll-target="#interpretazione-specifica-dei-parametri"><span class="header-section-number">56.7.1</span> Interpretazione Specifica dei Parametri</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">56.8</span> Considerazioni Conclusive</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/appendix/a45_mcmc.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/14_stan_categorical.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/appendix/a00_installation.html">Appendici</a></li><li class="breadcrumb-item"><a href="../../chapters/appendix/a45_mcmc.html"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Catene di Markov</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/14_stan_categorical.html"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello categoriale</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-markov" class="quarto-section-identifier">Appendice P — Catene di Markov</span></h1>
+<h1 class="title"><span id="sec-stan-categorical" class="quarto-section-identifier"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello categoriale</span></span></h1>
 </div>
 
 
@@ -1163,35 +1283,371 @@ window.Quarto = {
 </header>
 
 
-<section id="struttura-e-dinamica-delle-catene-di-markov" class="level2" data-number="P.1">
-<h2 data-number="P.1" class="anchored" data-anchor-id="struttura-e-dinamica-delle-catene-di-markov"><span class="header-section-number">P.1</span> Struttura e Dinamica delle Catene di Markov</h2>
-<p>Nelle catene di Markov, le variabili casuali si muovono all’interno di uno “spazio degli stati”, che può essere discreto o continuo. In questo contesto, ci focalizziamo su spazi degli stati discreti e finiti, generalmente rappresentati come <span class="math inline">\(\{1, 2, \ldots, M\}\)</span>.</p>
-<p>La dinamica interna delle catene di Markov è governata dalle “probabilità di transizione” tra gli stati, riassunte in una “matrice di transizione”. Ogni elemento $ (i, j) $ di questa matrice indica la probabilità di passare dallo stato $ i $ allo stato $ j $ in un singolo passo della catena.</p>
-<p>In sintesi, le catene di Markov offrono un framework robusto e versatile per la modellazione di dipendenze tra variabili casuali, rivelandosi essenziali in molti settori della statistica e della scienza dei dati, inclusa la metodologia MCMC, che è centrale in algoritmi come quello di Metropolis.</p>
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:03:39.389187Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:03:38.182700Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> io <span class="im">import</span> StringIO</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-3" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T18:03:40.709652Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T18:03:40.703979Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"stan_hier_beta_binomial"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Nel capitolo <a href="../dynamic_models/02_change_across_time.html" class="quarto-xref"><span>Capitolo 85</span></a>, utilizzeremo Stan per stimare i parametri di un processo dinamico utilizzando un modello di Markov di primo ordine. In quella discussione, impiegheremo la distribuzione di probabilità categoriale. L’obiettivo di questo capitolo è familiarizzare con questa distribuzione.</p>
+<p>La variabile casuale più semplice può assumere solo due stati, comunemente denominati “successo” e “fallimento”. Tuttavia, variabili casuali più complesse possono avere più di due stati possibili. In questo capitolo, esploreremo come la teoria della probabilità tratta questi diversi scenari.</p>
 </section>
-<section id="terminologia" class="level2" data-number="P.2">
-<h2 data-number="P.2" class="anchored" data-anchor-id="terminologia"><span class="header-section-number">P.2</span> Terminologia</h2>
-<p><strong>Catene di Markov omogenee</strong></p>
-<p>Una catena di Markov è detta “omogenea” quando le probabilità di transizione tra gli stati sono indipendenti dal tempo. In termini più semplici, la dinamica della catena è regolata da una matrice di transizione fissa che rimane costante nel tempo. Ciò significa che la probabilità di passare da uno stato all’altro è sempre la stessa, indipendentemente dal momento in cui avviene questa transizione.</p>
-<p><strong>Catene di Markov irriducibili</strong></p>
-<p>Una catena di Markov è “irriducibile” quando è possibile raggiungere qualsiasi stato partendo da qualsiasi altro stato in un numero finito di passaggi. In altre parole, non esistono stati isolati che intrappolano la catena indefinitamente.</p>
-<p><strong>Stati ricorrenti</strong></p>
-<p>In una catena di Markov, uno stato è considerato “ricorrente” se viene rivisitato ripetutamente. Gli stati possono ulteriormente essere classificati come “positivamente ricorrenti” se esiste un tempo limitato per tornare allo stato, e “nullamente ricorrenti” in caso contrario. Gli stati “ricorrenti di Harris” sono quelli che vengono visitati infinite volte mentre il tempo tende all’infinito.</p>
-<p><strong>Aperiodicità</strong></p>
-<p>Gli stati “aperiodici” in una catena di Markov sono quelli senza cicli deterministici, il che significa che la catena non rimane bloccata in un ciclo fisso di stati.</p>
-<p><strong>Stazionarietà</strong></p>
-<p>Nella teoria delle catene di Markov, la “distribuzione marginale” è semplicemente la distribuzione delle probabilità degli stati della catena in un certo momento. In altre parole, è una descrizione delle probabilità di trovarsi in ciascuno degli stati possibili in un determinato istante di tempo. Se stiamo parlando, ad esempio, di una catena di Markov con tre stati (A, B, C), una possibile distribuzione marginale potrebbe essere <span class="math inline">\([0.4, 0.5, 0.1]\)</span>, indicando che la probabilità di trovarsi nello stato A è del 40%, nello stato B del 50% e nello stato C del 10%.</p>
-<p>Una catena di Markov è definita come “stazionaria” quando questa distribuzione marginale rimane invariata nel tempo. In altre parole, le probabilità di essere in ogni stato possibile non cambiano, anche se la catena passa da uno stato all’altro seguendo le probabilità di transizione.</p>
-<p>La stazionarietà è un concetto cruciale perché rende possibile analizzare il comportamento a lungo termine della catena senza dover tener conto di tutti i dettagli delle transizioni individuali. In pratica, una volta che la catena è stazionaria, sappiamo che la sua distribuzione marginale non cambierà più, e questo è spesso ciò che ci interessa nelle applicazioni reali.</p>
-<p><strong>Ergodicità</strong></p>
-<p>L’ergodicità è un’altra proprietà fondamentale che descrive come una catena di Markov si comporta nel limite quando il numero di passaggi tende all’infinito. Una catena ergodica è una catena che è sia aperiodica (non ha cicli fissi) sia irriducibile (ogni stato è raggiungibile da ogni altro stato) e positivamente ricorrente secondo Harris (ogni stato viene visitato infinite volte in un tempo finito). Ciò significa che mentre il numero di passaggi tende all’infinito, la distribuzione marginale della catena rimane stabile. Pertanto, se campioniamo da una catena di Markov stazionaria a intervalli ampiamente distanziati, questi campioni possono essere considerati indipendenti.</p>
-<p>Nella teoria ergodica, si discute spesso di “burn-in”, che è il periodo di tempo necessario perché la catena si avvicini alla distribuzione stazionaria, e di “thinning”, che è la pratica di prendere campioni a intervalli ampiamente distanziati per minimizzare la correlazione tra i campioni.</p>
-<p><strong>Convergenza</strong></p>
-<p>Nel contesto della convergenza, le proprietà di irriducibilità e aperiodicità garantiscono che la catena di Markov si stabilizzerà in un equilibrio a lungo termine, specificamente convergendo verso una distribuzione stazionaria $ s $. In questo scenario, “convergenza” implica che con l’incrementare indefinito del numero di passaggi $ n $, la distribuzione marginale della catena tende sempre più verso la distribuzione stazionaria $ s $.</p>
-<p>Tale convergenza è di natura probabilistica e avviene a prescindere dalle condizioni iniziali, cioè dall’effettivo stato da cui la catena è partita. Detto in modo più semplice, con un tempo sufficientemente lungo, il comportamento della catena di Markov diventa prevedibile e stabile, in accordo con la distribuzione stazionaria $ s $.</p>
-<p>Quindi, i concetti di convergenza e stazionarietà sono strettamente correlati: la convergenza rappresenta il percorso che la catena percorre per raggiungere uno stato di equilibrio, mentre la stazionarietà fornisce una descrizione formale di questo stato di equilibrio al quale la catena tenderà nel lungo periodo.</p>
+<section id="distribuzioni-bernoulliana-e-binomiale" class="level2" data-number="56.1">
+<h2 data-number="56.1" class="anchored" data-anchor-id="distribuzioni-bernoulliana-e-binomiale"><span class="header-section-number">56.1</span> Distribuzioni Bernoulliana e Binomiale</h2>
+<p><strong>1. Distribuzione Bernoulliana</strong>:</p>
+<ul>
+<li>La <em>distribuzione Bernoulliana</em> (o di Bernoulli) è una distribuzione di probabilità discreta che descrive l’esito di un singolo esperimento dicotomico, cioè un evento che ha due possibili risultati: “successo” (generalmente codificato come 1) o “fallimento” (codificato come 0).</li>
+<li>Un esempio classico è il lancio di una moneta: “testa” (successo) o “croce” (fallimento).</li>
+<li>La probabilità di successo è denotata con <span class="math inline">\(p\)</span> e quella di fallimento con <span class="math inline">\(1 - p\)</span>.</li>
+</ul>
+<p><strong>2. Distribuzione Binomiale</strong>:</p>
+<ul>
+<li>La <em>distribuzione Binomiale</em> descrive il numero di successi in una sequenza di <span class="math inline">\(N\)</span> esperimenti indipendenti, ognuno dei quali segue una distribuzione di Bernoulli con probabilità di successo <span class="math inline">\(p\)</span>.</li>
+<li>Un esempio potrebbe essere il numero di volte in cui si ottiene “testa” quando si lancia una moneta 10 volte.</li>
+<li>La distribuzione binomiale ha due parametri: il numero di prove <span class="math inline">\(N\)</span> e la probabilità di successo <span class="math inline">\(p\)</span>.</li>
+</ul>
+</section>
+<section id="distribuzioni-categoriale-e-multinomiale" class="level2" data-number="56.2">
+<h2 data-number="56.2" class="anchored" data-anchor-id="distribuzioni-categoriale-e-multinomiale"><span class="header-section-number">56.2</span> Distribuzioni Categoriale e Multinomiale</h2>
+<p><strong>1. Distribuzione Categoriale</strong>:</p>
+<ul>
+<li>La <em>distribuzione Categoriale</em> è una generalizzazione della distribuzione di Bernoulli per variabili aleatorie con più di due categorie possibili.</li>
+<li>È utilizzata per descrivere l’esito di un singolo esperimento che può avere più di due risultati discreti (categorie), ciascuno con una propria probabilità.</li>
+<li>Un esempio psicologico potrebbe essere una prova in cui un partecipante deve scegliere tra quattro colori diversi (ad esempio, rosso, verde, blu, giallo). Le probabilità associate a ciascun colore rappresentano le probabilità categoriali.</li>
+<li>Se <span class="math inline">\(K\)</span> è il numero di categorie, la distribuzione categoriale è descritta da un vettore di probabilità <span class="math inline">\(\mathbf{p} = (p_1, p_2, \ldots, p_K)\)</span> dove la somma di tutte le probabilità è 1 (<span class="math inline">\(\sum_{i=1}^{K} p_i = 1\)</span>).</li>
+</ul>
+<p><strong>2. Distribuzione Multinomiale</strong>:</p>
+<ul>
+<li>La <em>distribuzione Multinomiale</em> è una generalizzazione della distribuzione Binomiale per esperimenti con più di due risultati.</li>
+<li>Descrive la distribuzione del numero di successi in ciascuna delle <span class="math inline">\(K\)</span> categorie in una sequenza di <span class="math inline">\(N\)</span> esperimenti indipendenti, dove ogni esperimento segue una distribuzione categoriale con probabilità specifiche per ciascuna categoria.</li>
+<li>Un esempio psicologico potrebbe essere una serie di 20 prove in cui un partecipante sceglie uno dei quattro colori in ogni prova. La distribuzione multinomiale descrive il numero di volte in cui ciascun colore è scelto.</li>
+</ul>
+</section>
+<section id="relazioni-tra-distribuzioni" class="level2" data-number="56.3">
+<h2 data-number="56.3" class="anchored" data-anchor-id="relazioni-tra-distribuzioni"><span class="header-section-number">56.3</span> Relazioni tra Distribuzioni</h2>
+<p>In sintesi, possiamo descrivere le relazioni tra le distribuzioni nel modo seguente.</p>
+<ul>
+<li><em>Bernoulliana</em> e <em>Binomiale</em>: sono appropriate per eventi dicotomici (due possibili risultati). Una singola prova è modellata da una distribuzione Bernoulliana; una serie di prove da una distribuzione Binomiale.</li>
+<li><em>Categoriale</em> e <em>Multinomiale</em>: sono appropriate per eventi con più di due risultati. Una singola prova è modellata da una distribuzione categoriale; una serie di prove da una distribuzione Multinomiale.</li>
+</ul>
+</section>
+<section id="esempio-con-la-distribuzione-binomiale" class="level2" data-number="56.4">
+<h2 data-number="56.4" class="anchored" data-anchor-id="esempio-con-la-distribuzione-binomiale"><span class="header-section-number">56.4</span> Esempio con la Distribuzione Binomiale</h2>
+<p>Un risultato consolidato nella letteratura psicologica è che le persone con disturbi emotivi, come il disturbo d’ansia sociale (SAD), il disturbo d’ansia generalizzata (GAD) e la depressione, mostrano una tendenza costante, o bias, a generare interpretazioni negative di materiali ambigui. Questo è diverso rispetto alle persone senza disturbi emotivi, che tendono, in generale, a fornire interpretazioni positive agli stimoli ambigui (<span class="citation" data-cites="hirsch2016resolving">Hirsch et al. (<a href="../../99-references.html#ref-hirsch2016resolving" role="doc-biblioref">2016</a>)</span>).</p>
+<p>Immaginiamo un compito psicologico in cui a ciascun partecipante di un campione di <span class="math inline">\(N\)</span> individui depressi viene chiesto di completare una singola prova. Viene presentata un’immagine ambigua e il partecipante deve scegliere tra due emozioni: felice o triste. L’uso di una singola prova per ciascun soggetto può essere giustificato per evitare di allertare il soggetto rispetto alle caratteristiche richieste dal compito, presentando questa prova cruciale all’interno di una serie di altre prove diverse che fungono da “filler”.</p>
+<p>Negli esperimenti effettivi in quest’area di ricerca si utilizzano stimoli come omofoni (ciascuno con un significato negativo e uno non negativo, ad esempio “die/dye”) oppure compiti di comprensione del testo in cui ogni set di frasi include una frase ambigua che ha un significato negativo e uno non correlato alla depressione (ad esempio, <span class="citation" data-cites="mogg2006interpretation">Mogg, Bradbury, e Bradley (<a href="../../99-references.html#ref-mogg2006interpretation" role="doc-biblioref">2006</a>)</span>).</p>
+<p>Nell’esempio presente, immaginiamo che i dati raccolti siano costituiti da <span class="math inline">\(N\)</span> osservazioni, dove 1 indica un’interpretazione negativa e 0 indica un’interpretazione non negativa. La variabile casuale che rappresenta l’esito dell’esperimento è Bernoulliana, poiché ogni prova può avere solo due risultati possibili (negativo o non negativo). Lo scopo dell’inferenza è stimare il parametro <span class="math inline">\(\theta\)</span>, che rappresenta la probabilità di un’interpretazione negativa.</p>
+<p>Ecco un esempio di codice Stan che modella questo scenario:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>&gt; N; <span class="co">// Numero di partecipanti</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; y[N]; <span class="co">// Risultati delle prove (valori 0 e 1)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>, <span class="kw">upper</span>=<span class="dv">1</span>&gt; theta; <span class="co">// Probabilità di interpretazione negativa</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  y ~ bernoulli(theta); <span class="co">// Likelihood: distribuzione Bernoulliana per ciascuna prova</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y_pred; <span class="co">// Predizione per una nuova prova</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  y_pred = bernoulli_rng(theta);</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Spiegazione del Codice Stan:</p>
+<ol type="1">
+<li><p><strong>Dati</strong>:</p>
+<ul>
+<li><code>N</code>: il numero totale di partecipanti.</li>
+<li><code>y</code>: un array di lunghezza <span class="math inline">\(N\)</span> che contiene i risultati delle prove per ciascun partecipante, con valori 0 (interpretazione non negativa) o 1 (interpretazione negativa).</li>
+</ul></li>
+<li><p><strong>Parametri</strong>:</p>
+<ul>
+<li><code>theta</code>: un parametro che rappresenta la probabilità di un’interpretazione negativa, vincolato tra 0 e 1.</li>
+</ul></li>
+<li><p><strong>Modello</strong>:</p>
+<ul>
+<li><code>y ~ bernoulli(theta)</code>: specifica che ogni osservazione <span class="math inline">\(y[i]\)</span> segue una distribuzione Bernoulliana con parametro <span class="math inline">\(\theta\)</span>. Questa è la <em>likelihood</em> del modello, che indica come i dati osservati sono generati dato il parametro <span class="math inline">\(\theta\)</span>.</li>
+</ul></li>
+<li><p><strong>Quantità Generate</strong>:</p>
+<ul>
+<li><code>y_pred</code>: una variabile che rappresenta la predizione di un nuovo esito sulla base delle probabilità posteriori stimate. Utilizza la funzione <code>bernoulli_rng(theta)</code> per generare un’osservazione simulata secondo la distribuzione Bernoulliana con parametro <span class="math inline">\(\theta\)</span>.</li>
+</ul></li>
+</ol>
+<p>Questo modello Stan permette di stimare la probabilità <span class="math inline">\(\theta\)</span> che un individuo con depressione interpreti un’ambiguità in modo negativo, sulla base dei dati osservati.</p>
+</section>
+<section id="esempio-con-la-distribuzione-categoriale" class="level2" data-number="56.5">
+<h2 data-number="56.5" class="anchored" data-anchor-id="esempio-con-la-distribuzione-categoriale"><span class="header-section-number">56.5</span> Esempio con la Distribuzione Categoriale</h2>
+<p>Per illustrare il modello categoriale, possiamo partire dallo scenario descritto in precedenza, con una piccola modifica. Immaginiamo che venga presentata un’immagine ambigua al partecipante, ma questa volta il partecipante deve scegliere tra quattro emozioni possibili: felice, triste, arrabbiato o neutrale. Ogni scelta rappresenta un risultato categoriale, poiché ci sono più di due possibili risposte.</p>
+<p>In questo caso, la variabile casuale <span class="math inline">\(X\)</span> che rappresenta la risposta del soggetto può assumere quattro valori distinti, corrispondenti alle quattro emozioni. La funzione di massa di probabilità (PMF) di <span class="math inline">\(X\)</span> è descritta da un <strong>simplex</strong> a 4 dimensioni, il che significa che ogni probabilità è non negativa e la somma delle probabilità di tutte le categorie è pari a uno. Formalmente, se <span class="math inline">\(\theta = (\theta_1, \theta_2, \theta_3, \theta_4)\)</span> rappresenta il vettore delle probabilità per ciascuna emozione, allora per <span class="math inline">\(x \in \{1, 2, 3, 4\}\)</span>, la probabilità categoriale è data da:</p>
+<p><span class="math display">\[
+P(X = x) = \theta_x,
+\]</span></p>
+<p>dove <span class="math inline">\(\theta_x\)</span> rappresenta la probabilità di ciascun risultato <span class="math inline">\(x\)</span>.</p>
+<p>Ad esempio, supponiamo che le probabilità per le quattro emozioni siano:</p>
+<ul>
+<li><span class="math inline">\(P(X = 1) = 0.2\)</span> (felice),</li>
+<li><span class="math inline">\(P(X = 2) = 0.4\)</span> (triste),</li>
+<li><span class="math inline">\(P(X = 3) = 0.1\)</span> (arrabbiato),</li>
+<li><span class="math inline">\(P(X = 4) = 0.3\)</span> (neutrale).</li>
+</ul>
+<p>In questo caso, il vettore delle probabilità è <span class="math inline">\(\theta = (0.2, 0.4, 0.1, 0.3)\)</span>, che rappresenta una distribuzione categoriale in cui le probabilità di ogni emozione sommano a 1, come richiesto da un simplex.</p>
+<p>Ecco come modellare questo scenario utilizzando Stan:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>&gt; N; <span class="co">// Numero di partecipanti</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[N] <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">1</span>, <span class="kw">upper</span>=<span class="dv">4</span>&gt; y;  <span class="co">// Risultati delle prove (valori da 1 a 4)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">simplex</span>[<span class="dv">4</span>] theta; <span class="co">// Vettore delle probabilità categoriali per le quattro emozioni</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  y ~ categorical(theta); <span class="co">// Likelihood: distribuzione categoriale per ciascuna prova</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y_pred; <span class="co">// Predizione per una nuova prova</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  y_pred = categorical_rng(theta);</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Nel codice precedente</p>
+<ol type="1">
+<li><p><strong>Dati</strong>:</p>
+<ul>
+<li><code>N</code>: il numero totale di partecipanti.</li>
+<li><code>y</code>: un array di lunghezza <span class="math inline">\(N\)</span> che contiene i risultati delle prove per ciascun partecipante, dove ogni valore può essere 1 (felice), 2 (triste), 3 (arrabbiato), o 4 (neutrale).</li>
+</ul></li>
+<li><p><strong>Parametri</strong>:</p>
+<ul>
+<li><code>theta</code>: un vettore di probabilità di tipo <code>simplex[4]</code>, che rappresenta la distribuzione delle probabilità per le quattro emozioni. Il tipo <code>simplex</code> garantisce che tutte le probabilità siano non negative e che la loro somma sia pari a 1.</li>
+</ul></li>
+</ol>
+<p>Quando <span class="math inline">\(\theta\)</span> è dichiarato come <code>simplex[4]</code> senza una specifica dichiarazione di prior nel blocco <code>model</code>, Stan assume automaticamente una distribuzione a priori uniforme sulla superficie del simplex. In altre parole, ogni possibile configurazione di <span class="math inline">\(\theta\)</span> che soddisfa le condizioni di un <code>simplex</code> (ovvero, tutte le componenti sono non negative e sommano a 1) ha la stessa probabilità a priori. Questo significa che, prima di vedere i dati, tutte le combinazioni di valori di <span class="math inline">\(\theta\)</span> che sommano a 1 sono considerate ugualmente probabili. Non c’è alcun bias a priori che favorisca una particolare configurazione di probabilità tra le quattro emozioni (felice, triste, arrabbiato, neutrale). Quindi, nel modello Stan, la distribuzione a priori su <span class="math inline">\(\theta\)</span> è effettivamente uniforme sul simplex, riflettendo una posizione a priori non informativa.</p>
+<ol start="3" type="1">
+<li><p><strong>Modello</strong>:</p>
+<ul>
+<li><code>y ~ categorical(theta)</code>: specifica che ogni osservazione <span class="math inline">\(y[i]\)</span> segue una distribuzione categoriale con parametro <span class="math inline">\(\theta\)</span>. Questa è la <em>likelihood</em> del modello, che descrive come i dati osservati sono generati dato il vettore di probabilità <span class="math inline">\(\theta\)</span>.</li>
+</ul></li>
+<li><p><strong>Quantità Generate</strong>:</p>
+<ul>
+<li><code>y_pred</code>: una variabile che rappresenta la predizione di un nuovo esito sulla base delle probabilità posteriori stimate. Utilizza la funzione <code>categorical_rng(theta)</code> per generare un’osservazione simulata secondo la distribuzione categoriale con parametro <span class="math inline">\(\theta\)</span>.</li>
+</ul></li>
+</ol>
+<p>Questo modello Stan consente di stimare le probabilità associate a ciascuna emozione scelta dai partecipanti in risposta a un’immagine ambigua.</p>
+</section>
+<section id="simulazione" class="level2" data-number="56.6">
+<h2 data-number="56.6" class="anchored" data-anchor-id="simulazione"><span class="header-section-number">56.6</span> Simulazione</h2>
+<p>Vediamo ora come implementare il modello categoriale in pratica. Iniziamo simulando dei dati dalla distribuzione categoriale.</p>
+<div id="cell-6" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definire i valori possibili e le probabilità associate</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>valori <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>probabilita <span class="op">=</span> [<span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generare 50 valori casuali dalla distribuzione categoriale</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.choice(valori, size<span class="op">=</span><span class="dv">50</span>, p<span class="op">=</span>probabilita)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[3 2 2 2 1 1 2 2 4 2 4 1 3 2 1 4 2 2 2 2 4 3 3 1 3 4 1 4 1 4 2 4 4 2 1 2 4
+ 3 2 2 2 1 1 4 2 4 2 4 2 4]</code></pre>
+</div>
+</div>
+<p>Inseriamo i dati in un dizionario come richiesto da Stan.</p>
+<div id="cell-8" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: <span class="bu">len</span>(y),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: y.tolist()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Importiamo il codice Stan che abbiamo discusso in precedenza.</p>
+<div id="cell-10" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"categorical_model.stan"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Compiliamo il modello.</p>
+<div id="cell-12" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo il campionamento MCMC utilizzando i dati simulati.</p>
+<div id="cell-14" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2000</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span>, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    chains<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo le stime a posteriori dei parametri.</p>
+<div id="cell-16" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>az.summary(fit, var_names<span class="op">=</span><span class="st">"theta"</span>, hdi_prob<span class="op">=</span><span class="fl">0.95</span>).<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+<div>
 
 
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">hdi_2.5%</th>
+<th data-quarto-table-cell-role="th">hdi_97.5%</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">theta[0]</td>
+<td>0.20</td>
+<td>0.05</td>
+<td>0.10</td>
+<td>0.31</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>15575.0</td>
+<td>10516.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">theta[1]</td>
+<td>0.39</td>
+<td>0.06</td>
+<td>0.27</td>
+<td>0.52</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>15457.0</td>
+<td>12342.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">theta[2]</td>
+<td>0.13</td>
+<td>0.04</td>
+<td>0.05</td>
+<td>0.22</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>14350.0</td>
+<td>10458.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">theta[3]</td>
+<td>0.28</td>
+<td>0.06</td>
+<td>0.16</td>
+<td>0.40</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>15702.0</td>
+<td>11989.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretazione-dei-risultati" class="level2" data-number="56.7">
+<h2 data-number="56.7" class="anchored" data-anchor-id="interpretazione-dei-risultati"><span class="header-section-number">56.7</span> Interpretazione dei Risultati</h2>
+<p>Nel contesto di questo esempio, immaginiamo un gruppo di pazienti depressi che giudicano delle immagini ambigue, assegnando loro un’emozione tra “felice”, “triste”, “arrabbiato” o “neutrale”. I parametri <span class="math inline">\(\theta[0]\)</span>, <span class="math inline">\(\theta[1]\)</span>, <span class="math inline">\(\theta[2]\)</span> e <span class="math inline">\(\theta[3]\)</span> rappresentano le stime a posteriori delle probabilità che un partecipante scelga rispettivamente ciascuna di queste emozioni.</p>
+<section id="interpretazione-specifica-dei-parametri" class="level3" data-number="56.7.1">
+<h3 data-number="56.7.1" class="anchored" data-anchor-id="interpretazione-specifica-dei-parametri"><span class="header-section-number">56.7.1</span> Interpretazione Specifica dei Parametri</h3>
+<ul>
+<li><p><strong><span class="math inline">\(\theta[0]\)</span>: Emozione “felice”</strong><br>
+La stima a posteriori della probabilità che un partecipante scelga l’emozione “felice” (<span class="math inline">\(P(X = 1)\)</span>) è 0.20, con un intervallo di credibilità al 95% (HDI) che va da 0.10 a 0.31. Questo suggerisce che, per questo gruppo di pazienti depressi, c’è una probabilità relativamente bassa di interpretare un’immagine ambigua come “felice”.</p></li>
+<li><p><strong><span class="math inline">\(\theta[1]\)</span>: Emozione “triste”</strong><br>
+La stima a posteriori della probabilità che un partecipante scelga l’emozione “triste” (<span class="math inline">\(P(X = 2)\)</span>) è 0.39, con un HDI al 95% tra 0.27 e 0.52. Questo valore più alto rispetto alle altre emozioni indica che i pazienti depressi nel campione hanno una tendenza maggiore a interpretare immagini ambigue come “tristi”. Questo risultato è coerente con le aspettative teoriche secondo cui le persone con depressione hanno una propensione a percepire situazioni ambigue in modo più negativo.</p></li>
+<li><p><strong><span class="math inline">\(\theta[2]\)</span>: Emozione “arrabbiato”</strong><br>
+La stima a posteriori della probabilità che un partecipante scelga l’emozione “arrabbiato” (<span class="math inline">\(P(X = 3)\)</span>) è 0.13, con un HDI al 95% che va da 0.05 a 0.22. Questa probabilità relativamente bassa suggerisce che interpretare un’immagine come “arrabbiato” non è un’interpretazione comune tra i pazienti depressi nel campione.</p></li>
+<li><p><strong><span class="math inline">\(\theta[3]\)</span>: Emozione “neutrale”</strong><br>
+La stima a posteriori della probabilità che un partecipante scelga l’emozione “neutrale” (<span class="math inline">\(P(X = 4)\)</span>) è 0.28, con un HDI al 95% tra 0.16 e 0.40. Una probabilità del 28% indica che un’interpretazione “neutrale” delle immagini ambigue è relativamente comune, ma non dominante, tra i pazienti depressi.</p></li>
+</ul>
+<p>In sintesi, queste stime posteriori forniscono una chiara indicazione delle tendenze emotive dei partecipanti depressi nel contesto di interpretazioni di stimoli ambigui. L’alta probabilità di scegliere “triste” e le basse probabilità associate alle altre emozioni sono coerenti con la letteratura esistente che indica un bias negativo nelle interpretazioni tra persone con depressione.</p>
+<p>In questo esempio simulato, le stime posteriori di <span class="math inline">\(\theta\)</span> riflettono accuratamente i valori delle probabilità utilizzati per generare i dati, dimostrando che anche con un numero limitato di dati, il modello bayesiano è capace di recuperare le distribuzioni delle probabilità a posteriori in modo efficace.</p>
+</section>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="56.8">
+<h2 data-number="56.8" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">56.8</span> Considerazioni Conclusive</h2>
+<p>L’obiettivo di questo breve capitolo era fornire un esempio della distribuzione categoriale, che rappresenta un’estensione della distribuzione di Bernoulli per il caso in cui vi siano più di due categorie possibili. Abbiamo mostrato come utilizzare Stan per eseguire inferenze su questa distribuzione, permettendo di stimare le probabilità associate a ciascuna categoria basandosi sui dati osservati. Questo approccio è utile in vari contesti psicologici in cui le risposte dei partecipanti non si limitano a scelte dicotomiche, ma comprendono più opzioni.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="cell-20" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m <span class="op">-</span>p cmdstanpy </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Sat Jul 27 2024
+
+Python implementation: CPython
+Python version       : 3.12.4
+IPython version      : 8.26.0
+
+cmdstanpy: 1.2.4
+
+Compiler    : Clang 16.0.6 
+OS          : Darwin
+Release     : 23.5.0
+Machine     : arm64
+Processor   : arm
+CPU cores   : 8
+Architecture: 64bit
+
+arviz     : 0.18.0
+pandas    : 2.2.2
+matplotlib: 3.9.1
+numpy     : 1.26.4
+requests  : 2.32.3
+cmdstanpy : 1.2.4
+logging   : 0.5.1.2
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-hirsch2016resolving" class="csl-entry" role="listitem">
+Hirsch, Colette R, Frances Meeten, Charlotte Krahé, e Clare Reeder. 2016. <span>«Resolving ambiguity in emotional disorders: The nature and role of interpretation biases»</span>. <em>Annual Review of Clinical Psychology</em> 12 (1): 281–305.
+</div>
+<div id="ref-mogg2006interpretation" class="csl-entry" role="listitem">
+Mogg, Karin, Katherine E Bradbury, e Brendan P Bradley. 2006. <span>«Interpretation of ambiguous information in clinical depression»</span>. <em>Behaviour Research and Therapy</em> 44 (10): 1411–19.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1606,13 +2062,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/appendix/a44_montecarlo.html" class="pagination-link" aria-label="Simulazione Monte Carlo">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Simulazione Monte Carlo</span></span>
+      <a href="../../chapters/mcmc/13_stan_hier_beta_binom.html" class="pagination-link" aria-label="Modello gerarchico beta-binomiale con Stan">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/appendix/a46_stan.html" class="pagination-link" aria-label="Linguaggio Stan">
-        <span class="nav-page-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/linear_models/introduction_linear_models.html" class="pagination-link" aria-label="Introduzione">
+        <span class="nav-page-text">Introduzione</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1624,7 +2080,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/appendix/a45_mcmc.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/14_stan_categorical.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
