@@ -1,7 +1,5 @@
 # Introduzione {.unnumbered}
 
-![](../../figures/art_8.png){ width=40% }
-
 In questa sezione esploreremo un approccio all'analisi dei dati basato sull'uso della regressione lineare, esaminandolo dalla prospettiva dell'inferenza bayesiana. La regressione è un metodo che consente ai ricercatori di riassumere come le previsioni o i valori medi di un risultato variano tra individui definiti da un insieme di predittori.
 
 Come indicato da @gelman2020regression, alcuni degli usi più importanti della regressione sono:
