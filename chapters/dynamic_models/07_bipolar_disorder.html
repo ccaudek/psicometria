@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>Data Science per Psicologi - 93&nbsp; Modello di Markov nascosto</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/dynamic_models/08_haslbeck.html" rel="next">
+<link href="../../chapters/dynamic_models/05_sequential_learning.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/dynamic_models/introduction_dynamic_models.html">Dinamiche</a></li><li class="breadcrumb-item"><a href="../../chapters/dynamic_models/07_bipolar_disorder.html"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Modello di Markov nascosto</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Data Science per Psicologi</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/introduction_python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/00_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/01_python_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/02_python_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/03_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/04_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pandas (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/05_pandas_aggregate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Pandas (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/06_pandas_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Pandas (3)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/07_matplotlib.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/python/08_seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seaborn</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Fondamenti</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/introduction_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/01_key_notions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Concetti chiave</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/02_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">La misurazione in psicologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/key_notions/03_data_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’analisi dei dati psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">EDA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/01_project_structure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Le fasi del progetto di analisi dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/02_data_cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Flusso di lavoro per la pulizia dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/03_dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Data tidying</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/04_freq_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/05_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/06_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/07_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/08_estimand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Estimandi teorici e estimandi empirici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">Probabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/introduction_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/01_intro_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/02_prob_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/03_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Fondamenti della probabilità: assiomi di Kolmogorov e sigma-algebra</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/04_conditional_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/05_bayes_theorem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/06_random_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/07_expval_var.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/08_sampling_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/09_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/10_density_func.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/11_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/12_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/13_likelihood.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/probability/14_simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Simulazioni</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">Inferenza</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/introduction_bayes_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/02_subj_prop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/03_grid_gauss.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/04_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/05_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/06_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/07_balance_prior_post.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/08_poisson_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/09_exponential_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/bayesian_inference/10_post_pred_distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">MCMC</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/introduction_mcmc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/09_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/10_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/11_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/12_stan_nuisance_parameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modelli con più di un parametro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/13_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/14_stan_categorical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Modello categoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mcmc/15_cmdstanr_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Introduzione a CmdStanR</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">Regressione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/introduction_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/02_non_centered_param.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Non-Centered Parameterization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/03_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/04_synt_sugar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/05_two_means.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/06_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/07_design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/08_linear_algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/09_stan_multreg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Il modello di regressione multipla</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/10_hier_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/11_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/12_specification_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/13_causal_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/14_interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Interazioni statistiche</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/15_ate_att_atu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/linear_models/16_missing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+ <span class="menu-text">GLM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/introduction_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/05_simchon_2023.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Tweets</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/06_stan_rct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/glm/07_stan_mediation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+ <span class="menu-text">Entropia</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/introduction_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/03_loo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/04_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/entropy/05_inductive_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true">
+ <span class="menu-text">Dinamiche</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/introduction_dynamic_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/01_canoeing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/02_change_across_time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/03_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/04_affect.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Le emozioni influenzano le emozioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/05_sequential_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">92</span>&nbsp; <span class="chapter-title">Analisi dinamica delle sequenze di apprendimento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/07_bipolar_disorder.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Modello di Markov nascosto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/dynamic_models/08_haslbeck.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">94</span>&nbsp; <span class="chapter-title">Recuperare le dinamiche intra-personali dalle serie temporali psicologiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false">
+ <span class="menu-text">Modelli cognitivi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cognitive_models/introduction_cognitive_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cognitive_models/01_ddm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">95</span>&nbsp; <span class="chapter-title">Drift Diffusion Model</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false">
+ <span class="menu-text">Frequentismo</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/introduction_frequentist_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">96</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">97</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">98</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">99</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false">
+ <span class="menu-text">Crisi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/introduction_replication_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduzione</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">100</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">101</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">102</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">103</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">104</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">105</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false">
+ <span class="menu-text">Epilogo</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/epiloque/epiloque.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Considerazioni Conclusive</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a00_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Ambiente di lavoro</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a01_markdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Jupyter Notebook</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a02_shell.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">La Shell</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a03_colab_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Colab: un breve tutorial</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a04_virtual_env.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Ambienti virtuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a10_math_symbols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Simbologia di base</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a11_numbers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">Numeri e intervalli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a12_sum_notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">Sommatorie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a13_sets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Insiemi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a14_combinatorics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">J</span>&nbsp; <span class="chapter-title">Calcolo combinatorio</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a15_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">K</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a20_kde_plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">L</span>&nbsp; <span class="chapter-title">Kernel Density Estimation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a30_prob_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">M</span>&nbsp; <span class="chapter-title">Esercizi di probabilità discreta</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a40_rng.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">N</span>&nbsp; <span class="chapter-title">Generazione di numeri casuali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a44_montecarlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">O</span>&nbsp; <span class="chapter-title">Simulazione Monte Carlo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a46_stan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">P</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a47_first_order_markov.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Q</span>&nbsp; <span class="chapter-title">Catene di Markov</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a48_hidden_markov_processes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">R</span>&nbsp; <span class="chapter-title">Processi di Markov Nascosti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a50_lin_fun.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">S</span>&nbsp; <span class="chapter-title">La funzione lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a51_r_squared.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">T</span>&nbsp; <span class="chapter-title">Teorema della scomposizione della devianza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a55_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_entropia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_replication_crisis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">^</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
+  <li><a href="#proprietà-degli-hmm" id="toc-proprietà-degli-hmm" class="nav-link" data-scroll-target="#proprietà-degli-hmm"><span class="header-section-number">93.1</span> Proprietà degli HMM</a></li>
+  <li><a href="#elementi-di-un-hmm" id="toc-elementi-di-un-hmm" class="nav-link" data-scroll-target="#elementi-di-un-hmm"><span class="header-section-number">93.2</span> Elementi di un HMM</a></li>
+  <li><a href="#le-fluttuazioni-dellumore-in-pazienti-con-disturbo-bipolare" id="toc-le-fluttuazioni-dellumore-in-pazienti-con-disturbo-bipolare" class="nav-link" data-scroll-target="#le-fluttuazioni-dellumore-in-pazienti-con-disturbo-bipolare"><span class="header-section-number">93.3</span> Le Fluttuazioni dell’Umore in Pazienti con Disturbo Bipolare</a></li>
+  <li><a href="#simulazione-dei-dati" id="toc-simulazione-dei-dati" class="nav-link" data-scroll-target="#simulazione-dei-dati"><span class="header-section-number">93.4</span> Simulazione dei Dati</a></li>
+  <li><a href="#simulazione-dei-dati-1" id="toc-simulazione-dei-dati-1" class="nav-link" data-scroll-target="#simulazione-dei-dati-1"><span class="header-section-number">93.5</span> Simulazione dei Dati</a></li>
+  <li><a href="#modello-hmm" id="toc-modello-hmm" class="nav-link" data-scroll-target="#modello-hmm"><span class="header-section-number">93.6</span> Modello HMM</a></li>
+  <li><a href="#stima-dei-parametri" id="toc-stima-dei-parametri" class="nav-link" data-scroll-target="#stima-dei-parametri"><span class="header-section-number">93.7</span> Stima dei Parametri</a></li>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">93.8</span> Interpretazione</a></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">93.9</span> Considerazioni Conclusive</a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/dynamic_models/07_bipolar_disorder.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/dynamic_models/introduction_dynamic_models.html">Dinamiche</a></li><li class="breadcrumb-item"><a href="../../chapters/dynamic_models/07_bipolar_disorder.html"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Modello di Markov nascosto</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-mildiner2024" class="quarto-section-identifier"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Modello di Markov nascosto</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<ul>
+<li>Leggere <em>Evidence for Mood Instability in Patients With Bipolar Disorder: Applying Multilevel Hidden Markov Modeling to Intensive Longitudinal Ecological Momentary Assessment Data</em> di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span>.</li>
+<li>Leggere l’<a href="../appendix/a48_hidden_markov_processes.html" class="quarto-xref"><span>Appendice R</span></a>.</li>
+</ul>
+<p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li>Comprendere la struttura e l’utilizzo degli HMM per modellare sistemi in cui gli stati nascosti evolvono nel tempo e influenzano le osservazioni visibili.</li>
+<li>Distinguere tra stati latenti (non osservabili direttamente) e dati osservabili, e comprendere come gli HMM inferiscono stati nascosti basandosi su osservazioni visibili.</li>
+<li>Conoscere il significato e l’importanza della matrice di transizione, che rappresenta le probabilità di passaggio tra stati nascosti consecutivi.</li>
+<li>Capire il ruolo della matrice di emissione, che descrive la probabilità di osservare determinate categorie in base allo stato nascosto del sistema.</li>
+<li>Sviluppare la capacità di interpretare i risultati dell’analisi HMM, inclusa la valutazione delle stime posteriori per le matrici di transizione e di emissione e la loro coerenza con le aspettative teoriche.</li>
+<li>Comprendere come gli HMM possono essere utilizzati per analizzare dati clinici, come quelli relativi al disturbo bipolare, e per inferire stati emotivi basati su osservazioni indirette.</li>
+</ul>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> bambi <span class="im">as</span> bmb</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(action<span class="op">=</span><span class="st">"ignore"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"hmm"</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
+<p>Immaginiamo di osservare il comportamento di un amico, ma senza poter leggere la sua mente. Questo è il concetto alla base dei modelli nascosti di Markov (HMM, dall’inglese <em>Hidden Markov Models</em>). Gli HMM sono come un gioco in cui si cerca di indovinare cosa sta pensando qualcuno basandoci solo sulle sue azioni. In questo “gioco”:</p>
+<ol type="1">
+<li>Il pensiero o lo stato d’animo del nostro amico rappresenta lo “stato nascosto”. Non possiamo vederlo direttamente.</li>
+<li>Le azioni o il comportamento del nostro amico sono le “osservazioni” che possiamo vedere.</li>
+<li>Lo stato d’animo del nostro amico cambia nel tempo, ma in modo prevedibile. Ad esempio, se è felice oggi, c’è una buona probabilità che sarà felice anche domani.</li>
+<li>Le azioni del nostro amico dipendono dal suo stato d’animo attuale. Se è felice, potrebbe sorridere di più; se è triste, potrebbe parlare meno.</li>
+</ol>
+<p>Ora, immaginiamo di osservare il nostro amico per diversi giorni. Ogni giorno:</p>
+<ul>
+<li>Il suo stato d’animo (che non vediamo) dipende principalmente da come si sentiva il giorno prima.</li>
+<li>Le sue azioni (che vediamo) dipendono solo da come si sente quel giorno, non da come si sentiva ieri o da cosa ha fatto ieri.</li>
+</ul>
+<p>Questo è essenzialmente ciò che fa un HMM: cerca di capire la sequenza degli stati nascosti (stati d’animo) basandosi sulla sequenza di osservazioni (azioni).</p>
+<p>In termini formali, un modello nascosto di Markov (HMM) è un modello probabilistico composto da due processi:</p>
+<ol type="1">
+<li>Un processo nascosto di Markov <span class="math inline">\(\{C_t : t \in \mathbb{N}\}\)</span></li>
+<li>Un processo osservabile <span class="math inline">\(\{X_t : t \in \mathbb{N}\}\)</span> dipendente dagli stati nascosti.</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../../figures/graph_hmm.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>Grafico diretto del modello nascosto di Markov (HMM).</figcaption>
+</figure>
+</div>
+<p>La struttura di un HMM può essere visualizzata attraverso un grafico diretto, come mostrato nella figura. In questo grafico:</p>
+<ul>
+<li>I nodi <span class="math inline">\(C_t\)</span> rappresentano gli stati nascosti.</li>
+<li>I nodi <span class="math inline">\(X_t\)</span> rappresentano le osservazioni.</li>
+<li>Le frecce indicano le dipendenze probabilistiche.</li>
+</ul>
+<p>In un HMM, gli stati nascosti controllano la generazione delle osservazioni, ma non possiamo osservare direttamente questi stati, solo le osservazioni risultanti. Gli HMM sono utili in molte situazioni reali dove non possiamo vedere direttamente ciò che sta realmente accadendo. Gli HMM ci aiutano a fare previsioni sugli stati nascosti basandoci su ciò che possiamo effettivamente osservare.</p>
+</section>
+<section id="proprietà-degli-hmm" class="level2" data-number="93.1">
+<h2 data-number="93.1" class="anchored" data-anchor-id="proprietà-degli-hmm"><span class="header-section-number">93.1</span> Proprietà degli HMM</h2>
+<p>Un HMM è definito dalle seguenti proprietà:</p>
+<ol type="1">
+<li><p><strong>Proprietà di Markov per gli stati nascosti</strong>: La probabilità di essere in uno stato attuale <span class="math inline">\(C_t\)</span> dipende solo dallo stato immediatamente precedente <span class="math inline">\(C_{t-1}\)</span>:</p>
+<p><span class="math display">\[\Pr(C_t | C_1, C_2, ..., C_{t-1}) = \Pr(C_t | C_{t-1}), \quad t = 2,3, ...\]</span></p></li>
+<li><p><strong>Indipendenza condizionale delle osservazioni</strong>: La probabilità di un’osservazione <span class="math inline">\(X_t\)</span> dipende solo dallo stato corrente <span class="math inline">\(C_t\)</span>:</p>
+<p><span class="math display">\[\Pr(X_t | X_1, X_2, ..., X_{t-1}, C_1, C_2, ..., C_t) = \Pr(X_t | C_t), \quad t \in \mathbb{N}.\]</span></p></li>
+</ol>
+</section>
+<section id="elementi-di-un-hmm" class="level2" data-number="93.2">
+<h2 data-number="93.2" class="anchored" data-anchor-id="elementi-di-un-hmm"><span class="header-section-number">93.2</span> Elementi di un HMM</h2>
+<p>Un HMM è completamente definito da tre elementi:</p>
+<ol type="1">
+<li><strong>Matrice di transizione degli stati</strong> <span class="math inline">\(A = (a_{ij})\)</span></li>
+</ol>
+<p>La matrice di transizione degli stati, denotata come <span class="math inline">\(A = (a_{ij})\)</span>, descrive le probabilità di transizione tra gli stati nascosti nel modello. Ogni elemento <span class="math inline">\(a_{ij}\)</span> della matrice rappresenta la probabilità di passare dallo stato nascosto <span class="math inline">\(i\)</span> allo stato nascosto <span class="math inline">\(j\)</span> da un tempo <span class="math inline">\(t\)</span> al tempo successivo <span class="math inline">\(t+1\)</span>.</p>
+<p>Matematicamente, questo è espresso come:</p>
+<p><span class="math display">\[
+a_{ij} = \Pr(C_t = j | C_{t-1} = i).
+\]</span></p>
+<p>Questo significa che, dato che il processo si trova nello stato <span class="math inline">\(i\)</span> al tempo <span class="math inline">\(t-1\)</span>, la probabilità che si trovi nello stato <span class="math inline">\(j\)</span> al tempo <span class="math inline">\(t\)</span> è <span class="math inline">\(a_{ij}\)</span>. La matrice <span class="math inline">\(A\)</span> deve soddisfare la condizione che la somma delle probabilità di ogni riga sia uguale a 1, ovvero <span class="math inline">\(\sum_{j} a_{ij} = 1\)</span> per ogni stato <span class="math inline">\(i\)</span>. Questo riflette il fatto che, partendo da uno stato qualsiasi, il processo deve necessariamente transitare in uno degli stati possibili nel passo successivo.</p>
+<ol start="2" type="1">
+<li><strong>Matrice di emissione</strong> <span class="math inline">\(B = (b_{j}(k))\)</span></li>
+</ol>
+<p>La matrice di emissione, indicata come <span class="math inline">\(B = (b_{j}(k))\)</span>, rappresenta le probabilità di emissione, ovvero le probabilità di osservare un certo output (osservazione) dato uno stato nascosto specifico. Ogni elemento <span class="math inline">\(b_{j}(k)\)</span> della matrice descrive la probabilità di osservare l’output <span class="math inline">\(k\)</span> quando il processo si trova nello stato nascosto <span class="math inline">\(j\)</span>.</p>
+<p>Matematicamente, questo è rappresentato da:</p>
+<p><span class="math display">\[
+b_{j}(k) = \Pr(X_t = k | C_t = j).
+\]</span></p>
+<p>In altre parole, se il processo è nello stato nascosto <span class="math inline">\(j\)</span> al tempo <span class="math inline">\(t\)</span>, <span class="math inline">\(b_{j}(k)\)</span> rappresenta la probabilità che l’osservazione al tempo <span class="math inline">\(t\)</span> sia <span class="math inline">\(k\)</span>. La matrice <span class="math inline">\(B\)</span> deve essere costruita in modo tale che, per ogni stato <span class="math inline">\(j\)</span>, la somma delle probabilità di emissione per tutti i possibili output <span class="math inline">\(k\)</span> sia pari a 1, ovvero <span class="math inline">\(\sum_{k} b_{j}(k) = 1\)</span>. Questo garantisce che, dato uno stato nascosto, l’emissione deve essere uno degli output possibili.</p>
+<ol start="3" type="1">
+<li><strong>Distribuzione iniziale degli stati</strong> <span class="math inline">\(\pi = (\pi_i)\)</span></li>
+</ol>
+<p>La distribuzione iniziale degli stati, denotata come <span class="math inline">\(\pi = (\pi_i)\)</span>, specifica la probabilità che il processo inizi in ciascuno dei possibili stati nascosti. Ogni elemento <span class="math inline">\(\pi_i\)</span> rappresenta la probabilità che il processo inizi nello stato <span class="math inline">\(i\)</span> al tempo iniziale <span class="math inline">\(t = 1\)</span>.</p>
+<p>Questo è definito come:</p>
+<p><span class="math display">\[
+\pi_i = \Pr(C_1 = i).
+\]</span></p>
+<p>Questa distribuzione iniziale fornisce le probabilità di partenza per gli stati nascosti, determinando in quale stato il processo inizia prima che avvengano le osservazioni. La somma di tutte le probabilità nella distribuzione iniziale deve essere uguale a 1, ovvero <span class="math inline">\(\sum_{i} \pi_i = 1\)</span>, poiché il processo deve iniziare in uno degli stati possibili.</p>
+<p>In sintesi, un HMM è completamente definito da questi tre elementi: la matrice di transizione degli stati (<span class="math inline">\(A\)</span>), che descrive le probabilità di passaggio tra stati nascosti; la matrice di emissione (<span class="math inline">\(B\)</span>), che descrive le probabilità delle osservazioni date gli stati nascosti; e la distribuzione iniziale degli stati (<span class="math inline">\(\pi\)</span>), che specifica le probabilità di partenza per gli stati nascosti. Insieme, questi componenti permettono di modellare fenomeni complessi in cui i dati osservabili sono influenzati da stati interni non direttamente osservabili, fornendo una struttura matematica per fare inferenze su tali stati nascosti basandosi sulle osservazioni disponibili.</p>
+</section>
+<section id="le-fluttuazioni-dellumore-in-pazienti-con-disturbo-bipolare" class="level2" data-number="93.3">
+<h2 data-number="93.3" class="anchored" data-anchor-id="le-fluttuazioni-dellumore-in-pazienti-con-disturbo-bipolare"><span class="header-section-number">93.3</span> Le Fluttuazioni dell’Umore in Pazienti con Disturbo Bipolare</h2>
+<p>In questo capitolo esamineremo un’applicazione degli HMM usata nella recente letteratura psicologica. In particolare, discuteremo lo studio di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span> che applica un modello di Markov nascosto (Hidden Markov Model, HMM) per analizzare le fluttuazioni dell’umore in pazienti con disturbo bipolare. <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span> applicano un HMM a dati raccolti tramite <em>Ecological Momentary Assessment</em> (EMA) intensivo, basato su dodici item che catturano vari aspetti dell’umore su una base longitudinale intensiva. Questo tipo di dati permette di monitorare in modo dettagliato e continuo i cambiamenti nell’umore dei pazienti, fornendo una ricca fonte di informazioni per l’analisi dinamica.</p>
+<p><span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span> hanno sviluppato e testato il modello HMM considerando diverse configurazioni, variando il numero di stati nascosti da due a sette. Questa scelta si basa su evidenze provenienti da studi precedenti, che suggeriscono una variabilità nel numero di stati necessari per descrivere adeguatamente le diverse manifestazioni cliniche del disturbo bipolare. La selezione del modello ottimale è stata effettuata utilizzando criteri di informazione statistica, come il Bayesian Information Criterion (BIC), per identificare il numero di stati che meglio descrivevano le transizioni dell’umore dei pazienti senza sovra-adattamento dei dati.</p>
+<p>In questo tutorial, utilizzeremo dati simulati per illustrare come applicare un HMM con quattro stati nascosti, considerando i dati di un singolo paziente. Questa configurazione a quattro stati riflette una suddivisione clinicamente rilevante degli stati dell’umore in:</p>
+<ul>
+<li><strong>Neutro</strong>: uno stato di equilibrio emotivo senza sintomi significativi di mania o depressione.</li>
+<li><strong>Elevato</strong>: uno stato caratterizzato da umore maniacale o ipomaniacale.</li>
+<li><strong>Misto</strong>: uno stato in cui coesistono sintomi sia maniacali che depressivi.</li>
+<li><strong>Abbassato</strong>: uno stato di umore depresso con sintomi depressivi predominanti.</li>
+</ul>
+<p>L’analisi dei dati simulati con un HMM a quattro stati ci permetterà di esplorare come questo modello può essere utilizzato per identificare e analizzare le transizioni tra diversi stati dell’umore, fornendo un esempio pratico delle potenzialità di questo approccio per la ricerca e la pratica clinica nel campo della salute mentale.</p>
+</section>
+<section id="simulazione-dei-dati" class="level2" data-number="93.4">
+<h2 data-number="93.4" class="anchored" data-anchor-id="simulazione-dei-dati"><span class="header-section-number">93.4</span> Simulazione dei Dati</h2>
+<p>In questo tutorial, considereremo un modello HMM generativo con 4 stati nascosti e 3 possibili categorie di osservazione. Definiremo le probabilità iniziali degli stati, una specifica matrice di transizione tra stati nascosti e una matrice di emissione per le osservazioni. Con queste impostazioni, simuleremo un set di dati composto da 5000 osservazioni che seguono la struttura del modello definito.</p>
+<div id="cell-6" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the number of hidden states and observation categories</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> <span class="dv">4</span>  <span class="co"># Number of hidden states: neutral, elevated, mixed, lowered</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">3</span>  <span class="co"># Number of observation categories (e.g., low, medium, high)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">5000</span>  <span class="co"># Number of observations to simulate</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial state probabilities (uniform for simplicity)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>pi <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Transition matrix (M x M)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.6</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>],</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>],</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.6</span>],</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Emission matrix for categorical distribution (M x K)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> np.array(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.7</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>],  <span class="co"># Emissions from 'neutral' state</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.1</span>, <span class="fl">0.8</span>, <span class="fl">0.1</span>],  <span class="co"># Emissions from 'elevated' state</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>],  <span class="co"># Emissions from 'mixed' state</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        [<span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.6</span>],  <span class="co"># Emissions from 'lowered' state</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate hidden states and observations</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>hidden_states <span class="op">=</span> np.zeros(N, dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>observations <span class="op">=</span> np.zeros(N, dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate the initial hidden state based on initial probabilities</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>hidden_states[<span class="dv">0</span>] <span class="op">=</span> np.random.choice(M, p<span class="op">=</span>pi)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate the sequence of hidden states and observations</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N):</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Simulate the next hidden state based on transition matrix A</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    hidden_states[t] <span class="op">=</span> np.random.choice(M, p<span class="op">=</span>A[hidden_states[t <span class="op">-</span> <span class="dv">1</span>]])</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Simulate the observation based on the emission matrix B</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    observations[t] <span class="op">=</span> np.random.choice(K, p<span class="op">=</span>B[hidden_states[t]])</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to 1-based indexing for Stan (Stan expects indices to start from 1)</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>observations <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>hidden_states <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the data dictionary for Stan</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: N,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">"M"</span>: M,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="st">"K"</span>: K,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: observations,  <span class="co"># Observations must be 1-based for Stan</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stan_data)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'N': 5000, 'M': 4, 'K': 3, 'y': array([1, 2, 1, ..., 3, 2, 1])}</code></pre>
+</div>
+</div>
+</section>
+<section id="simulazione-dei-dati-1" class="level2" data-number="93.5">
+<h2 data-number="93.5" class="anchored" data-anchor-id="simulazione-dei-dati-1"><span class="header-section-number">93.5</span> Simulazione dei Dati</h2>
+<p>Nella simulazione, le osservazioni sono categorizzate in tre diverse modalità, ciascuna rappresentata da una categoria distinta nei dati. Queste modalità possono essere interpretate come diverse manifestazioni degli stati emotivi dei pazienti. Di seguito, viene fornita una possibile interpretazione di ciascuna modalità nel contesto di un HMM applicato al disturbo bipolare:</p>
+<ol type="1">
+<li><strong>Modalità 1: Stato Stabile (ad esempio, “Normale” o “Neutro”)</strong>:
+<ul>
+<li><strong>Significato</strong>: Questa modalità rappresenta osservazioni che indicano uno stato di equilibrio emotivo del paziente. In questo contesto, “normale” o “neutro” significa che il paziente non manifesta sintomi evidenti di mania o depressione.</li>
+<li><strong>Esempi di osservazioni</strong>: Risposte a questionari EMA che indicano sentimenti di calma, livelli energetici normali e un umore stabile, senza eccessi emotivi. Potrebbe anche includere l’assenza di segni di agitazione o tristezza.</li>
+</ul></li>
+<li><strong>Modalità 2: Stato Elevato (ad esempio, “Maniacale” o “Elevato”)</strong>:
+<ul>
+<li><strong>Significato</strong>: Questa modalità rappresenta osservazioni che suggeriscono uno stato di umore elevato, maniacale o ipomaniacale. In questo stato, il paziente mostra sintomi tipici della mania, come alta energia, euforia, irritabilità o comportamento impulsivo.</li>
+<li><strong>Esempi di osservazioni</strong>: Risposte che indicano un significativo aumento dell’energia, bisogno ridotto di sonno, discorsi rapidi, incremento dell’attività o una tendenza a prendere decisioni impulsive. Questi sintomi sono coerenti con gli stati elevati osservati nei pazienti con disturbo bipolare.</li>
+</ul></li>
+<li><strong>Modalità 3: Stato Abbassato (ad esempio, “Depresso”)</strong>:
+<ul>
+<li><strong>Significato</strong>: Questa modalità indica osservazioni che suggeriscono uno stato di umore abbassato o depresso. In questo stato, il paziente manifesta sintomi di depressione come tristezza, mancanza di energia, sentimenti di inutilità o disperazione e possibile isolamento sociale.</li>
+<li><strong>Esempi di osservazioni</strong>: Risposte che riflettono sentimenti di tristezza persistente, perdita di interesse o piacere nelle attività quotidiane, fatica, pensieri negativi e problemi di concentrazione o indecisione. Questi sintomi sono tipici degli episodi depressivi nel disturbo bipolare.</li>
+</ul></li>
+</ol>
+<p>Nel modello HMM, ogni stato nascosto (neutro, elevato, misto, abbassato) è associato a una distribuzione di probabilità sulle tre modalità di osservazione. La matrice di emissione <span class="math inline">\(B\)</span> specifica queste probabilità, indicando la probabilità di ciascuna osservazione in ogni stato nascosto.</p>
+<p>Ad esempio:</p>
+<ul>
+<li><p><strong>Stato Nascosto “Neutro”</strong>: Questo stato ha una maggiore probabilità di generare osservazioni della Modalità 1 (“Normale” o “Neutro”) e una probabilità significativamente inferiore di generare osservazioni delle Modalità 2 (“Maniacale”) o 3 (“Depresso”).</p></li>
+<li><p><strong>Stato Nascosto “Elevato”</strong>: Questo stato ha una probabilità più alta di generare osservazioni della Modalità 2, che rappresentano sintomi maniacali o ipomaniacali, e una probabilità inferiore di generare osservazioni delle altre modalità.</p></li>
+<li><p><strong>Stato Nascosto “Abbassato”</strong>: Questo stato ha una probabilità maggiore di produrre osservazioni della Modalità 3 (“Depresso”), che corrispondono a sintomi depressivi.</p></li>
+<li><p><strong>Stato Nascosto “Misto”</strong>: Questo stato potrebbe avere una distribuzione più uniforme sulle tre modalità di osservazione, rappresentando la coesistenza di sintomi sia maniacali che depressivi.</p></li>
+</ul>
+<p>In sintesi, l’HMM utilizza le osservazioni categorizzate per inferire quali stati nascosti sono più probabili in base ai dati raccolti. Un modello ben adattato dovrebbe essere in grado di utilizzare la matrice di emissione <span class="math inline">\(B\)</span> per identificare correttamente i pattern di osservazione che indicano transizioni tra diversi stati emotivi, anche quando questi stati non sono direttamente osservabili.</p>
+</section>
+<section id="modello-hmm" class="level2" data-number="93.6">
+<h2 data-number="93.6" class="anchored" data-anchor-id="modello-hmm"><span class="header-section-number">93.6</span> Modello HMM</h2>
+<p>Il modello HMM è stato implementato nel seguente script Stan.</p>
+<div id="cell-9" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    project_directory, <span class="st">"stan"</span>, <span class="st">"hmm_model.stan"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>model_single <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model_single.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data {
+  int&lt;lower=1&gt; N; // Number of observations
+  int&lt;lower=1&gt; M; // Number of hidden states
+  int&lt;lower=1&gt; K; // Number of observation categories
+  array[N] int&lt;lower=1, upper=K&gt; y; // Observations, coded as integers 1:K
+}
+parameters {
+  simplex[M] pi; // Initial state probabilities
+  array[M] simplex[M] A; // Transition matrix for hidden states
+  array[M] simplex[K] B; // Emission matrix for observation categories
+}
+model {
+  // Priors
+  pi ~ dirichlet(rep_vector(1.0, M));
+  for (m in 1 : M) {
+    A[m] ~ dirichlet(rep_vector(1.0, M));
+    B[m] ~ dirichlet(rep_vector(1.0, K));
+  }
+  
+  // Forward algorithm for likelihood
+  {
+    array[N, M] real log_alpha;
+    for (m in 1 : M) 
+      log_alpha[1, m] = log(pi[m]) + categorical_lpmf(y[1] | B[m]);
+    
+    for (n in 2 : N) {
+      for (m in 1 : M) {
+        real acc = negative_infinity();
+        for (k in 1 : M) 
+          acc = log_sum_exp(acc, log_alpha[n - 1, k] + log(A[k, m]));
+        log_alpha[n, m] = acc + categorical_lpmf(y[n] | B[m]);
+      }
+    }
+    target += log_sum_exp(log_alpha[N]);
+  }
+}
+</code></pre>
+</div>
+</div>
+<p>Gli stati nascosti seguono una catena di Markov, e le osservazioni sono emesse in base allo stato corrente. Le componenti del modello sono descritte di seguito.</p>
+<ol type="1">
+<li><p><strong>Dati di Input (<code>data</code> block)</strong>:</p>
+<ul>
+<li><code>int&lt;lower=1&gt; N;</code>: Numero di osservazioni nella sequenza. Rappresenta la lunghezza della sequenza di dati osservati.</li>
+<li><code>int&lt;lower=1&gt; M;</code>: Numero di stati nascosti. Questi stati non sono osservabili direttamente, ma influenzano la probabilità delle osservazioni.</li>
+<li><code>int&lt;lower=1&gt; K;</code>: Numero di categorie di osservazione. Ogni osservazione può appartenere a una di queste categorie.</li>
+<li><code>array[N] int&lt;lower=1, upper=K&gt; y;</code>: Un array di osservazioni categoriali, codificate come interi da 1 a <span class="math inline">\(K\)</span>.</li>
+</ul></li>
+<li><p><strong>Parametri del Modello (<code>parameters</code> block)</strong>:</p>
+<ul>
+<li><code>simplex[M] pi;</code>: Vettore di probabilità iniziali per gli stati nascosti. Essendo un simplex, la somma di tutti gli elementi è pari a 1. Questo rappresenta la distribuzione iniziale degli stati nascosti al tempo <span class="math inline">\(t = 1\)</span>.</li>
+<li><code>array[M] simplex[M] A;</code>: Matrice di transizione degli stati nascosti. Ogni riga <span class="math inline">\(A[m]\)</span> è un simplex, e rappresenta le probabilità di transizione dall’attuale stato <span class="math inline">\(m\)</span> a tutti gli altri stati <span class="math inline">\(j\)</span>. La somma di ogni riga è 1.</li>
+<li><code>array[M] simplex[K] B;</code>: Matrice di emissione per le categorie di osservazione. Ogni riga <span class="math inline">\(B[m]\)</span> è un simplex che rappresenta la distribuzione di probabilità delle osservazioni per uno stato nascosto <span class="math inline">\(m\)</span>. La somma di ogni riga è 1.</li>
+</ul></li>
+<li><p><strong>Modello di Inferenza (<code>model</code> block)</strong>:</p>
+<ul>
+<li><p><strong>Priors</strong>:</p>
+<ul>
+<li><code>pi ~ dirichlet(rep_vector(1.0, M));</code>: Assegna una prior di Dirichlet uniforme alle probabilità iniziali degli stati nascosti, implicando che ogni stato nascosto è ugualmente probabile all’inizio.</li>
+<li><code>A[m] ~ dirichlet(rep_vector(1.0, M));</code>: Assegna una prior di Dirichlet uniforme a ogni riga della matrice di transizione <span class="math inline">\(A\)</span>, implicando che ogni transizione da uno stato a un altro è ugualmente probabile inizialmente.</li>
+<li><code>B[m] ~ dirichlet(rep_vector(1.0, K));</code>: Assegna una prior di Dirichlet uniforme a ogni riga della matrice di emissione <span class="math inline">\(B\)</span>, implicando che ogni categoria di osservazione è inizialmente ugualmente probabile per ogni stato nascosto.</li>
+</ul></li>
+<li><p><strong>Algoritmo Forward per la Verosimiglianza</strong>:</p>
+<ul>
+<li><p>Questo algoritmo calcola la verosimiglianza della sequenza osservata data la struttura del modello (gli stati nascosti e le loro transizioni). Utilizza una rappresentazione logaritmica per evitare problemi di underflow numerico.</p></li>
+<li><p><strong>Inizializzazione</strong>:</p>
+<ul>
+<li><code>log_alpha[1, m] = log(pi[m]) + categorical_lpmf(y[1] | B[m]);</code>
+<ul>
+<li>Calcola la log-verosimiglianza iniziale per il primo elemento della sequenza osservata. Combina la log-probabilità di iniziare in ciascuno stato nascosto con la log-probabilità di osservare <span class="math inline">\(y[1]\)</span> da ciascuno stato.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Ricorsione</strong>:</p>
+<ul>
+<li><code>for (n in 2 : N)</code>: Ciclo attraverso ogni osservazione nella sequenza, dal secondo all’ultimo.</li>
+<li><code>for (m in 1 : M)</code>: Per ogni possibile stato nascosto al tempo <span class="math inline">\(n\)</span>, calcola la log-verosimiglianza.
+<ul>
+<li><code>real acc = negative_infinity();</code>: Inizializza un accumulatore per sommare in logaritmo le probabilità dei percorsi.</li>
+<li><code>for (k in 1 : M) acc = log_sum_exp(acc, log_alpha[n - 1, k] + log(A[k, m]));</code>
+<ul>
+<li>Somma le probabilità di tutti i percorsi che portano al nuovo stato <span class="math inline">\(m\)</span>, considerando la probabilità di transizione da ciascuno stato precedente <span class="math inline">\(k\)</span> a <span class="math inline">\(m\)</span>.</li>
+</ul></li>
+<li><code>log_alpha[n, m] = acc + categorical_lpmf(y[n] | B[m]);</code>
+<ul>
+<li>Aggiorna la log-verosimiglianza per il tempo <span class="math inline">\(n\)</span> e lo stato <span class="math inline">\(m\)</span> aggiungendo la log-probabilità dell’osservazione <span class="math inline">\(y[n]\)</span> data dallo stato <span class="math inline">\(m\)</span>.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Termine Finale</strong>:</p>
+<ul>
+<li><code>target += log_sum_exp(log_alpha[N]);</code>
+<ul>
+<li>Somma le log-verosimiglianze dell’ultimo elemento della sequenza osservata su tutti gli stati nascosti, aggiornando il log-verosimiglianza complessiva del modello.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ol>
+<p>In sintesi, questo script Stan definisce un HMM in cui:</p>
+<ul>
+<li>Gli <strong>stati nascosti</strong> seguono una distribuzione di probabilità iniziale (<span class="math inline">\(\pi\)</span>) e una matrice di transizione (<span class="math inline">\(A\)</span>) che governa come gli stati cambiano nel tempo.</li>
+<li>Le <strong>osservazioni</strong> sono generate dagli stati nascosti secondo la matrice di emissione (<span class="math inline">\(B\)</span>), che specifica le probabilità delle osservazioni date ciascuno stato.</li>
+<li>Le <strong>priors uniformi</strong> per <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> implicano una mancanza di conoscenza a priori riguardo a queste matrici, lasciando che i dati osservati guidino l’inferenza.</li>
+<li>L’<strong>algoritmo Forward</strong> è utilizzato per calcolare la log-verosimiglianza della sequenza osservata, che viene poi utilizzata per inferire i parametri del modello.</li>
+</ul>
+</section>
+<section id="stima-dei-parametri" class="level2" data-number="93.7">
+<h2 data-number="93.7" class="anchored" data-anchor-id="stima-dei-parametri"><span class="header-section-number">93.7</span> Stima dei Parametri</h2>
+<p>Eseguiamo il campionamento.</p>
+<div id="cell-12" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit_single <span class="op">=</span> model_single.sample(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-13" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run diagnostics and print results</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>diagnostic_info <span class="op">=</span> fit_single.diagnose()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(diagnostic_info)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Processing csv files: /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp7qy4zp_b/hmm_model0fh6yuyh/hmm_model-20240903132237_1.csv, /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp7qy4zp_b/hmm_model0fh6yuyh/hmm_model-20240903132237_2.csv, /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp7qy4zp_b/hmm_model0fh6yuyh/hmm_model-20240903132237_3.csv, /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/tmp7qy4zp_b/hmm_model0fh6yuyh/hmm_model-20240903132237_4.csv
+
+Checking sampler transitions treedepth.
+Treedepth satisfactory for all transitions.
+
+Checking sampler transitions for divergences.
+No divergent transitions found.
+
+Checking E-BFMI - sampler transitions HMC potential energy.
+E-BFMI satisfactory.
+
+The following parameters had fewer than 0.001 effective draws per transition:
+  B[2,2]
+Such low values indicate that the effective sample size estimators may be biased high and actual performance may be substantially lower than quoted.
+
+The following parameters had split R-hat greater than 1.05:
+  A[1,1], A[3,1], A[2,2], A[3,2], A[4,2], A[1,3], A[1,4], B[1,1], B[2,1], B[3,1], B[4,1], B[1,2], B[2,2], B[3,2], B[4,2], B[1,3], B[2,3], B[3,3]
+Such high values indicate incomplete mixing and biased estimation.
+You should consider regularizating your model with additional prior information or a more effective parameterization.
+
+Processing complete.
+</code></pre>
+</div>
+</div>
+</section>
+<section id="interpretazione" class="level2" data-number="93.8">
+<h2 data-number="93.8" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">93.8</span> Interpretazione</h2>
+<p>Esaminiamo le stime a posteriori.</p>
+<div id="cell-15" class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'fit_single' is your fitted model object</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>posterior_df <span class="op">=</span> fit_single.draws_pd()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract samples for A (transition matrix)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>A_samples <span class="op">=</span> posterior_df.<span class="bu">filter</span>(regex<span class="op">=</span><span class="st">"^A"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute posterior mean for each element in A</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>A_mean <span class="op">=</span> A_samples.mean()</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the Series to a NumPy array and reshape it</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>A_mean_array <span class="op">=</span> A_mean.to_numpy().reshape(M, M)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure each row of A sums to 1</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>row_sums <span class="op">=</span> A_mean_array.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Posterior mean of A:</span><span class="ch">\n</span><span class="sc">{</span>A_mean_array<span class="sc">.</span><span class="bu">round</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Row sums of posterior mean of A (should be close to 1): </span><span class="sc">{</span>row_sums<span class="sc">.</span><span class="bu">round</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract samples for pi (initial state probabilities)</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>pi_samples <span class="op">=</span> posterior_df.<span class="bu">filter</span>(regex<span class="op">=</span><span class="st">"^pi"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute and print the posterior means for pi</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>pi_mean <span class="op">=</span> pi_samples.mean()</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Posterior mean of pi:</span><span class="ch">\n</span><span class="sc">{</span>pi_mean<span class="sc">.</span>to_numpy()<span class="sc">.</span><span class="bu">round</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract samples for B (emission matrix)</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>B_samples <span class="op">=</span> posterior_df.<span class="bu">filter</span>(regex<span class="op">=</span><span class="st">"^B"</span>)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute posterior mean for each element in B</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>B_mean <span class="op">=</span> B_samples.mean()</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert B_mean to NumPy array for further analysis</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>B_mean_array <span class="op">=</span> B_mean.to_numpy().reshape(</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    M, K</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>)  <span class="co"># Assuming emission matrix has K columns for K categories</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Emission probabilities (B) matrix:</span><span class="ch">\n</span><span class="sc">{</span>B_mean_array<span class="sc">.</span><span class="bu">round</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure each row of B sums to 1</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>B_row_sums <span class="op">=</span> B_mean_array.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Row sums of posterior mean of B (should be close to 1): </span><span class="sc">{</span>B_row_sums<span class="sc">.</span><span class="bu">round</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Posterior mean of A:
+[[0.5  0.16 0.17 0.18]
+ [0.17 0.47 0.19 0.19]
+ [0.16 0.18 0.46 0.19]
+ [0.17 0.18 0.19 0.44]]
+Row sums of posterior mean of A (should be close to 1): [1.01 1.01 1.   0.98]
+Posterior mean of pi:
+[0.24 0.25 0.25 0.26]
+Emission probabilities (B) matrix:
+[[0.32 0.33 0.36]
+ [0.42 0.49 0.42]
+ [0.41 0.33 0.19]
+ [0.25 0.23 0.25]]
+Row sums of posterior mean of B (should be close to 1): [1.01 1.33 0.93 0.73]</code></pre>
+</div>
+</div>
+<ol type="1">
+<li><p><strong>Matrice di Transizione <span class="math inline">\(A\)</span></strong>:</p>
+<ul>
+<li><strong>Interpretazione</strong>: La matrice di transizione <span class="math inline">\(A\)</span> rappresenta le probabilità di passaggio tra gli stati nascosti nel modello di Markov. Ogni elemento <span class="math inline">\(A_{ij}\)</span> della matrice indica la probabilità di transizione dallo stato nascosto <span class="math inline">\(i\)</span> allo stato nascosto <span class="math inline">\(j\)</span> in un singolo passo temporale.</li>
+<li><strong>Importanza</strong>: È fondamentale per comprendere la dinamica sottostante del sistema modellato. Ad esempio, nel contesto del disturbo bipolare, <span class="math inline">\(A\)</span> ci dice quanto è probabile che un paziente passi da uno stato dell’umore a un altro nel tempo, il che può essere cruciale per prevedere futuri episodi maniacali o depressivi.</li>
+</ul></li>
+<li><p><strong>Matrice di Emissione <span class="math inline">\(B\)</span></strong>:</p>
+<ul>
+<li><strong>Interpretazione</strong>: La matrice di emissione <span class="math inline">\(B\)</span> descrive le probabilità con cui ciascun stato nascosto genera ciascuna delle osservazioni possibili. In altre parole, ogni riga di <span class="math inline">\(B\)</span> rappresenta la distribuzione di probabilità delle osservazioni date le diverse condizioni latenti.</li>
+<li><strong>Importanza</strong>: È essenziale per collegare gli stati nascosti alle osservazioni misurate. Nel contesto di un HMM applicato ai dati del disturbo bipolare, <span class="math inline">\(B\)</span> ci aiuta a capire come gli stati dell’umore (neutro, elevato, misto, abbassato) si manifestano nei dati osservati (ad esempio, risposte a item maniacali e depressivi).</li>
+</ul></li>
+</ol>
+<p>L’importanza relativa di <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> dipende dal focus dell’analisi:</p>
+<ul>
+<li><p><strong>Se l’obiettivo è comprendere le dinamiche temporali degli stati nascosti</strong> (come i cambiamenti negli stati dell’umore di un paziente nel tempo), la <strong>matrice di transizione <span class="math inline">\(A\)</span></strong> è più importante. Un’accurata stima di <span class="math inline">\(A\)</span> permette di modellare e prevedere i cambiamenti di stato nel tempo, il che è cruciale per molte applicazioni previsionali.</p></li>
+<li><p><strong>Se l’obiettivo è inferire gli stati nascosti dalle osservazioni</strong> (ad esempio, diagnosticare l’umore di un paziente basandosi su dati osservati come sintomi o risposte ai questionari), allora la <strong>matrice di emissione <span class="math inline">\(B\)</span></strong> è più importante. Un’accurata stima di <span class="math inline">\(B\)</span> è essenziale per tradurre le osservazioni in ipotesi sugli stati nascosti, che è fondamentale per interpretare correttamente i dati osservati.</p></li>
+<li><p><strong>Matrice di Transizione <span class="math inline">\(A\)</span></strong>: Se <span class="math inline">\(A\)</span> è ben stimata (come sembra dai risultati forniti), si può concludere che il modello riesce a catturare correttamente le dinamiche degli stati nascosti. Questo significa che il modello può essere utilizzato per fare previsioni su come gli stati cambieranno nel tempo.</p></li>
+<li><p><strong>Matrice di Emissione <span class="math inline">\(B\)</span></strong>: D’altra parte, se <span class="math inline">\(B\)</span> non è ben stimata (come indicano le somme delle righe che non sono vicine a 1 e la mancanza di distinzione tra le emissioni), significa che il modello non riesce a collegare correttamente gli stati nascosti alle osservazioni. Questo può limitare la capacità del modello di inferire correttamente gli stati nascosti dai dati osservati.</p></li>
+</ul>
+<p>In sintesi, entrambi i risultati sono importanti, ma la loro rilevanza dipende dal contesto specifico dell’applicazione. Se si è interessati a modellare il cambiamento degli stati nel tempo, la matrice di transizione <span class="math inline">\(A\)</span> è più critica. Se, invece, si vuole inferire gli stati nascosti basandosi sulle osservazioni, la matrice di emissione <span class="math inline">\(B\)</span> è fondamentale. Dato che <span class="math inline">\(A\)</span> è ragionevolmente ben recuperata nei tuoi risultati, suggerisce che il modello è buono nel catturare le dinamiche degli stati nascosti, ma la difficoltà nel recuperare <span class="math inline">\(B\)</span> indica che il modello potrebbe avere difficoltà a collegare correttamente gli stati nascosti alle osservazioni.</p>
+<p>È possibile introdurre altre modifiche al modello per affrontare il problema della difficoltà di stimare la matrice di emissione B, ma per gli scopi presenti non è necessario, anche considerato il focus dello studio di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span> sulla transizione tra gli stati. Si può concludere, in questa simulazione, che anche con i dati di un solo partecipante, ma un grande numero di osservazioni, il modello HMM sia in grado di recuperare in maniera ragionevole i valori della matrice A.</p>
+<p>Tornando allo studio di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span>, si può concludere quanto segue:</p>
+<ol type="1">
+<li><p><strong>Identificazione degli Stati Latenti</strong>: L’HMM ha identificato quattro stati latenti di umore nei pazienti:</p>
+<ul>
+<li><strong>Neutro</strong>: Stato di equilibrio emotivo senza sintomi maniacali o depressivi significativi.</li>
+<li><strong>Elevato</strong>: Stato maniacale o ipomaniacale caratterizzato da alta energia e umore elevato.</li>
+<li><strong>Misto</strong>: Stato con la coesistenza di sintomi sia maniacali che depressivi.</li>
+<li><strong>Abbassato</strong>: Stato depressivo caratterizzato da umore basso e sintomi depressivi.</li>
+</ul></li>
+<li><p><strong>Transizioni tra Stati</strong>: Il modello ha rivelato che i pazienti con disturbo bipolare tendono a transitare frequentemente tra questi stati, con alcuni stati che fungono da “ponti” tra stati elevati e abbassati, in particolare lo stato misto.</p></li>
+<li><p><strong>Durata degli Stati</strong>: Lo studio ha trovato che la durata media degli stati variava, con lo stato elevato e lo stato abbassato che tendevano ad essere più persistenti rispetto agli stati misti e neutri.</p></li>
+<li><p><strong>Implicazioni Cliniche</strong>: Questi risultati suggeriscono che l’HMM può essere uno strumento utile per comprendere meglio la dinamica dell’umore nei pazienti con disturbo bipolare, identificando pattern di instabilità dell’umore che possono informare interventi terapeutici più mirati.</p></li>
+</ol>
+<p>In sintesi, lo studio di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span> dimostra l’efficacia degli HMM nel modellare e analizzare la complessità delle fluttuazioni dell’umore nei pazienti con disturbo bipolare, fornendo approfondimenti sui pattern di transizione tra stati emotivi.</p>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="93.9">
+<h2 data-number="93.9" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">93.9</span> Considerazioni Conclusive</h2>
+<p>In questo capitolo abbiamo esplorato l’applicazione di un modello di Markov nascosto (HMM) utilizzando dati simulati, ispirati dallo studio di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span>. L’analisi ha dimostrato che l’approccio bayesiano può recuperare stime ragionevoli della matrice di transizione <span class="math inline">\(A\)</span> tra gli stati nascosti anche a partire dai dati di un singolo partecipante. Tuttavia, è importante notare che la nostra simulazione ha utilizzato un numero elevato di osservazioni (<span class="math inline">\(N = 5000\)</span>), il che facilita la stima accurata dei parametri del modello.</p>
+<p>Lo studio di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span> ha adottato un modello bayesiano gerarchico, che è stato applicato a un campione di 20 soggetti. Questo approccio consente di incorporare variabilità tra i soggetti e di migliorare la robustezza delle inferenze sui parametri del modello. Nella pratica, un modello gerarchico è particolarmente utile quando si lavora con campioni più piccoli o con dati che presentano elevata variabilità individuale, poiché consente di “condividere” informazioni tra i partecipanti e di ottenere stime più stabili e generalizzabili.</p>
+<p>Sulla base dei risultati di <span class="citation" data-cites="mildiner2024evidence">Mildiner Moraga et al. (<a href="../../99-references.html#ref-mildiner2024evidence" role="doc-biblioref">2024</a>)</span>, possiamo formulare delle aspettative anche per quanto riguarda un gruppo di controllo (ad esempio, individui senza diagnosi di disturbo bipolare). In un gruppo di controllo, ci si potrebbe aspettare che:</p>
+<ol type="1">
+<li><p><strong>Meno Variabilità tra Stati</strong>: Il gruppo di controllo potrebbe mostrare transizioni meno frequenti tra gli stati dell’umore rispetto ai pazienti con disturbo bipolare. Questo suggerisce una maggiore stabilità emotiva, con stati neutri che predominano nel tempo e meno evidenze di stati elevati, misti o abbassati.</p></li>
+<li><p><strong>Diversa Matrice di Transizione</strong>: La matrice di transizione <span class="math inline">\(A\)</span> in un gruppo di controllo potrebbe avere probabilità di auto-transizione più alte per lo stato neutro e probabilità più basse di transizione verso stati estremi (elevati o abbassati). Questo rifletterebbe una tendenza a mantenere uno stato emotivo stabile piuttosto che fluttuare tra stati diversi.</p></li>
+<li><p><strong>Distribuzione Iniziale degli Stati</strong>: La distribuzione iniziale degli stati, rappresentata dal vettore di probabilità iniziali <span class="math inline">\(\pi\)</span>, potrebbe essere maggiormente concentrata sullo stato neutro nel gruppo di controllo, suggerendo che le persone senza disturbo bipolare iniziano e rimangono per lo più in uno stato emotivo neutro.</p></li>
+<li><p><strong>Meno Evidenza di Stati Misti</strong>: È plausibile che un gruppo di controllo mostri meno evidenze di stati misti, che combinano sintomi sia maniacali che depressivi. Gli stati misti potrebbero essere più caratteristici dei pazienti con disturbo bipolare, riflettendo la natura complessa e instabile della condizione.</p></li>
+</ol>
+<p>In sintesi, gli HMM permettono di modellare la dinamica degli stati emotivi nel tempo, fornendo un quadro dettagliato di come le persone sperimentano le transizioni tra diversi stati emotivi. Questo approccio può essere particolarmente utile per identificare pattern distintivi associati a condizioni psicologiche specifiche, aiutando a migliorare la diagnosi, il monitoraggio e la gestione dei disturbi dell’umore.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="cell-19" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Last updated: Tue Sep 03 2024
+
+Python implementation: CPython
+Python version       : 3.12.4
+IPython version      : 8.26.0
+
+matplotlib: 3.9.1
+bambi     : 0.14.0
+numpy     : 1.26.4
+networkx  : 3.3
+logging   : 0.5.1.2
+scipy     : 1.14.0
+cmdstanpy : 1.2.4
+pandas    : 2.2.2
+arviz     : 0.18.0
+
+Watermark: 2.4.3
+</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-mildiner2024evidence" class="csl-entry" role="listitem">
+Mildiner Moraga, Sebastian, Fionneke M Bos, Bennard Doornbos, Richard Bruggeman, Lian van der Krieke, Evelien Snippe, e Emmeke Aarts. 2024. <span>«Evidence for mood instability in patients with bipolar disorder: Applying multilevel hidden Markov modeling to intensive longitudinal ecological momentary assessment data.»</span> <em>Journal of Psychopathology and Clinical Science</em>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/dynamic_models/05_sequential_learning.html" class="pagination-link" aria-label="Analisi dinamica delle sequenze di apprendimento">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">92</span>&nbsp; <span class="chapter-title">Analisi dinamica delle sequenze di apprendimento</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/dynamic_models/08_haslbeck.html" class="pagination-link" aria-label="Recuperare le dinamiche intra-personali dalle serie temporali psicologiche">
+        <span class="nav-page-text"><span class="chapter-number">94</span>&nbsp; <span class="chapter-title">Recuperare le dinamiche intra-personali dalle serie temporali psicologiche</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Data Science per Psicologi è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/dynamic_models/07_bipolar_disorder.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
