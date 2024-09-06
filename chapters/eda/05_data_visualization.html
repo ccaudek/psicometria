@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>Data Science per Psicologi - 29&nbsp; Probabilità congiunta</title>
+<title>Data Science per Psicologi - 17&nbsp; Principi della visualizzazione dei dati</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -84,8 +50,8 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/probability/10_density_func.html" rel="next">
-<link href="../../chapters/probability/08_sampling_distr.html" rel="prev">
+<link href="../../chapters/eda/06_loc_scale.html" rel="next">
+<link href="../../chapters/eda/04_freq_distr.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -123,35 +89,6 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -164,7 +101,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/probability/introduction_probability.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/probability/09_joint_prob.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/05_data_visualization.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -312,13 +249,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
  <span class="menu-text">EDA</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/eda/introduction_eda.html" class="sidebar-item-text sidebar-link">
@@ -351,39 +288,45 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/05_loc_scale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
+  <a href="../../chapters/eda/05_data_visualization.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/06_correlation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
+  <a href="../../chapters/eda/06_loc_scale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/07_causality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  <a href="../../chapters/eda/07_correlation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Le relazioni tra variabili</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/eda/08_estimand.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Estimandi teorici e estimandi empirici</span></span></a>
+  <a href="../../chapters/eda/08_causality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Causalità dai dati osservazionali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/eda/09_estimand.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Estimandi teorici e estimandi empirici</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
  <span class="menu-text">Probabilità</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Attiva/disattiva sezione">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/introduction_probability.html" class="sidebar-item-text sidebar-link">
@@ -393,85 +336,85 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/01_intro_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Interpretazione della probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/02_prob_spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/03_prob_on_general_spaces.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Fondamenti della probabilità: assiomi di Kolmogorov e sigma-algebra</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Fondamenti della probabilità: assiomi di Kolmogorov e sigma-algebra</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/04_conditional_prob.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Probabilità condizionata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/05_bayes_theorem.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Il teorema di Bayes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/06_random_var.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Variabili casuali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/07_expval_var.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Proprietà delle variabili casuali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/08_sampling_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/probability/09_joint_prob.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
+  <a href="../../chapters/probability/09_joint_prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/10_density_func.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/11_discr_rv_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. discrete</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/12_cont_rv_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Distribuzioni di v.c. continue</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/13_likelihood.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">La verosimiglianza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/probability/14_simulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Simulazioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Simulazioni</span></span></a>
   </div>
 </li>
       </ul>
@@ -494,61 +437,61 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/01_intro_bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modellazione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/02_subj_prop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Pensare ad una proporzione in termini soggettivi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/03_grid_gauss.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Calcolo della Distribuzione a Posteriori Gaussiana tramite Metodo a Griglia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/04_conjugate_families_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (1)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/05_conjugate_families_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Distribuzioni coniugate (2)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/06_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Sintesi a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/07_balance_prior_post.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">L’influenza della distribuzione a priori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/08_poisson_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Modello di Poisson</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/09_exponential_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Modello Esponenziale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/bayesian_inference/10_post_pred_distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Distribuzione predittiva a posteriori</span></span></a>
   </div>
 </li>
       </ul>
@@ -571,91 +514,91 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/01_metropolis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/02_stan_beta_binomial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Linguaggio Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/03_stan_summary_posterior.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Metodi di sintesi della distribuzione a posteriori</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/06_stan_odds_ratio.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Analisi bayesiana dell’odds-ratio</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/07_stan_normal_normal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Inferenza bayesiana su una media</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/08_stan_two_groups.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Confronto tra due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/09_stan_poisson_model_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Poisson (1)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/10_stan_poisson_model_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modello di Poisson (2)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/11_stan_gaussian_mixture.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modelli Mistura Gaussiani</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/12_stan_nuisance_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modelli con più di un parametro</span></span></a>
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modelli con più di un parametro</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/13_stan_hier_beta_binom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Modello gerarchico beta-binomiale con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/14_stan_categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Modello categoriale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Modello categoriale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mcmc/15_cmdstanr_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Introduzione a CmdStanR</span></span></a>
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Introduzione a CmdStanR</span></span></a>
   </div>
 </li>
       </ul>
@@ -678,97 +621,97 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/01_reglin_bayesian.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/02_non_centered_param.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Non-Centered Parameterization</span></span></a>
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Non-Centered Parameterization</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/03_beauty_sex_power.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Bellezza, sesso e potere</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/04_synt_sugar.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Zucchero sintattico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/05_two_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Confronto tra le medie di due gruppi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/06_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Predizione e inferenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/07_design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Disegno della ricerca e potere statistico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/08_linear_algebra.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/09_stan_multreg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Il modello di regressione multipla</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Il modello di regressione multipla</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/10_hier_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Il modello lineare gerarchico</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/11_stan_mixed_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Modelli misti con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/12_specification_error.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Errore di specificazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/13_causal_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Inferenza causale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/14_interactions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Interazioni statistiche</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Interazioni statistiche</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/15_ate_att_atu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Concetti di ATE, ATT e ATU</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/linear_models/16_missing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
       </ul>
@@ -791,43 +734,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/01_robust_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Regressione robusta</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/03_stan_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Regressione logistica con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/04_stan_poisson_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Regressione di Poisson con Stan</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/05_simchon_2023.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Tweets</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Tweets</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/06_stan_rct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Incorporare dati storici di controllo in una RCT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/07_stan_mediation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Modello di mediazione con Stan</span></span></a>
   </div>
 </li>
       </ul>
@@ -850,31 +793,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/01_entropy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/02_kl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">84</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
+ <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Divergenza KL, LPPD, ELPD e LOO-CV</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/03_loo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">85</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
+ <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Validazione Incrociata Leave-One-Out</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/04_cognitive_modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">86</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Dall’analisi descrittiva alla modellazione cognitiva</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/entropy/05_inductive_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">87</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
+ <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza induttiva</span></span></a>
   </div>
 </li>
       </ul>
@@ -897,43 +840,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/01_canoeing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">88</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Dinamiche post-errore</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/02_change_across_time.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">Modellare il cambiamento nel tempo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/03_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">90</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/04_affect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">91</span>&nbsp; <span class="chapter-title">Le emozioni influenzano le emozioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">92</span>&nbsp; <span class="chapter-title">Le emozioni influenzano le emozioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/05_sequential_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">92</span>&nbsp; <span class="chapter-title">Analisi dinamica delle sequenze di apprendimento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Analisi dinamica delle sequenze di apprendimento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/07_bipolar_disorder.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">93</span>&nbsp; <span class="chapter-title">Modello di Markov nascosto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">94</span>&nbsp; <span class="chapter-title">Modello di Markov nascosto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/dynamic_models/08_haslbeck.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">94</span>&nbsp; <span class="chapter-title">Recuperare le dinamiche intra-personali dalle serie temporali psicologiche</span></span></a>
+ <span class="menu-text"><span class="chapter-number">95</span>&nbsp; <span class="chapter-title">Recuperare le dinamiche intra-personali dalle serie temporali psicologiche</span></span></a>
   </div>
 </li>
       </ul>
@@ -956,7 +899,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/cognitive_models/01_ddm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">95</span>&nbsp; <span class="chapter-title">Drift Diffusion Model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">96</span>&nbsp; <span class="chapter-title">Drift Diffusion Model</span></span></a>
   </div>
 </li>
       </ul>
@@ -979,25 +922,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/01_intro_frequentist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">96</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">97</span>&nbsp; <span class="chapter-title">Introduzione all’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/02_conf_interv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">97</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">98</span>&nbsp; <span class="chapter-title">Intervallo di confidenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/03_test_ipotesi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">98</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">99</span>&nbsp; <span class="chapter-title">Significatività statistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/frequentist_inference/04_two_ind_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">99</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">100</span>&nbsp; <span class="chapter-title">Test t di Student per campioni indipendenti</span></span></a>
   </div>
 </li>
       </ul>
@@ -1020,37 +963,37 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/01_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">100</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">101</span>&nbsp; <span class="chapter-title">La Crisi della Replicazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/02_limits_stat_freq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">101</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">102</span>&nbsp; <span class="chapter-title">Limiti dell’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/03_effect_size.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">102</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
+ <span class="menu-text"><span class="chapter-number">103</span>&nbsp; <span class="chapter-title">La grandezza dell’effetto</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/04_s_m_errors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">103</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">104</span>&nbsp; <span class="chapter-title">Errori di segno e errori di grandezza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/05_changes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">104</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
+ <span class="menu-text"><span class="chapter-number">105</span>&nbsp; <span class="chapter-title">Proposte di cambiamento</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/replication_crisis/06_integrity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">105</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
+ <span class="menu-text"><span class="chapter-number">106</span>&nbsp; <span class="chapter-title">Integrità della ricerca</span></span></a>
   </div>
 </li>
       </ul>
@@ -1291,43 +1234,30 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#sec-fun-join-prob" id="toc-sec-fun-join-prob" class="nav-link" data-scroll-target="#sec-fun-join-prob"><span class="header-section-number">29.1</span> Funzione di Probabilità Congiunta</a>
+  <li><a href="#codificare-i-dati-utilizzando-segnali-visivi" id="toc-codificare-i-dati-utilizzando-segnali-visivi" class="nav-link" data-scroll-target="#codificare-i-dati-utilizzando-segnali-visivi"><span class="header-section-number">17.1</span> Codificare i dati utilizzando segnali visivi</a>
   <ul class="collapse">
-  <li><a href="#esempio-lancio-di-tre-monete-equilibrate" id="toc-esempio-lancio-di-tre-monete-equilibrate" class="nav-link" data-scroll-target="#esempio-lancio-di-tre-monete-equilibrate"><span class="header-section-number">29.1.1</span> Esempio: Lancio di Tre Monete Equilibrate</a></li>
-  <li><a href="#definizione-funzione-di-probabilità-congiunta" id="toc-definizione-funzione-di-probabilità-congiunta" class="nav-link" data-scroll-target="#definizione-funzione-di-probabilità-congiunta"><span class="header-section-number">29.1.2</span> Definizione: Funzione di Probabilità Congiunta</a></li>
-  <li><a href="#proprietà" id="toc-proprietà" class="nav-link" data-scroll-target="#proprietà"><span class="header-section-number">29.1.3</span> Proprietà</a></li>
-  <li><a href="#calcolo-della-probabilità-di-eventi-specifici" id="toc-calcolo-della-probabilità-di-eventi-specifici" class="nav-link" data-scroll-target="#calcolo-della-probabilità-di-eventi-specifici"><span class="header-section-number">29.1.4</span> Calcolo della Probabilità di Eventi Specifici</a></li>
-  <li><a href="#sec-marg-distr-discr" id="toc-sec-marg-distr-discr" class="nav-link" data-scroll-target="#sec-marg-distr-discr"><span class="header-section-number">29.1.5</span> Funzioni di Probabilità Marginali</a></li>
-  <li><a href="#marginalizzazione-per-variabili-casuali-continue" id="toc-marginalizzazione-per-variabili-casuali-continue" class="nav-link" data-scroll-target="#marginalizzazione-per-variabili-casuali-continue"><span class="header-section-number">29.1.6</span> Marginalizzazione per Variabili Casuali Continue</a></li>
+  <li><a href="#ulteriori-considerazioni-sulla-scelta-della-visualizzazione" id="toc-ulteriori-considerazioni-sulla-scelta-della-visualizzazione" class="nav-link" data-scroll-target="#ulteriori-considerazioni-sulla-scelta-della-visualizzazione"><span class="header-section-number">17.1.1</span> Ulteriori considerazioni sulla scelta della visualizzazione</a></li>
   </ul></li>
-  <li><a href="#indipendenza-tra-variabili-casuali" id="toc-indipendenza-tra-variabili-casuali" class="nav-link" data-scroll-target="#indipendenza-tra-variabili-casuali"><span class="header-section-number">29.2</span> Indipendenza tra Variabili Casuali</a>
-  <ul class="collapse">
-  <li><a href="#definizione-di-indipendenza" id="toc-definizione-di-indipendenza" class="nav-link" data-scroll-target="#definizione-di-indipendenza"><span class="header-section-number">29.2.1</span> Definizione di Indipendenza</a></li>
-  <li><a href="#associazione-tra-variabili-casuali" id="toc-associazione-tra-variabili-casuali" class="nav-link" data-scroll-target="#associazione-tra-variabili-casuali"><span class="header-section-number">29.2.2</span> Associazione tra Variabili Casuali</a></li>
-  </ul></li>
-  <li><a href="#covarianza" id="toc-covarianza" class="nav-link" data-scroll-target="#covarianza"><span class="header-section-number">29.3</span> Covarianza</a>
-  <ul class="collapse">
-  <li><a href="#definizione-di-covarianza" id="toc-definizione-di-covarianza" class="nav-link" data-scroll-target="#definizione-di-covarianza"><span class="header-section-number">29.3.1</span> Definizione di Covarianza</a></li>
-  <li><a href="#dimostrazione" id="toc-dimostrazione" class="nav-link" data-scroll-target="#dimostrazione"><span class="header-section-number">29.3.2</span> Dimostrazione</a></li>
-  <li><a href="#esempio-di-calcolo-della-covarianza" id="toc-esempio-di-calcolo-della-covarianza" class="nav-link" data-scroll-target="#esempio-di-calcolo-della-covarianza"><span class="header-section-number">29.3.3</span> Esempio di Calcolo della Covarianza</a></li>
-  </ul></li>
-  <li><a href="#correlazione" id="toc-correlazione" class="nav-link" data-scroll-target="#correlazione"><span class="header-section-number">29.4</span> Correlazione</a></li>
-  <li><a href="#proprietà-1" id="toc-proprietà-1" class="nav-link" data-scroll-target="#proprietà-1"><span class="header-section-number">29.5</span> Proprietà</a>
-  <ul class="collapse">
-  <li><a href="#incorrelazione" id="toc-incorrelazione" class="nav-link" data-scroll-target="#incorrelazione"><span class="header-section-number">29.5.1</span> Incorrelazione</a></li>
-  </ul></li>
-  <li><a href="#variabili-continue" id="toc-variabili-continue" class="nav-link" data-scroll-target="#variabili-continue"><span class="header-section-number">29.6</span> Variabili continue</a></li>
-  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">29.7</span> Commenti e considerazioni finali</a></li>
-  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">29.8</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  <li><a href="#quando-includere-lo-zero" id="toc-quando-includere-lo-zero" class="nav-link" data-scroll-target="#quando-includere-lo-zero"><span class="header-section-number">17.2</span> Quando includere lo zero</a></li>
+  <li><a href="#evitare-le-distorsioni" id="toc-evitare-le-distorsioni" class="nav-link" data-scroll-target="#evitare-le-distorsioni"><span class="header-section-number">17.3</span> Evitare le distorsioni</a></li>
+  <li><a href="#ordinare-le-categorie" id="toc-ordinare-le-categorie" class="nav-link" data-scroll-target="#ordinare-le-categorie"><span class="header-section-number">17.4</span> Ordinare le categorie</a></li>
+  <li><a href="#evitare-i-dynamite-plots" id="toc-evitare-i-dynamite-plots" class="nav-link" data-scroll-target="#evitare-i-dynamite-plots"><span class="header-section-number">17.5</span> Evitare i Dynamite Plots</a></li>
+  <li><a href="#facilitare-i-confronti" id="toc-facilitare-i-confronti" class="nav-link" data-scroll-target="#facilitare-i-confronti"><span class="header-section-number">17.6</span> Facilitare i confronti</a></li>
+  <li><a href="#trasformazioni-logaritmiche" id="toc-trasformazioni-logaritmiche" class="nav-link" data-scroll-target="#trasformazioni-logaritmiche"><span class="header-section-number">17.7</span> Trasformazioni logaritmiche</a></li>
+  <li><a href="#codificare-una-terza-variabile" id="toc-codificare-una-terza-variabile" class="nav-link" data-scroll-target="#codificare-una-terza-variabile"><span class="header-section-number">17.8</span> Codificare una terza variabile</a></li>
+  <li><a href="#evitare-pseudo-tre-dimensioni" id="toc-evitare-pseudo-tre-dimensioni" class="nav-link" data-scroll-target="#evitare-pseudo-tre-dimensioni"><span class="header-section-number">17.9</span> Evitare pseudo-tre dimensioni</a></li>
+  <li><a href="#scegliere-il-numero-giusto-di-cifre-significative" id="toc-scegliere-il-numero-giusto-di-cifre-significative" class="nav-link" data-scroll-target="#scegliere-il-numero-giusto-di-cifre-significative"><span class="header-section-number">17.10</span> Scegliere il numero giusto di cifre significative</a></li>
+  <li><a href="#conoscere-il-pubblico" id="toc-conoscere-il-pubblico" class="nav-link" data-scroll-target="#conoscere-il-pubblico"><span class="header-section-number">17.11</span> Conoscere il pubblico</a></li>
+  <li><a href="#conclusioni" id="toc-conclusioni" class="nav-link" data-scroll-target="#conclusioni"><span class="header-section-number">17.12</span> Conclusioni</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/probability/09_joint_prob.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/eda/05_data_visualization.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/probability/introduction_probability.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/probability/09_joint_prob.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/eda/introduction_eda.html">EDA</a></li><li class="breadcrumb-item"><a href="../../chapters/eda/05_data_visualization.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-join-probability" class="quarto-section-identifier"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Probabilità congiunta</span></span></h1>
+<h1 class="title"><span id="sec-data-visualization" class="quarto-section-identifier"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Principi della visualizzazione dei dati</span></span></h1>
 </div>
 
 
@@ -1345,458 +1275,113 @@ window.Quarto = {
 
 
 <p><strong>Prerequisiti</strong></p>
-<p><strong>Concetti e Competenze Chiave</strong></p>
 <ul>
-<li>Comprendere la probabilità che due o più eventi si verifichino contemporaneamente.</li>
-<li>Definire e calcolare la funzione di probabilità congiunta per variabili casuali discrete.</li>
-<li>Verificare le proprietà fondamentali delle distribuzioni di probabilità congiunta.</li>
-<li>Determinare la probabilità di eventi definiti in termini di variabili aleatorie.</li>
-<li>Derivare e interpretare le distribuzioni marginali da una distribuzione congiunta.</li>
-<li>Formalizzare l’indipendenza tra variabili casuali e calcolare la loro distribuzione congiunta.</li>
-<li>Definire e calcolare la covarianza per quantificare la relazione lineare tra due variabili casuali.</li>
-<li>Utilizzare la correlazione per misurare l’intensità della relazione lineare tra variabili casuali, indipendentemente dalle loro unità di misura.</li>
-<li>Comprendere le proprietà chiave della covarianza e della correlazione, inclusa l’incorrelazione.</li>
-<li>Estendere i concetti di probabilità congiunta, marginale e condizionale alle variabili continue, utilizzando gli integrali.</li>
+<li>Leggere <a href="https://doi.org/10.1146/annurev-statistics-031219-041252"><em>Testing Statistical Charts: What Makes a Good Graph?</em> (Vanderplas, Cook, and Hofmann 2020)</a>. Questo articolo descrive le migliori pratiche per la creazione di grafici.</li>
+<li>Consultare il capitolo <a href="https://r4ds.hadley.nz/data-visualize">Data visualization</a> di <span class="citation" data-cites="wickham2023r">Wickham, Çetinkaya-Rundel, e Grolemund (<a href="../../99-references.html#ref-wickham2023r" role="doc-biblioref">2023</a>)</span>. Questo capitolo fornisce una panoramica degli aspetti fondamentali della visualizzazione dei dati.</li>
+<li>Consultare <a href="https://socviz.co">Data Visualization. A practical introduction</a> di <span class="citation" data-cites="healy2018data">Healy (<a href="../../99-references.html#ref-healy2018data" role="doc-biblioref">2018</a>)</span>.</li>
+<li>Consultare <a href="https://clauswilke.com/dataviz/">Fundamentals of Data Visualization</a> di <span class="citation" data-cites="wilke2019fundamentals">Wilke (<a href="../../99-references.html#ref-wilke2019fundamentals" role="doc-biblioref">2019</a>)</span>.</li>
+<li>Leggere il post <a href="https://simplystatistics.org/posts/2019-02-21-dynamite-plots-must-die/">Open letter to journal editors: dynamite plots must die</a> di Rafael Irizarry.</li>
+<li>Consultare il post <a href="https://www.biostat.wisc.edu/~kbroman/topten_worstgraphs/">The top ten worst graphs</a> di Karl Broman.</li>
+<li>Leggere il capitolo <a href="http://rafalab.dfci.harvard.edu/dsbook-part-1/dataviz/intro-dataviz.html">Data Visualization</a> di <em>Introduction to Data Science</em>.</li>
 </ul>
-<p><strong>Preparazione del Notebook</strong></p>
-<div id="1b540416-90ad-479d-b656-aa0479ed8b6d" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p><strong>Concetti e competenze chiave</strong></p>
+<ul>
+<li><strong>Segnali visivi principali</strong>: Posizione, lunghezza, angoli, area, luminosità, colore.</li>
+<li><strong>Efficienza dei segnali visivi</strong>: Posizione e lunghezza sono i segnali più efficaci per rappresentare quantità.</li>
+<li><strong>Evitare distorsioni</strong>: Preferire grafici lineari (barplot) a rappresentazioni come cerchi o pie chart che distorcono le proporzioni.</li>
+<li><strong>Includere lo zero</strong>: Nei barplot, l’asse deve iniziare da zero per evitare interpretazioni fuorvianti.</li>
+<li><strong>Ordine delle categorie</strong>: Ordinare categorie per valore e non alfabeticamente per facilitare il confronto.</li>
+<li><strong>Mostrare i dati</strong>: Evitare dynamite plots, preferire grafici che mostrano tutti i dati (es. dot plot).</li>
+<li><strong>Facilitare confronti</strong>: Usare assi comuni per confronti tra distribuzioni.</li>
+<li><strong>Trasformazioni logaritmiche</strong>: Utili per dati distribuiti su ordini di grandezza diversi.</li>
+<li><strong>Codificare una terza variabile</strong>: Utilizzare colore, dimensione o forma nei grafici a dispersione per rappresentare una terza variabile.</li>
+<li><strong>Evitare pseudo-3D</strong>: Preferire grafici bidimensionali per evitare confusione e distorsioni.</li>
+<li><strong>Numero di cifre significative</strong>: Limitare le cifre decimali per evitare eccessiva complessità.</li>
+<li><strong>Adattare al pubblico</strong>: Semplificare le visualizzazioni in base al livello di competenza del pubblico.</li>
+</ul>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>La probabilità congiunta è la probabilità che due o più eventi si verifichino contemporaneamente. In questo capitolo verrà esaminato il caso discreto.</p>
+<p>In questo capitolo verranno esposti i principi fondamentali della visualizzazione dei dati, fornendo una descrizione sintetica. Per una spiegazione visiva dettagliata di ciascun principio, si rimanda al capitolo <a href="http://rafalab.dfci.harvard.edu/dsbook-part-1/dataviz/intro-dataviz.html">Data Visualization</a>.</p>
 </section>
-<section id="sec-fun-join-prob" class="level2" data-number="29.1">
-<h2 data-number="29.1" class="anchored" data-anchor-id="sec-fun-join-prob"><span class="header-section-number">29.1</span> Funzione di Probabilità Congiunta</h2>
-<p>Dopo aver esplorato la distribuzione di probabilità di singole variabili casuali, che associa un unico numero reale ad ogni possibile risultato di un esperimento, si procede naturalmente all’estensione di questo concetto al caso di due o più variabili casuali.</p>
-<section id="esempio-lancio-di-tre-monete-equilibrate" class="level3" data-number="29.1.1">
-<h3 data-number="29.1.1" class="anchored" data-anchor-id="esempio-lancio-di-tre-monete-equilibrate"><span class="header-section-number">29.1.1</span> Esempio: Lancio di Tre Monete Equilibrate</h3>
-<p>Consideriamo l’esperimento del lancio di tre monete equilibrate. Lo spazio campione <span class="math inline">\(\Omega\)</span> è dato da:</p>
-<p><span class="math display">\[
-\Omega = \{TTT, TTC, TCT, CTT, CCT, CTC, TCC, CCC\},
-\]</span></p>
-<p>dove T rappresenta “testa” e C rappresenta “croce”. Assumendo che i lanci siano indipendenti, ogni risultato nell’insieme <span class="math inline">\(\Omega\)</span> ha la stessa probabilità di occorrenza, ovvero <span class="math inline">\(1/8\)</span>.</p>
-<p>Definiamo le seguenti variabili casuali sullo spazio campione <span class="math inline">\(\Omega\)</span>:</p>
+<section id="codificare-i-dati-utilizzando-segnali-visivi" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="codificare-i-dati-utilizzando-segnali-visivi"><span class="header-section-number">17.1</span> Codificare i dati utilizzando segnali visivi</h2>
+<p>Iniziamo con una panoramica sui principali segnali visivi per codificare i dati: posizione, lunghezza, angoli, area, luminosità e tonalità del colore. Tra questi, <strong>posizione e lunghezza</strong> sono i segnali visivi più efficaci e intuitivi. Questo perché il cervello umano è particolarmente abile nel riconoscere variazioni spaziali, rendendo la posizione e la lunghezza strumenti potenti per la rappresentazione quantitativa. In altre parole, le persone sono molto più accurate nel confrontare altezze e lunghezze di oggetti (come le barre in un barplot) rispetto a confrontare angoli o aree (come in un grafico a torta).</p>
+<p><strong>Angoli e aree</strong>, sebbene ampiamente usati, sono segnali visivi meno efficaci. Grafici come i pie chart, che utilizzano angoli e aree per rappresentare quantità, tendono a essere meno precisi e più difficili da interpretare, specialmente per piccole differenze. L’uso dell’<strong>area</strong>, ad esempio nei bubble plot, può distorcere visivamente la grandezza delle differenze tra i dati, a meno che non sia gestito correttamente. Anche se l’area di una bolla può essere proporzionale al valore che rappresenta, la percezione umana tende a sovrastimare le differenze quando le aree sono grandi.</p>
+<p><strong>Luminosità e tonalità del colore</strong> possono essere utili per rappresentare variabili qualitative o categoriali, ma risultano difficili da interpretare quando si tratta di misurare quantità precise. Nonostante ciò, il colore ha un ruolo fondamentale nelle visualizzazioni multidimensionali, come le heatmap, dove è necessario rappresentare più di due variabili contemporaneamente. Tuttavia, il colore deve essere usato con cautela, specialmente per garantire l’accessibilità a persone con problemi di daltonismo.</p>
+<p>Le <strong>tabelle</strong> possono essere utili quando si ha una quantità limitata di dati da rappresentare e quando la precisione numerica è fondamentale. Tuttavia, per set di dati più grandi o per rappresentare tendenze e differenze, i grafici, come i barplot, sono generalmente più efficaci. Le tabelle non offrono lo stesso impatto visivo immediato e possono rendere difficile la percezione di pattern complessi.</p>
+<section id="ulteriori-considerazioni-sulla-scelta-della-visualizzazione" class="level3" data-number="17.1.1">
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="ulteriori-considerazioni-sulla-scelta-della-visualizzazione"><span class="header-section-number">17.1.1</span> Ulteriori considerazioni sulla scelta della visualizzazione</h3>
+<p>La scelta della visualizzazione più appropriata dipende sia dalla natura dei dati che dallo scopo della comunicazione. Per esempio:</p>
 <ul>
-<li><span class="math inline">\(X \in \{0, 1, 2, 3\}\)</span> rappresenta il “numero di teste ottenute nei tre lanci”.</li>
-<li><span class="math inline">\(Y \in \{0, 1\}\)</span> indica se “la testa è stata ottenuta nel primo lancio” (1) o no (0).</li>
+<li><strong>Barplot o dot plot</strong> sono ideali per confrontare valori quantitativi tra categorie.</li>
+<li><strong>Istogrammi</strong>, <strong>boxplot</strong> e <a href="https://medium.com/@amorimfranchi/raincloud-plots-for-clear-precise-and-efficient-data-communication-4c71d0a37c23">raincloud plots</a> sono più adatti per descrivere la distribuzione di dati continui e fare confronti tra categorie.</li>
+<li><strong>Grafici di dispersione (scatter plot)</strong> sono eccellenti per esplorare relazioni tra due variabili continue.</li>
 </ul>
-<p>La tabella seguente illustra lo spazio campione e le variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, insieme alle rispettive probabilità:</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(\omega\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(X\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(Y\)</span></th>
-<th style="text-align: center;"><span class="math inline">\(P(\omega)\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(\omega_1\)</span> = TTT</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(\omega_2\)</span> = TTC</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(\omega_3\)</span> = TCT</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(\omega_4\)</span> = CTT</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(\omega_5\)</span> = CCT</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(\omega_6\)</span> = CTC</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(\omega_7\)</span> = TCC</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(\omega_8\)</span> = CCC</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-</tbody>
-</table>
-<p>Per ogni coppia <span class="math inline">\((x, y)\)</span> definita su <span class="math inline">\(\Omega\)</span>, associamo una probabilità come segue:</p>
-<ul>
-<li><span class="math inline">\(P(X=0, Y=0) = P(\text{CCC}) = 1/8\)</span>,</li>
-</ul>
-<p>e similmente per le altre coppie.</p>
-<p>Le probabilità calcolate per tutte le possibili coppie <span class="math inline">\((X, Y)\)</span> sono:</p>
-<p><span class="math display">\[
-\begin{aligned}
-P(X = 0, Y = 0) &amp;= 1/8, \\
-P(X = 1, Y = 0) &amp;= P(\text{CCT}) + P(\text{CTC}) = 1/4, \\
-P(X = 1, Y = 1) &amp;= 1/8, \\
-P(X = 2, Y = 0) &amp;= 1/8, \\
-P(X = 2, Y = 1) &amp;= 1/4, \\
-P(X = 3, Y = 1) &amp;= 1/8.
-\end{aligned}
-\]</span></p>
-<p>Queste probabilità compongono la <em>distribuzione di probabilità congiunta</em> delle variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>.</p>
-</section>
-<section id="definizione-funzione-di-probabilità-congiunta" class="level3" data-number="29.1.2">
-<h3 data-number="29.1.2" class="anchored" data-anchor-id="definizione-funzione-di-probabilità-congiunta"><span class="header-section-number">29.1.2</span> Definizione: Funzione di Probabilità Congiunta</h3>
-<p>La <em>funzione di probabilità congiunta</em> di due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> associa a ogni coppia <span class="math inline">\((x, y)\)</span> una probabilità <span class="math inline">\(P(X = x, Y = y)\)</span>.</p>
-</section>
-<section id="proprietà" class="level3" data-number="29.1.3">
-<h3 data-number="29.1.3" class="anchored" data-anchor-id="proprietà"><span class="header-section-number">29.1.3</span> Proprietà</h3>
-<p>Una distribuzione di probabilità congiunta deve soddisfare:</p>
-<ol type="1">
-<li><span class="math inline">\(0 \leq P(x_i, y_j) \leq 1\)</span> per ogni coppia <span class="math inline">\((x_i, y_j)\)</span>,</li>
-<li><span class="math inline">\(\sum_{i} \sum_{j} P(x_i, y_j) = 1\)</span>, ovvero la somma delle probabilità su tutte le coppie deve essere 1.</li>
-</ol>
-</section>
-<section id="calcolo-della-probabilità-di-eventi-specifici" class="level3" data-number="29.1.4">
-<h3 data-number="29.1.4" class="anchored" data-anchor-id="calcolo-della-probabilità-di-eventi-specifici"><span class="header-section-number">29.1.4</span> Calcolo della Probabilità di Eventi Specifici</h3>
-<p>Data la distribuzione di probabilità congiunta, possiamo determinare la probabilità di eventi definiti in termini delle variabili aleatorie <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. Ad esempio, per trovare la probabilità che <span class="math inline">\(X + Y \leq 1\)</span>, sommiamo le probabilità di tutte le coppie <span class="math inline">\((x, y)\)</span> che soddisfano questa condizione, ottenendo <span class="math inline">\(P(X+Y \leq 1) = 3/8\)</span>.</p>
-</section>
-<section id="sec-marg-distr-discr" class="level3" data-number="29.1.5">
-<h3 data-number="29.1.5" class="anchored" data-anchor-id="sec-marg-distr-discr"><span class="header-section-number">29.1.5</span> Funzioni di Probabilità Marginali</h3>
-<p>La distribuzione marginale di un insieme di variabili casuali descrive la distribuzione di probabilità di queste variabili considerate singolarmente, indipendentemente dalle altre. La “marginalizzazione” è un processo che permette di ottenere la distribuzione di probabilità di una o più variabili casuali marginali sommando o integrando la distribuzione congiunta su tutte le possibili realizzazioni delle altre variabili casuali, ovvero quelle non considerate (e quindi “marginalizzate”).</p>
-<p>Per esempio, data la distribuzione congiunta di due variabili casuali discrete <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, la distribuzione marginale di <span class="math inline">\(X\)</span>, indicata come <span class="math inline">\(P(X=x)\)</span>, si calcola come:</p>
-<p><span class="math display">\[
-P(X = x) = \sum_y P(X = x, Y = y),
-\]</span></p>
-<p>dove <span class="math inline">\(P(X = x, Y = y)\)</span> rappresenta la probabilità congiunta di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. Le distribuzioni marginali e congiunte di variabili casuali discrete sono frequentemente rappresentate in tabelle di contingenza. Si garantisce che le distribuzioni marginali siano normalizzate:</p>
-<p><span class="math display">\[
-\sum_x P(X=x) = 1, \quad \sum_y P(Y=y) = 1.
-\]</span></p>
-<p>Per variabili casuali continue, la somma è sostituita dall’integrazione.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 29.1</strong></span> Prendiamo come riferimento l’esperimento del lancio di tre monete equilibrate descritto precedentemente. Per calcolare le probabilità marginali di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, sommiamo le probabilità congiunte su una dimensione. La probabilità marginale di <span class="math inline">\(X\)</span>, <span class="math inline">\(P_X\)</span>, si ottiene sommando le probabilità lungo le colonne per ciascun valore fisso di <span class="math inline">\(X\)</span>; analogamente, la probabilità marginale di <span class="math inline">\(Y\)</span>, <span class="math inline">\(P_Y\)</span>, si calcola sommando le probabilità lungo le righe per ciascun valore fisso di <span class="math inline">\(Y\)</span>.</p>
-<p>La tabella seguente mostra la distribuzione di probabilità congiunta <span class="math inline">\(P(X, Y)\)</span> e le probabilità marginali <span class="math inline">\(P(X)\)</span> e <span class="math inline">\(P(Y)\)</span>:</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(x \setminus y\)</span></th>
-<th style="text-align: center;">0</th>
-<th style="text-align: center;">1</th>
-<th style="text-align: center;"><span class="math inline">\(P(x)\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2/8</td>
-<td style="text-align: center;">1/8</td>
-<td style="text-align: center;">3/8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">1/8</td>
-<td style="text-align: center;">2/8</td>
-<td style="text-align: center;">3/8</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1/8</td>
-<td style="text-align: center;">1/8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(P(y)\)</span></td>
-<td style="text-align: center;">4/8</td>
-<td style="text-align: center;">4/8</td>
-<td style="text-align: center;">1.0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="marginalizzazione-per-variabili-casuali-continue" class="level3" data-number="29.1.6">
-<h3 data-number="29.1.6" class="anchored" data-anchor-id="marginalizzazione-per-variabili-casuali-continue"><span class="header-section-number">29.1.6</span> Marginalizzazione per Variabili Casuali Continue</h3>
-<p>Nell’ambito della statistica bayesiana, il concetto di marginalizzazione gioca un ruolo cruciale. Un esempio di equazione che emerge da questo processo è:</p>
-<p><span class="math display">\[
-p(y) = \int_{\theta} p(y, \theta) \, d\theta = \int_{\theta} p(y \mid \theta) p(\theta) \, d\theta,
-\]</span></p>
-<p>dove <span class="math inline">\(y\)</span> e <span class="math inline">\(\theta\)</span> sono variabili casuali continue, con <span class="math inline">\(y\)</span> che rappresenta i dati osservati e <span class="math inline">\(\theta\)</span> i parametri di un modello statistico. Questa equazione illustra come, in un contesto continuo, la marginalizzazione possa essere vista come l’estensione dell’approccio discreto a un continuum di valori per le variabili in esame.</p>
+<p>La <strong>chiarezza</strong> e la <strong>leggibilità</strong> sono principi fondamentali nella creazione di visualizzazioni efficaci. L’aggiunta di elementi visivi eccessivi, come decorazioni superflue o troppi colori, può distrarre dal messaggio principale. Un buon grafico deve essere semplice, ma allo stesso tempo completo, includendo solo gli elementi visivi necessari per trasmettere il messaggio desiderato.</p>
+<p>In conclusione, scegliere segnali visivi adeguati e il tipo di grafico più appropriato non solo migliora l’accuratezza della comunicazione, ma rende le informazioni più accessibili e comprensibili per il pubblico.</p>
 </section>
 </section>
-<section id="indipendenza-tra-variabili-casuali" class="level2" data-number="29.2">
-<h2 data-number="29.2" class="anchored" data-anchor-id="indipendenza-tra-variabili-casuali"><span class="header-section-number">29.2</span> Indipendenza tra Variabili Casuali</h2>
-<p>L’indipendenza tra variabili casuali è un concetto fondamentale in statistica e probabilità, parallelo all’idea di indipendenza tra eventi. Due variabili casuali si considerano indipendenti quando l’informazione su una non altera in alcun modo la distribuzione di probabilità dell’altra. Questa sezione offre una formalizzazione dell’indipendenza tra due variabili casuali discrete, basata sulla loro distribuzione di probabilità congiunta.</p>
-<section id="definizione-di-indipendenza" class="level3" data-number="29.2.1">
-<h3 data-number="29.2.1" class="anchored" data-anchor-id="definizione-di-indipendenza"><span class="header-section-number">29.2.1</span> Definizione di Indipendenza</h3>
-<p>Due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, con una distribuzione congiunta, sono definite indipendenti se, e solo se, per ogni coppia di valori <span class="math inline">\((x, y)\)</span> si verifica che:</p>
-<p><span class="math display">\[
-P_{X, Y}(x, y) = P_X(x) \cdot P_Y(y).
-\]</span></p>
-<p>In termini pratici, ciò significa che se <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> sono variabili casuali discrete indipendenti, la loro distribuzione di probabilità congiunta è il prodotto delle rispettive distribuzioni di probabilità marginali. Se invece <span class="math inline">\(P_{X, Y}(x, y) \neq P_X(x) \cdot P_Y(y)\)</span>, le variabili non sono indipendenti e si dicono associate o dipendenti.</p>
-<p>Questo concetto si applica anche alle variabili casuali continue, mantenendo la stessa logica: l’indipendenza si verifica quando la funzione di densità congiunta è il prodotto delle funzioni di densità marginali.</p>
+<section id="quando-includere-lo-zero" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="quando-includere-lo-zero"><span class="header-section-number">17.2</span> Quando includere lo zero</h2>
+<p>Quando si usa la lunghezza come segnale visivo, come nei barplot, è essenziale che l’asse parta da zero. Non farlo può essere fuorviante e far sembrare le differenze più grandi di quanto non siano in realtà. Questo errore viene spesso sfruttato nei media per esagerare differenze apparentemente significative.</p>
+<p>Tuttavia, quando si usa la <strong>posizione</strong> (ad esempio in un grafico a dispersione), non è sempre necessario includere lo zero, soprattutto se l’interesse principale è il confronto tra gruppi rispetto alla variabilità interna.</p>
 </section>
-<section id="associazione-tra-variabili-casuali" class="level3" data-number="29.2.2">
-<h3 data-number="29.2.2" class="anchored" data-anchor-id="associazione-tra-variabili-casuali"><span class="header-section-number">29.2.2</span> Associazione tra Variabili Casuali</h3>
-<p>Quando due variabili casuali non sono indipendenti, si descrivono come associate o dipendenti. In questo contesto, è utile introdurre il concetto di covarianza (e correlazione) come misura del grado di associazione lineare tra due variabili casuali. La covarianza e la correlazione quantificano in che modo la variazione di una variabile è associata alla variazione dell’altra, fornendo un indice della loro interdipendenza lineare.</p>
-<p>Riepilogando, l’indipendenza tra variabili casuali è un concetto chiave per comprendere le relazioni tra fenomeni aleatori. Riconoscere se due variabili sono indipendenti o associate è fondamentale per l’analisi statistica e per la modellazione di relazioni causali o di correlazione tra variabili.</p>
+<section id="evitare-le-distorsioni" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="evitare-le-distorsioni"><span class="header-section-number">17.3</span> Evitare le distorsioni</h2>
+<p>Una distorsione comune si verifica quando le differenze tra quantità sono rappresentate utilizzando aree, come nei <a href="https://it.wikipedia.org/wiki/Diagramma_a_bolle">bubble plot</a>, dove il raggio dei cerchi è proporzionale al dato. Il problema è che, poiché l’area di un cerchio è proporzionale al quadrato del raggio, le differenze sembrano molto più ampie di quanto siano realmente. Per evitare queste distorsioni, è meglio utilizzare la posizione o la lunghezza, come in un <strong>grafico a barre</strong>, per confrontare direttamente le quantità.</p>
 </section>
+<section id="ordinare-le-categorie" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="ordinare-le-categorie"><span class="header-section-number">17.4</span> Ordinare le categorie</h2>
+<p>Quando si visualizzano categorie, come nei barplot o nei boxplot, è opportuno ordinarle in base al valore della variabile di interesse, anziché in ordine alfabetico. Questo aiuta a evidenziare pattern significativi e facilita il confronto tra categorie.</p>
 </section>
-<section id="covarianza" class="level2" data-number="29.3">
-<h2 data-number="29.3" class="anchored" data-anchor-id="covarianza"><span class="header-section-number">29.3</span> Covarianza</h2>
-<p>La covarianza è un parametro statistico che quantifica il grado e la direzione della relazione lineare tra due variabili casuali, <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. In termini semplici, misura come le variazioni di una variabile si accompagnano a quelle dell’altra. Per esempio, considerando l’altezza e il peso di giraffe, scopriremmo che queste due misure tendono ad aumentare insieme, evidenziando così una covarianza positiva. La covarianza è denotata come <span class="math inline">\(Cov(X, Y) = \sigma_{xy}\)</span>.</p>
-<section id="definizione-di-covarianza" class="level3" data-number="29.3.1">
-<h3 data-number="29.3.1" class="anchored" data-anchor-id="definizione-di-covarianza"><span class="header-section-number">29.3.1</span> Definizione di Covarianza</h3>
-<p>La covarianza tra due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è definita come:</p>
-<p><span class="math display">\[
-Cov(X, Y) = \mathbb{E}\left[\left(X - \mathbb{E}[X]\right) \left(Y - \mathbb{E}[Y]\right)\right],
-\]</span></p>
-<p>dove <span class="math inline">\(\mathbb{E}[X]\)</span> e <span class="math inline">\(\mathbb{E}[Y]\)</span> rappresentano i valori attesi (o medie) di <span class="math inline">\(X\)</span> ed <span class="math inline">\(Y\)</span>, rispettivamente.</p>
-<p>In termini più espliciti, la covarianza può essere espressa come:</p>
-<p><span class="math display">\[
-Cov(X, Y) = \sum_{(x, y) \in \Omega} (x - \mu_X) (y - \mu_Y) f(x, y),
-\]</span></p>
-<p>dove <span class="math inline">\(\mu_X\)</span> e <span class="math inline">\(\mu_Y\)</span> sono le medie di <span class="math inline">\(X\)</span> ed <span class="math inline">\(Y\)</span>, e <span class="math inline">\(f(x, y)\)</span> è la funzione di probabilità congiunta delle variabili.</p>
-<p>Questa definizione mostra una stretta analogia con la varianza, che è la covarianza di una variabile con se stessa:</p>
-<p><span class="math display">\[
-\mathbb{V}(X) = Cov(X, X).
-\]</span></p>
-<p>Inoltre, la covarianza può essere calcolata attraverso la relazione:</p>
-<p><span class="math display">\[
-Cov(X, Y) = \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y).
-\]</span></p>
+<section id="evitare-i-dynamite-plots" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="evitare-i-dynamite-plots"><span class="header-section-number">17.5</span> Evitare i Dynamite Plots</h2>
+<p>I <strong>dynamite plots</strong>, che mostrano la media e l’errore standard (o la deviazione standard), sono spesso utilizzati in psicologia ma sono fuorvianti. Questi grafici tendono a esagerare le differenze e possono indurre false interpretazioni. È preferibile mostrare tutti i dati, ad esempio tramite un <a href="https://en.wikipedia.org/wiki/Dot_plot_(statistics)">dot plot</a>, che fornisce un’immagine più chiara della distribuzione dei dati <span class="citation" data-cites="butler2022popularity">(<a href="../../99-references.html#ref-butler2022popularity" role="doc-biblioref">Butler 2022</a>)</span>.</p>
 </section>
-<section id="dimostrazione" class="level3" data-number="29.3.2">
-<h3 data-number="29.3.2" class="anchored" data-anchor-id="dimostrazione"><span class="header-section-number">29.3.2</span> Dimostrazione</h3>
-<p>La formula alternativa per la covarianza si dimostra come segue:</p>
-<p><span class="math display">\[
-\begin{align}
-Cov(X, Y) &amp;= \mathbb{E}\left[\left(X - \mathbb{E}[X]\right) \left(Y - \mathbb{E}[Y]\right)\right]\\
-&amp;= \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y).
-\end{align}
-\]</span></p>
+<section id="facilitare-i-confronti" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="facilitare-i-confronti"><span class="header-section-number">17.6</span> Facilitare i confronti</h2>
+<p>Quando si confrontano due distribuzioni, come in un <a href="https://en.wikipedia.org/wiki/Histogram">istogramma</a>, è fondamentale mantenere gli stessi assi per entrambi i grafici. Se le distribuzioni sono presentate su assi con scale diverse, il confronto diventa difficile e potrebbe portare a conclusioni errate. Allineare i grafici verticalmente o orizzontalmente consente di percepire più facilmente le differenze tra i gruppi.</p>
 </section>
-<section id="esempio-di-calcolo-della-covarianza" class="level3" data-number="29.3.3">
-<h3 data-number="29.3.3" class="anchored" data-anchor-id="esempio-di-calcolo-della-covarianza"><span class="header-section-number">29.3.3</span> Esempio di Calcolo della Covarianza</h3>
-<p>Consideriamo le variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> con medie <span class="math inline">\(\mu_X = 1.5\)</span> e <span class="math inline">\(\mu_Y = 0.5\)</span>. La covarianza di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> si calcola come:</p>
-<p><span class="math display">\[
-Cov(X, Y) = \sum_{(x, y) \in \Omega} (x - \mu_X) (y - \mu_Y) f(x, y) = \frac{1}{4}.
-\]</span></p>
-<p>Questo risultato si può ottenere anche dalla formula alternativa, calcolando prima <span class="math inline">\(\mathbb{E}(XY)\)</span>:</p>
-<p><span class="math display">\[
-\mathbb{E}(XY) = 1.0.
-\]</span></p>
-<p>Allora, la covarianza tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è:</p>
-<p><span class="math display">\[
-Cov(X, Y) = 1 - 1.5 \cdot 0.5 = 0.25.
-\]</span></p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 29.2</strong></span> Per fare un esempio con Python, consideriamo l’esempio precedente nel quale <span class="math inline">\(X\)</span> è il numero che si ottiene dal lancio di tre monete equilibrate e <span class="math inline">\(Y\)</span> è il numero di teste al primo lancio. Troviamo <span class="math inline">\(Cov(X, Y)\)</span>.</p>
-<p>Creiamo il prodotto cartesiano che si ottiene per tutti i possibili valori <span class="math inline">\(X\)</span> e i possibili valori <span class="math inline">\(Y\)</span>.</p>
-<div id="6e332108-80f2-4451-87d0-1c1298078e10" class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>c3 <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">4</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>c1 <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">2</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> c1 <span class="cf">for</span> j <span class="kw">in</span> c3]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sample</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Il primo numero di ogni coppia rappresenta il valore di <span class="math inline">\(Y\)</span>, mentre il secondo numero è il valore di <span class="math inline">\(X\)</span>. Come abbiamo visto in precedenza, però, quete coppie di valori <span class="math inline">\(X, Y\)</span> non hanno tutte la stessa probabilità di verificarsi. Infatti, la probabilità che ciascuna coppia <span class="math inline">\(X, Y\)</span> si osservi è data, in sequenza, dai valori 1/8, 2/8, 1/8, 0, 0, 1/8, 2/8, 1/8. Questi valori rappresentano la distribuzione di massa di probabilità congiunta delle variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>. Possiamo quindi applicare l’eq. {eq}<code>eq-cov-def-rv</code>:</p>
-<div id="df08f279-5ebe-456b-beae-c958008f534e" class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> []</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pmf <span class="op">=</span> np.array([<span class="dv">1</span> <span class="op">/</span> <span class="dv">8</span>, <span class="dv">2</span> <span class="op">/</span> <span class="dv">8</span>, <span class="dv">1</span> <span class="op">/</span> <span class="dv">8</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span> <span class="op">/</span> <span class="dv">8</span>, <span class="dv">2</span> <span class="op">/</span> <span class="dv">8</span>, <span class="dv">1</span> <span class="op">/</span> <span class="dv">8</span>])</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    res.append((sample[i][<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.5</span>) <span class="op">*</span> (sample[i][<span class="dv">1</span>] <span class="op">-</span> <span class="fl">1.5</span>) <span class="op">*</span> pmf[i])</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(res)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>La covarianza tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è dunque uguale a 0.25.</p>
-</div>
+<section id="trasformazioni-logaritmiche" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="trasformazioni-logaritmiche"><span class="header-section-number">17.7</span> Trasformazioni logaritmiche</h2>
+<p>Le <strong>trasformazioni logaritmiche</strong> sono utili quando si lavora con dati distribuiti su più ordini di grandezza o quando le variazioni tra le quantità sono moltiplicative <span class="citation" data-cites="west2022best">(<a href="../../99-references.html#ref-west2022best" role="doc-biblioref">West 2022</a>)</span>. L’uso della scala logaritmica in un grafico a barre o a dispersione può ridurre le distorsioni visive e migliorare l’interpretazione dei dati. Questo approccio è particolarmente utile quando alcuni valori estremi potrebbero dominare il grafico, nascondendo dettagli rilevanti.</p>
 </section>
+<section id="codificare-una-terza-variabile" class="level2" data-number="17.8">
+<h2 data-number="17.8" class="anchored" data-anchor-id="codificare-una-terza-variabile"><span class="header-section-number">17.8</span> Codificare una terza variabile</h2>
+<p>Per rappresentare tre variabili, è possibile utilizzare un <a href="https://it.wikipedia.org/wiki/Grafico_di_dispersione">grafico di dispersione</a> con variabili codificate attraverso dimensioni aggiuntive come il colore, la dimensione o la forma dei punti. Ad esempio, in un grafico che confronta aspettativa di vita e reddito, la dimensione dei punti potrebbe rappresentare la popolazione e il colore la regione geografica. Quando si utilizza il colore per rappresentare una variabile, è importante scegliere palette cromatiche accessibili anche per chi è affetto da <strong>daltonismo</strong>, evitando combinazioni problematiche come rosso-verde.</p>
 </section>
-<section id="correlazione" class="level2" data-number="29.4">
-<h2 data-number="29.4" class="anchored" data-anchor-id="correlazione"><span class="header-section-number">29.4</span> Correlazione</h2>
-<p>Mentre la covarianza fornisce un’indicazione della tendenza di due variabili casuali a variare insieme, essa è influenzata dalle unità di misura delle variabili, rendendo difficile valutare l’intensità della loro relazione lineare. Per ovviare a questo, si utilizza la correlazione, che normalizza la covarianza attraverso le deviazioni standard delle variabili, offrendo così una misura standardizzata dell’associazione lineare tra di esse.</p>
-<div id="def-" class="theorem definition">
-<p><span class="theorem-title"><strong>Definizione 29.1</strong></span> Il coefficiente di correlazione tra due variabili casuali <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, denotato come <span class="math inline">\(\rho(X,Y)\)</span> o <span class="math inline">\(\rho_{X,Y}\)</span>, è definito come:</p>
-<p><span class="math display">\[
-\rho(X,Y) = \frac{Cov(X,Y)}{\sqrt{\mathbb{V}(X)\mathbb{V}(Y)}},
-\]</span></p>
-<p>dove <span class="math inline">\(\mathbb{V}(X)\)</span> e <span class="math inline">\(\mathbb{V}(Y)\)</span> rappresentano le varianze di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, rispettivamente.</p>
-</div>
-<p>Il coefficiente di correlazione <span class="math inline">\(\rho_{xy}\)</span> è un valore adimensionale, ovvero non dipende dalle unità di misura delle variabili, e varia nell’intervallo <span class="math inline">\(-1 \leq \rho \leq 1\)</span>.</p>
+<section id="evitare-pseudo-tre-dimensioni" class="level2" data-number="17.9">
+<h2 data-number="17.9" class="anchored" data-anchor-id="evitare-pseudo-tre-dimensioni"><span class="header-section-number">17.9</span> Evitare pseudo-tre dimensioni</h2>
+<p>Grafici tridimensionali, come barre o pie chart 3D, spesso aggiungono confusione senza fornire informazioni aggiuntive significative. Sebbene visivamente accattivanti, questi grafici distorcono la percezione e rendono difficile l’interpretazione accurata dei dati. È preferibile mantenere le visualizzazioni bidimensionali, a meno che la terza dimensione non rappresenti effettivamente una variabile aggiuntiva.</p>
 </section>
-<section id="proprietà-1" class="level2" data-number="29.5">
-<h2 data-number="29.5" class="anchored" data-anchor-id="proprietà-1"><span class="header-section-number">29.5</span> Proprietà</h2>
-<ul>
-<li><strong>Covarianza con una Costante:</strong> La covarianza tra una variabile aleatoria <span class="math inline">\(X\)</span> e una costante <span class="math inline">\(c\)</span> è sempre nulla: <span class="math inline">\(Cov(c, X) = 0\)</span>.</li>
-<li><strong>Simmetria:</strong> La covarianza è simmetrica: <span class="math inline">\(Cov(X,Y) = Cov(Y,X)\)</span>.</li>
-<li><strong>Intervallo di Correlazione:</strong> Il coefficiente di correlazione <span class="math inline">\(\rho\)</span> varia tra -1 e 1: <span class="math inline">\(-1 \leq \rho(X,Y) \leq 1\)</span>.</li>
-<li><strong>Indipendenza dalle Unità di Misura:</strong> La correlazione è indipendente dalle unità di misura: <span class="math inline">\(\rho(aX, bY) = \rho(X,Y)\)</span> per ogni <span class="math inline">\(a, b &gt; 0\)</span>.</li>
-<li><strong>Relazione Lineare Perfetta:</strong> Se <span class="math inline">\(Y = a + bX\)</span> è una funzione lineare di <span class="math inline">\(X\)</span>, allora <span class="math inline">\(\rho(X,Y) = \pm 1\)</span>, a seconda del segno di <span class="math inline">\(b\)</span>.</li>
-<li><strong>Covarianza e Costanti:</strong> La covarianza tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, ciascuna moltiplicata per una costante, è <span class="math inline">\(Cov(aX, bY) = ab \, Cov(X,Y)\)</span>.</li>
-<li><strong>Varianza della Somma/Differenza:</strong> <span class="math inline">\(\mathbb{V}(X \pm Y) = \mathbb{V}(X) + \mathbb{V}(Y) \pm 2Cov(X,Y)\)</span>.</li>
-<li><strong>Covarianza e Somma di Variabili:</strong> <span class="math inline">\(Cov(X + Y, Z) = Cov(X,Z) + Cov(Y,Z)\)</span>.</li>
-<li><strong>Varianza di una Somma di Variabili Aleatorie:</strong> Per variabili aleatorie <span class="math inline">\(X_1, \dots, X_n\)</span>, si ha <span class="math inline">\(\mathbb{V}(\sum_{i=1}^n X_i) = \sum_{i=1}^n \mathbb{V}(X_i) + 2\sum_{i&lt;j} Cov(X_i, X_j)\)</span>.</li>
-<li><strong>Covarianza e Somme di Prodotti:</strong> <span class="math inline">\(Cov(\sum_{i=1}^n a_i X_i, \sum_{j=1}^m b_j Y_j) = \sum_{i=1}^n \sum_{j=1}^m a_i b_j Cov(X_i, Y_j)\)</span>.</li>
-<li><strong>Indipendenza e Covarianza di Somme:</strong> Se <span class="math inline">\(X_1, X_2, \dots, X_n\)</span> sono indipendenti, allora <span class="math inline">\(Cov(\sum_{i=1}^n a_i X_i, \sum_{j=1}^n b_j X_j) = \sum_{i=1}^n a_i b_i \mathbb{V}(X_i)\)</span>.</li>
-</ul>
-<section id="incorrelazione" class="level3" data-number="29.5.1">
-<h3 data-number="29.5.1" class="anchored" data-anchor-id="incorrelazione"><span class="header-section-number">29.5.1</span> Incorrelazione</h3>
-<p>Due variabili casuali <span class="math inline">\(X\)</span> ed <span class="math inline">\(Y\)</span> si dicono incorrelate, o linearmente indipendenti, se la loro covarianza è nulla:</p>
-<p><span class="math display">\[
-Cov(X,Y) = \mathbb{E}[(X - \mu_X)(Y - \mu_Y)] = 0,
-\]</span></p>
-<p>equivalente a dire che <span class="math inline">\(\rho_{XY} = 0\)</span> e <span class="math inline">\(\mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y)\)</span>.</p>
-<p>Questa condizione indica una forma di indipendenza più debole rispetto all’indipendenza stocastica. Tuttavia, <span class="math inline">\(Cov(X, Y) = 0\)</span> non implica necessariamente che <span class="math inline">\(X\)</span> ed <span class="math inline">\(Y\)</span> siano stocasticamente indipendenti.</p>
-<div id="exm-" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 29.3</strong></span> Consideriamo una distribuzione di probabilità congiunta di due variabili aleatorie, <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>, definita come:</p>
-<p><span class="math display">\[
-f_{XY}(x,y) = \left\{
-\begin{array}{ll}
-\frac{1}{4} &amp; \text{per } (x,y) \in \{(0,0), (1,1), (1, -1), (2,0) \}, \\
-0 &amp; \text{altrimenti.}
-\end{array}
-\right.
-\]</span></p>
-<p>Questo implica che le variabili aleatorie <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> assumono valori specifici con probabilità uniforme solo per determinate coppie <span class="math inline">\((x, y)\)</span> e zero in tutti gli altri casi.</p>
-<p><strong>Distribuzioni Marginali</strong></p>
-<p>La distribuzione marginale di <span class="math inline">\(X\)</span> si ottiene sommando le probabilità congiunte su tutti i possibili valori di <span class="math inline">\(Y\)</span>, e viceversa per <span class="math inline">\(Y\)</span>. Le distribuzioni marginali risultano essere:</p>
-<ul>
-<li><p>Per <span class="math inline">\(X\)</span>:</p>
-<p><span class="math display">\[
-f_X(x) = \left\{
-\begin{array}{ll}
-\frac{1}{4} &amp; \text{per } x=0, \\
-\frac{1}{2} &amp; \text{per } x=1, \\
-\frac{1}{4} &amp; \text{per } x=2.
-\end{array}
-\right.
-\]</span></p></li>
-<li><p>Per <span class="math inline">\(Y\)</span>:</p>
-<p><span class="math display">\[
-f_Y(y) = \left\{
-\begin{array}{ll}
-\frac{1}{4} &amp; \text{per } y=-1, \\
-\frac{1}{2} &amp; \text{per } y=0, \\
-\frac{1}{4} &amp; \text{per } y=1.
-\end{array}
-\right.
-\]</span></p></li>
-</ul>
-<p><strong>Medie e Varianze</strong></p>
-<p>Calcoliamo ora le medie e le varianze di <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span>:</p>
-<ul>
-<li><p>Media di <span class="math inline">\(X\)</span>:</p>
-<p><span class="math display">\[
-\mathbb{E}(X) = 0 \cdot \frac{1}{4} + 1 \cdot \frac{1}{2} + 2 \cdot \frac{1}{4} = 1.
-\]</span></p></li>
-<li><p>Varianza di <span class="math inline">\(X\)</span>:</p>
-<p><span class="math display">\[
-\mathbb{V}(X) = \left(0^2 \cdot \frac{1}{4} + 1^2 \cdot \frac{1}{2} + 2^2 \cdot \frac{1}{4}\right) - \mathbb{E}(X)^2 = \frac{3}{2} - 1 = \frac{1}{2}.
-\]</span></p></li>
-<li><p>Media di <span class="math inline">\(Y\)</span>:</p>
-<p><span class="math display">\[
-\mathbb{E}(Y) = (-1) \cdot \frac{1}{4} + 0 \cdot \frac{1}{2} + 1 \cdot \frac{1}{4} = 0.
-\]</span></p></li>
-<li><p>Varianza di <span class="math inline">\(Y\)</span>:</p>
-<p><span class="math display">\[
-\mathbb{V}(Y) = \left((-1)^2 \cdot \frac{1}{4} + 0^2 \cdot \frac{1}{2} + 1^2 \cdot \frac{1}{4}\right) - \mathbb{E}(Y)^2 = \frac{1}{2}.
-\]</span></p></li>
-</ul>
-<p><strong>Covarianza tra X e Y</strong></p>
-<p>La covarianza si calcola come:</p>
-<p><span class="math display">\[
-Cov(X,Y) = \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y),
-\]</span></p>
-<p>dove <span class="math inline">\(\mathbb{E}(XY)\)</span> si trova sommando il prodotto delle coppie di valori <span class="math inline">\((x, y)\)</span> per la loro probabilità congiunta:</p>
-<p><span class="math display">\[
-\mathbb{E}(XY) = 0.
-\]</span></p>
-<p>Di conseguenza, la covarianza tra <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> è zero:</p>
-<p><span class="math display">\[
-Cov(X,Y) = 0 - 1 \cdot 0 = 0.
-\]</span></p>
-<p><strong>Conclusioni</strong></p>
-<p>Sebbene <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> siano incorrelate (covarianza nulla), ciò non implica la loro indipendenza. L’indipendenza richiede che la funzione di probabilità congiunta si possa esprimere come il prodotto delle funzioni di probabilità marginali per ogni <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>, condizione che non si verifica in questo caso. Quindi, nonostante l’assenza di correlazione, <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> non sono indipendenti, dimostrando che l’incorrelazione non garantisce l’indipendenza.</p>
-</div>
+<section id="scegliere-il-numero-giusto-di-cifre-significative" class="level2" data-number="17.10">
+<h2 data-number="17.10" class="anchored" data-anchor-id="scegliere-il-numero-giusto-di-cifre-significative"><span class="header-section-number">17.10</span> Scegliere il numero giusto di cifre significative</h2>
+<p>È importante evitare l’uso di troppe cifre decimali nelle tabelle e nei grafici. Spesso, una o due cifre significative sono sufficienti per rappresentare accuratamente i dati, mentre l’aggiunta di cifre inutili può confondere il lettore e dare un falso senso di precisione. Limitiamoci a mostrare solo le cifre necessarie per trasmettere il messaggio in modo chiaro.</p>
 </section>
+<section id="conoscere-il-pubblico" class="level2" data-number="17.11">
+<h2 data-number="17.11" class="anchored" data-anchor-id="conoscere-il-pubblico"><span class="header-section-number">17.11</span> Conoscere il pubblico</h2>
+<p>Infine, è fondamentale adattare la visualizzazione dei dati al pubblico di riferimento. Grafici progettati per l’analisi esplorativa interna possono contenere dettagli tecnici complessi, ma quando si comunica a un pubblico più ampio o non specializzato, è necessario semplificare. Ad esempio, utilizzare una scala logaritmica può essere utile per un pubblico esperto, ma confondere un pubblico generale. In questi casi, mantenere la scala lineare e spiegare chiaramente i dati aiuta a evitare malintesi.</p>
 </section>
-<section id="variabili-continue" class="level2" data-number="29.6">
-<h2 data-number="29.6" class="anchored" data-anchor-id="variabili-continue"><span class="header-section-number">29.6</span> Variabili continue</h2>
-<p>Consideriamo ora le distribuzioni di densità. Nella figura successiva, tratta da <span class="citation" data-cites="martin2024bayesian">Martin (<a href="../../99-references.html#ref-martin2024bayesian" role="doc-biblioref">2024</a>)</span>, vediamo una rappresentazione della relazione tra la probabilità congiunta <span class="math inline">\(p(A,B)\)</span>, le probabilità marginali <span class="math inline">\(p(A)\)</span> e <span class="math inline">\(p(B)\)</span>, e le probabilità condizionali <span class="math inline">\(p(A \mid B)\)</span>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../figures/cond_prob_cont.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Distribuzioni di densità (figura tratta da <span class="citation" data-cites="martin2024bayesian">Martin (<a href="../../99-references.html#ref-martin2024bayesian" role="doc-biblioref">2024</a>)</span>).</figcaption>
-</figure>
-</div>
-<ul>
-<li><p><strong>Probabilità congiunta <span class="math inline">\(p(A,B)\)</span></strong>: rappresenta la probabilità che A e B assumano certi valori contemporaneamente. Per le variabili continue, questa è data dall’integrazione della funzione di densità congiunta su un’area o volume di interesse.</p></li>
-<li><p><strong>Probabilità marginale <span class="math inline">\(p(A)\)</span> e <span class="math inline">\(p(B)\)</span></strong>: è la probabilità di osservare un particolare valore di A (o B) indipendentemente dal valore di B (o A). Si ottiene integrando la funzione di densità congiunta sull’intero intervallo di valori dell’altra variabile.</p></li>
-<li><p><strong>Probabilità condizionale <span class="math inline">\(p(A \mid B)\)</span></strong>: esprime la probabilità di A dato B. Si calcola dividendo la probabilità congiunta per la probabilità marginale di B, applicando la definizione di probabilità condizionale anche nel contesto continuo.</p></li>
-</ul>
-<p>La transizione dal trattamento delle variabili discrete a quello delle variabili continue richiede un cambiamento di strumenti matematici da somme ad integrali, ma i concetti fondamentali di probabilità congiunta, marginale e condizionale rimangono applicabili.</p>
-</section>
-<section id="commenti-e-considerazioni-finali" class="level2" data-number="29.7">
-<h2 data-number="29.7" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">29.7</span> Commenti e considerazioni finali</h2>
-<p>In alcune situazioni, ogni singolo elemento di una popolazione può essere associato a diverse variabili casuali. Ad esempio, consideriamo l’elenco di tutti gli studenti iscritti a un’università e immaginiamo di selezionare uno studente a caso per misurare la sua altezza e il suo peso. In questo caso, ogni individuo della popolazione è associato a due variabili casuali, l’altezza e il peso. Quando si hanno due o più variabili casuali associate ad ogni elemento di una popolazione, è possibile studiare la distribuzione congiunta di tali variabili casuali. In questo capitolo abbiamo esaminato come rappresentare la distribuzione di massa di probabilità congiunta di due variabili casuali discrete e come ottenere le distribuzioni marginali delle due variabili. Inoltre, abbiamo discusso i concetti di incorrelazione e indipendenza.</p>
-</section>
-<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="29.8">
-<h2 data-number="29.8" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">29.8</span> Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="fa70d673-a3ed-4600-a58b-eed52bacad89" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>The watermark extension is already loaded. To reload it, use:
-  %reload_ext watermark
-Last updated: Sat Mar 16 2024
-
-Python implementation: CPython
-Python version       : 3.11.8
-IPython version      : 8.22.2
-
-Compiler    : Clang 16.0.6 
-OS          : Darwin
-Release     : 23.4.0
-Machine     : arm64
-Processor   : arm
-CPU cores   : 8
-Architecture: 64bit
-
-numpy : 1.26.4
-pandas: 2.2.1
-
-Watermark: 2.4.3
-</code></pre>
-</div>
-</div>
+<section id="conclusioni" class="level2" data-number="17.12">
+<h2 data-number="17.12" class="anchored" data-anchor-id="conclusioni"><span class="header-section-number">17.12</span> Conclusioni</h2>
+<p>I principi di visualizzazione dei dati trattati in questo capitolo sono strumenti fondamentali per garantire chiarezza e accuratezza nella rappresentazione delle informazioni. Scelte appropriate di grafici, segnali visivi e trasformazioni facilitano la comprensione, riducendo la possibilità di distorsioni o interpretazioni errate.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-martin2024bayesian" class="csl-entry" role="listitem">
-Martin, Osvaldo. 2024. <em>Bayesian analysis with python</em>. Packt Publishing Ltd.
+<div id="ref-butler2022popularity" class="csl-entry" role="listitem">
+Butler, Ruth C. 2022. <span>«Popularity leads to bad habits: Alternatives to <span>“the statistics”</span> routine of significance,<span>“alphabet soup”</span> and dynamite plots»</span>. <em>Annals of Applied Biology</em>. Wiley Online Library.
+</div>
+<div id="ref-healy2018data" class="csl-entry" role="listitem">
+Healy, Kieran. 2018. <em>Data visualization: a practical introduction</em>. Princeton University Press.
+</div>
+<div id="ref-west2022best" class="csl-entry" role="listitem">
+West, Robert M. 2022. <span>«Best practice in statistics: The use of log transformation»</span>. <em>Annals of Clinical Biochemistry</em> 59 (3): 162–65.
+</div>
+<div id="ref-wickham2023r" class="csl-entry" role="listitem">
+Wickham, Hadley, Mine Çetinkaya-Rundel, e Garrett Grolemund. 2023. <em>R for data science</em>. " O’Reilly Media, Inc.".
+</div>
+<div id="ref-wilke2019fundamentals" class="csl-entry" role="listitem">
+Wilke, Claus O. 2019. <em>Fundamentals of data visualization: a primer on making informative and compelling figures</em>. O’Reilly Media.
 </div>
 </div>
 </section>
@@ -2213,13 +1798,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/probability/08_sampling_distr.html" class="pagination-link" aria-label="Stime, stimatori e parametri">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Stime, stimatori e parametri</span></span>
+      <a href="../../chapters/eda/04_freq_distr.html" class="pagination-link" aria-label="Analisi esplorativa dei dati">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Analisi esplorativa dei dati</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/probability/10_density_func.html" class="pagination-link" aria-label="La funzione di densità di probabilità">
-        <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La funzione di densità di probabilità</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/eda/06_loc_scale.html" class="pagination-link" aria-label="Indici di posizione e di scala">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Indici di posizione e di scala</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -2231,7 +1816,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/probability/09_joint_prob.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/eda/05_data_visualization.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
