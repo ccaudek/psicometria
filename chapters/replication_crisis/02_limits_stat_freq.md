@@ -1,5 +1,20 @@
 # Limiti dell'inferenza frequentista {#sec-limits-freq-inference}
 
+**Prerequisiti**
+
+- Leggere [Bayesian statistics for clinical research](https://www.sciencedirect.com/science/article/pii/S0140673624012959) di @Goligher2024.
+
+**Concetti e Competenze Chiave**
+
+- Comprensione e limiti della NHST.
+- Origine e utilizzo del valore-$p$.
+- Critiche all'uso del valore-$p$.
+- Concetto di $P$-hacking.
+- L'importanza di valutare la dimensione dell'effetto piuttosto che limitarsi alla significatività statistica.
+- Crisi della riproducibilità.
+
+## Introduzione {.unnumbered}
+
 In questa sezione della dispensa abbiamo esaminato il metodo "tradizionale" per il test di significatività dell'ipotesi nulla (NHST). Comprendere la logica alla base dell'approccio NHST è essenziale poiché questo è stato l'approccio predominante alla statistica inferenziale fin dalla sua introduzione all'inizio del XX secolo e la maggior parte dei ricercatori ancora si affida a questa procedura per analizzare i dati. Tuttavia, recentemente, l'approccio NHST è stato oggetto di aspre critiche, poiché molti ricercatori hanno iniziato a pensare che questo approccio possa creare più problemi di quanti ne risolva. Pertanto, è importante conoscere le critiche mosse alla procedura inferenziale NHST all'interno della comunità scientifica. In questa sezione esamineremo alcuni dei dubbi sorti riguardo a questo approccio.
 
 ## L'uso del valore-$p$ nel mondo della ricerca
