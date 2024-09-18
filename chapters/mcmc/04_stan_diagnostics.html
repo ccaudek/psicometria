@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>51&nbsp; Modelli generativi – Data Science per Psicologi</title>
+<title>51&nbsp; Diagnostica delle catene markoviane – Data Science per Psicologi</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -64,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../chapters/mcmc/05_stan_diagnostics.html" rel="next">
+<link href="../../chapters/mcmc/05_stan_prediction.html" rel="next">
 <link href="../../chapters/mcmc/03_stan_summary_posterior.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -147,7 +167,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/04_stan_cats.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modelli generativi</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/04_stan_diagnostics.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -589,20 +609,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/04_stan_cats.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modelli generativi</span></span></a>
+  <a href="../../chapters/mcmc/04_stan_diagnostics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/05_stan_diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></a>
+  <a href="../../chapters/mcmc/05_stan_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../chapters/mcmc/06_stan_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span></a>
+  <a href="../../chapters/mcmc/06_bayesian_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Bayesian workflow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1228,20 +1248,26 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a53_entropy_rv_cont.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Entropia di una variabile casuale continua</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a55_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">U</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Apprendimento per rinforzo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a60_ttest_exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">V</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
+ <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">Esercizi sull’inferenza frequentista</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/a70_predict_counts.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">W</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
+ <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">La predizione delle frequenze</span></span></a>
   </div>
 </li>
           <li class="sidebar-item sidebar-item-section">
@@ -1256,43 +1282,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">X</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_bayesian_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Y</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
+ <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Inferenza bayesiana</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_causality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">Z</span>&nbsp; <span class="chapter-title">Causalità</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_mult_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Regressione multipla</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_rescorla_wagner.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">\</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
+ <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Modello Rescorla-Wagner</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_entropia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">]</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
+ <span class="menu-text"><span class="chapter-number">^</span>&nbsp; <span class="chapter-title">Entropia</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/appendix/solutions_replication_crisis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">^</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">_</span>&nbsp; <span class="chapter-title">Crisi della replicazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -1310,17 +1336,28 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione">Introduzione</a></li>
-  <li><a href="#commenti-conclusivi" id="toc-commenti-conclusivi" class="nav-link" data-scroll-target="#commenti-conclusivi"><span class="header-section-number">51.1</span> Commenti Conclusivi</a></li>
-  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo"><span class="header-section-number">51.2</span> Informazioni sull’Ambiente di Sviluppo</a></li>
+  <li><a href="#grafici-di-tracciamento" id="toc-grafici-di-tracciamento" class="nav-link" data-scroll-target="#grafici-di-tracciamento"><span class="header-section-number">51.1</span> Grafici di Tracciamento</a></li>
+  <li><a href="#i-grafici-della-densità-posteriore-sono-adeguati" id="toc-i-grafici-della-densità-posteriore-sono-adeguati" class="nav-link" data-scroll-target="#i-grafici-della-densità-posteriore-sono-adeguati"><span class="header-section-number">51.2</span> I Grafici della Densità Posteriore Sono Adeguati?</a></li>
+  <li><a href="#lautocorrelazione-nelle-catene-di-markov-monte-carlo-è-troppo-alta" id="toc-lautocorrelazione-nelle-catene-di-markov-monte-carlo-è-troppo-alta" class="nav-link" data-scroll-target="#lautocorrelazione-nelle-catene-di-markov-monte-carlo-è-troppo-alta"><span class="header-section-number">51.3</span> L’Autocorrelazione nelle Catene di Markov Monte Carlo È Troppo Alta?</a></li>
+  <li><a href="#la-dimensione-effettiva-del-campione-è-sufficiente" id="toc-la-dimensione-effettiva-del-campione-è-sufficiente" class="nav-link" data-scroll-target="#la-dimensione-effettiva-del-campione-è-sufficiente"><span class="header-section-number">51.4</span> La Dimensione Effettiva del Campione È Sufficiente?</a></li>
+  <li><a href="#la-statistica-hatr-è-prossima-a-uno" id="toc-la-statistica-hatr-è-prossima-a-uno" class="nav-link" data-scroll-target="#la-statistica-hatr-è-prossima-a-uno"><span class="header-section-number">51.5</span> La Statistica <span class="math inline">\(\hat{R}\)</span> È Prossima a Uno?</a></li>
+  <li><a href="#la-diagnostica-di-geweke-è-prossima-a-zero" id="toc-la-diagnostica-di-geweke-è-prossima-a-zero" class="nav-link" data-scroll-target="#la-diagnostica-di-geweke-è-prossima-a-zero"><span class="header-section-number">51.6</span> La Diagnostica di Geweke È Prossima a Zero?</a></li>
+  <li><a href="#lerrore-standard-di-monte-carlo-è-piccolo" id="toc-lerrore-standard-di-monte-carlo-è-piccolo" class="nav-link" data-scroll-target="#lerrore-standard-di-monte-carlo-è-piccolo"><span class="header-section-number">51.7</span> L’Errore Standard di Monte Carlo È Piccolo?</a></li>
+  <li><a href="#i-grafici-di-rango-sono-piatti" id="toc-i-grafici-di-rango-sono-piatti" class="nav-link" data-scroll-target="#i-grafici-di-rango-sono-piatti"><span class="header-section-number">51.8</span> I Grafici di Rango Sono Piatti?</a></li>
+  <li><a href="#ci-sono-transizioni-divergenti" id="toc-ci-sono-transizioni-divergenti" class="nav-link" data-scroll-target="#ci-sono-transizioni-divergenti"><span class="header-section-number">51.9</span> Ci Sono Transizioni Divergenti?</a></li>
+  <li><a href="#la-bmfi-è-sufficientemente-grande" id="toc-la-bmfi-è-sufficientemente-grande" class="nav-link" data-scroll-target="#la-bmfi-è-sufficientemente-grande"><span class="header-section-number">51.10</span> LA BMFI È Sufficientemente Grande?</a></li>
+  <li><a href="#la-leave-one-out-cross-validation-fornisce-evidenze-di-buon-adattamento" id="toc-la-leave-one-out-cross-validation-fornisce-evidenze-di-buon-adattamento" class="nav-link" data-scroll-target="#la-leave-one-out-cross-validation-fornisce-evidenze-di-buon-adattamento"><span class="header-section-number">51.11</span> La Leave-One-Out Cross-Validation Fornisce Evidenze di Buon Adattamento?</a></li>
+  <li><a href="#il-parametro-k" id="toc-il-parametro-k" class="nav-link" data-scroll-target="#il-parametro-k"><span class="header-section-number">51.12</span> Il Parametro <span class="math inline">\(k\)</span></a></li>
+  <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/04_stan_cats.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/04_stan_diagnostics.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/04_stan_cats.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modelli generativi</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/04_stan_diagnostics.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-generative-models" class="quarto-section-identifier"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modelli generativi</span></span></h1>
+<h1 class="title"><span id="sec-diagnostics_mcmc" class="quarto-section-identifier"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span></h1>
 </div>
 
 
@@ -1338,539 +1375,1027 @@ window.Quarto = {
 
 
 <p><strong>Prerequisiti</strong></p>
-<ul>
-<li>Leggere il <a href="../probability/11_discr_rv_distr.html" class="quarto-xref"><span>Capitolo 33</span></a>.</li>
-</ul>
-<p><strong>Concetti e Competenze Chiave</strong></p>
-<ul>
-<li>Comprensione dei modelli generativi e della loro applicazione nell’inferenza statistica.</li>
-<li>Gestione dei dati censurati, in particolare per stimare correttamente le probabilità di un evento (adozione).</li>
-<li>Utilizzo del linguaggio Stan per implementare modelli bayesiani, integrando dati completi e censurati.</li>
-<li>Importanza di includere tutte le informazioni disponibili nei modelli per evitare bias nelle stime.</li>
-</ul>
+<p><strong>Concetti e competenze chiave</strong></p>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:48:30.871809Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:48:29.750176Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> stat</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-3" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed: <span class="bu">int</span> <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">map</span>(<span class="bu">ord</span>, <span class="st">"generative_models"</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng: np.random.Generator <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span>seed)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>az.style.use(<span class="st">"arviz-darkgrid"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the home directory</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>home_directory <span class="op">=</span> os.path.expanduser(<span class="st">"~"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Construct the path to the Quarto project directory </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>project_directory <span class="op">=</span> os.path.join(</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    home_directory, <span class="st">'_repositories'</span>, <span class="st">'psicometria'</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:14:38.227502Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:14:38.210899Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>run ..<span class="op">/</span>..<span class="op">/</span>config.py <span class="co"># Import the configuration settings</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> stat</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cmdstanpy</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cmdstanpy <span class="im">import</span> CmdStanModel</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>cmdstanpy.utils.get_logger().setLevel(logging.ERROR)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo presenteremo uno dei tutorial utilizzati da Richard McElreath nella sua presentazione <em>Introduction to Probabilistic Programming with Stan</em> alla <a href="https://github.com/rmcelreath/intro_to_stan_stancon2024">StanCon</a> a Oxford nel 2024. Lo scopo del tutorial è spiegare come i modelli implementati in Stan siano modelli generativi. Questo significa che i modelli mettono in relazione in modo esplicito le ipotesi scientifiche o meccaniche sul funzionamento della natura con l’algoritmo di inferenza.</p>
-<p>Per scrivere un programma Stan, è quindi fondamentale chiarire gli obiettivi dell’analisi, rendere trasparente e verificabile la logica dell’estimatore, e testare il modello in modo efficace.</p>
-<p>L’esempio discusso da Richard McElreath riguarda l’analisi di un database contenente informazioni su 22.356 gatti provenienti dall’Austin, Texas Animal Center. Per ciascun gatto presente nel rifugio, sappiamo quanti giorni è rimasto senza essere adottato o, se è stato adottato, quanti giorni ha trascorso nel rifugio prima dell’adozione. Abbiamo inoltre informazioni sul colore del gatto, distinguendo se è nero o di un altro colore.</p>
-<div id="cell-5" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># URL for the data file</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>urlfile <span class="op">=</span> (</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/AustinCats.csv"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the CSV file directly from the URL</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> pd.read_csv(urlfile, sep<span class="op">=</span><span class="st">";"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few rows of the dataframe</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>d.head()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">id</th>
-<th data-quarto-table-cell-role="th">days_to_event</th>
-<th data-quarto-table-cell-role="th">date_out</th>
-<th data-quarto-table-cell-role="th">out_event</th>
-<th data-quarto-table-cell-role="th">date_in</th>
-<th data-quarto-table-cell-role="th">in_event</th>
-<th data-quarto-table-cell-role="th">breed</th>
-<th data-quarto-table-cell-role="th">color</th>
-<th data-quarto-table-cell-role="th">intake_age</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>A730601</td>
-<td>1</td>
-<td>07/08/2016 09:00:00 AM</td>
-<td>Transfer</td>
-<td>07/07/2016 12:11:00 PM</td>
-<td>Stray</td>
-<td>Domestic Shorthair Mix</td>
-<td>Blue Tabby</td>
-<td>7</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>A679549</td>
-<td>25</td>
-<td>06/16/2014 01:54:00 PM</td>
-<td>Transfer</td>
-<td>05/22/2014 03:43:00 PM</td>
-<td>Stray</td>
-<td>Domestic Shorthair Mix</td>
-<td>Black/White</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>A683656</td>
-<td>4</td>
-<td>07/17/2014 04:57:00 PM</td>
-<td>Adoption</td>
-<td>07/13/2014 01:20:00 PM</td>
-<td>Stray</td>
-<td>Snowshoe Mix</td>
-<td>Lynx Point</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>A709749</td>
-<td>41</td>
-<td>09/22/2015 12:49:00 PM</td>
-<td>Transfer</td>
-<td>08/12/2015 06:29:00 PM</td>
-<td>Stray</td>
-<td>Domestic Shorthair Mix</td>
-<td>Calico</td>
-<td>12</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>A733551</td>
-<td>9</td>
-<td>09/01/2016 12:00:00 AM</td>
-<td>Transfer</td>
-<td>08/23/2016 02:35:00 PM</td>
-<td>Stray</td>
-<td>Domestic Shorthair Mix</td>
-<td>Brown Tabby/White</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-
+<p>Le catene di Markov sono utilizzate per approssimare la distribuzione a posteriori. Tuttavia, è fondamentale riconoscere che tale approssimazione è soggetta a errori e imperfezioni. <span class="citation" data-cites="de2020tutorial">Schoot et al. (<a href="../../99-references.html#ref-de2020tutorial" role="doc-biblioref">2020</a>)</span> propongono una <em>When-to-Worry- and-How-to-Avoid-the-Misuse-of-Bayesian-Statistics</em> (WAMBS) checklist.</p>
+<p>La diagnostica delle catene Markoviane, quindi, si configura come un insieme di pratiche e strumenti mirati a indagare vari aspetti della convergenza. Questi includono l’accuratezza dell’approssimazione della distribuzione a posteriori, l’efficienza del campionamento e l’esplorazione esaustiva dello spazio dei parametri. Tali strumenti diagnostici possono essere sia grafici che numerici e dovrebbero essere applicati in un contesto olistico per fornire una panoramica completa della qualità della catena di Markov.</p>
+<p>Non esiste un’unica metrica o diagnostico che possa fornire un quadro completo; piuttosto, è l’analisi combinata di più metriche e diagnostici che permette di acquisire una comprensione più profonda del comportamento della catena. Inoltre, l’esperienza del ricercatore gioca un ruolo significativo nel distinguere tra una “buona” e una “cattiva” catena di Markov e nel suggerire strategie per migliorare la qualità del campionamento.</p>
+<p>In sintesi, l’analisi della convergenza e la diagnostica delle catene Markoviane sono fasi imprescindibili nel processo di inferenza bayesiana, soprattutto quando si utilizzano metodi MCMC. La loro applicazione consente di garantire che le stime a posteriori siano tanto accurate e affidabili quanto possibile.</p>
+</section>
+<section id="grafici-di-tracciamento" class="level2" data-number="51.1">
+<h2 data-number="51.1" class="anchored" data-anchor-id="grafici-di-tracciamento"><span class="header-section-number">51.1</span> Grafici di Tracciamento</h2>
+<p>Un metodo diagnostico comunemente utilizzato per valutare la convergenza nei metodi di Monte Carlo basati su catene di Markov (MCMC) è l’analisi dei grafici di tracciamento, o “trace plots”. Questi grafici rappresentano sequenzialmente le stime dei parametri posteriori ottenute ad ogni iterazione della catena. In generale, si tende a interpretare che un parametro sta convergendo quando le stime campionarie si aggregano in una banda orizzontale ristretta lungo l’asse delle iterazioni che compongono la catena. Tuttavia, considerare questa disposizione come prova conclusiva di convergenza è piuttosto grossolano, in quanto una traccia compatta non garantisce che la convergenza sia stata effettivamente raggiunta. Di fatto, questa metodologia risulta essere più un indicatore di non-convergenza. Ad esempio, se due catene per lo stesso parametro sono campionate da regioni diverse della distribuzione target e le stime rimangono separate lungo la storia della catena, ciò costituisce un’evidenza di non-convergenza. Allo stesso modo, se il grafico mostra fluttuazioni significative o salti nella catena, è probabile che la catena associata a quel parametro non abbia raggiunto la convergenza.</p>
+<p>Un trace plot ideale presenta una dispersione casuale dei valori attorno a un livello medio stabile, indicando una buona miscelazione delle catene e un’adeguata configurazione del processo MCMC. Questo pattern suggerisce che l’algoritmo è assestato su una distribuzione stabile e le inferenze tratte dai dati campionati sono affidabili.</p>
+<p>Approfondendo con l’esempio di <span class="citation" data-cites="martin2022bayesian">Martin, Kumar, e Lao (<a href="../../99-references.html#ref-martin2022bayesian" role="doc-biblioref">2022</a>)</span>, è possibile osservare diversi esempi di trace plots per catene MCMC. Questi esempi illustrano sia scenari in cui il comportamento è ottimale, segnalando una convergenza adeguata, sia casi in cui le catene mostrano segni di problemi di convergenza o di miscelazione. Tali situazioni indicano la necessità di un’ulteriore affinazione dei parametri dell’algoritmo MCMC per garantire l’affidabilità delle stime statistiche ottenute.</p>
+<div id="cell-4" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:14:42.320322Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:14:42.307598Z&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>good_chains <span class="op">=</span> stats.beta.rvs(<span class="dv">2</span>, <span class="dv">5</span>, size<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2000</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>bad_chains0 <span class="op">=</span> np.random.normal(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    np.sort(good_chains, axis<span class="op">=</span><span class="va">None</span>), <span class="fl">0.05</span>, size<span class="op">=</span><span class="dv">4000</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>).reshape(<span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>bad_chains1 <span class="op">=</span> good_chains.copy()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> np.random.randint(<span class="dv">1900</span>, size<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    bad_chains1[i <span class="op">%</span> <span class="dv">2</span> :, i : i <span class="op">+</span> <span class="dv">100</span>] <span class="op">=</span> np.random.beta(i, <span class="dv">950</span>, size<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>chains <span class="op">=</span> {</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"good_chains"</span>: good_chains,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bad_chains0"</span>: bad_chains0,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bad_chains1"</span>: bad_chains1,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-<p>La domanda che Richard McElreath si pone riguarda la stima del tempo medio di permanenza di un gatto nel rifugio prima di essere adottato. Inoltre, si interroga se questo tempo medio vari in funzione del colore del gatto (nero vs altri colori). Oltre a stimare il tempo medio di permanenza per ciascun gruppo, è fondamentale anche stimare il grado di incertezza delle nostre stime.</p>
-<p>McElreath ipotizza che la probabilità giornaliera di adozione dipenda dal colore del gatto, e che la probabilità di dover attendere <span class="math inline">\(D\)</span> giorni prima dell’adozione sia data da:</p>
-<p><span class="math display">\[
-p(1− p)^{D−1}.
-\]</span></p>
-<p>Questo rappresenta il modello generativo che riflette il processo probabilistico che porta all’adozione. Richard McElreath dimostra come costruire un modello generativo, che può essere utilizzato per costruire e testare un modello statistico.</p>
-<p>Il modello bayesiano è costituito da tre componenti principali:</p>
-<ol type="1">
-<li><p><strong>Verosimiglianza</strong>: <span class="math display">\[
-Pr(D | p) = p(1− p)^{D−1},
-\]</span> che rappresenta la probabilità di osservare <span class="math inline">\(D\)</span> giorni di attesa fino all’adozione, dato un certo valore di <span class="math inline">\(p\)</span> (la probabilità giornaliera di adozione).</p></li>
-<li><p><strong>Prior</strong>: <span class="math display">\[
-Pr(p) = \text{Beta}(1,10),
-\]</span> che rappresenta la nostra assunzione a priori sulla distribuzione di <span class="math inline">\(p\)</span>, dove assumiamo che la probabilità di adozione sia bassa.</p></li>
-<li><p><strong>Distribuzione a posteriori</strong>: <span class="math display">\[
-Pr(p | D) ∝ Pr(D | p) \cdot Pr(p),
-\]</span> che combina la verosimiglianza con il prior per ottenere la distribuzione a posteriori, che rappresenta la nostra conoscenza aggiornata di <span class="math inline">\(p\)</span> dopo aver osservato i dati <span class="math inline">\(D\)</span>.</p></li>
-</ol>
-<p>Il nostro obiettivo è costruire un modello in Stan che implementi questo modello statistico, permettendoci di stimare la probabilità giornaliera di adozione per gatti di colore diverso, insieme alle incertezze associate a tali stime.</p>
-<p>Il modello Stan presentato da Richard McElreath è fornito qui sotto.</p>
-<div id="cell-7" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"cats_model.stan"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>// all events, including censored
-data {
-  int N;
-  array[N] int adopted; // 1/0 indicator
-  array[N] int days; // days until event
-  array[N] int color; // 1=black, 2=other
-}
-parameters {
-  vector&lt;lower=0, upper=1&gt;[2] p;
-}
-model {
-  p ~ beta(1, 10);
-  for (i in 1 : N) {
-    real P = p[color[i]];
-    if (adopted[i] == 1) {
-      target += log((1 - P) ^ (days[i] - 1) * P);
-    } else {
-      target += log((1 - P) ^ days[i]);
-    }
-  }
-}
-</code></pre>
-</div>
-</div>
-<p>La riga di codice <code>real P = p[color[i]];</code> significa che la probabilità <code>P</code> di adozione per il gatto <code>i</code> dipende dal colore del gatto. Ecco una spiegazione più dettagliata:</p>
-<ul>
-<li><p><strong><code>p</code></strong>: Questo è il vettore delle probabilità di adozione per ciascun gruppo di colore. Nel modello, <code>p</code> è un vettore di lunghezza 2, che contiene le probabilità di adozione per due categorie di colore: <code>p[1]</code> per il colore 1 (ad esempio, <strong>nero</strong>) e <code>p[2]</code> per il colore 2 (ad esempio, <strong>altri colori</strong>).</p></li>
-<li><p><strong><code>color[i]</code></strong>: Questo è un array che contiene, per ciascun soggetto, un valore intero che indica il colore del soggetto. Per esempio:</p>
-<ul>
-<li><code>color[i] = 1</code> potrebbe indicare che il soggetto <span class="math inline">\(i\)</span> è nero.</li>
-<li><code>color[i] = 2</code> potrebbe indicare che il soggetto <span class="math inline">\(i\)</span> è di un altro colore.</li>
-</ul></li>
-<li><p><strong><code>P = p[color[i]]</code></strong>: Questa espressione estrae la probabilità <span class="math inline">\(P\)</span> di adozione per il soggetto <span class="math inline">\(i\)</span> dal vettore <code>p</code>, in base al suo colore. Quindi, se <code>color[i]</code> è 1, <span class="math inline">\(P\)</span> sarà uguale a <code>p[1]</code>, mentre se <code>color[i]</code> è 2, <span class="math inline">\(P\)</span> sarà uguale a <code>p[2]</code>.</p></li>
-</ul>
-<p>Questo approccio permette di testare se il colore del gatto ha un effetto significativo sulla probabilità di adozione, riflettendo la possibilità che il colore possa influenzare le probabilità di essere adottato.</p>
-<p>Se il gatto è stato adottato, la riga</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> log((<span class="dv">1</span> - P) ^ (days[i] - <span class="dv">1</span>) * P);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>è un’espressione che aggiunge il logaritmo della probabilità di osservare un certo numero di giorni prima dell’adozione nel modello basato sulla <strong>distribuzione geometrica</strong>. Vediamo cosa significa in dettaglio.</p>
-<p>Nella distribuzione geometrica, stiamo modellando il <strong>numero di tentativi falliti</strong> (o giorni in cui l’adozione non è avvenuta) prima di osservare un successo (l’adozione).</p>
-<ol type="1">
-<li><strong><code>P</code></strong>: È la probabilità che l’adozione avvenga in un dato giorno (successo).</li>
-<li><strong><code>1 - P</code></strong>: È la probabilità che l’adozione <strong>non</strong> avvenga in un dato giorno (fallimento).</li>
-<li><strong><code>days[i] - 1</code></strong>: Indica il numero di giorni falliti prima dell’adozione. La distribuzione geometrica modella i fallimenti fino a che si verifica il primo successo, quindi <code>days[i] - 1</code> rappresenta i giorni in cui l’adozione non è avvenuta prima di avere successo.</li>
-</ol>
-<p>La formula <strong><span class="math inline">\((1 - P)^{(days[i] - 1)} \cdot P\)</span></strong> rappresenta la probabilità che l’adozione avvenga esattamente al giorno <span class="math inline">\(days[i]\)</span>, ossia:</p>
-<ul>
-<li><strong><span class="math inline">\((1 - P)^{(days[i] - 1)}\)</span></strong>: La probabilità che l’adozione non avvenga per <span class="math inline">\(days[i] - 1\)</span> giorni consecutivi.</li>
-<li><strong><span class="math inline">\(\cdot P\)</span></strong>: La probabilità che l’adozione avvenga esattamente al giorno <span class="math inline">\(days[i]\)</span> (il primo successo).</li>
-</ul>
-<p>Quindi, questa formula sta modellando la probabilità di un certo numero di giorni di attesa fino all’adozione usando la distribuzione geometrica.</p>
-<p>In Stan, la verosimiglianza del modello è rappresentata come la somma dei logaritmi delle probabilità. La funzione <code>target</code> tiene traccia del log-verosimiglianza totale. Aggiungendo il logaritmo della probabilità con <code>target +=</code>, Stan massimizza la funzione log-verosimiglianza durante il processo di campionamento.</p>
-<ul>
-<li><strong><code>log((1 - P) ^ (days[i] - 1) * P)</code></strong>: Prendiamo il logaritmo della probabilità che il soggetto venga adottato dopo <span class="math inline">\(days[i]\)</span> giorni.</li>
-<li>Il logaritmo viene usato per garantire stabilità numerica e perché il logaritmo della funzione verosimiglianza è più facile da sommare nel contesto dell’inferenza bayesiana.</li>
-</ul>
-<p>Possiamo riscrivere la formula come:</p>
-<p><span class="math display">\[
-\text{log}((1 - P)^{days[i] - 1} \cdot P) = (days[i] - 1) \cdot \log(1 - P) + \log(P)
-\]</span></p>
-<p>Questa forma è equivalente e più efficiente dal punto di vista numerico. Se volessimo scrivere il codice usando questa riscrittura, sarebbe:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> (days[i] - <span class="dv">1</span>) * log(<span class="dv">1</span> - P) + log(P);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>In sintesi:</p>
-<ul>
-<li><strong><code>(1 - P)^{days[i] - 1}</code></strong>: Probabilità che l’adozione non avvenga nei primi <span class="math inline">\(days[i] - 1\)</span> giorni.</li>
-<li><strong><code>P</code></strong>: Probabilità che l’adozione avvenga esattamente al giorno <span class="math inline">\(days[i]\)</span>.</li>
-<li><strong><code>log()</code></strong>: Usiamo il logaritmo per sommare le probabilità su più osservazioni in modo numericamente stabile.</li>
-<li><strong><code>target +=</code></strong>: Aggiungiamo la log-verosimiglianza al totale, che Stan utilizza per ottimizzare il modello e campionare i parametri.</li>
-</ul>
-<p>Questo approccio modella esattamente il tempo fino al successo (adozione) utilizzando la distribuzione geometrica.</p>
-<p>Se invece il gatto non viene adottato, viene eseguita l’istruzione:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> log((<span class="dv">1</span> - P) ^ days[i]);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Questa espressione modella il caso in cui il gatto <strong>non viene adottato</strong> entro il periodo osservato. È un esempio di <strong>dati censurati</strong>, cioè sappiamo che l’evento di adozione non è avvenuto, ma non sappiamo se accadrà in futuro.</p>
-<p>Vediamo nel dettaglio cosa rappresentano i termini:</p>
-<ol type="1">
-<li><strong><code>P</code></strong>: È la probabilità giornaliera che il gatto venga adottato.</li>
-<li><strong><code>1 - P</code></strong>: È la probabilità giornaliera che il gatto <strong>non venga adottato</strong> (fallimento).</li>
-<li><strong><code>days[i]</code></strong>: È il numero di giorni osservati in cui il gatto non è stato adottato.</li>
-</ol>
-<p>Se il gatto <strong>non viene adottato</strong> in <span class="math inline">\(days[i]\)</span> giorni, allora la probabilità di questo evento è data dal fatto che l’adozione non è avvenuta per tutti i <span class="math inline">\(days[i]\)</span> giorni osservati. Questa probabilità è:</p>
-<p><span class="math display">\[
-(1 - P)^{days[i]}
-\]</span></p>
-<p>In altre parole, per ogni giorno osservato, la probabilità che il gatto <strong>non venga adottato</strong> è <span class="math inline">\(1 - P\)</span>, e poiché osserviamo <span class="math inline">\(days[i]\)</span> giorni senza adozione, moltiplichiamo questa probabilità per se stessa <span class="math inline">\(days[i]\)</span> volte. Quindi, la probabilità complessiva di osservare <span class="math inline">\(days[i]\)</span> giorni senza adozione è <span class="math inline">\((1 - P)^{days[i]}\)</span>.</p>
-<p>Questo passaggio è fondamentale perché rappresenta i <strong>dati censurati</strong>, cioè i casi in cui il gatto non è stato adottato entro il periodo osservato. Senza questa parte del modello, non staremmo prendendo in considerazione le informazioni fornite dai soggetti che non sono stati adottati, il che porterebbe a una stima incompleta o distorta delle probabilità di adozione.</p>
-<p>In Stan, come già detto, le probabilità vengono sommate nel logaritmo per stabilità numerica. Quindi, quando diciamo:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> log((<span class="dv">1</span> - P) ^ days[i]);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>stiamo aggiungendo il logaritmo della probabilità che il gatto <strong>non sia stato adottato</strong> in <span class="math inline">\(days[i]\)</span> giorni. Questo passaggio assicura che anche i gatti che non sono stati adottati contribuiscano al calcolo della verosimiglianza, migliorando la stima complessiva del modello.</p>
-<p>Analogamente al caso dell’adozione, possiamo riscrivere questa espressione in modo più efficiente dal punto di vista numerico:</p>
-<p><span class="math display">\[
-\text{log}((1 - P)^{days[i]}) = days[i] \cdot \log(1 - P)
-\]</span></p>
-<p>Quindi, la versione più efficiente di questa istruzione in Stan è:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode stan code-with-copy"><code class="sourceCode stan"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">target +=</span> days[i] * log(<span class="dv">1</span> - P);</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>In sintesi:</p>
-<ul>
-<li><strong><code>(1 - P) ^ days[i]</code></strong>: Modella la probabilità che il gatto <strong>non sia stato adottato</strong> per <span class="math inline">\(days[i]\)</span> giorni consecutivi.</li>
-<li><strong>Dati censurati</strong>: È necessario modellare i casi in cui l’adozione non avviene per assicurarsi che anche questi dati contribuiscano alla stima complessiva.</li>
-<li><strong><code>target += log()</code></strong>: Il logaritmo viene utilizzato per stabilità numerica e per sommare correttamente le probabilità nel contesto dell’inferenza bayesiana.</li>
-</ul>
-<p>Questa istruzione è quindi fondamentale per tenere conto di tutte le informazioni, comprese quelle derivanti da casi in cui l’adozione non è avvenuta.</p>
-<p>Compiliamo il modello:</p>
-<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:48:41.409839Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:48:40.614370Z&quot;}" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Definiamo il dizionario con i dati:</p>
-<div id="cell-12" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the 'adopted' indicator (1 if the event is Adoption, 0 otherwise)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>d[<span class="st">"adopted"</span>] <span class="op">=</span> np.where(d[<span class="st">"out_event"</span>] <span class="op">==</span> <span class="st">"Adoption"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the 'color' indicator (1 if the cat is black, 2 for all other colors)</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>d[<span class="st">"color"</span>] <span class="op">=</span> np.where(d[<span class="st">"color"</span>].<span class="bu">str</span>.contains(<span class="st">"Black"</span>, case<span class="op">=</span><span class="va">False</span>), <span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the relevant columns for the Stan model</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"N"</span>: <span class="bu">len</span>(d),</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"adopted"</span>: d[<span class="st">"adopted"</span>].tolist(),</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"days"</span>: d[<span class="st">"days_to_event"</span>].tolist(),</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"color"</span>: d[<span class="st">"color"</span>].tolist(),</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Eseguiamo il campionamento:</p>
-<div id="cell-14" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T06:48:52.947083Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T06:48:52.772370Z&quot;}" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup <span class="op">=</span> <span class="dv">2_000</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling <span class="op">=</span> <span class="dv">2_000</span>,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    chains <span class="op">=</span> <span class="dv">4</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    seed <span class="op">=</span> <span class="dv">123</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    show_progress <span class="op">=</span> <span class="va">False</span>, </span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    show_console <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-5" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:14:47.003624Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:14:46.482072Z&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>az.plot_trace(chains)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>11:38:02 - cmdstanpy - INFO - CmdStan start processing
-11:38:02 - cmdstanpy - INFO - Chain [1] start processing
-11:38:02 - cmdstanpy - INFO - Chain [2] start processing
-11:38:02 - cmdstanpy - INFO - Chain [3] start processing
-11:38:02 - cmdstanpy - INFO - Chain [4] start processing
-11:38:36 - cmdstanpy - INFO - Chain [1] done processing
-11:38:37 - cmdstanpy - INFO - Chain [3] done processing
-11:38:38 - cmdstanpy - INFO - Chain [4] done processing
-11:38:38 - cmdstanpy - INFO - Chain [2] done processing</code></pre>
+<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_95156/2425599176.py:2: UserWarning: The figure layout has changed to tight
+  plt.tight_layout()</code></pre>
 </div>
-</div>
-<p>Estraiamo i campioni a posteriori.</p>
-<div id="cell-16" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>posterior_samples <span class="op">=</span> fit.draws_pd()  <span class="co"># Ottiene i campioni posteriori come DataFrame</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Generiamo una figura con la distribuzione a posteriori del tempo di attesa medio, distinguendo i gatti neri dai gatti di altri colori.</p>
-<div id="cell-18" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I parametri p sono denominati "p[1]" per i gatti neri e "p[2]" per gli altri colori</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p_black <span class="op">=</span> posterior_samples[<span class="st">"p[1]"</span>]  <span class="co"># Probabilità di adozione per i gatti neri</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>p_other <span class="op">=</span> posterior_samples[<span class="st">"p[2]"</span>]  <span class="co"># Probabilità di adozione per gli altri colori</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-19" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Calcola il numero atteso di giorni fino all'adozione</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Numero atteso di giorni = 1 / p</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>expected_days_black <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> p_black</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>expected_days_other <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> p_other</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-20" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della distribuzione per i gatti neri</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    expected_days_black,</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">50</span>,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Black Cats"</span>,</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"black"</span>,</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della distribuzione per gli altri colori</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    expected_days_other,</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">50</span>,</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Other Colors"</span>,</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"orange"</span>,</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggiungi etichette e titolo</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Expected Days Until Adoption"</span>)</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Posterior Distribution of Expected Days Until Adoption by Cat Color"</span>)</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04_stan_cats_files/figure-html/cell-12-output-1.png" width="733" height="491" class="figure-img"></p>
+<p><img src="04_stan_diagnostics_files/figure-html/cell-4-output-2.png" width="1189" height="590" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>In conclusione, il tempo medio di attesa per l’adozione di un gatto nero risulta essere almeno 10 giorni più lungo rispetto a quello di un gatto di colore diverso.</p>
-<p>Consideriamo ora un modello che non considera i dati censurati, ossia non include i gatti che non sono ancora stati adottati. Di seguito si trova il modello modificato:</p>
-<div id="cell-22" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"cats_model_2.stan"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model2.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Le cattive catene non convergono né si mescolano tra loro. Uno dei motivi per l’esecuzione di più catene è che ogni singola catena potrebbe convergere verso un target, mentre un’altra catena potrebbe convergere su un target diverso, e questo sarebbe un problema. Inoltre, catene altrimenti sane possono bloccarsi occasionalmente nel corso della serie, il che suggerirebbe la necessità di modifiche al modello o alle impostazioni del campionatore. Un altro modo per valutare la convergenza dell’algoritmo è plottando la densità della distribuzione a posteriori degli effetti stimati, per assicurarsi che si avvicini ad una classica curva a campana.</p>
+<p>In pratica, non abbiamo mai il privilegio di poter confrontare i risultati del campionamento MCMC con la corretta distribuzione a posteriori. Ecco perché la diagnostica delle catene di Markov è così importante: se vediamo trace-plots come le precedenti “bad chains”, sappiamo che non abbiamo ottenuto una approssimazione adeguata della distribuzione a posteriori. In tali circostanze possiamo ricorrere ad alcuni rimedi.</p>
+<ol type="1">
+<li>Controllare il modello. Siamo sicuri che le distribuzioni a priori e la verosimiglianza siano appropriate per i dati osservati?</li>
+<li>Utilizzare un numero maggiore di iterazioni. Alcune tendenze indesiderate a breve termine della catena possono appianarsi nel lungo termine.</li>
+</ol>
+</section>
+<section id="i-grafici-della-densità-posteriore-sono-adeguati" class="level2" data-number="51.2">
+<h2 data-number="51.2" class="anchored" data-anchor-id="i-grafici-della-densità-posteriore-sono-adeguati"><span class="header-section-number">51.2</span> I Grafici della Densità Posteriore Sono Adeguati?</h2>
+<p>I grafici della densità posteriore rappresentano uno degli strumenti diagnostici più efficaci per identificare eventuali anomalie nella convergenza delle catene di Markov nell’analisi bayesiana. Questi grafici mostrano la distribuzione dei valori campionati per ogni parametro del modello statistico e per ogni catena di Markov. L’importanza di questi grafici è primaria: essi sono la base da cui deriviamo le statistiche riassuntive dei parametri del modello, quali la media, la mediana, o l’intervallo di credibilità.</p>
+<p>Prendiamo come esempio un parametro di interesse in un modello di regressione che assume una distribuzione a priori gaussiana (normale). In un contesto ideale, senza problemi di convergenza, ci aspetteremmo che la densità posteriore del parametro sia anch’essa normalmente distribuita, centrata intorno a una media con una certa varianza. Questo andamento simmetrico e unimodale della densità posteriore è un segnale che la catena di Markov ha esplorato adeguatamente lo spazio dei parametri e che i campioni estratti possono essere considerati rappresentativi della distribuzione posteriore effettiva del parametro.</p>
+<p>Tuttavia, se il grafico della densità posteriore mostra deviazioni significative dalla forma attesa, come ad esempio asimmetrie marcate o bimodalità, questo suggerisce che potrebbero esserci problemi nella convergenza della catena al vero valore del parametro. Una distribuzione bimodale, in particolare, può indicare che la catena è rimasta “intrappolata” in aree locali dello spazio dei parametri, senza riuscire a esplorare adeguatamente l’intero spazio e raggiungere l’equilibrio.</p>
+<p>Per risolvere tali problemi e ottenere una stima più accurata della distribuzione posteriore, potremmo considerare diverse strategie:</p>
+<ol type="1">
+<li><p><strong>Aumentare il Numero di Iterazioni</strong>: Incrementare il numero delle iterazioni delle catene di Markov può permettere una migliore esplorazione dello spazio dei parametri e aiutare a superare le barriere tra i picchi di una distribuzione bimodale.</p></li>
+<li><p><strong>Ottimizzazione delle Distribuzioni a Priori</strong>: La scelta delle distribuzioni a priori può influenzare fortemente la convergenza della catena. Selezionare priori più informativi o più flessibili può aiutare la catena a guidare l’esplorazione dello spazio dei parametri in modo più efficace.</p></li>
+<li><p><strong>Affinamento dei Parametri dell’Algoritmo MCMC</strong>: Modificare i parametri di configurazione dell’algoritmo MCMC, come il passo del campionamento o i criteri di accettazione, può migliorare la qualità del campionamento e favorire una convergenza più rapida e stabile.</p></li>
+</ol>
+<p>In definitiva, l’analisi dei grafici della densità posteriore non solo fornisce una stima visiva dell’andamento dei parametri, ma serve anche come fondamento per decisioni metodologiche che possono migliorare la robustezza e l’affidabilità delle inferenze bayesiane.</p>
+</section>
+<section id="lautocorrelazione-nelle-catene-di-markov-monte-carlo-è-troppo-alta" class="level2" data-number="51.3">
+<h2 data-number="51.3" class="anchored" data-anchor-id="lautocorrelazione-nelle-catene-di-markov-monte-carlo-è-troppo-alta"><span class="header-section-number">51.3</span> L’Autocorrelazione nelle Catene di Markov Monte Carlo È Troppo Alta?</h2>
+<p>Nell’ambito dell’analisi bayesiana tramite le catene di Markov Monte Carlo (MCMC), è di fondamentale importanza valutare la rapidità con cui i campioni estratti dalla distribuzione a posteriori raggiungono l’indipendenza. Inizialmente, come è noto, i campioni della distribuzione a posteriori non sono indipendenti l’uno dall’altro, ma ci si aspetta che, nel tempo, la catena “dimentichi” il suo stato iniziale e converga verso un insieme di estrazioni indipendenti e stazionarie dalla distribuzione a posteriori.</p>
+<p>Una metodologia per determinare la velocità con cui la catena si allontana dallo stato iniziale è l’analisi della funzione di autocorrelazione (ACF), che si basa sull’osservazione che un campione <span class="math inline">\(\theta^{(s)}\)</span> tende a essere più simile al campione immediatamente precedente <span class="math inline">\(\theta^{(s-1)}\)</span> rispetto a quelli più distanti come <span class="math inline">\(\theta^{(s-2)}\)</span>, <span class="math inline">\(\theta^{(s-3)}\)</span>, e così via. La correlazione di lag-l per una catena stazionaria di Markov, dove <span class="math inline">\(s = 1, \ldots, S\)</span>, può essere espressa come:</p>
+<p><span class="math display">\[
+\rho_l = \text{cor}(\theta^{(s)}, \theta^{(s+l)}).
+\]</span></p>
+<p>In generale, ci aspettiamo che l’autocorrelazione a lag-1 sia vicina a 1, ma che diminuisca man mano che il lag aumenta, indicando che i componenti della catena stanno diventando indipendenti. Una riduzione rapida dell’autocorrelazione con il numero di iterazioni è preferibile, poiché una lenta diminuzione può suggerire che la catena sia “intrappolata” e non esplori completamente il supporto della distribuzione target.</p>
+<p>Il correlogramma, che mostra l’autocorrelazione in funzione dei ritardi fino a un certo valore (ad esempio 20), è utile per valutare questa caratteristica. Se l’autocorrelazione a lag 1 non è eccessivamente alta e diminuisce rapidamente con l’incremento dei lag, ciò indica che la catena sta fornendo una buona approssimazione di un campionamento casuale dalla distribuzione <span class="math inline">\(p(\theta \mid y)\)</span>.</p>
+<p>Catene che mostrano un rapido “mixing” si comportano in modo simile a un campione indipendente: i valori si concentrano nei range più plausibili della distribuzione a posteriori e l’autocorrelazione tra i campioni diminuisce rapidamente, risultando in un rapporto campionario effettivo alto. Al contrario, catene che non sono rapidamente “mixing” tendono a non concentrarsi nei valori più plausibili, presentano un’autocorrelazione che diminuisce lentamente e un rapporto campionario effettivo basso.</p>
+<p>In caso di catene non rapidamente “mixing”, si possono adottare due strategie:</p>
+<ol type="1">
+<li><strong>Aumento del Numero di Iterazioni</strong>: Anche una catena lenta nel “mixing” può alla fine fornire una buona approssimazione della distribuzione a posteriori se si permette un numero sufficientemente grande di iterazioni.</li>
+<li><strong>Thinning (Diradamento)</strong>: Questo processo consiste nel selezionare solo alcuni campioni a intervalli regolari, come ogni secondo o ogni decimo valore della catena, con l’obiettivo di ridurre le autocorrelazioni presenti nei lag più brevi.</li>
+</ol>
+<p>Un esempio pratico è fornito da <span class="citation" data-cites="martin2022bayesian">Martin, Kumar, e Lao (<a href="../../99-references.html#ref-martin2022bayesian" role="doc-biblioref">2022</a>)</span>.</p>
+<div id="cell-9" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:14:52.667458Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:14:52.455179Z&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">1</span>)  </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>az.plot_autocorr(chains, combined<span class="op">=</span><span class="va">True</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>13:12:16 - cmdstanpy - INFO - compiling stan file /Users/corradocaudek/_repositories/psicometria/stan/cats_model_2.stan to exe file /Users/corradocaudek/_repositories/psicometria/stan/cats_model_2
-13:12:32 - cmdstanpy - INFO - compiled model executable: /Users/corradocaudek/_repositories/psicometria/stan/cats_model_2</code></pre>
+<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_95156/4208770402.py:3: UserWarning: The figure layout has changed to tight
+  plt.tight_layout()</code></pre>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>data {
-  int N;
-  array[N] int adopted; // 1/0 indicator (adopted = 1, only adopted cats considered)
-  array[N] int days; // days until event (adoption)
-  array[N] int color; // 1 = black, 2 = other
-}
-parameters {
-  vector&lt;lower=0, upper=1&gt;[2] p; // Probabilità di adozione per ciascun colore
-}
-model {
-  p ~ beta(1, 10); // Prior sulla probabilità di adozione
-  
-  for (i in 1 : N) {
-    if (adopted[i] == 1) {
-      // Consideriamo solo i gatti adottati
-      real P = p[color[i]]; // Probabilità di adozione per il colore del gatto
-      target += log((1 - P) ^ (days[i] - 1) * P); // Verosimiglianza per l'adozione
-    }
-  }
-}
-</code></pre>
-</div>
-</div>
-<div id="cell-23" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="op">=</span> model2.sample(</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    iter_sampling<span class="op">=</span><span class="dv">2_000</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    chains<span class="op">=</span><span class="dv">4</span>,</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">123</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    show_console<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>13:12:44 - cmdstanpy - INFO - CmdStan start processing
-13:12:44 - cmdstanpy - INFO - Chain [1] start processing
-13:12:44 - cmdstanpy - INFO - Chain [2] start processing
-13:12:44 - cmdstanpy - INFO - Chain [3] start processing
-13:12:44 - cmdstanpy - INFO - Chain [4] start processing
-13:13:04 - cmdstanpy - INFO - Chain [4] done processing
-13:13:04 - cmdstanpy - INFO - Chain [2] done processing
-13:13:05 - cmdstanpy - INFO - Chain [3] done processing
-13:13:06 - cmdstanpy - INFO - Chain [1] done processing</code></pre>
-</div>
-</div>
-<div id="cell-24" class="cell" data-execution_count="34">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>posterior_samples_2 <span class="op">=</span> fit2.draws_pd()  <span class="co"># Ottiene i campioni posteriori come DataFrame</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-25" class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I parametri p sono denominati "p[1]" per i gatti neri e "p[2]" per gli altri colori</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>p_black <span class="op">=</span> posterior_samples_2[<span class="st">"p[1]"</span>]  <span class="co"># Probabilità di adozione per i gatti neri</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>p_other <span class="op">=</span> posterior_samples_2[<span class="st">"p[2]"</span>]  <span class="co"># Probabilità di adozione per gli altri colori</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>expected_days_black <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> p_black</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>expected_days_other <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> p_other</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della distribuzione per i gatti neri</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    expected_days_black,</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">50</span>,</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Black Cats"</span>,</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"black"</span>,</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot della distribuzione per gli altri colori</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>plt.hist(</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    expected_days_other,</span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">50</span>,</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Other Colors"</span>,</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"orange"</span>,</span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    density<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggiungi etichette e titolo</span></span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Expected Days Until Adoption"</span>)</span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Posterior Distribution of Expected Days Until Adoption by Cat Color"</span>)</span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04_stan_cats_files/figure-html/cell-16-output-1.png" width="733" height="491" class="figure-img"></p>
+<p><img src="04_stan_diagnostics_files/figure-html/cell-5-output-2.png" width="710" height="468" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>In questo caso, notiamo che la differenza tra i tempi di attesa dei due gruppi si è dimezzata rispetto alla stima precedente. In altre parole, se trascuriamo le informazioni relative ai gatti che sono ancora presenti nel rifugio ma non sono stati ancora adottati (e che potrebbero essere adottati in futuro), rischiamo di ottenere una stima distorta dei parametri del modello. Ignorare i gatti non ancora adottati introduce un bias verso l’alto nelle stime — è come considerare solo i successi e ignorare i fallimenti.</p>
-<p>Questo stesso bias si manifesta anche quando calcoliamo le statistiche descrittive, se escludiamo i dati relativi ai gatti che non sono ancora stati adottati.</p>
-<div id="cell-27" class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the dataset to only include adopted cats</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>adopted_cats <span class="op">=</span> d[d[<span class="st">"out_event"</span>] <span class="op">==</span> <span class="st">"Adoption"</span>]</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a color indicator (1 for black, 2 for other)</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>adopted_cats[<span class="st">"color_category"</span>] <span class="op">=</span> adopted_cats[<span class="st">"color"</span>].<span class="bu">apply</span>(</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: <span class="st">"black"</span> <span class="cf">if</span> <span class="st">"Black"</span> <span class="kw">in</span> x <span class="cf">else</span> <span class="st">"other"</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the mean waiting time (days_to_event) for black cats and other colors</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>mean_wait_black <span class="op">=</span> adopted_cats[adopted_cats[<span class="st">"color_category"</span>] <span class="op">==</span> <span class="st">"black"</span>][</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"days_to_event"</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>].mean()</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>mean_wait_other <span class="op">=</span> adopted_cats[adopted_cats[<span class="st">"color_category"</span>] <span class="op">==</span> <span class="st">"other"</span>][</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"days_to_event"</span></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>].mean()</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the results</span></span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>mean_wait_black, mean_wait_other</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_3816/2371120338.py:5: SettingWithCopyWarning: 
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
+</section>
+<section id="la-dimensione-effettiva-del-campione-è-sufficiente" class="level2" data-number="51.4">
+<h2 data-number="51.4" class="anchored" data-anchor-id="la-dimensione-effettiva-del-campione-è-sufficiente"><span class="header-section-number">51.4</span> La Dimensione Effettiva del Campione È Sufficiente?</h2>
+<p>Nell’ambito delle analisi con catene di Markov Monte Carlo (MCMC), un aspetto strettamente correlato alla diagnosi di autocorrelazione è la dimensione effettiva del campione, indicata con <span class="math inline">\(N_{\text{eff}}\)</span> nell’output del software Stan. Questa grandezza rappresenta una stima del numero di estrazioni indipendenti dalla distribuzione a posteriori. In altre parole, corrisponde al numero di campioni indipendenti che possiede lo stesso potere di stima di <span class="math inline">\(T\)</span> campioni autocorrelati. Seguendo la notazione di Stan, la <span class="math inline">\(N_{\text{eff}}\)</span> è calcolata come segue:</p>
+<p><span class="math display">\[
+N_{\text{eff}} = \frac{T}{1 + 2 \sum_{s=1}^{S} \rho_{s}},
+\]</span></p>
+<p>dove <span class="math inline">\(T\)</span> è il numero totale di campioni e <span class="math inline">\(\rho_{s}\)</span> rappresenta l’autocorrelazione a lag <span class="math inline">\(s\)</span>.</p>
+<p>Poiché i campioni della distribuzione a posteriori non sono indipendenti, ci aspettiamo che la <span class="math inline">\(N_{\text{eff}}\)</span> sia minore del numero totale di estrazioni. Se il rapporto tra la dimensione effettiva del campione e il numero totale di estrazioni è vicino a 1, ciò indica che l’algoritmo ha raggiunto un campionamento sostanzialmente indipendente. Valori molto inferiori potrebbero essere motivo di preoccupazione poiché indicano una forte dipendenza tra i campioni, ma è importante notare che questo rapporto dipende fortemente dalla scelta dell’algoritmo MCMC, dal numero di iterazioni di “warmup” (o “burn-in”), e dal numero di iterazioni successive al “warmup”.</p>
+<p>Un metodo per affrontare il problema dell’autocorrelazione e del conseguente abbassamento della dimensione effettiva del campione coinvolge l’uso del diradamento (<em>thinning</em>). Supponiamo che l’algoritmo venga impostato per effettuare 3.000 estrazioni dalla distribuzione a posteriori. Questo può essere paragonato a effettuare 30.000 estrazioni ma conservando solo ogni decima. Sebbene questo metodo sia un modo per ridurre il carico sulla memoria, il vantaggio è che tipicamente l’autocorrelazione viene ridotta, risultando in una dimensione effettiva del campione maggiore.</p>
+<p>Per distinguere tra buone e cattive catene MCMC, possiamo utilizzare la statistica <span class="math inline">\(N_{\text{eff}}\)</span>. Un basso valore di <span class="math inline">\(N_{\text{eff}}\)</span> può indicare una catena con una mescolanza insufficiente, suggerendo la necessità di aumentare il numero di iterazioni o di implementare il diradamento. In contrasto, un valore alto di <span class="math inline">\(N_{\text{eff}}\)</span> è indice di una catena con una buona mescolanza, che assicura un campionamento efficace dalla distribuzione a posteriori. Esempi pratici di queste considerazioni sono illustrati in <span class="citation" data-cites="martin2022bayesian">Martin, Kumar, e Lao (<a href="../../99-references.html#ref-martin2022bayesian" role="doc-biblioref">2022</a>)</span>, dove la statistica <span class="math inline">\(N_{\text{eff}}\)</span> è utilizzata per valutare la qualità delle catene MCMC.</p>
+<div id="cell-11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:14:08.050860Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:14:07.225086Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>_, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">3</span>, sharey<span class="op">=</span><span class="va">True</span>, sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>az.plot_ess(chains, kind<span class="op">=</span><span class="st">"local"</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>az.plot_ess(chains, kind<span class="op">=</span><span class="st">"quantile"</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>])</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax_ <span class="kw">in</span> axes[<span class="dv">0</span>]:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    ax_.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax_ <span class="kw">in</span> axes[<span class="dv">1</span>]:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    ax_.set_title(<span class="st">""</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax_ <span class="kw">in</span> axes[:, <span class="dv">1</span>:].ravel():</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    ax_.set_ylabel(<span class="st">""</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="dv">100</span>, <span class="dv">5000</span>)<span class="op">;</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_stan_diagnostics_files/figure-html/cell-6-output-1.png" width="1463" height="983" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="la-statistica-hatr-è-prossima-a-uno" class="level2" data-number="51.5">
+<h2 data-number="51.5" class="anchored" data-anchor-id="la-statistica-hatr-è-prossima-a-uno"><span class="header-section-number">51.5</span> La Statistica <span class="math inline">\(\hat{R}\)</span> È Prossima a Uno?</h2>
+<p>Nell’ambito dell’analisi bayesiana, è cruciale assicurarsi che ogni catena di Markov sia stazionaria e che le diverse catene mostrino coerenza tra loro. La statistica <span class="math inline">\(\hat{R}\)</span>, introdotta da Gelman e Rubin nel 1992, serve proprio a valutare il grado di convergenza tra più catene per ciascun parametro in esame. Questo indicatore si basa sul confronto tra due tipi di varianza: la varianza media all’interno di ogni singola catena (W) e la varianza tra le diverse catene (B). Questo metodo ricorda l’approccio dell’analisi della varianza unidirezionale, in cui si confrontano stime di varianza per determinare se esistono differenze significative, in questo caso tra le catene.</p>
+<p>La formula per calcolare <span class="math inline">\(\hat{R}\)</span> è <span class="math inline">\(\hat{R} = \frac{W + \frac{1}{n} (B - W)}{W}\)</span>, e tale metrica viene calcolata automaticamente dalla maggior parte dei software Bayesiani, come indicato da Gelman e collaboratori nel 2014. Nel contesto pratico, un valore di <span class="math inline">\(\hat{R}\)</span> superiore a 1.1 è generalmente considerato un segnale di convergenza inadeguata delle catene. Inoltre, è fondamentale esaminare visivamente la convergenza delle catene attraverso il confronto delle distribuzioni posteriori di ciascun parametro per ogni catena. In condizioni ideali, <span class="math inline">\(\hat{R}\)</span> dovrebbe essere pari a 1. Se <span class="math inline">\(\hat{R}\)</span> si discosta notevolmente da questo valore, ciò indica che la convergenza non è stata ancora raggiunta.</p>
+<p>Più specificamente, un valore di <span class="math inline">\(\hat{R}\)</span> maggiore di 1.01, secondo <span class="citation" data-cites="vehtari2021rank">Vehtari et al. (<a href="../../99-references.html#ref-vehtari2021rank" role="doc-biblioref">2021</a>)</span>, segnala una mancanza di coerenza nelle approssimazioni della distribuzione a posteriori ottenute dalle diverse catene parallele. Un valore così elevato di <span class="math inline">\(\hat{R}\)</span> suggerisce una simulazione non stabile, indicando la necessità di ulteriori iterazioni o di un raffinamento del modello per garantire una convergenza affidabile. Questo aspetto è fondamentale per assicurare che le simulazioni Monte Carlo basate su catene di Markov (MCMC) forniscano risultati consistenti e attendibili per l’analisi statistica in corso.</p>
+<div id="cell-13" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:12:23.215781Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:12:23.165994Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>az.rhat(chains)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewbox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewbox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
 
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  adopted_cats["color_category"] = adopted_cats["color"].apply(</code></pre>
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body[data-theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class="xr-text-repr-fallback">&lt;xarray.Dataset&gt; Size: 24B
+Dimensions:      ()
+Data variables:
+    bad_chains0  float64 8B 2.43
+    bad_chains1  float64 8B 1.018
+    good_chains  float64 8B 1.001</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-5834f46c-2734-4598-81ac-a768294a1d93" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-5834f46c-2734-4598-81ac-a768294a1d93" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-cfd695a5-e411-40b0-8b0e-b5438674f9de" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-cfd695a5-e411-40b0-8b0e-b5438674f9de" class="xr-section-summary" title="Expand/collapse section">Coordinates: <span>(0)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"></ul></div></li><li class="xr-section-item"><input id="section-76b48257-2657-45b5-8e63-c2cc16c45477" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-76b48257-2657-45b5-8e63-c2cc16c45477" class="xr-section-summary">Data variables: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>bad_chains0</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">2.43</div><input id="attrs-afa2331c-e3f1-46e8-8ec9-5978e41150e3" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-afa2331c-e3f1-46e8-8ec9-5978e41150e3" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-a6dcf2b0-5abf-4a78-96b8-0304e9e96942" class="xr-var-data-in" type="checkbox"><label for="data-a6dcf2b0-5abf-4a78-96b8-0304e9e96942" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(2.42962207)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>bad_chains1</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">1.018</div><input id="attrs-16f7a777-3e38-4964-ac9d-10d463fd288b" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-16f7a777-3e38-4964-ac9d-10d463fd288b" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-33db6a5e-2d87-4b87-8132-d54ed3583aab" class="xr-var-data-in" type="checkbox"><label for="data-33db6a5e-2d87-4b87-8132-d54ed3583aab" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(1.01782964)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>good_chains</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">1.001</div><input id="attrs-dc575f45-7da9-4027-ad84-c1d10f8bbb43" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-dc575f45-7da9-4027-ad84-c1d10f8bbb43" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-76f39166-0274-4b3b-84c1-7c5eb49be23c" class="xr-var-data-in" type="checkbox"><label for="data-76f39166-0274-4b3b-84c1-7c5eb49be23c" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(1.00080843)</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-e1f461da-8d52-463e-9e0a-c11fd50f281c" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-e1f461da-8d52-463e-9e0a-c11fd50f281c" class="xr-section-summary" title="Expand/collapse section">Indexes: <span>(0)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"></ul></div></li><li class="xr-section-item"><input id="section-710d5200-3f47-4624-8b19-057c23f0908c" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-710d5200-3f47-4624-8b19-057c23f0908c" class="xr-section-summary" title="Expand/collapse section">Attributes: <span>(0)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"></dl></div></li></ul></div></div>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="37">
-<pre><code>(42.41035441278666, 37.03930131004367)</code></pre>
+</div>
+<p>Nell’esempio di <span class="citation" data-cites="martin2022bayesian">Martin, Kumar, e Lao (<a href="../../99-references.html#ref-martin2022bayesian" role="doc-biblioref">2022</a>)</span> vediamo come <span class="math inline">\(\hat{R}\)</span> è in grado di distinguere tra le buone e le cattive catene MCMC. Mentre <code>bad_chains0</code> ha valori <span class="math inline">\(\hat{R}\)</span> totalmente inadeguati, <code>bad_chains1</code> tende ad avere valori accettabili e <code>good_chains</code> ha un valore <span class="math inline">\(\hat{R}\)</span> praticamente uguale a 1.0.</p>
+</section>
+<section id="la-diagnostica-di-geweke-è-prossima-a-zero" class="level2" data-number="51.6">
+<h2 data-number="51.6" class="anchored" data-anchor-id="la-diagnostica-di-geweke-è-prossima-a-zero"><span class="header-section-number">51.6</span> La Diagnostica di Geweke È Prossima a Zero?</h2>
+<p>La statistica diagnostica di convergenza di Geweke è basata su un test per l’uguaglianza delle medie della prima e dell’ultima parte di una catena di Markov (di default il primo 10% e l’ultimo 50% della catena). Se i due campioni sono estratti dalla distribuzione stazionaria della catena, le due medie sono statisticamente uguali e la statistica di Geweke ha una distribuzione asintotica Normale standardizzata.</p>
+<p><strong>Interpretazione:</strong> la statistica di Geweke è uguale a zero quando le medie delle due porzioni della catena di Markov sono uguali; valori maggiori di <span class="math inline">\(\mid 2 \mid\)</span> suggeriscono che la catena non ha ancora raggiunto una distribuzione stazionaria.</p>
+</section>
+<section id="lerrore-standard-di-monte-carlo-è-piccolo" class="level2" data-number="51.7">
+<h2 data-number="51.7" class="anchored" data-anchor-id="lerrore-standard-di-monte-carlo-è-piccolo"><span class="header-section-number">51.7</span> L’Errore Standard di Monte Carlo È Piccolo?</h2>
+<p>Quando utilizziamo i metodi MCMC introduciamo un ulteriore livello di incertezza poiché stiamo approssimando il posteriore con un numero finito di campioni. Possiamo stimare la quantità di questo tipo di errore mediante la statistica <em>errore standard di Monte Carlo</em> (MCSE). Il MCSE è definitp come la deviazione standard delle catene MCMC divisa per la loro numerosità campionaria effettiva (ESS). Il MCSE ci fornisce dunque un’indicazione quantitativa di quanto è grande sia il “rumore” della stima.</p>
+<p>Per l’esempio di <span class="citation" data-cites="martin2022bayesian">Martin, Kumar, e Lao (<a href="../../99-references.html#ref-martin2022bayesian" role="doc-biblioref">2022</a>)</span> otteniamo i valori seguenti.</p>
+<div id="cell-16" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:12:26.588157Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:12:26.562704Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>az.mcse(chains)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewbox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewbox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body[data-theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class="xr-text-repr-fallback">&lt;xarray.Dataset&gt; Size: 24B
+Dimensions:      ()
+Data variables:
+    bad_chains0  float64 8B 0.1087
+    bad_chains1  float64 8B 0.01616
+    good_chains  float64 8B 0.002583</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.Dataset</div></div><ul class="xr-sections"><li class="xr-section-item"><input id="section-0f0ad507-0e25-4947-8cf6-ec4837928509" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-0f0ad507-0e25-4947-8cf6-ec4837928509" class="xr-section-summary" title="Expand/collapse section">Dimensions:</label><div class="xr-section-inline-details"></div><div class="xr-section-details"></div></li><li class="xr-section-item"><input id="section-c3f474a6-77b8-4994-ba86-30907e68b414" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-c3f474a6-77b8-4994-ba86-30907e68b414" class="xr-section-summary" title="Expand/collapse section">Coordinates: <span>(0)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"></ul></div></li><li class="xr-section-item"><input id="section-c412a93f-e62b-4bc3-871b-ba74b0551d3c" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-c412a93f-e62b-4bc3-871b-ba74b0551d3c" class="xr-section-summary">Data variables: <span>(3)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span>bad_chains0</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.1087</div><input id="attrs-157e1efb-6bbc-4fc4-9a15-00a9c3951d18" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-157e1efb-6bbc-4fc4-9a15-00a9c3951d18" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-61917a76-2f93-4658-a826-649f836dec4c" class="xr-var-data-in" type="checkbox"><label for="data-61917a76-2f93-4658-a826-649f836dec4c" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(0.10870935)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>bad_chains1</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.01616</div><input id="attrs-b9bfb290-3282-4844-9ac8-7b24f12d495d" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-b9bfb290-3282-4844-9ac8-7b24f12d495d" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-2b0da47d-9275-4b2f-8706-7da1017500aa" class="xr-var-data-in" type="checkbox"><label for="data-2b0da47d-9275-4b2f-8706-7da1017500aa" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(0.01615769)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>good_chains</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">0.002583</div><input id="attrs-81dc62b2-e868-439e-b7bd-db626a739ef7" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-81dc62b2-e868-439e-b7bd-db626a739ef7" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-ba6f55b3-5838-4e19-ace3-8e0aa683aca6" class="xr-var-data-in" type="checkbox"><label for="data-ba6f55b3-5838-4e19-ace3-8e0aa683aca6" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(0.00258312)</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-5645d676-3699-43f2-b481-626130a52f06" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-5645d676-3699-43f2-b481-626130a52f06" class="xr-section-summary" title="Expand/collapse section">Indexes: <span>(0)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"></ul></div></li><li class="xr-section-item"><input id="section-55f74701-3b61-46ab-a7b0-88dc49e33973" class="xr-section-summary-in" type="checkbox" disabled=""><label for="section-55f74701-3b61-46ab-a7b0-88dc49e33973" class="xr-section-summary" title="Expand/collapse section">Attributes: <span>(0)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"></dl></div></li></ul></div></div>
+</div>
+</div>
+<div id="cell-17" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:14:17.348289Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:14:16.531903Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">9</span>))  </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>az.plot_mcse(chains, ax<span class="op">=</span>ax)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_95156/1242931680.py:3: UserWarning: The figure layout has changed to tight
+  plt.tight_layout()</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_stan_diagnostics_files/figure-html/cell-9-output-2.png" width="1380" height="1780" class="figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="commenti-conclusivi" class="level2" data-number="51.1">
-<h2 data-number="51.1" class="anchored" data-anchor-id="commenti-conclusivi"><span class="header-section-number">51.1</span> Commenti Conclusivi</h2>
-<p>In questo capitolo, abbiamo esplorato come l’analisi dei dati possa essere influenzata dalla presenza di dati censurati, ovvero di osservazioni incomplete (nell’esempio, gatti che non sono ancora stati adottati). Abbiamo visto che ignorare questi dati può portare a stime distorte dei tempi di attesa. Il modello generativo implementato in Stan ci ha permesso di affrontare correttamente queste problematiche, integrando sia i dati completi che quelli censurati, fornendo stime più accurate e un quadro più completo del fenomeno in esame. Questo esempio sottolinea l’importanza di considerare tutte le informazioni disponibili e di scegliere il modello statistico appropriato per evitare distorsioni nelle analisi.</p>
-<p>Nel concludere il suo tutorial su Stan, Richard McElreath riassume i compiti principali per un moderno data analyst:</p>
-<ul>
-<li>Imparare i concetti di base della programmazione probabilistica.</li>
-<li>Imparare a esprimere le idee in termini di modelli probabilistici.</li>
-<li>Conoscere le convenzioni del linguaggio Stan.</li>
-<li>Seguire un flusso di lavoro ragionevole e affidabile.</li>
-</ul>
+<section id="i-grafici-di-rango-sono-piatti" class="level2" data-number="51.8">
+<h2 data-number="51.8" class="anchored" data-anchor-id="i-grafici-di-rango-sono-piatti"><span class="header-section-number">51.8</span> I Grafici di Rango Sono Piatti?</h2>
+<p>In alcune situazioni, l’interpretazione dei grafici di traccia può risultare estremamente complessa. Ad esempio, quando si raccolgono un numero molto elevato di campioni, comprimere lunghe tracce in un grafico di dimensioni standard può occultare alcuni comportamenti problematici delle catene, facendo apparire erroneamente buone le tracce. Giudicare i grafici di traccia può essere difficile anche quando le distribuzioni sono fortemente asimmetriche e/o a code pesanti. Per queste ragioni, ora si raccomanda di utilizzare i grafici di rango oltre, se non al posto, dei grafici di traccia, in modo che qualsiasi differenza nei valori campionati da ogni catena possa essere riconosciuta in un modo più affidabile (Vehtari et al., 2021).</p>
+<p>In statistica, il “rango” di un’osservazione è la sua posizione in un insieme di dati ordinati. Ad esempio, consideriamo il seguente insieme di dati: [5, 3, 8, 10]. Se ordiniamo questi dati in ordine crescente otterremo [3, 5, 8, 10]. In questo caso, il rango del numero 5 è 2 perché è il secondo numero nell’insieme ordinato. Allo stesso modo, il rango del numero 10 è 4 perché è il quarto numero nell’insieme ordinato.</p>
+<p>I grafici di rango rappresentano un nuovo strumento diagnostico che si ottiene ordinando i campioni aggregati da tutte le catene, e poi presentando un istogramma dei ranghi derivanti da ogni catena separatamente. Se tutte le catene hanno come target la stessa distribuzione, allora la distribuzione dei ranghi per ogni catena dovrebbe approssimare una distribuzione uniforme. Inoltre, se i grafici dei ranghi di tutte le catene sembrano simili, ciò indica una buon mixing delle catene. Le deviazioni dall’uniformità possono indicare una vasta gamma di problemi di convergenza. Qui sotto è riportato l’esempio fornito da <span class="citation" data-cites="martin2022bayesian">Martin, Kumar, e Lao (<a href="../../99-references.html#ref-martin2022bayesian" role="doc-biblioref">2022</a>)</span>:</p>
+<div id="cell-19" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-06-15T07:13:03.962507Z&quot;,&quot;start_time&quot;:&quot;2024-06-15T07:13:03.662150Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">8</span>))  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>az.plot_rank(chains, kind<span class="op">=</span><span class="st">"bars"</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_95156/2441558539.py:3: UserWarning: The figure layout has changed to tight
+  plt.tight_layout()</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_stan_diagnostics_files/figure-html/cell-10-output-2.png" width="689" height="788" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Una rappresentazione alternativa (con dei segmenti verticali al posto delle barre) è la seguente:</p>
+<div id="cell-21" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">8</span>))  </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>az.plot_rank(chains, kind<span class="op">=</span><span class="st">"vlines"</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T/ipykernel_24737/353816278.py:3: UserWarning: The figure layout has changed to tight
+  plt.tight_layout()</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_stan_diagnostics_files/figure-html/cell-11-output-2.png" width="687" height="788" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="51.2">
-<h2 data-number="51.2" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">51.2</span> Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-30" class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m <span class="op">-</span>p cmdstanpy</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="ci-sono-transizioni-divergenti" class="level2" data-number="51.9">
+<h2 data-number="51.9" class="anchored" data-anchor-id="ci-sono-transizioni-divergenti"><span class="header-section-number">51.9</span> Ci Sono Transizioni Divergenti?</h2>
+<p>Quando usiamo l’algoritmo di campionamento Hamiltonian Monte Carlo (HMC), è molto importante assicurarci che non ci siano “transizioni divergenti” riportate nei risultati. Idealmente, il numero di queste transizioni dovrebbe essere zero. Una transizione divergente è come un segnale di allarme che ci avverte di possibili problemi nella fase in cui l’algoritmo esplora i vari parametri. In pratica, indica che l’algoritmo non è riuscito a esaminare correttamente alcune aree dello spazio dei parametri.</p>
+<p>Ogni volta che notiamo una transizione divergente, dobbiamo indagare attentamente il motivo. La presenza di queste transizioni ci dice che l’algoritmo potrebbe non avere esplorato adeguatamente certe zone, mettendo a rischio l’affidabilità delle conclusioni del nostro studio. In presenza di divergenze, i campioni risultanti non possono essere considerati affidabili e, pertanto, non dovrebbero essere impiegati per la stima dei parametri, il confronto tra modelli, o qualsiasi altra forma di inferenza statistica <span class="citation" data-cites="gelman2020bayesian">Gelman et al. (<a href="../../99-references.html#ref-gelman2020bayesian" role="doc-biblioref">2020</a>)</span>.</p>
+<p>Per capire e risolvere il problema delle transizioni divergenti, possiamo considerare diverse soluzioni:</p>
+<ol type="1">
+<li><strong>Controllo dei dati</strong>: È utile controllare se ci sono dati anormali o estremi che potrebbero complicare il lavoro dell’algoritmo.</li>
+<li><strong>Valutazione delle distribuzioni a priori</strong>: Dobbiamo assicurarci che le distribuzioni a priori usate si adattino bene al modello e ai dati che stiamo analizzando. Se non sono appropriate, possono creare problemi durante l’esplorazione dello spazio dei parametri.</li>
+<li><strong>Regolazione della dimensione del passo</strong>: È importante controllare e, se necessario, modificare la dimensione del passo (o <em>step size</em>) dell’algoritmo HMC. Un passo troppo lungo o troppo breve può causare instabilità e favorire l’occorrenza di transizioni divergenti.</li>
+</ol>
+<p>Affrontando questi problemi con attenzione, possiamo migliorare la performance dell’algoritmo HMC e ridurre il rischio di incontrare transizioni divergenti. Risolvere questi problemi è fondamentale per assicurare che l’algoritmo fornisca una rappresentazione precisa della distribuzione a posteriori e per garantire inferenze statistiche corrette.</p>
+</section>
+<section id="la-bmfi-è-sufficientemente-grande" class="level2" data-number="51.10">
+<h2 data-number="51.10" class="anchored" data-anchor-id="la-bmfi-è-sufficientemente-grande"><span class="header-section-number">51.10</span> LA BMFI È Sufficientemente Grande?</h2>
+<p>Un altro strumento diagnostico che è stato recentemente sviluppato per il campionamento HMC/NUTS si chiama <em>Bayesian Fraction of Missing Information</em> (BFMI), calcolato in modo bayesiano. Questo indicatore si basa sull’analisi delle variazioni di energia durante ciascuna iterazione del campionamento nelle catene. Esso ci permette di capire con maggiore precisione quanto bene l’algoritmo HMC/NUTS sta funzionando a un livello più dettagliato rispetto ad altre tecniche di diagnostica.</p>
+<p>Un valore basso di BFMI in una catena specifica indica che l’algoritmo non sta esplorando efficacemente la distribuzione dei dati che stiamo analizzando, il che può portare a risultati distorti o fuorvianti. È generalmente accettato che il valore di BFMI debba essere almeno 0.2 per ogni catena. Se in una o più catene il valore scende al di sotto di 0.2, si considera che i risultati ottenuti non siano affidabili per fare inferenze corrette, poiché le stime prodotte potrebbero essere distorte <span class="citation" data-cites="betancourt2016diagnosing">(<a href="../../99-references.html#ref-betancourt2016diagnosing" role="doc-biblioref">Betancourt 2016</a>)</span>.</p>
+</section>
+<section id="la-leave-one-out-cross-validation-fornisce-evidenze-di-buon-adattamento" class="level2" data-number="51.11">
+<h2 data-number="51.11" class="anchored" data-anchor-id="la-leave-one-out-cross-validation-fornisce-evidenze-di-buon-adattamento"><span class="header-section-number">51.11</span> La Leave-One-Out Cross-Validation Fornisce Evidenze di Buon Adattamento?</h2>
+<p>La Leave-One-Out Cross-Validation (LOO) rappresenta un metodo ampiamente impiegato nell’ambito dell’analisi bayesiana per valutare quanto adeguatamente un modello statistico si adatta ai dati osservati. Immaginiamo di avere una serie di foto e di voler valutare quanto bene un software riesce a riconoscere le persone in queste foto. La LOO ci aiuta a testare il software in un modo accurato.</p>
+<p>Il processo è semplice: prendiamo tutte le foto tranne una, e usiamo queste per insegnare al software come riconoscere le persone. Poi, usiamo la foto che abbiamo messo da parte per vedere se il software riesce a riconoscere la persona in quella foto. Ripetiamo questo processo per ogni singola foto, una alla volta. Ogni volta, il software apprende da tutte le foto tranne una, e quella esclusa serve per testarlo.</p>
+<p>Questo metodo è molto efficace perché assicura che il software non impari solo a riconoscere le persone nelle foto specifiche che ha già visto (questo si chiama “overfitting”, ovvero sovraadattamento), ma che sia davvero capace di riconoscere persone anche in foto nuove che non ha mai analizzato. Inoltre, evita il problema opposto, chiamato “underfitting”, dove il software non impara abbastanza dai dati e quindi non riesce a fare buone previsioni.</p>
+<p>Nel contesto dell’analisi bayesiana, dove si utilizzano modelli statistici complessi, la LOO è spesso accompagnata da calcoli come il logaritmo della verosimiglianza, che aiutano a quantificare quanto bene il modello riesce a prevedere i dati esclusi. I risultati di questi calcoli possono essere usati per calcolare un indice chiamato LOOIC (Leave-One-Out Information Criterion), che permette di confrontare diversi modelli per scegliere quello che si adatta meglio ai dati.</p>
+<p>In conclusione, la LOO è uno strumento molto utile per valutare in modo imparziale e preciso quanto bene un modello statistico possa prevedere nuovi dati, garantendo che le nostre previsioni siano il più accurate possibile.</p>
+</section>
+<section id="il-parametro-k" class="level2" data-number="51.12">
+<h2 data-number="51.12" class="anchored" data-anchor-id="il-parametro-k"><span class="header-section-number">51.12</span> Il Parametro <span class="math inline">\(k\)</span></h2>
+<p>Il parametro <span class="math inline">\(k\)</span>, noto anche come parametro di coda di Pareto, riveste un ruolo importante nell’ambito del campionamento MCMC. È utilizzato per valutare l’efficienza e la convergenza delle catene di campionamento, nonché per misurare la qualità del processo di campionamento di importanza, come nel caso del Pareto Smoothed Importance Sampling (PSIS).</p>
+<p>Immaginiamo di essere a una festa dove stai cercando di scoprire quale gusto di gelato è il preferito tra gli invitati. Invece di chiedere a tutti, decidiamo di assaggiare solo alcuni gelati per avere un’idea generale. Questo processo di selezionare solo alcuni gelati per fare un’assunzione sul gusto preferito è simile a quello che avviene nel campionamento per l’Importance Sampling: scegliamo solo alcuni punti (o “campioni”) da un insieme molto grande per fare delle stime su tutta la popolazione.</p>
+<p>Nel Pareto Smoothed Importance Sampling (PSIS), dopo aver scelto i campioni, cerchiamo di “lisciare” le nostre stime per renderle più precise e meno variabili. Pensalo come se stessi cercando di bilanciare le risposte per non dare troppo peso a poche opinioni estreme.</p>
+<p>Il parametro <span class="math inline">\(k\)</span> ci dice quanto siamo vicini a raggiungere questo obiettivo di bilanciamento. Se <span class="math inline">\(k\)</span> è vicino a 0, significa che abbiamo fatto un buon lavoro: le nostre stime sono affidabili e non troppo dipendenti da pochi campioni estremi. Se, invece, <span class="math inline">\(k\)</span> è più alto, specialmente sopra 0.7, ci indica che ci sono problemi: forse abbiamo dato troppo peso a poche opinioni estreme, o non abbiamo un buon mix di opinioni per fare una stima affidabile. In pratica, un <span class="math inline">\(k\)</span> alto è come un campanello d’allarme che ci dice che dobbiamo essere cauti con le nostre conclusioni e, possibilmente, raccogliere più dati o ripensare come li stiamo campionando.</p>
+<p>In sostanza, il parametro <span class="math inline">\(k\)</span> è uno strumento per aiutarci a capire quanto possiamo fidarci delle nostre stime basate su un campione limitato di dati. Un valore basso è buono, indicando che le stime sono solide e ben equilibrate, mentre un valore alto suggerisce che potremmo avere dei problemi e che dovremmo esaminare più attentamente i dati che abbiamo raccolto.</p>
+<p>Per calcolare il parametro <span class="math inline">\(\hat{\kappa}\)</span>, è possibile fare uso di ArviZ, uno strumento appositamente progettato per le analisi bayesiane avanzate.</p>
+</section>
+<section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
+<div id="cell-24" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Last updated: Wed Sep 11 2024
+<pre><code>Last updated: Mon Jun 10 2024
 
 Python implementation: CPython
-Python version       : 3.12.4
-IPython version      : 8.26.0
-
-cmdstanpy: 1.2.4
+Python version       : 3.12.3
+IPython version      : 8.25.0
 
 Compiler    : Clang 16.0.6 
 OS          : Darwin
-Release     : 23.6.0
+Release     : 23.4.0
 Machine     : arm64
 Processor   : arm
 CPU cores   : 8
 Architecture: 64bit
 
-seaborn   : 0.13.2
-arviz     : 0.18.0
-pandas    : 2.2.2
-matplotlib: 3.9.1
-cmdstanpy : 1.2.4
+matplotlib: 3.8.4
 logging   : 0.5.1.2
+cmdstanpy : 1.2.3
+scipy     : 1.13.1
+arviz     : 0.18.0
 numpy     : 1.26.4
+pandas    : 2.2.2
 
 Watermark: 2.4.3
 </code></pre>
@@ -1878,6 +2403,23 @@ Watermark: 2.4.3
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-betancourt2016diagnosing" class="csl-entry" role="listitem">
+Betancourt, Michael. 2016. <span>«Diagnosing suboptimal cotangent disintegrations in Hamiltonian Monte Carlo»</span>. <em>arXiv preprint arXiv:1604.00695</em>.
+</div>
+<div id="ref-gelman2020bayesian" class="csl-entry" role="listitem">
+Gelman, Andrew, Aki Vehtari, Daniel Simpson, Charles C Margossian, Bob Carpenter, Yuling Yao, Lauren Kennedy, Jonah Gabry, Paul-Christian Bürkner, e Martin Modrák. 2020. <span>«Bayesian workflow»</span>. <em>arXiv preprint arXiv:2011.01808</em>.
+</div>
+<div id="ref-martin2022bayesian" class="csl-entry" role="listitem">
+Martin, Osvaldo A, Ravin Kumar, e Junpeng Lao. 2022. <em>Bayesian Modeling and Computation in Python</em>. CRC Press.
+</div>
+<div id="ref-de2020tutorial" class="csl-entry" role="listitem">
+Schoot, Van Rens de, Duco Veen, Laurent Smeets, e Sonja Winter. 2020. <span>«A tutorial on using the WAMBS checklist to avoid the misuse of Bayesian statistics»</span>. Routledge.
+</div>
+<div id="ref-vehtari2021rank" class="csl-entry" role="listitem">
+Vehtari, Aki, Andrew Gelman, Daniel Simpson, Bob Carpenter, e Paul-Christian Bürkner. 2021. <span>«Rank-normalization, folding, and localization: An improved R ̂ for assessing convergence of MCMC (with discussion)»</span>. <em>Bayesian analysis</em> 16 (2): 667–718.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -2308,8 +2850,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../chapters/mcmc/05_stan_diagnostics.html" class="pagination-link" aria-label="Diagnostica delle catene markoviane">
-        <span class="nav-page-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Diagnostica delle catene markoviane</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../chapters/mcmc/05_stan_prediction.html" class="pagination-link" aria-label="La predizione bayesiana">
+        <span class="nav-page-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">La predizione bayesiana</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -2321,7 +2863,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/04_stan_cats.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/mcmc/04_stan_diagnostics.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
