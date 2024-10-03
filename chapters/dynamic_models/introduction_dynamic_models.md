@@ -1,5 +1,9 @@
 # Introduzione {.unnumbered}
 
+**Prerequisiti**
+
+- Leggere *The role of the individual in the coming era of process-based therapy* [@hayes2019role].
+
 Uno degli sviluppi più significativi nella psicologia contemporanea è l'uso di teorie formali per formulare ipotesi sui meccanismi che sottendono i fenomeni psicologici. I modelli matematici sono strumenti essenziali per concettualizzare la cognizione umana e prevedere i comportamenti osservabili. Questi modelli cercano di fornire una formalizzazione matematica dei processi cognitivi, mappando i costrutti cognitivi latenti sui parametri del modello e descrivendo come questi producono i dati osservati.
 
 La maggior parte dei modelli cognitivi tradizionali tratta i dati umani come osservazioni indipendenti e identicamente distribuite (IID). Questa assunzione implica che tali modelli spesso trascurano le variazioni temporali dei costrutti cognitivi latenti. Tuttavia, questi costrutti sono intrinsecamente dinamici, indipendentemente dalla scala temporale considerata. Negli esperimenti psicologici, le capacità cognitive sono influenzate non solo dalle richieste esterne del compito, ma anche dai processi mentali interni e dagli stati cerebrali che cambiano nel tempo. Le fluttuazioni sistematiche e non sistematiche che ne derivano possono avere diverse spiegazioni, come la fatica, la pratica, la divagazione mentale o fattori motivazionali. Come evidenziato da @schumacher2023neural, i meccanismi cognitivi dovrebbero essere trattati come sistemi dinamici complessi, e i modelli cognitivi dovrebbero tenere conto delle dinamiche dei loro componenti per comprendere appieno e catturare la ricca struttura dei dati empirici umani.
