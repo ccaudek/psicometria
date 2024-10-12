@@ -1394,7 +1394,7 @@ window.Quarto = {
 </ul>
 <p>Questi concetti sono fondamentali per navigare nel processo di inferenza bayesiana e per comprendere come le probabilità si aggiornano in risposta a nuove informazioni. Inoltre, esamineremo i principali teoremi legati alla probabilità condizionata.</p>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="cell-2" class="cell">
+<div id="cell-2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1461,11 +1461,11 @@ P(A \mid B) = \frac{| A \cap B |}{| B |}.
 <p>Inizialmente, quando non abbiamo ulteriori informazioni, possiamo calcolare la probabilità in modo tradizionale. Ci sono 21 risultati possibili con somma minore di 8. Poiché ci sono 36 possibili combinazioni di lancio dei due dadi, la probabilità di ottenere una somma minore di 8 è 21/36, che equivale a circa 0.58.</p>
 <p>Supponiamo ora di sapere che la somma del lancio di due dadi ha prodotto un risultato dispari. In questo caso, ci sono solo 18 possibili combinazioni di lancio dei due dadi (dato che abbiamo escluso i risultati pari). Tra essi, vi sono 12 risultati che soddisfano la condizione per cui la somma è minore di 8. Quindi, la probabilità di ottenere una somma minore di 8 cambia da circa 0.58 a 12/18, ovvero 0.67 quando consideriamo l’informazione aggiuntiva del risultato dispari.</p>
 <p>Svolgiamo il problema in Python.</p>
-<div id="6ac07b04-dd7e-4f38-8ceb-70777a0fd7f3" class="cell" data-execution_count="3">
+<div id="6ac07b04-dd7e-4f38-8ceb-70777a0fd7f3" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> r <span class="cf">for</span> j <span class="kw">in</span> r]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sample</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>[(1, 1),
  (1, 2),
  (1, 3),
@@ -1569,7 +1569,7 @@ P(A \mid B) = \frac{12}{18}.
 <div id="fig-mammography" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-mammography-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../figures/mammografia.png" class="img-fluid figure-img" style="width:80.0%">
+<img src="../../figures/mammografia.png" class="img-fluid figure-img" style="width:64.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mammography-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;26.1: Esiti della mammografia per 1000 donne.
@@ -1581,12 +1581,93 @@ Figura&nbsp;26.1: Esiti della mammografia per 1000 donne.
 <p>In questo esempio, la probabilità dell’evento “ottenere un risultato positivo al test” è una probabilità non condizionata, poiché calcoliamo semplicemente la proporzione di risultati positivi nel campione totale. D’altra parte, la probabilità dell’evento “avere il cancro al seno, dato che il test ha prodotto un risultato positivo” è una probabilità condizionata, poiché calcoliamo la proporzione delle donne con il cancro al seno tra quelle che hanno ottenuto un risultato positivo al test.</p>
 <p>Questo esempio illustra come la conoscenza di ulteriori informazioni (il risultato positivo al test) può influenzare la probabilità di un evento (avere il cancro al seno), mostrando chiaramente la differenza tra probabilità condizionate e non condizionate.</p>
 </div>
+<div id="exm-3a" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 26.3</strong></span> Il problema di Monty Hall è diventato famoso grazie alla rubrica tenuta da Marilyn vos Savant nella rivista <em>Parade</em>, che rispose alla seguente lettera, pubblicata il 9 settembre 1990:</p>
+<blockquote class="blockquote">
+<p>“Supponiamo che tu sia in un quiz televisivo, e ti venga data la scelta tra tre porte. Dietro una delle porte c’è un’auto, dietro le altre due ci sono delle capre. Tu scegli una porta, diciamo la numero 1, e il conduttore, che sa cosa c’è dietro ogni porta, apre un’altra porta, diciamo la numero 3, che contiene una capra. Il conduttore ti chiede quindi se vuoi cambiare la tua scelta e passare alla porta numero 2. È vantaggioso cambiare la scelta?” Craig. F. Whitaker, Columbia, MD</p>
+</blockquote>
+<p>La situazione descritta nella lettera è simile a quella che i concorrenti affrontavano nel quiz televisivo degli anni ’70 <em>Let’s Make a Deal</em>, condotto da Monty Hall e Carol Merrill. Marilyn rispose che il concorrente dovrebbe cambiare la scelta, poiché se l’auto è dietro una delle due porte non scelte (il che è due volte più probabile rispetto alla porta inizialmente scelta), il concorrente vince cambiando porta. Tuttavia, la sua risposta suscitò una reazione a catena, con molte lettere, persino da parte di matematici, che affermavano che avesse torto. Questo episodio diede origine al <em>problema di Monty Hall</em> e innescò migliaia di ore di dibattiti.</p>
+<p>Questo incidente sottolinea un aspetto fondamentale della probabilità: spesso, l’intuizione porta a conclusioni completamente errate. Fino a quando non si affinano le capacità nel trattare problemi di probabilità, un approccio rigoroso e sistematico è utile per evitare errori.</p>
+<p><strong>Chiarire il Problema</strong></p>
+<p>La lettera originale di Craig Whitaker è un po’ vaga, quindi dobbiamo fare delle ipotesi per poter modellare formalmente il gioco. Supponiamo che:</p>
+<ol type="1">
+<li>L’auto sia nascosta in modo casuale ed equiprobabile dietro una delle tre porte.</li>
+<li>Il giocatore scelga una delle tre porte in modo casuale, indipendentemente dalla posizione dell’auto.</li>
+<li>Dopo che il giocatore ha scelto una porta, il conduttore apre un’altra porta, che contiene una capra, e offre al giocatore la possibilità di mantenere la scelta o cambiarla.</li>
+<li>Se il conduttore ha la possibilità di scegliere quale porta aprire (ossia, se ci sono due capre disponibili), sceglie casualmente quale porta aprire.</li>
+</ol>
+<p>Con queste assunzioni, possiamo affrontare la domanda: “Qual è la probabilità che un giocatore che cambia porta vinca l’auto?”</p>
+<p><strong>Il Metodo in Quattro Passi</strong></p>
+<p>Ogni problema di probabilità riguarda un esperimento o un processo casuale. In questi casi, il problema può essere suddiviso in quattro fasi distinte.</p>
+<p><strong>Passo 1: Trovare lo Spazio Campionario</strong></p>
+<p>Il primo passo è identificare tutti i possibili esiti dell’esperimento. Nel problema di Monty Hall, ci sono tre quantità determinate casualmente:</p>
+<ol type="1">
+<li>La porta che nasconde l’auto.</li>
+<li>La porta scelta inizialmente dal giocatore.</li>
+<li>La porta che il conduttore apre per rivelare una capra.</li>
+</ol>
+<p>Un diagramma ad albero può aiutarci a visualizzare il problema, dato che il numero di esiti non è troppo grande e la struttura è semplice. Il primo evento casuale è la posizione dell’auto, che rappresentiamo con tre rami in un albero. Ogni ramo corrisponde a una delle porte. La seconda quantità casuale è la porta scelta dal giocatore, rappresentata nel secondo livello dell’albero, e la terza quantità casuale è la porta che il conduttore apre, mostrata nel terzo livello.</p>
+<p>Ecco un esempio di diagramma ad albero in Python che rappresenta questa situazione:</p>
+<div id="fig-monthy-hall-tree" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-monthy-hall-tree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/monthy-hall-tree.png" class="img-fluid figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-monthy-hall-tree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;26.2: Il diagramma ad albero per il Problema di Monty Hall mostra le probabilità associate a ogni possibile esito. I pesi sugli archi rappresentano la probabilità di seguire quel particolare percorso, dato che ci troviamo nel nodo padre. Ad esempio, se l’auto si trova dietro la porta A, la probabilità che il giocatore scelga inizialmente la porta B è pari a 1/3. La colonna più a destra del diagramma mostra la probabilità di ciascun esito finale. Ogni probabilità di esito è calcolata moltiplicando le probabilità lungo il percorso che parte dalla radice (auto dietro una certa porta) e termina alla foglia (esito finale) (Figura tratta da Lehman, Leighton e Meyer, 2018).
+</figcaption>
+</figure>
+</div>
+<p>Nel diagramma ad albero, i rami rappresentano le possibili combinazioni delle porte, e le foglie rappresentano gli esiti dell’esperimento. Ogni foglia dell’albero rappresenta un esito dello spazio campionario, che nel nostro caso è composto da 12 esiti. Per esempio, (<code>Car A, Pick B, Reveal C</code>).</p>
+<p><strong>Passo 2: Definire gli Eventi di Interesse</strong></p>
+<p>L’evento di interesse è “il giocatore vince cambiando porta”. Questo significa che, se la porta scelta dal giocatore inizialmente non contiene l’auto, e il giocatore decide di cambiare porta, allora vincerà. Gli esiti favorevoli sono quelli in cui la porta inizialmente scelta dal giocatore <strong>non</strong> nasconde l’auto, e cambiando porta il giocatore sceglie correttamente la porta che nasconde l’auto.</p>
+<p>Gli esiti che soddisfano questa condizione sono:</p>
+<ul>
+<li><code>(Car A, Pick B, Reveal C)</code></li>
+<li><code>(Car A, Pick C, Reveal B)</code></li>
+<li><code>(Car B, Pick A, Reveal C)</code></li>
+<li><code>(Car B, Pick C, Reveal A)</code></li>
+<li><code>(Car C, Pick A, Reveal B)</code></li>
+<li><code>(Car C, Pick B, Reveal A)</code></li>
+</ul>
+<p>Questi esiti sono 6 in totale.</p>
+<p><strong>Passo 3: Calcolare le Probabilità degli Esiti</strong></p>
+<p>Ogni esito ha una certa probabilità di verificarsi. Il modo per determinare la probabilità di ciascun esito è moltiplicare le probabilità lungo il percorso nell’albero.</p>
+<p>Esempio di calcolo per l’esito <code>(Car A, Pick B, Reveal C)</code>:</p>
+<ul>
+<li>La probabilità che l’auto sia dietro la porta A è <span class="math inline">\(\frac{1}{3}\)</span>.</li>
+<li>La probabilità che il giocatore scelga la porta B è <span class="math inline">\(\frac{1}{3}\)</span>.</li>
+<li>La probabilità che il conduttore apra la porta C (che contiene una capra) è <span class="math inline">\(1\)</span> (poiché il conduttore deve aprire una porta con una capra, e la porta C è l’unica possibile).</li>
+</ul>
+<p>La probabilità totale per questo esito è:</p>
+<p><span class="math display">\[
+P(\text{Car A, Pick B, Reveal C}) = \frac{1}{3} \times \frac{1}{3} \times 1 = \frac{1}{9}.
+\]</span></p>
+<p>Procedendo in modo simile per tutti gli altri esiti, otteniamo le probabilità per tutti i 12 esiti.</p>
+<p><strong>Passo 4: Calcolare le Probabilità degli Eventi</strong></p>
+<p>La probabilità di vincere cambiando porta è data dalla somma delle probabilità degli esiti favorevoli elencati sopra.</p>
+<p><span class="math display">\[
+\begin{aligned}
+P&amp;(\text{vincere cambiando porta}) = \notag \\
+&amp;\quad P(\text{Car A, Pick B, Reveal C}) + P(\text{Car A, Pick C, Reveal B}) + \notag\\  
+&amp;\quad P(\text{Car B, Pick A, Reveal C}) + \dots \notag
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+= \frac{1}{9} + \frac{1}{9} + \frac{1}{9} + \frac{1}{9} + \frac{1}{9} + \frac{1}{9} = \frac{6}{9} = \frac{2}{3}.
+\]</span></p>
+<p>La probabilità di vincere mantenendo la scelta originale è semplicemente il complemento:</p>
+<p><span class="math display">\[
+P(\text{vincere mantenendo la scelta}) = 1 - P(\text{vincere cambiando porta}) = 1 - \frac{2}{3} = \frac{1}{3}.
+\]</span></p>
+<p>La conclusione è che il giocatore ha una probabilità di vincere pari a <span class="math inline">\(\frac{2}{3}\)</span> se cambia porta, contro una probabilità di <span class="math inline">\(\frac{1}{3}\)</span> se mantiene la sua scelta iniziale. Cambiare porta è quindi la strategia vincente. Questo risultato controintuitivo è il motivo per cui il problema di Monty Hall ha causato tanta confusione inizialmente.</p>
+<p>Il problema di Monty Hall è un classico esempio di probabilità condizionata perché la probabilità di vincere l’auto dipende da informazioni aggiuntive ottenute durante il gioco, cioè la porta che il conduttore apre. Inizialmente, la probabilità di trovare l’auto dietro la porta scelta dal giocatore è <span class="math inline">\(\frac{1}{3}\)</span>, mentre la probabilità che l’auto sia dietro una delle altre due porte è <span class="math inline">\(\frac{2}{3}\)</span>.</p>
+<p>Quando il conduttore apre una porta mostrando una capra, fornisce nuove informazioni che cambiano le probabilità. Questa nuova informazione condiziona la probabilità che l’auto sia dietro la porta non scelta dal giocatore, facendo sì che la probabilità di vincere cambiando porta diventi <span class="math inline">\(\frac{2}{3}\)</span>. Quindi, il problema di Monty Hall è un esempio di probabilità condizionata perché l’aggiornamento delle probabilità dipende da un evento intermedio (la scelta della porta aperta dal conduttore).</p>
+</div>
 <div id="exm-3" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 26.3</strong></span> Il paradosso di Monty Hall rappresenta un curioso esempio di come l’introduzione di nuove informazioni possa influenzare l’esito di una situazione probabilistica. Questo famoso problema trae origine dal popolare programma televisivo americano “Let’s Make a Deal” e deve la sua notorietà al conduttore Monty Hall.</p>
-<p>Nel gioco ci sono tre porte chiuse: dietro una si nasconde un’automobile, mentre dietro le altre due ci sono delle capre. Inizialmente, il concorrente sceglie una delle tre porte senza aprirla. Successivamente, Monty Hall apre una delle due porte rimaste, rivelando una capra. A questo punto, offre al concorrente la possibilità di cambiare la sua scelta iniziale e optare per l’altra porta ancora chiusa. Il paradosso si presenta quando si scopre che cambiando la scelta in questa fase, il concorrente aumenta le sue probabilità di vincere l’automobile, passando da 1/3 a 2/3.</p>
-<p>Per confermare questo risultato inaspettato, è possibile eseguire una simulazione in Python. In questa simulazione, consideriamo due scenari: uno in cui il concorrente mantiene la sua scelta iniziale e un altro in cui cambia la sua scelta dopo che Monty Hall ha svelato una capra. Ripetendo questa simulazione migliaia di volte, possiamo confrontare i risultati empirici e confermare come effettivamente il cambiamento di scelta aumenti le probabilità del concorrente di vincere l’automobile.</p>
+<p><span class="theorem-title"><strong>Esempio 26.4</strong></span> Per confermare il risultato inaspettato del Problema di Monty Hall, è possibile eseguire una simulazione. In questa simulazione, consideriamo due scenari: uno in cui il concorrente mantiene la sua scelta iniziale e un altro in cui cambia la sua scelta dopo che Monty Hall ha svelato una capra. Ripetendo questa simulazione migliaia di volte, possiamo confrontare i risultati empirici e confermare come effettivamente il cambiamento di scelta aumenti le probabilità del concorrente di vincere l’automobile.</p>
 <p>Di seguito è riportato lo script di una simulazione progettata per illustrare il paradosso di Monty Hall.</p>
-<div id="262076d9-961b-4401-a7e6-be090999990f" class="cell">
+<div id="262076d9-961b-4401-a7e6-be090999990f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>porte <span class="op">=</span> [</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"capra1"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"capra2"</span>,</span>
@@ -1610,27 +1691,18 @@ Figura&nbsp;26.1: Esiti della mammografia per 1000 donne.
 <span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(counter <span class="op">/</span> n)  <span class="co"># quante volte vinco non cambiando porta</span></span>
 <span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(contatore_cambio <span class="op">/</span> n)  <span class="co"># quante volte vinco cambiando porta</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.3322
+0.6678</code></pre>
+</div>
 </div>
 <p>Questo script Python è stato creato da un gruppo di studenti di Psicometria nell’AA 2023-2023. La simulazione mostra che, effettivamente, la probabilità di vincere la macchina aumenta quando il concorrente sceglie di cambiare porta.</p>
-<p>Ecco una spiegazione del paradosso:</p>
-<ol type="1">
-<li><p><strong>Fase Iniziale:</strong> Nel gioco, il concorrente deve scegliere una delle tre porte (A, B, C), dietro una delle quali si trova una macchina. Inizialmente, la probabilità che la macchina si trovi dietro la porta scelta è <span class="math inline">\(1/3\)</span>, dato che esistono tre possibilità ugualmente probabili e solo una contiene la macchina.</p></li>
-<li><p><strong>Aggiunta di Informazioni:</strong> Dopo la scelta iniziale, Monty Hall, che conosce il contenuto dietro ogni porta, apre una delle due porte non scelte, rivelando sempre una capra. Questo passaggio è fondamentale: non cambia la probabilità <span class="math inline">\(1/3\)</span> che la macchina sia dietro la porta originariamente scelta dal concorrente, ma la probabilità che la macchina si trovi dietro l’altra porta non scelta aumenta ora a <span class="math inline">\(2/3\)</span>. Questo aumento di probabilità deriva dal fatto che Monty ha scelto deliberatamente una porta con una capra, basando la sua scelta sulla posizione della macchina.</p></li>
-</ol>
-<p>Consideriamo i tre possibili scenari dopo che il concorrente ha scelto la porta A:</p>
-<ul>
-<li><strong>La macchina è dietro la porta A:</strong> La probabilità di questo scenario è <span class="math inline">\(1/3\)</span>. Monty può aprire sia la porta B che la porta C, poiché entrambe nascondono una capra. Se il concorrente cambia la sua scelta, perderà.</li>
-<li><strong>La macchina è dietro la porta B:</strong> La probabilità di questo scenario è <span class="math inline">\(1/3\)</span>. Monty aprirà la porta C, perché sa che la macchina è dietro la porta B e non può rivelarla. Se il concorrente cambia la sua scelta da A a B, vincerà.</li>
-<li><strong>La macchina è dietro la porta C:</strong> La probabilità di questo scenario è <span class="math inline">\(1/3\)</span>. Monty aprirà la porta B. Se il concorrente cambia la sua scelta da A a C, vincerà.</li>
-</ul>
-<p>In conclusione, cambiare la scelta originale porta alla vittoria in due dei tre scenari possibili. Pertanto, la probabilità complessiva di vincere cambiando la scelta è <span class="math inline">\(2/3\)</span>.</p>
-<p>Questo paradosso evidenzia come, in presenza di informazioni aggiuntive, le probabilità iniziali possano essere riviste significativamente. È un classico esempio di come l’intuizione umana spesso si scontri con i principi della teoria delle probabilità, sottolineando l’importanza della revisione bayesiana delle probabilità alla luce di nuove informazioni.</p>
 </div>
 <section id="sec-simpson-paradox" class="level3" data-number="26.2.1">
 <h3 data-number="26.2.1" class="anchored" data-anchor-id="sec-simpson-paradox"><span class="header-section-number">26.2.1</span> Il paradosso di Simpson</h3>
 <p>Nel campo della probabilità condizionata, uno dei fenomeni più interessanti e, nel contempo, più controintuitivi, è rappresentato dal paradosso di Simpson. Il paradosso di Simpson è un fenomeno statistico in cui una tendenza che appare in diversi gruppi separati di dati scompare o si inverte quando i dati vengono combinati. Questo paradosso mette in luce l’importanza di considerare le variabili confondenti e di analizzare i dati con attenzione per evitare conclusioni errate.</p>
 <div id="exm-4" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 26.4</strong></span> Due psicoterapeuti, Rossi e Bianchi, praticano due tipi di terapie: terapia per disturbi d’ansia e coaching per migliorare le prestazioni lavorative. Ogni terapia può avere un esito positivo o negativo.</p>
+<p><span class="theorem-title"><strong>Esempio 26.5</strong></span> Due psicoterapeuti, Rossi e Bianchi, praticano due tipi di terapie: terapia per disturbi d’ansia e coaching per migliorare le prestazioni lavorative. Ogni terapia può avere un esito positivo o negativo.</p>
 <p>I rispettivi bilanci dei due terapeuti sono riportati nelle seguenti tabelle.</p>
 <p><strong>Rossi</strong></p>
 <table class="caption-top table">
@@ -1727,7 +1799,7 @@ P(&amp;A_1 \cap A_2 \cap A_3 \cap A_4) =  \\
 \end{split}
 \]</span></p>
 <div id="exm-5" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 26.5</strong></span> Per fare un esempio, consideriamo il problema seguente. Da un’urna contenente 6 palline bianche e 4 nere si estrae una pallina per volta, senza reintrodurla nell’urna. Indichiamo con <span class="math inline">\(B_i\)</span> l’evento: “esce una pallina bianca alla <span class="math inline">\(i\)</span>-esima estrazione” e con <span class="math inline">\(N_i\)</span> l’estrazione di una pallina nera. L’evento: “escono due palline bianche nelle prime due estrazioni” è rappresentato dalla intersezione <span class="math inline">\(\{B_1 \cap B_2\}\)</span> e, per l’<a href="#eq-probcondinv" class="quarto-xref">Equazione&nbsp;<span>26.2</span></a>, la sua probabilità vale</p>
+<p><span class="theorem-title"><strong>Esempio 26.6</strong></span> Per fare un esempio, consideriamo il problema seguente. Da un’urna contenente 6 palline bianche e 4 nere si estrae una pallina per volta, senza reintrodurla nell’urna. Indichiamo con <span class="math inline">\(B_i\)</span> l’evento: “esce una pallina bianca alla <span class="math inline">\(i\)</span>-esima estrazione” e con <span class="math inline">\(N_i\)</span> l’estrazione di una pallina nera. L’evento: “escono due palline bianche nelle prime due estrazioni” è rappresentato dalla intersezione <span class="math inline">\(\{B_1 \cap B_2\}\)</span> e, per l’<a href="#eq-probcondinv" class="quarto-xref">Equazione&nbsp;<span>26.2</span></a>, la sua probabilità vale</p>
 <p><span class="math display">\[
 P(B_1 \cap B_2) = P(B_1)P(B_2 \mid B_1).
 \]</span></p>
@@ -1773,7 +1845,7 @@ P(E) = \sum_{i=1}^n P(E \mid H_i)P(H_i),
 <img src="../../figures/bayes_theorem.png" class="img-fluid figure-img" style="width:50.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bayes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;26.2: Partizione dello spazio campionario per il teorema di Bayes.
+Figura&nbsp;26.3: Partizione dello spazio campionario per il teorema di Bayes.
 </figcaption>
 </figure>
 </div>
@@ -1783,7 +1855,7 @@ P(E) = P(E \mid H_1) P(H_1) + P(E \mid H_2) P(H_2).
 \]</span></p>
 <p>L’<a href="#eq-prob-tot" class="quarto-xref">Equazione&nbsp;<span>26.4</span></a> è utile per calcolare <span class="math inline">\(P(E)\)</span>, se <span class="math inline">\(P(E \mid H_i)\)</span> e <span class="math inline">\(P(H_i)\)</span> sono facili da trovare.</p>
 <div id="exm-6" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 26.6</strong></span> Abbiamo tre urne, ciascuna delle quali contiene 100 palline:</p>
+<p><span class="theorem-title"><strong>Esempio 26.7</strong></span> Abbiamo tre urne, ciascuna delle quali contiene 100 palline:</p>
 <ul>
 <li>Urna 1: 75 palline rosse e 25 palline blu,</li>
 <li>Urna 2: 60 palline rosse e 40 palline blu,</li>
@@ -1835,7 +1907,7 @@ P(A \cap B \cap C) &amp;= P(A) P(B) P(C).
 <p>Le prime tre condizioni verificano l’indipendenza a due a due, ovvero l’indipendenza di ciascuna coppia di eventi. Tuttavia, per essere completamente indipendenti, deve essere soddisfatta anche l’ultima condizione, che riguarda l’intersezione di tutti e tre gli eventi. Solo se tutte queste condizioni sono soddisfatte possiamo dire che <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> e <span class="math inline">\(C\)</span> sono completamente indipendenti.</p>
 <p>In sintesi, l’indipendenza tra eventi implica che la conoscenza del verificarsi di uno non fornisce alcuna informazione sulla probabilità del verificarsi degli altri.</p>
 <div id="exm-7" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 26.7</strong></span> Consideriamo un esempio utilizzando un mazzo di 52 carte. Ogni seme contiene 13 carte e ci sono 4 regine in totale. Definiamo i seguenti eventi:</p>
+<p><span class="theorem-title"><strong>Esempio 26.8</strong></span> Consideriamo un esempio utilizzando un mazzo di 52 carte. Ogni seme contiene 13 carte e ci sono 4 regine in totale. Definiamo i seguenti eventi:</p>
 <ul>
 <li>Evento A: pescare una carta di picche,</li>
 <li>Evento B: pescare una regina.</li>
@@ -1865,14 +1937,14 @@ P(A \cap B \cap C) &amp;= P(A) P(B) P(C).
 <p>In generale, l’indipendenza tra due eventi significa che la probabilità di uno non è influenzata dal verificarsi dell’altro. Questo concetto è cruciale per analisi probabilistiche e modelli statistici più complessi.</p>
 </div>
 <div id="exm-8" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 26.8</strong></span> Nel lancio di due dadi non truccati, si considerino gli eventi: <span class="math inline">\(A\)</span> = “esce un 1 o un 2 nel primo lancio” e <span class="math inline">\(B\)</span> = “il punteggio totale è 8”. Gli eventi <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> sono indipendenti?</p>
+<p><span class="theorem-title"><strong>Esempio 26.9</strong></span> Nel lancio di due dadi non truccati, si considerino gli eventi: <span class="math inline">\(A\)</span> = “esce un 1 o un 2 nel primo lancio” e <span class="math inline">\(B\)</span> = “il punteggio totale è 8”. Gli eventi <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> sono indipendenti?</p>
 <p>Calcoliamo <span class="math inline">\(P(A)\)</span>:</p>
 <div id="963672e3-7cdd-4bf8-8583-df57424d1362" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> r <span class="cf">for</span> j <span class="kw">in</span> r]</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> [roll <span class="cf">for</span> roll <span class="kw">in</span> sample <span class="cf">if</span> roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">2</span>]</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(A)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> r <span class="cf">for</span> j <span class="kw">in</span> r]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> [roll <span class="cf">for</span> roll <span class="kw">in</span> sample <span class="cf">if</span> roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">2</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(A)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6)]
 12 / 36</code></pre>
@@ -1880,9 +1952,9 @@ P(A \cap B \cap C) &amp;= P(A) P(B) P(C).
 </div>
 <p>Calcoliamo <span class="math inline">\(P(B)\)</span>:</p>
 <div id="1ea3a1d5-6b44-407d-bc7e-35602782ef17" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> [roll <span class="cf">for</span> roll <span class="kw">in</span> sample <span class="cf">if</span> roll[<span class="dv">0</span>] <span class="op">+</span> roll[<span class="dv">1</span>] <span class="op">==</span> <span class="dv">8</span>]</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(B)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(B)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> [roll <span class="cf">for</span> roll <span class="kw">in</span> sample <span class="cf">if</span> roll[<span class="dv">0</span>] <span class="op">+</span> roll[<span class="dv">1</span>] <span class="op">==</span> <span class="dv">8</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(B)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(B)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[(2, 6), (3, 5), (4, 4), (5, 3), (6, 2)]
 5 / 36</code></pre>
@@ -1890,13 +1962,13 @@ P(A \cap B \cap C) &amp;= P(A) P(B) P(C).
 </div>
 <p>Calcoliamo <span class="math inline">\(P(A \cap B)\)</span>:</p>
 <div id="3dbc25be-84b0-49d1-9c92-959a6f0ea4b4" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> [</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    roll</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> roll <span class="kw">in</span> sample</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">2</span>) <span class="kw">and</span> (roll[<span class="dv">0</span>] <span class="op">+</span> roll[<span class="dv">1</span>] <span class="op">==</span> <span class="dv">8</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(I)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(I)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> [</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    roll</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> roll <span class="kw">in</span> sample</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> roll[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">2</span>) <span class="kw">and</span> (roll[<span class="dv">0</span>] <span class="op">+</span> roll[<span class="dv">1</span>] <span class="op">==</span> <span class="dv">8</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(I)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(I)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(sample)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[(2, 6)]
 1 / 36</code></pre>
@@ -1904,7 +1976,7 @@ P(A \cap B \cap C) &amp;= P(A) P(B) P(C).
 </div>
 <p>Gli eventi <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span> non sono statisticamente indipendenti dato che <span class="math inline">\(P(A \cap B) \neq P(A)P(B)\)</span>:</p>
 <div id="ba0f5375-3073-4503-97f9-8715293933b0" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">12</span><span class="op">/</span><span class="dv">36</span> <span class="op">*</span> <span class="dv">5</span><span class="op">/</span><span class="dv">36</span> <span class="op">==</span> <span class="dv">1</span><span class="op">/</span><span class="dv">36</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dv">12</span><span class="op">/</span><span class="dv">36</span> <span class="op">*</span> <span class="dv">5</span><span class="op">/</span><span class="dv">36</span> <span class="op">==</span> <span class="dv">1</span><span class="op">/</span><span class="dv">36</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>False</code></pre>
 </div>
@@ -1934,8 +2006,8 @@ P(A | E) = \frac{P(E | A) \times P(A)}{P(E)}
 <section id="informazioni-sullambiente-di-sviluppo" class="level2" data-number="26.6">
 <h2 data-number="26.6" class="anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo"><span class="header-section-number">26.6</span> Informazioni sull’Ambiente di Sviluppo</h2>
 <div id="a1daed63-4e8f-4775-bec6-1d17db139078" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Last updated: Wed Feb 21 2024
 
