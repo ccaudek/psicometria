@@ -100,9 +100,54 @@ draws_arr <- fit$draws() # or format="array"
 str(draws_arr)
 ```
 
+Oppure, possiamo usare `as_draws_df()` per creare un data frame:
+
+```{r}
+draws <- as_draws_df(fit)
+head(draws)
+```
+
+Lo stesso risultato si ottiene nel modo seguente:
+
 ```{r}
 draws_df <- as_draws_df(draws_arr)
 head(draws_df)
+```
+
+Una volta creato un data frame, possiamo facilmente calcolare le statistiche descrittive. Per esempio:
+
+```{r}
+draws_df$p |>
+    mean()
+```
+
+In questo modo possiamo calcolare la probabilità che, ad esempio, $p$ sia compreso tra 0.5 e 0.75:
+
+```{r}
+draws_df |>
+    summarise(
+        p_between_0.5_and_0.75 = mean(p > 0.5 & p < 0.75)
+    )
+```
+
+```{r}
+partion_vector <- c("italic(p)<0.5", "{0.5<italic(p)}<0.75", "lower~80*'%'", "middle~80*'%'")
+
+draws_df |>
+    mutate(
+        `italic(p)<0.5` = p < 0.5,
+        `{0.5<italic(p)}<0.75` = p > 0.5 & p < 0.75,
+        `lower~80*'%'` = p < quantile(p, probs = 0.8),
+        `middle~80*'%'` = p > quantile(p, probs = 0.1) & p < quantile(p, probs = 0.9)
+    ) |>
+    pivot_longer(cols = `italic(p)<0.5`:`middle~80*'%'`) |>
+    mutate(name = factor(name, levels = partion_vector)) |>
+    ggplot(aes(x = p, fill = value)) +
+    geom_histogram(boundary = 0, binwidth = 0.01) +
+    scale_x_continuous(expression(proportion ~ water ~ (italic(p))), limits = 0:1) +
+    scale_y_continuous(NULL, breaks = NULL) +
+    scale_fill_viridis_d(end = 0.6, breaks = NULL) +
+    facet_wrap(~name, labeller = label_parsed)
 ```
 
 ### Visualizzazione dei campioni
