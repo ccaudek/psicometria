@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -66,7 +32,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/probability/03_prob_on_general_spaces.html" rel="next">
 <link href="../../chapters/probability/01_intro_prob.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -105,6 +70,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -864,7 +830,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1393,7 +1359,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/probability/introduction_probability.html">Probabilità</a></li><li class="breadcrumb-item"><a href="../../chapters/probability/02_prob_spaces.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-prob-spaces" class="quarto-section-identifier"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Codice</button></div></div>
+<h1 class="title"><span id="sec-prob-spaces" class="quarto-section-identifier"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Misura di Probabilità</span></span></h1>
 </div>
 
 
@@ -1930,8 +1896,6 @@ Figura&nbsp;25.16: Le misure possono anche essere costruite allocando la misura 
 <p>In conclusione, le nozioni di misura e distribuzione di probabilità sono strumenti potenti per allocare e manipolare la nostra certezza tra diversi eventi possibili. Comprendere questi concetti è fondamentale per comprendere le applicazioni della teoria della probabilità e della statistica bayesiana. La “misura totale” <span class="math inline">\(M\)</span> rappresenta la nostra certezza complessiva, e le distribuzioni di probabilità ci permettono di distribuire questa certezza in modo coerente e informato tra gli eventi possibili.</p>
 
 
-<!-- -->
-
 </section>
 
 </main> <!-- /main -->
@@ -2168,57 +2132,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2561,443 +2474,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Fondamenti della probabilità: assiomi di Kolmogorov e sigma-algebra</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Eseguire il codice</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Misura di Probabilità {#sec-prob-spaces}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>**Prerequisiti**</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Leggi l'@sec-combinatorics.</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>**Concetti e Competenze Chiave**</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduzione {.unnumbered}</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">### Introduzione alle Probabilità: Origine e Definizione</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Da dove derivano matematicamente i numeri che chiamiamo "probabilità"? Per rispondere, ci riferiamo alla trattazione di <span class="co">[</span><span class="ot">Michael Betancourt</span><span class="co">](https://github.com/betanalpha/quarto_chapters/tree/main)</span>, che chiarisce il concetto di *distribuzione di probabilità*. Questo capitolo offre una versione semplificata del suo lavoro, mantenendo la notazione e le figure originali.</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Betancourt afferma che i principi della teoria della probabilità sono semplici; le difficoltà matematiche emergono principalmente nell'applicazione a insiemi complessi come i numeri reali. Per semplificare, Betancourt introduce i fondamenti della teoria della probabilità utilizzando uno spazio campionario composto da un numero finito di elementi.</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Insiemi Finiti</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Un **insieme finito** è costituito da un numero finito di elementi distinti,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>X = <span class="sc">\{</span>x_1, ..., x_N<span class="sc">\}</span>.</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>Qui, l'indice numerico serve a distinguere gli $N$ elementi individuali, senza implicare necessariamente un ordine particolare tra di essi. Per evitare qualsiasi presunzione di ordine, Betancourt utilizza un insieme di cinque elementi come esempio:</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>X = <span class="sc">\{</span>\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit<span class="sc">\}</span>.</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="al">![Un insieme finito contiene un numero finito di elementi. Questo particolare insieme ne contiene cinque.](figures/ambient_set/ambient_set)</span>{width=50% #fig-ambient_set}</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>Nelle applicazioni pratiche della teoria della probabilità, gli elementi astratti $x_{n}$ rappresentano oggetti concreti e significativi. Tuttavia, in questo capitolo, ci si concentrerà esclusivamente sui concetti matematici, evitando qualsiasi interpretazione particolare. Quando $X$ è inteso a rappresentare *tutti* gli oggetti di interesse in una data applicazione, viene denominato **spazio campionario**.</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>Una volta definito lo spazio campionario, possiamo organizzare e manipolare i suoi elementi in vari modi.</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sottoinsiemi</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Un **sottoinsieme** di $X$ è qualsiasi collezione di elementi in $X$. Per evitare ambiguità, userò esclusivamente lettere romane minuscole $x$ per indicare un elemento variabile nello spazio campionario $X$ e lettere minuscole sans serif $\mathsf{x}$ per indicare un sottoinsieme variabile.</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>Ad esempio, $\mathsf{x} = <span class="sc">\{</span>\Box, \diamondsuit, \heartsuit<span class="sc">\}</span>$ è un sottoinsieme di $X = <span class="sc">\{</span>\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit<span class="sc">\}</span>$. Importante notare che nel concetto di sottoinsieme non esiste la nozione di molteplicità, solo di appartenenza: un sottoinsieme può includere un elemento $x_{n}$ ma non può includerlo più volte.</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="al">![Un sottoinsieme $\mathsf{x} \subset X$ è qualsiasi collezione di elementi dallo spazio campionario $X$. Qui $\mathsf{x} = \{\Box, \diamondsuit, \heartsuit\}$ contiene solo tre dei cinque elementi in $X = \{\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit\}.](figures/subset/subset)</span>{width=50% #fig-subset}</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>Se $\mathsf{x}$ è un sottoinsieme dello spazio campionario $X$ allora scriviamo $\mathsf{x} \subset X$. Quando $\mathsf{x}$ potrebbe contenere tutti gli elementi di $X$, nel qual caso $\mathsf{x} = X$, allora scriviamo $\mathsf{x} \subseteq X$. </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>Indipendentemente da quanti elementi un insieme finito $X$ contiene, possiamo sempre costruire tre tipi speciali di sottoinsiemi. L'**insieme vuoto** $\emptyset = \{\}$ non contiene alcun elemento. D'altra parte, l'intero insieme stesso può essere considerato un sottoinsieme contenente tutti gli elementi. Un sottoinsieme contenente un singolo elemento è denotato $\{ x_{n} \}$ e chiamato **insieme atomico**.</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>Ci sono</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>{N \choose n} = \frac{ N! }{ n! (N - n)!}</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>modi per selezionare $n$ elementi da un insieme finito di $N$ elementi totali, e quindi ${N \choose n}$ sottoinsiemi totali di dimensione $n$. Ad esempio, esiste un solo sottoinsieme che non contiene elementi,</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>{N \choose 0} = \frac{ N! }{ 0! (N - 0)!} = \frac{ N! }{ N! } = 1,</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>che è solo l'insieme vuoto. Allo stesso modo, esiste un solo sottoinsieme che contiene tutti gli elementi,</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>{N \choose N} = \frac{ N! }{ N! (N - N)!} = \frac{ N! }{ N! } = 1,</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>che è solo l'insieme completo stesso. D'altra parte, ci sono</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>{N \choose 1} = \frac{ N! }{ 1! (N - 1)!} = N</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>insiemi atomici distinti che contengono un solo elemento, uno per ciascun elemento in $X$.</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>Contando tutti i sottoinsiemi di tutte le dimensioni possibili si ottiene</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>\sum_{n = 0}^{N} {N \choose n} = 2^{N}</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>sottoinsiemi possibili che possiamo costruire da un insieme finito con $N$ elementi. </span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>La collezione di tutti i sottoinsiemi è essa stessa un insieme finito con $2^{N}$ elementi. Chiamiamo questo insieme **insieme potenza** di $X$ e lo denotiamo $2^{X}$.</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operazioni sui Sottoinsiemi</span></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>Possiamo sempre costruire sottoinsiemi elemento per elemento, ma possiamo anche costruirli manipolando sottoinsiemi esistenti.</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>Ad esempio, dato un sottoinsieme $\mathsf{x} \subset X$ possiamo costruire il suo **complemento** raccogliendo tutti gli elementi in $X$ che non sono già in $\mathsf{x}$. L'insieme atomico $\mathsf{x} = <span class="sc">\{</span> \diamondsuit <span class="sc">\}</span>$ contiene l'unico elemento $\diamondsuit$ e il suo complemento contiene i rimanenti elementi</span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>\mathsf{x}^{c} = <span class="sc">\{</span> \Box, \clubsuit, \heartsuit, \spadesuit <span class="sc">\}</span>.</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>Per costruzione, il complemento dell'insieme vuoto è l'intero insieme, $\emptyset^{c} = X$, e il complemento dell'insieme completo è l'insieme vuoto, $X^{c} = \emptyset$.</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="al">![Il complemento di un sottoinsieme $\mathsf{x}$ è il sottoinsieme $\mathsf{x}^{c}$ costituito da tutti gli elementi nello spazio campionario che non sono in $\mathsf{x}$.](figures/complement/complement)</span>{width=75% #fig-complement}</span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>Ad esempio, applicando l'operatore di complemento al sottoinsieme $\mathsf{x} = <span class="sc">\{</span> \clubsuit, \spadesuit <span class="sc">\}</span>$ otteniamo</span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>\mathsf{x}^{c}</span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\{</span> \clubsuit, \spadesuit <span class="sc">\}</span>^{c}</span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\{</span> \Box, \diamondsuit, \heartsuit <span class="sc">\}</span>.</span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>Possiamo anche costruire sottoinsiemi da più di un sottoinsieme. Consideriamo, ad esempio, due sottoinsiemi $\mathsf{x}_1 = \{ \Box, \heartsuit \}$ e $\mathsf{x}_2 = \{ \Box, \spadesuit \}$. La collezione di tutti gli elementi che sono contenuti in _uno qualsiasi_ dei due sottoinsiemi è essa stessa un sottoinsieme,</span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="sc">\{</span> \Box, \heartsuit, \spadesuit <span class="sc">\}</span> \subset X,</span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>così come la collezione di tutti gli elementi che sono contenuti in _entrambi_ i sottoinsiemi,</span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a><span class="sc">\{</span> \Box <span class="sc">\}</span> \subset X.</span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>Questi sottoinsiemi derivati sono chiamati rispettivamente **unione**,</span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_1 \cup \mathsf{x}_2</span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\{</span> \Box, \heartsuit <span class="sc">\}</span> \cup <span class="sc">\{</span> \Box, \spadesuit <span class="sc">\}</span></span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\{</span> \Box, \heartsuit, \spadesuit <span class="sc">\}</span>,</span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>e **intersezione**,</span>
-<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_1 \cap \mathsf{x}_2</span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\{</span> \Box, \heartsuit <span class="sc">\}</span> \cap <span class="sc">\{</span> \Box, \spadesuit <span class="sc">\}</span></span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>= <span class="sc">\{</span> \Box <span class="sc">\}</span>.</span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="al">![Possiamo manipolare due sottoinsiemi in vari modi per ottenere un nuovo sottoinsieme.](figures/overlapping_subsets/overlapping_subsets)</span>{width=75% #fig-subsets}</span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a><span class="al">![L'unione di due sottoinsiemi, $\mathsf{x}_1 \cup \mathsf{x}_2$, è un sottoinsieme contenente tutti gli elementi di entrambi i sottoinsiemi in input. D'altra parte, l'intersezione di due sottoinsiemi, $\mathsf{x}_1 \cap \mathsf{x}_2$, è un sottoinsieme contenente solo gli elementi che compaiono in entrambi i sottoinsiemi in input.](figures/overlapping_subsets_ui/overlapping_subsets_ui)</span>{width=75% #fig-ui}</span>
-<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>Due sottoinsiemi sono **disgiunti** se non condividono alcun elemento; in questo caso la loro intersezione è l'insieme vuoto,</span>
-<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_{1} \cap \mathsf{x}_{2} = \emptyset.</span>
-<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>L'unione e l'intersezione di un sottoinsieme con se stesso restituiscono quel sottoinsieme,</span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>\mathsf{x} \cup \mathsf{x} = \mathsf{x} \cap \mathsf{x} = \mathsf{x}.</span>
-<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>Poiché l'insieme vuoto non contiene alcun elemento, la sua unione con qualsiasi sottoinsieme restituisce quel sottoinsieme,</span>
-<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>\mathsf{x} \cup \emptyset = \emptyset \cup \mathsf{x} = \mathsf{x},</span>
-<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>e la sua intersezione con qualsiasi sottoinsieme restituisce l'insieme vuoto,</span>
-<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>\mathsf{x} \cap \emptyset = \emptyset \cap \mathsf{x} = \emptyset.</span>
-<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>Allo stesso modo, l'unione di un sottoinsieme con l'insieme completo restituisce l'insieme completo,</span>
-<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>\mathsf{x} \cup X = X \cup \mathsf{x} = X,</span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>e l'intersezione di un sottoinsieme con l'insieme completo restituisce quel sottoinsieme,</span>
-<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>\mathsf{x} \cap X = X \cap \mathsf{x} = \mathsf{x}.</span>
-<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a><span class="fu">## Misura e Probabilità sugli Elementi</span></span>
-<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>Da un punto di vista matematico, _la teoria della misura_ riguarda l'**allocazione** coerente di una qualche quantità astratta attraverso lo spazio campionario. Consideriamo un _serbatoio_ (il termine standard in questo contesto sarebbe "misura totale" o "massa totale") di una qualche quantità positiva, continua e _conservata_, $M \in [0, \infty]$. Poiché $M$ è conservato, qualsiasi quantità $m_{n}$ che viene allocata all'elemento $x_{n} \in X$ deve essere _detratta_ dal serbatoio, lasciando meno da allocare agli altri elementi.</span>
-<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>Un caso particolare si verifica quando il contenuto totale del serbatoio $M$ è infinito. In questo scenario, possiamo allocare una quantità infinita dal serbatoio pur avendo ancora una quantità infinita rimanente. Allo stesso tempo, allocare una quantità infinita può esaurire completamente il serbatoio o lasciare qualsiasi quantità finita residua. L'infinito è un concetto matematicamente complesso da trattare.</span>
-<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a><span class="al">![La teoria della misura riguarda l'allocazione di una qualche quantità continua e positiva $M$ sugli elementi individuali dello spazio campionario.](figures/allocations/0/0)</span>{width=50% #fig-reservoir}</span>
-<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>Un'allocazione _esaustiva_ di $M$ su tutto lo spazio campionario assicura che il serbatoio sia completamente svuotato. In altre parole, l'intero valore di $M$ deve essere distribuito tra gli elementi $x_{n} \in X$.</span>
-<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>Per illustrare questo concetto, consideriamo il nostro spazio campionario dimostrativo $X = <span class="sc">\{</span>\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit <span class="sc">\}</span>$. Il processo di allocazione può essere descritto come segue:</span>
-<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Allocchiamo $m_\Box$ a $\Box$, lasciando $M - m_\Box$ nel serbatoio.</span>
-<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Assegniamo $m_\clubsuit$ a $\clubsuit$, riducendo ulteriormente il contenuto del serbatoio a $M - m_\Box - m_\clubsuit$.</span>
-<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Continuiamo questo processo per $\diamondsuit$ e $\heartsuit$.</span>
-<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Infine, per svuotare completamente il serbatoio, dobbiamo allocare tutto ciò che rimane a $\spadesuit$.</span>
-<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>Matematicamente, l'ammontare finale allocato a $\spadesuit$ sarà:</span>
-<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>M - m_{\Box} - m_{\clubsuit} - m_{\diamondsuit} - m_{\heartsuit}.</span>
-<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>Questa allocazione finale assicura che la somma di tutte le quantità distribuite sia esattamente uguale a $M$, svuotando così completamente il serbatoio.</span>
-<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>::: {#fig-allocation layout="[ <span class="co">[</span><span class="ot">45, 45</span><span class="co">]</span>, <span class="co">[</span><span class="ot">45, 45</span><span class="co">]</span>, <span class="co">[</span><span class="ot">-22.5, 45, -22.5</span><span class="co">]</span>]"}</span>
-<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/allocations/1/1)</span>{#fig-allocationa}</span>
-<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/allocations/2/2)</span>{#fig-allocationb}</span>
-<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/allocations/3/3)</span>{#fig-allocationc}</span>
-<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/allocations/4/4)</span>{#fig-allocationd}</span>
-<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/allocations/5/5)</span>{#fig-allocatione}</span>
-<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>Poiché la quantità totale $M$ è conservata, ogni allocazione $m_{n}$ a un elemento $x_{n} \in X$ riduce la quantità disponibile per l'allocazione agli altri elementi. Un'allocazione esaustiva non lascia nulla nel serbatoio iniziale dopo che ciascun elemento ha ricevuto la sua allocazione.</span>
-<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>Una **misura** è qualsiasi allocazione coerente della quantità $M$ agli elementi di uno spazio campionario. Matematicamente, qualsiasi misura su un insieme finito può essere caratterizzata da $N$ numeri</span>
-<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>\mu = <span class="sc">\{</span> m_{1}, \ldots, m_{N} <span class="sc">\}</span></span>
-<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>che soddisfano</span>
-<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>0 \le m_{n}</span>
-<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>e</span>
-<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>\sum_{n = 1}^{N} m_{n} = M.</span>
-<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>Ad esempio, qualsiasi misura sui cinque elementi dell'insieme $X = <span class="sc">\{</span>\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit<span class="sc">\}</span>$ è specificata da cinque numeri positivi $<span class="sc">\{</span> m_\Box, m_\clubsuit, m_\diamondsuit, m_\heartsuit, m_\spadesuit <span class="sc">\}</span>$ che soddisfano</span>
-<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>m_\Box + m_\clubsuit + m_\diamondsuit + m_\heartsuit + m_\spadesuit = M.</span>
-<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a><span class="al">![Una misura $\mu$ su un insieme finito $X$ è qualsiasi allocazione coerente di $M$ agli elementi $x_{n} \in X. Ogni misura può essere caratterizzata da $N$ numeri $m_{n}$ che sommano a $M$, o equivalentemente una funzione che mappa ogni elemento $x_{n}$ alla sua misura allocata $m_{n}$.](figures/measure/measure)</span>{width=50% #fig-measure}</span>
-<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>Più grande è $m_{n}$, più di $M$ viene allocato all'elemento $x_{n}$. Seguendo questa terminologia, chiameremo anche $M$ come la **misura totale** e $m_{n}$ come la **misura allocata a $x_{n}$**.</span>
-<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>In questa discussione, ci occuperemo solo di misure finite, dove la misura totale $M$ è un numero positivo e finito ($0 \leq M \leq \infty$). Non tratteremo il caso di misure infinite ($M = \infty$), poiché richiede considerazioni più complesse che vanno oltre lo scopo di questa trattazione.</span>
-<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>Una misura $\mu$ su uno spazio campionario $X$ può essere vista come una funzione che assegna un valore numerico non negativo (la misura) a ogni elemento dello spazio:</span>
-<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>\begin{alignat*}{6}</span>
-<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>\mu :\; &amp; X &amp; &amp;\rightarrow&amp; \; &amp; <span class="co">[</span><span class="ot">0, \infty</span><span class="co">]</span> &amp;</span>
-<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a><span class="sc">\\</span></span>
-<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>&amp; x_{n} &amp; &amp;\mapsto&amp; &amp; m_{n} = \mu(x_{n}) &amp;,</span>
-<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>\end{alignat*}</span>
-<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>dove:</span>
-<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$X$ è lo spazio campionario,</span>
-<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$x_n$ è un elemento di $X$,</span>
-<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$m_n$ è la misura assegnata a $x_n$.</span>
-<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>Questo approccio funzionale ci permette di considerare ogni elemento dello spazio campionario separatamente, valutando $\mu(x_{n})$ per ciascun $x_{n}$, invece di dover gestire tutte le allocazioni contemporaneamente.</span>
-<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>È importante notare che esistono molti modi diversi per distribuire una misura totale $M$ tra gli elementi di un insieme finito. L'insieme di tutte le possibili misure su $X$ si indica con $\mathcal{M}(X)$.</span>
-<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>All'interno di questa collezione ci sono alcuni esempi notevoli. Ad esempio, una **misura singolare** alloca la misura totale $M$ a un singolo elemento, lasciando il resto con niente. D'altra parte, una **misura uniforme** alloca la stessa misura $M / N$ a ciascun elemento. Su insiemi finiti ci sono $N$ misure singolari distinte, una per ciascun elemento distinto, e una misura uniforme unica.</span>
-<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>::: {#fig-types_of_measure layout="[ <span class="co">[</span><span class="ot">45, 45</span><span class="co">]</span> ]"}</span>
-<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/singular_measure/singular_measure)</span>{#fig-types_of_measurea}</span>
-<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a><span class="al">![](figures/uniform_measure/uniform_measure)</span>{#fig-types_of_measureb}</span>
-<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>Una misura singolare (a) alloca la misura totale a un singolo elemento, mentre la misura uniforme (b) distribuisce la misura totale uniformemente a ciascun elemento.</span>
-<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>Le misure finite sono una categoria particolarmente importante nel campo della teoria della misura. Una misura si definisce finita quando la sua misura totale $M$ è un numero positivo e limitato, ovvero $0 &lt; M &lt; \infty$. </span>
-<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>L'importanza delle misure finite risiede nella possibilità di esprimere le allocazioni in termini relativi anziché assoluti. Questo significa che possiamo rappresentare la misura di ciascun elemento come una frazione o una percentuale della misura totale, invece di usare il valore assoluto.</span>
-<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>Invece di considerare la misura assoluta allocata a ciascun elemento $m_{n}$, possiamo considerare la *proporzione* della misura totale allocata a ciascun elemento</span>
-<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>p_{n} = m_{n} / M.</span>
-<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>Per costruzione, le proporzioni sono confinate all'intervallo unitario $<span class="co">[</span><span class="ot">0, 1</span><span class="co">]</span>$. Come per qualsiasi quantità che assume valori in $<span class="co">[</span><span class="ot">0, 1</span><span class="co">]</span>$, possiamo rappresentare le proporzioni altrettanto bene con decimali, ad esempio $p_{n} = 0.2$, e percentuali, $p_{n} = 20\%$.</span>
-<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>Questo approccio relativo offre diversi vantaggi: permette di confrontare facilmente l'importanza relativa di diversi elementi, facilita la comprensione della distribuzione della misura sull'intero spazio campionario e consente di normalizzare misure diverse, rendendo più semplice il confronto tra sistemi diversi. In sintesi, le misure finite ci permettono di passare da una visione "assoluta" a una "relativa" della distribuzione della misura, offrendo una prospettiva più intuitiva e utile per l'analisi.</span>
-<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a><span class="al">![Ogni misura finita può essere caratterizzata da un'allocazione proporzionale.](figures/proportional_measure/proportional_measure)</span>{width=50% #fig-proportional}</span>
-<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a>In altre parole, una misura proporzionale definisce la funzione</span>
-<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>\begin{alignat*}{6}</span>
-<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>\pi :\; &amp; X &amp; &amp;\rightarrow&amp; \; &amp; <span class="co">[</span><span class="ot">0, 1</span><span class="co">]</span> &amp;</span>
-<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a><span class="sc">\\</span></span>
-<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>&amp; x_{n} &amp; &amp;\mapsto&amp; &amp; p_{n} = \pi(x_{n}) &amp;</span>
-<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>\end{alignat*}</span>
-<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>con</span>
-<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>0 \le p_{n} \le 1</span>
-<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a>e</span>
-<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a>\sum_{n = 1}^{N} p_{n} = 1.</span>
-<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a>Una collezione di variabili $<span class="sc">\{</span> p_{1}, \ldots, p_{N} <span class="sc">\}</span>$ che soddisfano queste proprietà è chiamata **simplex**.</span>
-<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a><span class="al">![Un'allocazione proporzionale è anche conosciuta come distribuzione di probabilità.](figures/probability_distribution/probability_distribution)</span>{width=50% #fig-probability}</span>
-<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>Più importante, una misura proporzionale $\pi$ è anche conosciuta come **distribuzione di probabilità**, e le allocazioni proporzionali $p_{n}$ sono chiamate **probabilità**. Sebbene il termine "probabilità" sia spesso carico di significati interpretativi e filosofici, la sua struttura matematica è piuttosto semplice: su un insieme finito, una probabilità rappresenta semplicemente la proporzione di una quantità finita assegnata a ciascun elemento individuale.</span>
-<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a><span class="fu">## Misura e Probabilità sui Sottoinsiemi</span></span>
-<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>Sugli insiemi finiti, qualsiasi allocazione, sia assoluta che proporzionale, agli elementi individuali $x \in X$ determina anche un'allocazione per i sottoinsiemi $\mathsf{x} \in 2^{X}$. La misura assegnata a un sottoinsieme è semplicemente la somma delle misure assegnate agli elementi che lo compongono. Ad esempio, la misura assegnata al sottoinsieme $\mathsf{x} = <span class="sc">\{</span> \Box, \clubsuit, \heartsuit <span class="sc">\}</span>$ è $m_{\Box} + m_{\clubsuit} + m_{\heartsuit}$.</span>
-<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a><span class="al">![Su un insieme finito, un'allocazione sugli elementi individuali definisce anche un'allocazione su qualsiasi sottoinsieme.](figures/subset_measure/subset_measure)</span>{width=50% #fig-subset_measure}</span>
-<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>Per costruzione, qualsiasi misura sui sottoinsiemi e distribuzione di probabilità soddisfano una serie di proprietà utili. Ad esempio, per qualsiasi misura</span>
-<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a>\mu( \emptyset ) = 0</span>
-<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>e</span>
-<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a>\mu( X ) = \sum_{n = 1}^{N} \mu(x_{n}) = M,</span>
-<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a>mentre per qualsiasi distribuzione di probabilità abbiamo $\pi( \emptyset ) = 0$ e $\pi( X ) = 1$.</span>
-<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>Le allocazioni sui sottoinsiemi si combinano in modo naturale con le operazioni sui sottoinsiemi. Consideriamo, ad esempio, i due sottoinsiemi disgiunti $\mathsf{x}_{1} = \{ \Box, \diamondsuit \}$ e $\mathsf{x}_{2} = <span class="sc">\{</span> \clubsuit, \spadesuit <span class="sc">\}</span>$. Poiché i due sottoinsiemi sono disgiunti, la loro unione include semplicemente tutti i loro elementi:</span>
-<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_{1} \cup \mathsf{x}_{2}</span>
-<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a><span class="sc">\{</span> \Box, \diamondsuit <span class="sc">\}</span> \cup <span class="sc">\{</span> \clubsuit, \spadesuit <span class="sc">\}</span></span>
-<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a><span class="sc">\{</span> \Box, \clubsuit, \diamondsuit, \spadesuit <span class="sc">\}</span>,</span>
-<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>e la misura di questa unione è solo la somma delle misure dei due sottoinsiemi:</span>
-<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>\begin{align*}</span>
-<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a>\mu ( \mathsf{x}_{1} \cup \mathsf{x}_{2} )</span>
-<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>&amp;=</span>
-<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>\mu ( <span class="sc">\{</span> \Box, \clubsuit, \diamondsuit, \spadesuit <span class="sc">\}</span> )</span>
-<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a><span class="sc">\\</span></span>
-<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a>&amp;=</span>
-<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>m_{\Box} + m_{\clubsuit} + m_{\diamondsuit} + m_{\spadesuit}</span>
-<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a><span class="sc">\\</span></span>
-<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>&amp;=</span>
-<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a>( m_{\Box} + m_{\diamondsuit} ) + ( m_{\clubsuit} + m_{\spadesuit} )</span>
-<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a><span class="sc">\\</span></span>
-<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a>&amp;=</span>
-<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a>\mu( \mathsf{x}_{1} ) + \mu( \mathsf{x}_{2} ).</span>
-<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a>\end{align*}</span>
-<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>Più in generale, per qualsiasi collezione di sottoinsiemi</span>
-<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_{1}, \ldots, \mathsf{x}_{K}</span>
-<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a>che sono reciprocamente disgiunti,</span>
-<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_{k} \cap \mathsf{x}_{k'} = \emptyset \quad \text{per} \quad k \ne k',</span>
-<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>abbiamo</span>
-<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a>\mu ( \cup_{k = 1}^{K} \mathsf{x}_{k} )</span>
-<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a>=</span>
-<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a>\sum_{k = 1}^{K} \mu ( \mathsf{x}_{k} ).</span>
-<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>In altre parole, se possiamo scomporre un sottoinsieme in una collezione di sottoinsiemi più piccoli e disgiunti, possiamo anche scomporre la misura allocata a quel sottoinsieme iniziale nelle misure allocate ai sottoinsiemi componenti. Questa proprietà di coerenza è chiamata **additività**.</span>
-<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a>Un sottoinsieme $\mathsf{x}$ e il suo complemento $\mathsf{x}^{c}$ sono sempre disgiunti, ovvero $\mathsf{x} \cap \mathsf{x}^{c} = \emptyset$. Allo stesso tempo, la loro unione copre l'intero insieme: $\mathsf{x} \cup \mathsf{x}^{c} = X$. Di conseguenza, l'additività implica che:</span>
-<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a>\begin{align*}</span>
-<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>M &amp;= \mu (X) <span class="sc">\\</span></span>
-<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a>  &amp;= \mu ( \mathsf{x} \cup \mathsf{x}^{c} ) <span class="sc">\\</span></span>
-<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>  &amp;= \mu ( \mathsf{x} ) + \mu ( \mathsf{x}^{c} ),</span>
-<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>\end{align*}</span>
-<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>da cui segue che:</span>
-<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a>\mu ( \mathsf{x}^{c} ) = M - \mu ( \mathsf{x} ).</span>
-<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a>In altre parole, la misura assegnata al complemento di un sottoinsieme è la misura totale meno la misura assegnata a quel sottoinsieme. Per le distribuzioni di probabilità, questo concetto è ancora più evidente:</span>
-<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>\pi ( \mathsf{x}^{c} ) = 1 - \pi ( \mathsf{x} ).</span>
-<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a>Quando due sottoinsiemi si sovrappongono, dobbiamo considerare che la somma delle loro misure $\mu (\mathsf{x}_{1} ) + \mu ( \mathsf{x}_{2} )$ conta due volte la misura degli elementi condivisi tra di essi. Ad esempio, se $\mathsf{x}_{1} = \{ \Box, \heartsuit \}$ e $\mathsf{x}_{2} = <span class="sc">\{</span> \Box, \spadesuit <span class="sc">\}</span>$, allora l'unione include l'elemento sovrapposto $\Box$ solo una volta:</span>
-<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a>\mathsf{x}_{1} \cup \mathsf{x}_{2} = <span class="sc">\{</span> \Box, \heartsuit <span class="sc">\}</span> \cup <span class="sc">\{</span> \Box, \spadesuit <span class="sc">\}</span> = <span class="sc">\{</span> \Box, \heartsuit, \spadesuit <span class="sc">\}</span>.</span>
-<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a>Di conseguenza:</span>
-<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a>\begin{align*}</span>
-<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a>\mu( \mathsf{x}_{1} \cup \mathsf{x}_{2} ) &amp;= \mu( <span class="sc">\{</span> \Box, \heartsuit, \spadesuit <span class="sc">\}</span> ) <span class="sc">\\</span></span>
-<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>&amp;= m_{\Box} + m_{\heartsuit} + m_{\spadesuit}.</span>
-<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>\end{align*}</span>
-<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a>Sommando le misure allocate ai due sottoinsiemi individualmente, tuttavia, otteniamo:</span>
-<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a>\begin{align*}</span>
-<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a>\mu( \mathsf{x}_{1} ) + \mu ( \mathsf{x}_{2} ) &amp;= (m_{\Box} + m_{\heartsuit} ) + ( m_{\Box} + m_{\spadesuit} ) <span class="sc">\\</span></span>
-<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a>&amp;= m_{\Box} + m_{\Box} + m_{\heartsuit} + m_{\spadesuit} <span class="sc">\\</span></span>
-<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a>&amp;= m_{\Box} + \mu( \mathsf{x}_{1} \cup \mathsf{x}_{2} ).</span>
-<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a>\end{align*}</span>
-<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a>L'elemento che viene contato due volte è esattamente l'unico elemento nell'intersezione dei due sottoinsiemi:</span>
-<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a>m_{\Box} = \mu( <span class="sc">\{</span> \Box <span class="sc">\}</span> ) = \mu( \mathsf{x}_{1} \cap \mathsf{x}_{2} ).</span>
-<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a>In altre parole, possiamo scrivere:</span>
-<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a>\mu( \mathsf{x}_{1} ) + \mu ( \mathsf{x}_{2} ) = \mu( \mathsf{x}_{1} \cup \mathsf{x}_{2} ) + \mu( \mathsf{x}_{1} \cap \mathsf{x}_{2} ).</span>
-<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a>Questa relazione vale per *qualsiasi* due sottoinsiemi, indipendentemente dalla loro sovrapposizione.</span>
-<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a><span class="al">![Quando due sottoinsiemi si sovrappongono, la misura allocata a ciascuno conta doppio la misura allocata a qualsiasi elemento sovrapposto, qui $\Box$, ma la misura allocata alla loro unione no. Questo risulta in una relazione importante tra le misure allocate ai due sottoinsiemi, la misura allocata alla loro unione e la misura allocata alla loro intersezione.](figures/overlapping_subsets_measures/overlapping_subsets_measures)</span>{width=75% #fig-overlapping_subsets_measures}</span>
-<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a>Queste proprietà dei sottoinsiemi ci permettono di costruire una misura in molti modi diversi, ciascuno dei quali può essere utile in circostanze diverse. Questa flessibilità è molto comoda quando si applica la teoria della misura e la teoria della probabilità nella pratica.</span>
-<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a>Ad esempio, possiamo specificare una misura in due modi principali:</span>
-<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Allocazione globale**: possiamo assegnare le misure a tutti gli elementi individuali contemporaneamente. Questo metodo considera l'intero insieme fin dall'inizio e assegna una misura a ciascun elemento.</span>
-<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a><span class="al">![Le misure possono essere costruite specificando le allocazioni degli elementi individuali tutte insieme.](figures/decompositions/all_at_once/all_at_once)</span>{width=33% #fig-all_at_once}</span>
-<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Allocazione locale**: possiamo assegnare la misura a ciascun elemento uno alla volta. Questo metodo permette di concentrarsi su un elemento alla volta, aggiungendo gradualmente le misure agli altri elementi.</span>
-<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a><span class="al">![Allo stesso tempo, le misure possono essere costruite specificando le allocazioni degli elementi individuali uno alla volta.](figures/decompositions/one_at_a_time/one_at_a_time)</span>{width=100% #fig-one_at_a_time}</span>
-<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a>Inoltre, non è sempre necessario partire dalle allocazioni individuali. Un altro metodo consiste nel:</span>
-<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Allocazione iterativa**: possiamo iniziare allocando la misura totale a sottoinsiemi disgiunti e poi affinare iterativamente questa allocazione suddividendo i sottoinsiemi in parti sempre più piccole fino a raggiungere gli elementi individuali.</span>
-<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a><span class="al">![Le misure possono anche essere costruite allocando la misura totale a sottoinsiemi disgiunti e poi raffinando iterativamente tale allocazione a sottoinsiemi sempre più piccoli.](figures/decompositions/refinement/refinement)</span>{width=100% #fig-refinement}</span>
-<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a>Questa flessibilità nelle modalità di costruzione delle misure è particolarmente utile perché permette di adattare l'approccio alle specifiche necessità del problema in questione. Ad esempio, nella pratica, potremmo trovare più semplice allocare inizialmente misure a grandi gruppi di elementi e poi suddividere questi gruppi, oppure potremmo voler assegnare le misure a ciascun elemento uno per uno a seconda delle esigenze del contesto.</span>
-<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a>Infine, la definizione di misura sui sottoinsiemi $\mu : 2^{X} \rightarrow <span class="co">[</span><span class="ot">0, \infty</span><span class="co">]</span>$ è cruciale per estendere la teoria della misura oltre gli insiemi finiti. Questa estensione è necessaria per definire misure in modo coerente su insiemi matematicamente più complessi, come la retta reale.</span>
-<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a><span class="fu">## Commenti e considerazioni finali</span></span>
-<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a>Il significato applicativo delle nozioni di misura e distribuzione di probabilità è centrale per comprendere come utilizzare questi concetti nella pratica, in particolare nella statistica bayesiana. Il punto cruciale è capire cosa rappresenta $M$, la "misura totale". Nelle applicazioni bayesiane, $M$ rappresenta la nostra certezza complessiva.</span>
-<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-424"><a href="#cb1-424" aria-hidden="true" tabindex="-1"></a>Quando si lavora con distribuzioni di probabilità, stiamo effettivamente allocando questa certezza complessiva tra diversi eventi possibili. Una distribuzione (di massa) di probabilità è quindi l'allocazione relativa della nostra certezza tra un insieme di eventi disgiunti. Ogni probabilità individuale, $p_n$, rappresenta la proporzione della nostra certezza totale che assegniamo a un particolare evento.</span>
-<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a>Nella teoria bayesiana, la "misura totale" $M$ è interpretata come la somma totale delle probabilità, che è sempre uguale a 1. Questo riflette il fatto che la somma delle nostre certezze relative per tutti gli eventi possibili deve essere completa: siamo completamente certi che uno degli eventi nel nostro spazio campionario si verificherà.</span>
-<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-428"><a href="#cb1-428" aria-hidden="true" tabindex="-1"></a>Quando creiamo una distribuzione di probabilità, stiamo dividendo questa certezza totale tra i vari eventi possibili nel nostro spazio campionario. Ad esempio, se stiamo analizzando un problema con cinque possibili esiti distinti, dobbiamo allocare l'intera certezza (pari a 1) tra questi esiti. Ogni valore di probabilità $p_n$ rappresenta la frazione della nostra certezza totale che attribuiamo a un particolare esito.</span>
-<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-430"><a href="#cb1-430" aria-hidden="true" tabindex="-1"></a>Le nozioni di misura e distribuzione di probabilità trovano numerose applicazioni pratiche. Ad esempio:</span>
-<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-432"><a href="#cb1-432" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Inferenza bayesiana*: Utilizziamo distribuzioni di probabilità per rappresentare le nostre incertezze sui parametri di interesse. Dopo aver osservato i dati, aggiorniamo queste distribuzioni tramite il teorema di Bayes.</span>
-<span id="cb1-433"><a href="#cb1-433" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Modellizzazione probabilistica*: Costruiamo modelli che descrivono il comportamento di sistemi complessi assegnando probabilità agli eventi possibili. Questo ci permette di fare previsioni e prendere decisioni informate basate sulle probabilità assegnate.</span>
-<span id="cb1-434"><a href="#cb1-434" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-435"><a href="#cb1-435" aria-hidden="true" tabindex="-1"></a>In conclusione, le nozioni di misura e distribuzione di probabilità sono strumenti potenti per allocare e manipolare la nostra certezza tra diversi eventi possibili. Comprendere questi concetti è fondamentale per comprendere le applicazioni della teoria della probabilità e della statistica bayesiana. La "misura totale" $M$ rappresenta la nostra certezza complessiva, e le distribuzioni di probabilità ci permettono di distribuire questa certezza in modo coerente e informato tra gli eventi possibili.</span></code><button title="Copia negli appunti" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
-</div></div></div></div></div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -3016,4 +2493,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

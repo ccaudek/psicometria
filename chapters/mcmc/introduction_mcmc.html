@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -66,7 +32,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/mcmc/01_metropolis.html" rel="next">
 <link href="../../chapters/bayesian_inference/11_post_pred_distr.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -105,6 +70,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 </head>
@@ -835,7 +801,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1349,7 +1315,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">MCMC</a></li><li class="breadcrumb-item"><a href="../../chapters/mcmc/introduction_mcmc.html">Introduzione</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Introduzione</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Codice</button></div></div>
+<h1 class="title">Introduzione</h1>
 </div>
 
 
@@ -1368,8 +1334,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>In questa sezione della dispensa, ci concentreremo sulle procedure Monte Carlo a catena di Markov, con particolare attenzione all’algoritmo di Metropolis, che consente di approssimare la distribuzione a posteriori quando non è possibile ottenere una soluzione analitica. Esploreremo il concetto di predizione bayesiana, fondamentale per la costruzione della distribuzione predittiva a posteriori, e discuteremo anche la distribuzione predittiva a priori. Applicheremo l’inferenza bayesiana a diversi contesti, tra cui la stima di una proporzione, il confronto tra due proporzioni, la stima di una media da una distribuzione normale e il confronto tra due medie. Esamineremo inoltre il modello bayesiano di Poisson per l’analisi delle frequenze. Infine, introdurremo il modello gerarchico bayesiano, uno strumento potente per affrontare situazioni in cui le osservazioni sono strutturate su diversi livelli di incertezza.</p>
 
-
-<!-- -->
 
 
 </main> <!-- /main -->
@@ -1606,57 +1570,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -1999,11 +1912,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Monte Carlo a Catena di Markov</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Eseguire il codice</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduzione {.unnumbered}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>In questa sezione della dispensa, ci concentreremo sulle procedure Monte Carlo a catena di Markov, con particolare attenzione all'algoritmo di Metropolis, che consente di approssimare la distribuzione a posteriori quando non è possibile ottenere una soluzione analitica. Esploreremo il concetto di predizione bayesiana, fondamentale per la costruzione della distribuzione predittiva a posteriori, e discuteremo anche la distribuzione predittiva a priori. Applicheremo l'inferenza bayesiana a diversi contesti, tra cui la stima di una proporzione, il confronto tra due proporzioni, la stima di una media da una distribuzione normale e il confronto tra due medie. Esamineremo inoltre il modello bayesiano di Poisson per l'analisi delle frequenze. Infine, introdurremo il modello gerarchico bayesiano, uno strumento potente per affrontare situazioni in cui le osservazioni sono strutturate su diversi livelli di incertezza.</span></code><button title="Copia negli appunti" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
-</div></div></div></div></div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -2022,4 +1931,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

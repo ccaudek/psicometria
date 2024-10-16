@@ -86,7 +86,6 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/probability/06_random_var.html" rel="next">
 <link href="../../chapters/probability/04_conditional_prob.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -125,6 +124,7 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -887,7 +887,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1533,13 +1533,6 @@ P(O) = P(O \mid H_1)P(H_1) + P(O \mid H_2)P(H_2).
 P(H_1 \mid O) = \frac{P(O \mid H_1)P(H_1)}{P(O \mid H_1)P(H_1) + P(O \mid H_2)P(H_2)}.
 \tag{29.1}\]</span></span></p>
 <p>Questa espressione costituisce l’essenza della formula di Bayes per il caso semplificato in cui le ipotesi si limitano a due eventi mutualmente esclusivi, <span class="math inline">\(H_1\)</span> e <span class="math inline">\(H_2\)</span>.</p>
-<p>La stessa derivazione può essere presentata in forma visiva nel modo seguente.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../figures/bayes_theorem_visual.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption>Derivazione visiva del teorema di Bayes (immagine ricavata da X).</figcaption>
-</figure>
-</div>
 <p>Nel quadro delle probabilità discrete, questa formula può essere generalizzata per accogliere un insieme più ampio di ipotesi che formano una partizione completa dello spazio degli eventi <span class="math inline">\(\mathcal{H}\)</span>, dove ogni <span class="math inline">\(O\)</span> rappresenta un evento con probabilità maggiore di zero. Per ogni ipotesi <span class="math inline">\(H_i\)</span> all’interno di un insieme numerabile, la formula di Bayes si estende come segue:</p>
 <p><span id="eq-bayes2"><span class="math display">\[
 P(H_i \mid O) = \frac{P(O \mid H_i)P(H_i)}{\sum_{j=1}^{\infty}P(O \mid H_j)P(H_j)}.
@@ -1815,7 +1808,7 @@ P(M^- \mid T^-) = \frac{P(T^- \mid M^-) \cdot (1 - P(M^+))}{P(T^- \mid M^-) \cdo
 <p>Utilizzando i dati della simulazione, la probabilità che una persona abbia il cancro al seno dato un risultato positivo al test è molto vicina al valore teorico calcolato in precedenza (circa 8.3%). Se eseguissimo la simulazione nuovamente, il valore ottenuto potrebbe variare leggermente a causa della casualità intrinseca nel campionamento. Tuttavia, ripetendo la simulazione molte volte, i risultati tenderanno a convergere verso il valore teorico, grazie alla legge dei grandi numeri. Questo conferma che il modello teorico è coerente con i risultati simulati.</p>
 </div>
 <div id="exm-hiv" class="theorem example">
-<p><span class="theorem-title"><strong>Esempio 29.4</strong></span> Poniamoci il problema di capire quanto sia affidabile un test per l’HIV. Per fare questo, utilizzeremo le seguenti informazioni <span class="citation" data-cites="petersen2024principles">(<a href="../../99-references.html#ref-petersen2024principles" role="doc-biblioref"><strong>petersen2024principles?</strong></a>)</span>:</p>
+<p><span class="theorem-title"><strong>Esempio 29.4</strong></span> Poniamoci il problema di capire quanto sia affidabile un test per l’HIV. Per fare questo, utilizzeremo le seguenti informazioni <span class="citation" data-cites="petersen2024principles">(<a href="../../99-references.html#ref-petersen2024principles" role="doc-biblioref">Petersen 2024</a>)</span>:</p>
 <ul>
 <li><strong>Tasso di base dell’HIV (P(HIV))</strong>: 0.3% (0.003). Questa è la probabilità che una persona nella popolazione generale abbia l’HIV.</li>
 <li><strong>Sensibilità del test (P(Test+ HIV))</strong>: 95% (0.95). Questa è la probabilità che il test risulti positivo se la persona ha effettivamente l’HIV.</li>
@@ -2009,15 +2002,204 @@ P(HIV \mid \text{Secondo Test+}) = \frac{0.95 \times 0.2844}{0.2753} \approx 0.9
 <p>In sintesi, quando si afferma che c’è solo una probabilità su 3 milioni che il sospetto sia innocente (ovvero la specificità), si commette la fallacia del procuratore. In realtà, la probabilità che il sospetto sia colpevole, data una corrispondenza del DNA, è molto inferiore, come dimostrato nell’esempio numerico (circa 4.83%).</p>
 <p>Questa fallacia può portare a errori giudiziari perché non si considera la bassa prevalenza del colpevole nella popolazione generale e si confonde la specificità del test con la probabilità condizionale di colpevolezza. In altre parole, non si riconosce che le due domande ‘Quanto è probabile che il DNA di una persona corrisponda al campione, se è innocente?’ e ‘Quanto è probabile che qualcuno sia innocente, dato che il suo DNA corrisponde al campione?’ non sono equivalenti. È come confondere ‘Quanto è probabile che un determinato essere umano sia il papa?’ con ‘Quanto è probabile che il papa sia un essere umano?’.</p>
 </div>
+<div id="exm-7" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 29.8</strong></span> Due dadi equi vengono lanciati e ti viene detto che la somma dei loro punteggi è 9. Qual è la distribuzione a posteriori dei punteggi di ciascun dado? (Questo esempio è tratto da Taylan Cemgil ed è discusso da <span class="citation" data-cites="barber2012bayesian">Barber (<a href="../../99-references.html#ref-barber2012bayesian" role="doc-biblioref">2012</a>)</span>).</p>
+<p>Indichiamo il punteggio del dado <span class="math inline">\(a\)</span> con <span class="math inline">\(s_a\)</span>, dove <span class="math inline">\(\text{dom}(s_a) = \{1,2,3,4,5,6\}\)</span>, e in modo simile per <span class="math inline">\(s_b\)</span>. Le tre variabili coinvolte sono quindi <span class="math inline">\(s_a\)</span>, <span class="math inline">\(s_b\)</span> e la somma totale, <span class="math inline">\(t = s_a + s_b\)</span>. Un modello per queste tre variabili assume la forma:</p>
+<p><span class="math display">\[
+p(t, s_a, s_b) = p(t | s_a, s_b) p(s_a, s_b),
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><strong>Likelihood</strong>: <span class="math inline">\(p(t | s_a, s_b)\)</span> rappresenta la probabilità che la somma dei dadi sia <span class="math inline">\(t\)</span> dato <span class="math inline">\(s_a\)</span> e <span class="math inline">\(s_b\)</span>.</li>
+<li><strong>Prior</strong>: <span class="math inline">\(p(s_a, s_b)\)</span> è la probabilità congiunta dei punteggi <span class="math inline">\(s_a\)</span> e <span class="math inline">\(s_b\)</span> senza conoscere la somma <span class="math inline">\(t\)</span>.</li>
+</ul>
+<p>Assumiamo che i dadi siano equi e indipendenti, quindi la probabilità congiunta <span class="math inline">\(p(s_a, s_b)\)</span> è il prodotto delle distribuzioni uniformi di <span class="math inline">\(s_a\)</span> e <span class="math inline">\(s_b\)</span>:</p>
+<p><span class="math display">\[
+p(s_a, s_b) = p(s_a) p(s_b) = \frac{1}{6} \times \frac{1}{6} = \frac{1}{36}.
+\]</span></p>
+<p>Il termine di likelihood è dato da:</p>
+<p><span class="math display">\[
+p(t | s_a, s_b) = I[t = s_a + s_b],
+\]</span></p>
+<p>dove <span class="math inline">\(I[A]\)</span> è la funzione indicatrice che vale 1 se la condizione <span class="math inline">\(A\)</span> è vera e 0 altrimenti.</p>
+<p>Abbiamo che <span class="math inline">\(p(t = 9 | s_a, s_b)\)</span> è 1 se la somma di <span class="math inline">\(s_a\)</span> e <span class="math inline">\(s_b\)</span> è 9, altrimenti è 0. Quindi la likelihood è data dalla seguente tabella:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(s_b\)</span> \</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><span class="math inline">\(s_a\)</span></strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Le combinazioni possibili sono quindi <span class="math inline">\((3,6), (4,5), (5,4), (6,3)\)</span>.</p>
+<p>La distribuzione a posteriori dei punteggi dei dadi, data la somma <span class="math inline">\(t = 9\)</span>, si calcola con:</p>
+<p><span class="math display">\[
+p(s_a, s_b | t = 9) = \frac{p(t = 9 | s_a, s_b) p(s_a) p(s_b)}{p(t = 9)}.
+\]</span></p>
+<p>Il denominatore <span class="math inline">\(p(t = 9)\)</span> è la somma dei termini non nulli del numeratore:</p>
+<p><span class="math display">\[
+p(t = 9) = \sum_{s_a, s_b} p(t = 9 | s_a, s_b) p(s_a) p(s_b) = 4 \times \frac{1}{36} = \frac{1}{9}.
+\]</span></p>
+<p>Quindi, la distribuzione a posteriori è:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(s_b\)</span> \</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><span class="math inline">\(s_a\)</span></strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1/4</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1/4</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1/4</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>1/4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>In questo caso, le uniche combinazioni con probabilità non nulla sono quelle in cui la somma è 9, e ciascuna di queste ha probabilità <span class="math inline">\(1/4\)</span>.</p>
+</div>
 </section>
 </section>
 <section id="probabilità-inversa" class="level2" data-number="29.4">
 <h2 data-number="29.4" class="anchored" data-anchor-id="probabilità-inversa"><span class="header-section-number">29.4</span> Probabilità Inversa</h2>
-<p>Gli esempi precedenti mettono in luce che possiamo distinguere due domande diverse. La prima domanda è: “Qual è la probabilità dell’evidenza, data l’ipotesi?” La seconda domanda è: “Qual è la probabilità che l’ipotesi sia vera, data l’evidenza?”</p>
-<p>Un esempio per rispondere alla prima domanda è il seguente: Supponiamo che la probabilità di ottenere testa nel lancio di una moneta sia 0.5 (questa è l’ipotesi). Qual è la probabilità di ottenere 0 volte testa in cinque lanci?</p>
-<p>Un esempio per rispondere alla seconda domanda è il seguente: Supponiamo di avere ottenuto 0 volte testa in 5 lanci di una moneta (questa è l’evidenza). Ci chiediamo: qual è la probabilità che la moneta sia bilanciata, alla luce delle nostre osservazioni?</p>
-<p>Per molto tempo, la storia della probabilità si è concentrata sulla prima domanda. Ma dopo che il reverendo Thomas Bayes ha iniziato a porsi la seconda domanda nel XVIII secolo, questa è diventata nota come <em>probabilità inversa</em>.</p>
-<p>Questo modo di pensare ha suscitato molte controversie nel corso della storia della statistica, forse perché influisce su tutto. In particolare, ci si può chiedere la seguente domanda: quanto è probabile che un’ipotesi scientifica sia vera, dato il risultato di uno studio? Per stimare questa probabilità, e un numero crescente di scienziati sostiene che è esattamente ciò che dovrebbero fare le statistiche, abbiamo bisogno di Bayes e delle probabilità a priori.</p>
+<p>Gli esempi precedenti evidenziano la differenza tra due domande fondamentali. La prima è: “Qual è la probabilità di osservare un determinato risultato, supponendo che una certa ipotesi sia vera?” La seconda, invece, è: “Qual è la probabilità che un’ipotesi sia vera, dato il risultato osservato?”</p>
+<p>Un esempio che risponde alla prima domanda potrebbe essere questo: supponiamo che la probabilità di ottenere testa nel lancio di una moneta sia 0,5 (ipotesi). Qual è la probabilità di ottenere 0 teste in cinque lanci?</p>
+<p>Per la seconda domanda, un esempio potrebbe essere: supponiamo di aver ottenuto 0 teste in 5 lanci di una moneta (evidenza). Qual è la probabilità che la moneta sia effettivamente bilanciata, alla luce di questa osservazione?</p>
+<p>Per molto tempo, lo studio della probabilità si è concentrato principalmente sulla prima domanda. Tuttavia, nel XVIII secolo, il reverendo Thomas Bayes iniziò a riflettere sulla seconda domanda, dando origine a quello che oggi chiamiamo <em>probabilità inversa</em>.</p>
+<p>Questo approccio ha generato numerose controversie nella storia della statistica, in gran parte perché influenza molti ambiti. Ad esempio, possiamo chiederci: quanto è probabile che un’ipotesi scientifica sia vera, dato il risultato di un esperimento? Per stimare questa probabilità — un compito che molti scienziati ritengono essenziale per la statistica moderna — è necessario fare uso del teorema di Bayes e delle probabilità a priori.</p>
 </section>
 <section id="commenti-e-considerazioni-finali" class="level2" data-number="29.5">
 <h2 data-number="29.5" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">29.5</span> Commenti e Considerazioni Finali</h2>
@@ -2058,8 +2240,14 @@ Watermark: 2.4.3
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-barber2012bayesian" class="csl-entry" role="listitem">
+Barber, David. 2012. <em>Bayesian reasoning and machine learning</em>. Cambridge University Press.
+</div>
 <div id="ref-chivers2024everything" class="csl-entry" role="listitem">
 Chivers, Tom. 2024. <em>Everything is Predictable: How Bayesian Statistics Explain Our World</em>. Simon; Schuster.
+</div>
+<div id="ref-petersen2024principles" class="csl-entry" role="listitem">
+Petersen, Isaac T. 2024. <em>Principles of psychological assessment: With applied examples in R</em>. CRC Press.
 </div>
 </div>
 </section>
@@ -2299,57 +2487,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2711,4 +2848,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

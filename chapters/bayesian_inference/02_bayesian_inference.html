@@ -86,7 +86,6 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/bayesian_inference/03_subj_prop.html" rel="next">
 <link href="../../chapters/bayesian_inference/01_intro_bayes.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -125,6 +124,7 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -884,7 +884,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1427,6 +1427,7 @@ window.Quarto = {
   <ul>
   <li><a href="#implementazione-in-python" id="toc-implementazione-in-python" class="nav-link" data-scroll-target="#implementazione-in-python"><span class="header-section-number">40.7.1</span> Implementazione in Python</a></li>
   </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">40.8</span> Considerazioni Conclusive</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/bayesian_inference/02_bayesian_inference.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
@@ -1776,9 +1777,22 @@ p(k = 7, n = 10) = \frac{1}{3} \binom{10}{7} 0.1^7 (1 - 0.1)^3 + \frac{1}{3} \bi
 <p>In questo caso, il prior è una Beta(2,2), che dà più peso ai valori di <span class="math inline">\(\theta\)</span> vicini a 0.5, riflettendo una distribuzione a priori che preferisce valori intermedi di <span class="math inline">\(\theta\)</span>.</p>
 </section>
 </section>
+<section id="considerazioni-conclusive" class="level2" data-number="40.8">
+<h2 data-number="40.8" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">40.8</span> Considerazioni Conclusive</h2>
+<p>Al cuore della ricerca scientifica c’è una domanda del tipo: “dimmi qualcosa sulla variabile <span class="math inline">\(\theta\)</span> dato che ho osservato i dati <span class="math inline">\(D\)</span> e ho una certa conoscenza del meccanismo sottostante che genera i dati”. La regola di Bayes fornisce la seguente risposta:</p>
+<p><span class="math display">\[
+p(\theta \mid D) = \frac{p(D \mid\theta) p(\theta)}{p(D)} = \frac{p(D \mid \theta) p(\theta)}{\int_\theta p(D \mid\theta) p(\theta) d\theta}.
+\]</span></p>
+<p>Questa equazione mostra come, partendo da un modello generativo <span class="math inline">\(p(D \mid\theta)\)</span> dei dati osservati e abbinato a una credenza a priori <span class="math inline">\(p(\theta)\)</span> su quali valori della variabile <span class="math inline">\(\theta\)</span> siano plausibili, possiamo inferire la distribuzione a posteriori <span class="math inline">\(p(\theta \mid D)\)</span> della variabile alla luce dei dati osservati.</p>
+<p>La stima MAP (Massimo A Posteriori), che corrisponde al valore di <span class="math inline">\(\theta\)</span> che massimizza la distribuzione a posteriori, rappresenta una stima puntuale del parametro:</p>
+<p><span class="math display">\[
+\theta^* = \arg \max_\theta p(\theta \mid D).
+\]</span></p>
+<p>Nel caso di un prior non informativo (piatto), la stima MAP coincide con la stima di massima verosimiglianza, ovvero il valore di <span class="math inline">\(\theta\)</span> che massimizza la probabilità che il modello generi i dati osservati.</p>
+</section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-21" class="cell" data-execution_count="14">
+<div id="cell-22" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2050,57 +2064,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2462,4 +2425,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

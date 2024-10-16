@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -86,7 +52,6 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/linear_models/01_reglin_bayesian.html" rel="next">
 <link href="../../chapters/mcmc/19_approximations.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -125,6 +90,7 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
 
 </head>
@@ -855,7 +821,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1369,7 +1335,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Regressione</a></li><li class="breadcrumb-item"><a href="../../chapters/linear_models/introduction_linear_models.html">Introduzione</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Introduzione</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Codice</button></div></div>
+<h1 class="title">Introduzione</h1>
 </div>
 
 
@@ -1396,8 +1362,6 @@ div.csl-indent {
 </ul>
 <p>In tutti questi scenari, è cruciale che il modello di regressione includa tutte le variabili rilevanti. Ad esempio, in uno studio sull’efficacia di una terapia per la depressione negli anziani, è essenziale includere fattori come l’età, le condizioni di salute preesistenti e il supporto sociale. Omettere questi predittori potrebbe portare a stime inaccurate e conclusioni fuorvianti sull’effettiva efficacia del trattamento in questa popolazione specifica.</p>
 
-
-<!-- -->
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-gelman2020regression" class="csl-entry" role="listitem">
@@ -1639,57 +1603,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2032,23 +1945,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Modello bayesiano di regressione lineare bivariata</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Eseguire il codice</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduzione {.unnumbered}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>In questa sezione esploreremo un approccio all'analisi dei dati basato sull'uso della regressione lineare, esaminandolo dalla prospettiva dell'inferenza bayesiana. La regressione è un metodo che consente ai ricercatori di riassumere come le previsioni o i valori medi di un risultato variano tra individui definiti da un insieme di predittori.</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>Come indicato da @gelman2020regression, alcuni degli usi più importanti della regressione sono:</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Previsione**: Modellare osservazioni esistenti o prevedere nuovi dati. Esempi con risultati continui o approssimativamente continui includono la previsione dei punteggi in un test futuro, la misurazione dei livelli di stress in un contesto di lavoro, o il monitoraggio del benessere psicologico in uno studio longitudinale. Esempi con risultati discreti o categoriali (a volte chiamati classificazione) includono la diagnosi di un disturbo psicologico, la riuscita o il fallimento in un compito cognitivo, e le decisioni individuali di partecipare a una terapia.</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Esplorazione delle associazioni**: Riassumere quanto bene una variabile, o un insieme di variabili, predica il risultato. Esempi includono l'identificazione dei tratti di personalità associati a una maggiore resilienza allo stress. Oppure l'analisi della relazione tra stili di attaccamento infantile e capacità relazionali in età adulta. Oppure lo studio di come diversi fattori socio-economici influenzano lo sviluppo cognitivo nei bambini.</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Estrapolazione**: Adeguare le analisi per tenere conto delle differenze conosciute tra il campione osservato e la popolazione di interesse. Per esempio, la generalizzazione dei risultati di uno studio sulla depressione condotto su studenti universitari alla popolazione generale. Oppure la stima dell'efficacia di una nuova terapia cognitivo-comportamentale testata in un contesto clinico controllato su una popolazione più ampia e diversificata. Oppure la previsione dell'impatto di un programma di prevenzione del bullismo testato in alcune scuole su un intero distretto scolastico.</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Inferenza causale**: Forse l'uso più importante della regressione è stimare gli effetti di un trattamento. Abbiamo già definito l'inferenza causale più dettagliatamente nel @sec-causality-from-observational-data. Per esempio, la valutazione dell'effetto di un intervento di mindfulness sui livelli di ansia, controllando per variabili confondenti come l'età e precedenti esperienze di meditazione. Oppure la stima dell'impatto di un programma di sviluppo delle competenze emotive sulle performance lavorative, tenendo conto di fattori come l'ambiente di lavoro e la personalità dei partecipanti. Oppure l'analisi dell'efficacia di diverse tecniche psicoterapeutiche nel trattamento del disturbo post-traumatico da stress, considerando la gravità iniziale dei sintomi e il supporto sociale dei pazienti.</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>In tutti questi scenari, è cruciale che il modello di regressione includa tutte le variabili rilevanti. Ad esempio, in uno studio sull'efficacia di una terapia per la depressione negli anziani, è essenziale includere fattori come l'età, le condizioni di salute preesistenti e il supporto sociale. Omettere questi predittori potrebbe portare a stime inaccurate e conclusioni fuorvianti sull'effettiva efficacia del trattamento in questa popolazione specifica.</span></code><button title="Copia negli appunti" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
-</div></div></div></div></div>
+</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -2067,4 +1964,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

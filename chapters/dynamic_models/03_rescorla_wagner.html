@@ -86,7 +86,6 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/dynamic_models/04_affect.html" rel="next">
 <link href="../../chapters/dynamic_models/02_change_across_time.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -125,6 +124,7 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -887,7 +887,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1512,11 +1512,11 @@ window.Quarto = {
 <section id="concetti-fondamentali" class="level2" data-number="103.2">
 <h2 data-number="103.2" class="anchored" data-anchor-id="concetti-fondamentali"><span class="header-section-number">103.2</span> Concetti Fondamentali</h2>
 <p>Per comprendere l’apprendimento associativo, è importante introdurre alcuni concetti chiave che sono comunemente utilizzati nella letteratura sull’apprendimento per rinforzo.</p>
-<p>Nell’apprendimento per rinforzo, immaginiamo un “agente” che interagisce con un “ambiente”, in modo simile a un giocatore che esplora un nuovo videogioco. L’agente esegue una serie di azioni per scoprire quali siano le migliori per ottenere la massima ricompensa. Questo processo si svolge in vari turni, durante i quali l’agente fa delle scelte e riceve feedback sotto forma di ricompense <span class="citation" data-cites="sutton2018reinforcement">(<a href="../../99-references.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton e Barto 2018</a>)</span>.</p>
-<p>Ad ogni turno, l’agente seleziona un’azione tra quelle disponibili. In uno scenario semplice, potrebbe dover scegliere tra due opzioni, come decidere tra due porte in un gioco. Dopo aver fatto la sua scelta, l’agente riceve una ricompensa, che può essere positiva o negativa, in base al risultato dell’azione intrapresa. Per visualizzare questo concetto, possiamo immaginare uno psicologo che cerca il miglior trattamento per un paziente; ogni “azione” rappresenta un diverso approccio terapeutico, e la “ricompensa” è il miglioramento del benessere del paziente.</p>
-<p>È importante notare che le ricompense sono stocastiche, ovvero non sono deterministiche ma probabilistiche: una stessa azione può portare a diverse ricompense in momenti differenti. Le ricompense vengono generate in base a una distribuzione probabilistica rappresentata come <span class="math inline">\(r_t \sim M^\star(\cdot | \pi_t)\)</span>, dove <span class="math inline">\(M^\star(\cdot | \pi_t)\)</span> è il modello che descrive il comportamento dell’ambiente in risposta alla politica <span class="math inline">\(\pi_t\)</span>.</p>
-<p>Definiamo <span class="math inline">\(f(\pi) := \mathbb{E}[r | \pi]\)</span> come la funzione di ricompensa media sotto la distribuzione <span class="math inline">\(r \sim M^\star(\cdot | \pi)\)</span>. Ad esempio, un’azione <span class="math inline">\(A\)</span> potrebbe avere una probabilità dell’80% di portare a una ricompensa positiva e del 20% di portare a una ricompensa negativa. Queste probabilità possono restare costanti nel tempo o variare in base all’esperienza accumulata.</p>
-<p>Nel contesto dell’apprendimento per rinforzo, la “storia” <span class="math inline">\(\mathcal{H}^t\)</span> rappresenta la sequenza di tutte le azioni intraprese e delle ricompense ricevute fino al tempo <span class="math inline">\(t\)</span>. Formalmente, può essere espressa come <span class="math inline">\(\mathcal{H}^t = (\pi^1, r^1), \ldots, (\pi^t, r^t)\)</span>. Questa storia è essenziale perché fornisce un quadro completo del percorso di apprendimento dell’agente, aiutandolo a migliorare le sue decisioni nel tempo.</p>
+<p>Nell’apprendimento per rinforzo, immaginiamo un “agente” che interagisce con un “ambiente”, in modo simile a un giocatore che esplora un nuovo videogioco. L’agente esegue una serie di azioni per scoprire quali siano le migliori per ottenere la massima ricompensa. Questo processo si svolge in vari turni, durante i quali l’agente fa delle scelte e riceve feedback sotto forma di ricompense o punizioni <span class="citation" data-cites="sutton2018reinforcement">(<a href="../../99-references.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton e Barto 2018</a>)</span>.</p>
+<p>Ad ogni turno, l’agente seleziona un’azione tra quelle disponibili. In uno scenario semplice, potrebbe dover scegliere tra due opzioni, come decidere tra due porte in un gioco. Dopo aver fatto la sua scelta, l’agente riceve un feedback, che può essere positivo o negativo, in base al risultato dell’azione intrapresa.</p>
+<p>È importante notare che i feedback sono stocastici, ovvero non sono deterministici ma probabilistici: una stessa azione può portare a una ricompensa o a una punizione, in momenti differenti. I feedback vengono generati in base a una distribuzione probabilistica rappresentata come <span class="math inline">\(r_t \sim M^\star(\cdot | \pi_t)\)</span>, dove <span class="math inline">\(M^\star(\cdot | \pi_t)\)</span> è il modello che descrive il comportamento dell’ambiente in risposta alla politica <span class="math inline">\(\pi_t\)</span>.</p>
+<p>Definiamo <span class="math inline">\(f(\pi) := \mathbb{E}[r | \pi]\)</span> come la funzione di ricompensa media sotto la distribuzione <span class="math inline">\(r \sim M^\star(\cdot | \pi)\)</span>. Ad esempio, un’azione <span class="math inline">\(A\)</span> potrebbe avere una probabilità dell’80% di portare a una ricompensa positiva e del 20% di portare a una punizione. Queste probabilità possono restare costanti nel tempo o variare in base all’esperienza accumulata.</p>
+<p>Nel contesto dell’apprendimento per rinforzo, la “storia” <span class="math inline">\(\mathcal{H}^t\)</span> rappresenta la sequenza di tutte le azioni intraprese e dai feedback ricevuti fino al tempo <span class="math inline">\(t\)</span>. Formalmente, può essere espressa come <span class="math inline">\(\mathcal{H}^t = (\pi^1, r^1), \ldots, (\pi^t, r^t)\)</span>. Questa storia è essenziale perché fornisce un quadro completo del percorso di apprendimento dell’agente, aiutandolo a migliorare le sue decisioni nel tempo.</p>
 <p>L’obiettivo principale dell’agente è quello di identificare le azioni che, in media, forniscono la ricompensa più alta. Per misurare l’efficacia delle scelte dell’agente, si utilizza il concetto di “regret” (rimpianto). Il regret misura la differenza tra la ricompensa che l’agente avrebbe potuto ottenere scegliendo sempre l’azione ottimale e la ricompensa effettivamente ottenuta con le sue scelte attuali.</p>
 <p>Matematicamente, il regret (<span class="math inline">\(\text{Reg}\)</span>) è definito come la differenza cumulativa tra la ricompensa massima possibile (ottenuta scegliendo sempre la politica ottimale <span class="math inline">\(\pi^\star\)</span>) e la ricompensa media delle scelte effettuate:</p>
 <p><span class="math display">\[
@@ -2515,57 +2515,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     });
     clipboardModal.on('success', onCopySuccess);
   }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/psicometria\/intro\.html");
@@ -2926,4 +2875,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

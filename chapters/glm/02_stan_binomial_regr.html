@@ -8,7 +8,7 @@
 
 <meta name="author" content="Corrado Caudek">
 
-<title>89&nbsp; Regressione binomiale – Data Science per Psicologi</title>
+<title>89&nbsp; Modelli lineari generalizzati – Data Science per Psicologi</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/glm/03_stan_logistic_regr.html" rel="next">
 <link href="../../chapters/glm/01_robust_regr.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -105,6 +104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -150,7 +150,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/glm/introduction_glm.html">GLM</a></li><li class="breadcrumb-item"><a href="../../chapters/glm/02_stan_binomial_regr.html"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/glm/introduction_glm.html">GLM</a></li><li class="breadcrumb-item"><a href="../../chapters/glm/02_stan_binomial_regr.html"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -867,7 +867,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1385,8 +1385,11 @@ window.Quarto = {
   </ul></li>
   <li><a href="#modelli-lineari-generalizzati" id="toc-modelli-lineari-generalizzati" class="nav-link" data-scroll-target="#modelli-lineari-generalizzati"><span class="header-section-number">89.2</span> Modelli Lineari Generalizzati</a>
   <ul>
-  <li><a href="#la-regressione-binomiale" id="toc-la-regressione-binomiale" class="nav-link" data-scroll-target="#la-regressione-binomiale"><span class="header-section-number">89.2.1</span> La Regressione Binomiale</a></li>
-  <li><a href="#funzione-di-legame-nella-regressione-binomiale" id="toc-funzione-di-legame-nella-regressione-binomiale" class="nav-link" data-scroll-target="#funzione-di-legame-nella-regressione-binomiale"><span class="header-section-number">89.2.2</span> Funzione di Legame nella Regressione Binomiale</a></li>
+  <li><a href="#modello-normale" id="toc-modello-normale" class="nav-link" data-scroll-target="#modello-normale"><span class="header-section-number">89.2.1</span> Modello Normale</a></li>
+  <li><a href="#modello-di-poisson" id="toc-modello-di-poisson" class="nav-link" data-scroll-target="#modello-di-poisson"><span class="header-section-number">89.2.2</span> Modello di Poisson</a></li>
+  <li><a href="#modello-binomiale" id="toc-modello-binomiale" class="nav-link" data-scroll-target="#modello-binomiale"><span class="header-section-number">89.2.3</span> Modello Binomiale</a></li>
+  <li><a href="#modello-categoriale" id="toc-modello-categoriale" class="nav-link" data-scroll-target="#modello-categoriale"><span class="header-section-number">89.2.4</span> Modello Categoriale</a></li>
+  <li><a href="#approccio-bayesiano" id="toc-approccio-bayesiano" class="nav-link" data-scroll-target="#approccio-bayesiano"><span class="header-section-number">89.2.5</span> Approccio Bayesiano</a></li>
   </ul></li>
   <li><a href="#un-esempio-concreto" id="toc-un-esempio-concreto" class="nav-link" data-scroll-target="#un-esempio-concreto"><span class="header-section-number">89.3</span> Un esempio concreto</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
@@ -1396,9 +1399,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/glm/introduction_glm.html">GLM</a></li><li class="breadcrumb-item"><a href="../../chapters/glm/02_stan_binomial_regr.html"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/glm/introduction_glm.html">GLM</a></li><li class="breadcrumb-item"><a href="../../chapters/glm/02_stan_binomial_regr.html"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-stan-binomial-regression" class="quarto-section-identifier"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></h1>
+<h1 class="title"><span id="sec-stan-glm" class="quarto-section-identifier"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></h1>
 </div>
 
 
@@ -1450,7 +1453,7 @@ window.Quarto = {
 </div>
 <section id="introduzione" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="introduzione">Introduzione</h2>
-<p>In questo capitolo, esploreremo i Modelli Lineari Generalizzati (GLM) e, in particolare, il modello di regressione binomiale, che è un’applicazione specifica dei GLM. Discuteremo anche come affrontare questo tipo di modelli utilizzando un approccio bayesiano e illustreremo come implementare la regressione binomiale con il software Stan.</p>
+<p>In questo capitolo, esploreremo i Modelli Lineari Generalizzati (GLM) e, in particolare, il modello di regressione binomiale, che è un’applicazione specifica dei GLM. Discuteremo anche come affrontare questo tipo di modelli utilizzando un approccio bayesiano e illustreremo come implementare la regressione binomiale con Stan.</p>
 </section>
 <section id="probabilità-odds-e-logit" class="level2" data-number="89.1">
 <h2 data-number="89.1" class="anchored" data-anchor-id="probabilità-odds-e-logit"><span class="header-section-number">89.1</span> Probabilità, Odds e Logit</h2>
@@ -1528,49 +1531,70 @@ window.Quarto = {
 </section>
 <section id="modelli-lineari-generalizzati" class="level2" data-number="89.2">
 <h2 data-number="89.2" class="anchored" data-anchor-id="modelli-lineari-generalizzati"><span class="header-section-number">89.2</span> Modelli Lineari Generalizzati</h2>
-<p>I Modelli Lineari Generalizzati (GLM) estendono i modelli di regressione lineare classica per gestire variabili dipendenti che non soddisfano le ipotesi del modello lineare standard, come la normalità degli errori e la linearità tra variabili indipendenti e dipendenti. Questa flessibilità consente ai GLM di adattarsi a una varietà di tipi di dati, inclusi conteggi, proporzioni e dati categoriali.</p>
-<p>Un GLM è costituito da tre componenti principali:</p>
+<p>I <strong>Modelli Lineari Generalizzati (GLM)</strong> estendono la regressione lineare per affrontare situazioni in cui la variabile dipendente non segue una distribuzione normale e non esiste una relazione lineare tra le variabili indipendenti e dipendenti. Questa flessibilità consente di modellare diversi tipi di dati, come conteggi, proporzioni o dati categoriali.</p>
+<p>Un GLM si compone di tre elementi principali:</p>
 <ol type="1">
-<li><p><strong>Componente Aleatoria</strong>: Determina la distribuzione di probabilità della variabile risposta <span class="math inline">\(Y\)</span>. Per esempio, se <span class="math inline">\(Y\)</span> è un conteggio di eventi, potrebbe essere modellata come una variabile casuale con distribuzione di Poisson.</p></li>
-<li><p><strong>Componente Sistematica</strong>: Definisce la combinazione lineare delle variabili indipendenti <span class="math inline">\(X\)</span>, che viene utilizzata per modellare la media attesa della variabile risposta. Questa combinazione lineare è rappresentata dal <em>predittore lineare</em> <span class="math inline">\(\eta\)</span>, espresso come <span class="math inline">\(\eta = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_k X_k\)</span>, dove <span class="math inline">\(\beta_0, \beta_1, \dots, \beta_k\)</span> sono i parametri del modello.</p></li>
-<li><p><strong>Funzione di Legame</strong>: Stabilisce la relazione tra la media attesa della variabile risposta, <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span>, e il predittore lineare <span class="math inline">\(\eta\)</span>. La funzione di legame garantisce che questa relazione sia appropriata per la distribuzione specifica della variabile <span class="math inline">\(Y\)</span>. Nel caso della regressione binomiale, la funzione di legame più comune è il logit, definito come:</p></li>
+<li><p><strong>Componente Aleatoria</strong>: descrive la distribuzione della variabile risposta <span class="math inline">\(Y\)</span>, che può provenire da una qualsiasi distribuzione della famiglia esponenziale. Ad esempio, se <span class="math inline">\(Y\)</span> rappresenta un conteggio, si potrebbe usare una distribuzione di Poisson.</p></li>
+<li><p><strong>Componente Sistematica</strong>: rappresenta il predittore lineare <span class="math inline">\(\eta\)</span>, una combinazione delle variabili indipendenti <span class="math inline">\(X\)</span>, espressa come <span class="math inline">\(\eta = \beta_0 + \beta_1 X_1 + \dots + \beta_k X_k\)</span>, dove <span class="math inline">\(\beta\)</span> sono i parametri del modello.</p></li>
+<li><p><strong>Funzione di Legame</strong>: stabilisce la relazione tra la media attesa della variabile risposta <span class="math inline">\(\mu = E(Y)\)</span> e il predittore lineare <span class="math inline">\(\eta\)</span>. Questa funzione di legame, <span class="math inline">\(g(\mu) = \eta\)</span>, permette di adattare il modello alla natura specifica dei dati. Ad esempio, nella regressione logistica, la funzione di legame è il logit, che trasforma la probabilità di successo <span class="math inline">\(p\)</span> in un valore lineare:</p></li>
 </ol>
 <p><span class="math display">\[
-g(\mu) = \ln\left(\frac{\mu}{1-\mu}\right).
+g(p) = \ln\left(\frac{p}{1-p}\right).
 \]</span></p>
-<p>Questa funzione trasforma la proporzione media di successi <span class="math inline">\(\mu\)</span>, che varia tra 0 e 1, in un valore <span class="math inline">\(\eta\)</span> che può assumere qualsiasi numero reale. Questa trasformazione permette di modellare la probabilità di successo in funzione delle variabili indipendenti in modo lineare rispetto al logit.</p>
-<section id="la-regressione-binomiale" class="level3" data-number="89.2.1">
-<h3 data-number="89.2.1" class="anchored" data-anchor-id="la-regressione-binomiale"><span class="header-section-number">89.2.1</span> La Regressione Binomiale</h3>
-<p>La regressione binomiale è un tipo specifico di GLM utilizzato quando la variabile dipendente rappresenta il numero di successi in una serie di prove binarie, ovvero situazioni in cui ogni osservazione può essere un successo o un fallimento. Questo modello è particolarmente utile per analizzare dati di proporzioni, come il numero di successi in una serie di tentativi.</p>
-<p>Consideriamo una variabile risposta <span class="math inline">\(Y_i\)</span> che segue una distribuzione binomiale con parametri <span class="math inline">\(n_i\)</span> (numero di prove) e <span class="math inline">\(p_i\)</span> (probabilità di successo in ciascuna prova):</p>
+<section id="modello-normale" class="level3" data-number="89.2.1">
+<h3 data-number="89.2.1" class="anchored" data-anchor-id="modello-normale"><span class="header-section-number">89.2.1</span> Modello Normale</h3>
+<p>Il modello osservativo in questo caso segue una distribuzione normale con parametri media <span class="math inline">\(\mu\)</span> e varianza del rumore <span class="math inline">\(\sigma^2\)</span>:</p>
 <p><span class="math display">\[
-Y_i \sim \text{Binomiale}(n_i, p_i),
+p(y|\mu, \sigma) = \mathcal{N}(y|\mu, \sigma^2),\
+\mu = \eta.
 \]</span></p>
-<p>dove <span class="math inline">\(Y_i\)</span> rappresenta il numero di successi osservati per l’<span class="math inline">\(i\)</span>-esima osservazione, <span class="math inline">\(n_i\)</span> è il numero totale di tentativi, e <span class="math inline">\(p_i\)</span> è la probabilità di successo per ciascun tentativo. L’obiettivo della regressione binomiale è modellare la probabilità di successo <span class="math inline">\(p_i\)</span> in funzione di una o più variabili indipendenti.</p>
+<p>In questo modello, la funzione di legame canonica è la funzione identità. Un esempio di questo modello è stato visto nella sezione sul “flusso di lavoro bayesiano”, dove si calcolava <span class="math inline">\(\mu = b_0 + b_1 * \text{peso}\)</span>.</p>
 </section>
-<section id="funzione-di-legame-nella-regressione-binomiale" class="level3" data-number="89.2.2">
-<h3 data-number="89.2.2" class="anchored" data-anchor-id="funzione-di-legame-nella-regressione-binomiale"><span class="header-section-number">89.2.2</span> Funzione di Legame nella Regressione Binomiale</h3>
-<p>Nella regressione binomiale, la funzione di legame comunemente utilizzata è il logit:</p>
+<section id="modello-di-poisson" class="level3" data-number="89.2.2">
+<h3 data-number="89.2.2" class="anchored" data-anchor-id="modello-di-poisson"><span class="header-section-number">89.2.2</span> Modello di Poisson</h3>
+<p>In questo caso, le osservazioni sono valori interi non negativi, che si suppone seguano una distribuzione di Poisson con parametro di media <span class="math inline">\(\lambda\)</span>:</p>
 <p><span class="math display">\[
-\eta_i = g(p_i) = \ln\left(\frac{p_i}{1 - p_i}\right).
+p(y|\lambda) = \text{Pois}(y|\lambda),\
+\log(\lambda) = \eta.
 \]</span></p>
-<p>Questa funzione converte la probabilità <span class="math inline">\(p_i\)</span>, limitata all’intervallo [0, 1], in un valore <span class="math inline">\(\eta_i\)</span> che può variare su tutta la linea dei numeri reali. La funzione logistica inversa riconverte <span class="math inline">\(\eta_i\)</span> in <span class="math inline">\(p_i\)</span>:</p>
+<p>In questo modello, la funzione di legame è la funzione logaritmica, che consente di trasformare il predittore lineare <span class="math inline">\(\eta\)</span>, definito nello spazio reale continuo, nel parametro <span class="math inline">\(\lambda\)</span> della distribuzione di Poisson, garantendo che <span class="math inline">\(\lambda\)</span> sia sempre positivo (o zero):</p>
 <p><span class="math display">\[
-p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}}
+\lambda = \exp(\eta).
 \]</span></p>
-<p>o, in termini del predittore lineare:</p>
+</section>
+<section id="modello-binomiale" class="level3" data-number="89.2.3">
+<h3 data-number="89.2.3" class="anchored" data-anchor-id="modello-binomiale"><span class="header-section-number">89.2.3</span> Modello Binomiale</h3>
+<p>Le osservazioni in questo modello sono binarie, cioè <span class="math inline">\(y \in \{0, 1\}\)</span>. Queste osservazioni si suppone seguano una distribuzione binomiale con parametro di probabilità <span class="math inline">\(p\)</span>:</p>
 <p><span class="math display">\[
-p_i = \frac{e^{\beta_0 + \beta_1 X_1 + \dots + \beta_k X_k}}{1 + e^{\beta_0 + \beta_1 X_1 + \dots + \beta_k X_k}}.
+p(y|\eta) = \text{Binom}(p),\
+\text{logit}(p) = \eta.
 \]</span></p>
-<p>Questa rappresentazione garantisce che le probabilità stimate siano sempre comprese tra 0 e 1, permettendo una chiara interpretazione come probabilità di successo.</p>
-<p>In conclusione, la regressione binomiale offre un potente strumento per analizzare dati di proporzioni e conteggi di successi, utilizzando la distribuzione binomiale e la funzione di legame logit per modellare la relazione tra variabili indipendenti e la probabilità di successo. Questo rende la regressione binomiale particolarmente utile in diverse applicazioni, dalla biostatistica alla psicologia, dove è cruciale comprendere i fattori che influenzano la probabilità di un determinato esito binario.</p>
-<p>Adottando un approccio bayesiano, possiamo incorporare informazioni a priori sui parametri del modello, permettendo di aggiornare le nostre stime alla luce dei dati osservati e migliorando la robustezza e l’interpretabilità delle conclusioni tratte dall’analisi.</p>
+<p>In questo caso, la probabilità <span class="math inline">\(p\)</span> è collegata al predittore lineare <span class="math inline">\(\eta\)</span> tramite la trasformazione logistica <span class="math inline">\(\text{logit}(·)\)</span>, che converte i valori del predittore lineare (solitamente definiti nello spazio reale continuo) in valori di probabilità compresi nell’intervallo <span class="math inline">\([0, 1]\)</span>. In alternativa, è possibile usare anche la funzione di legame ‘probit’ per ottenere lo stesso effetto.</p>
+</section>
+<section id="modello-categoriale" class="level3" data-number="89.2.4">
+<h3 data-number="89.2.4" class="anchored" data-anchor-id="modello-categoriale"><span class="header-section-number">89.2.4</span> Modello Categoriale</h3>
+<p>Il modello categoriale, noto anche come “multinomiale”, viene utilizzato nei problemi di classificazione multi-classe, dove le osservazioni possono assumere valori appartenenti a più classi <span class="math inline">\(y \in \{1, . . . , J\}\)</span>. In questo caso, il modello osservativo segue una distribuzione multinomiale:</p>
+<p><span class="math display">\[
+p(y | p) = \text{Categorical}(p),\
+p = \text{softmax}(\eta),
+\]</span></p>
+<p>dove <span class="math inline">\(p = (p_1, \dots, p_J)\)</span> è un vettore di probabilità associate a ciascuna classe. La somma delle probabilità per tutte le classi deve essere uguale a 1, ovvero <span class="math inline">\(\sum_{j=1}^J p_j = 1\)</span>.</p>
+<p>La probabilità di appartenere a una classe <span class="math inline">\(j\)</span> viene calcolata tramite la trasformazione ‘softmax’:</p>
+<p><span class="math display">\[
+p_j = \frac{\exp(\eta_j)}{\sum_{k=1}^J \exp(\eta_k)}.
+\]</span></p>
+<p>In questo modo, si ottiene una rappresentazione probabilistica per ogni classe, garantendo che le probabilità siano sempre non negative e sommino a 1.</p>
+</section>
+<section id="approccio-bayesiano" class="level3" data-number="89.2.5">
+<h3 data-number="89.2.5" class="anchored" data-anchor-id="approccio-bayesiano"><span class="header-section-number">89.2.5</span> Approccio Bayesiano</h3>
+<p>In un contesto bayesiano, i parametri del modello, come <span class="math inline">\(\mu\)</span> e <span class="math inline">\(\phi\)</span>, sono associati a distribuzioni a priori. Quando si modella <span class="math inline">\(\mu\)</span> attraverso un predittore lineare, si specificano le distribuzioni a priori sui parametri <span class="math inline">\(\beta\)</span> che definiscono tale predittore. Questo approccio consente di integrare informazioni a priori e aggiornare le stime sulla base dei dati osservati, migliorando la robustezza del modello e la sua interpretazione.</p>
+<p>In sintesi, i GLM offrono un potente strumento per modellare dati complessi, fornendo flessibilità nella scelta delle distribuzioni e nelle relazioni tra variabili, e consentono di affrontare problemi in numerosi contesti applicativi.</p>
 </section>
 </section>
 <section id="un-esempio-concreto" class="level2" data-number="89.3">
 <h2 data-number="89.3" class="anchored" data-anchor-id="un-esempio-concreto"><span class="header-section-number">89.3</span> Un esempio concreto</h2>
 <p>Seguiamo il tutorial fornito sul sito ufficiale di PyMC e generiamo dei dati sintetici dove <span class="math inline">\(y\)</span> indica il numero di successi in <span class="math inline">\(n = 20\)</span> prove e <span class="math inline">\(x\)</span> è un predittore.</p>
-<div id="cell-5" class="cell" data-execution_count="2">
+<div id="cell-6" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># true params</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>beta0_true <span class="op">=</span> <span class="fl">0.7</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>beta1_true <span class="op">=</span> <span class="fl">0.4</span></span>
@@ -1775,7 +1799,7 @@ y_i \mid p_i \sim \text{Binomiale}(n, p_i)
 \]</span></p></li>
 </ol>
 <p>Compiliamo il modello e stampiamo il codice Stan:</p>
-<div id="cell-8" class="cell" data-execution_count="3">
+<div id="cell-9" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>stan_file <span class="op">=</span> os.path.join(project_directory, <span class="st">"stan"</span>, <span class="st">"binomial_regression.stan"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span>stan_file)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.code())</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1806,7 +1830,7 @@ model {
 </div>
 </div>
 <p>Creiamo un dizionario nel formato richiesto per l’input a CmdStan:</p>
-<div id="cell-10" class="cell">
+<div id="cell-11" class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stan_data <span class="op">=</span> {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sample_size"</span>: data.shape[<span class="dv">0</span>],</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: data[<span class="st">"x"</span>],</span>
@@ -1815,7 +1839,7 @@ model {
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Eseguiamo il campionamento.</p>
-<div id="cell-12" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="10">
+<div id="cell-13" class="cell" data-tags="[&quot;hide-output&quot;]" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> model.sample(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>stan_data,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    iter_warmup<span class="op">=</span><span class="dv">1000</span>,</span>
@@ -1826,11 +1850,11 @@ model {
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Per visualizzare e descrivere la distribuzione a posteriori dei parametri è possibile utilizzare ArviZ dopo aver fittato il modello con cmdstanpy. ArviZ utilizza un formato di dati chiamato <code>InferenceData</code>, che è un formato ad alto livello per la memorizzazione di risultati statistici. cmdstanpy restituisce un oggetto <code>CmdStanMCMC</code>, che può essere convertito in <code>InferenceData</code> utilizzando la funzione <code>az.from_cmdstanpy</code>.</p>
-<div id="cell-14" class="cell" data-execution_count="11">
+<div id="cell-15" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>idata <span class="op">=</span> az.from_cmdstanpy(fit)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Otteniamo un riassunto delle statistiche posteriori:</p>
-<div id="cell-16" class="cell" data-execution_count="12">
+<div id="cell-17" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> az.summary(fit, var_names<span class="op">=</span>([<span class="st">"beta0"</span>, <span class="st">"beta1"</span>]), hdi_prob<span class="op">=</span><span class="fl">0.94</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1844,7 +1868,7 @@ beta1    1.0  </code></pre>
 </div>
 </div>
 <p>Mostriamo le distribuzioni a posteriori e le tracce di campionamento per i parametri:</p>
-<div id="cell-18" class="cell" data-execution_count="13">
+<div id="cell-19" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> az.plot_trace(fit, var_names<span class="op">=</span>([<span class="st">"beta0"</span>, <span class="st">"beta1"</span>]))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1855,7 +1879,7 @@ beta1    1.0  </code></pre>
 </div>
 </div>
 <p>Nel pannello superiore della figura seguente vediamo il modello lineare nella sua forma non trasformata. Come si può osservare, questo modello lineare genera valori che escono dall’intervallo [0, 1], sottolineando quindi la necessità di una funzione di collegamento inversa. Questa funzione ha il compito di mappare i valori dal dominio dei numeri reali all’intervallo [0, 1]. Come abbiamo visto, questa trasformazione è realizzata mediante la funzione logistica inversa.</p>
-<div id="cell-20" class="cell" data-execution_count="14">
+<div id="cell-21" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>), gridspec_kw<span class="op">=</span>{<span class="st">"width_ratios"</span>: [<span class="dv">2</span>, <span class="dv">1</span>]})</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Data space plot ========================================================</span></span>
@@ -1915,7 +1939,7 @@ beta1    1.0  </code></pre>
 </section>
 <section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
-<div id="cell-22" class="cell" data-execution_count="15">
+<div id="cell-23" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext watermark</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>watermark <span class="op">-</span>n <span class="op">-</span>u <span class="op">-</span>v <span class="op">-</span>iv <span class="op">-</span>w <span class="op">-</span>m <span class="op">-</span>p cmdstanpy</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2182,57 +2206,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2594,4 +2567,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

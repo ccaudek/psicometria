@@ -86,7 +86,6 @@ div.csl-indent {
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/bayesian_inference/08_balance_prior_post.html" rel="next">
 <link href="../../chapters/bayesian_inference/06_conjugate_families_2.html" rel="prev">
-<link href="../../figures/favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -125,6 +124,7 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
+<style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -884,7 +884,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/glm/02_stan_binomial_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Regressione binomiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">89</span>&nbsp; <span class="chapter-title">Modelli lineari generalizzati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1399,10 +1399,19 @@ window.Quarto = {
   <li><a href="#riepilogo-numerico" id="toc-riepilogo-numerico" class="nav-link" data-scroll-target="#riepilogo-numerico"><span class="header-section-number">45.1</span> Riepilogo numerico</a>
   <ul>
   <li><a href="#stima-puntuale" id="toc-stima-puntuale" class="nav-link" data-scroll-target="#stima-puntuale"><span class="header-section-number">45.1.1</span> Stima puntuale</a></li>
-  <li><a href="#intervallo-di-credibilità" id="toc-intervallo-di-credibilità" class="nav-link" data-scroll-target="#intervallo-di-credibilità"><span class="header-section-number">45.1.2</span> Intervallo di credibilità</a></li>
+  <li><a href="#intervallo-di-credibilità" id="toc-intervallo-di-credibilità" class="nav-link" data-scroll-target="#intervallo-di-credibilità"><span class="header-section-number">45.1.2</span> Intervallo di credibilità</a>
+  <ul>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">45.1.2.1</span> Interpretazione</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#verifica-di-ipotesi-bayesiana" id="toc-verifica-di-ipotesi-bayesiana" class="nav-link" data-scroll-target="#verifica-di-ipotesi-bayesiana"><span class="header-section-number">45.2</span> Verifica di ipotesi bayesiana</a></li>
-  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">45.3</span> Commenti e considerazioni finali</a></li>
+  <li><a href="#sintesi-della-distribuzione-a-posteriori-questioni-multivariate" id="toc-sintesi-della-distribuzione-a-posteriori-questioni-multivariate" class="nav-link" data-scroll-target="#sintesi-della-distribuzione-a-posteriori-questioni-multivariate"><span class="header-section-number">45.3</span> Sintesi della distribuzione a posteriori: questioni multivariate</a>
+  <ul>
+  <li><a href="#correlazioni-nascoste-e-distribuzioni-marginali" id="toc-correlazioni-nascoste-e-distribuzioni-marginali" class="nav-link" data-scroll-target="#correlazioni-nascoste-e-distribuzioni-marginali"><span class="header-section-number">45.3.1</span> Correlazioni nascoste e distribuzioni marginali</a></li>
+  <li><a href="#correlazioni-non-lineari" id="toc-correlazioni-non-lineari" class="nav-link" data-scroll-target="#correlazioni-non-lineari"><span class="header-section-number">45.3.2</span> Correlazioni non lineari</a></li>
+  <li><a href="#strategie-per-affrontare-queste-sfide" id="toc-strategie-per-affrontare-queste-sfide" class="nav-link" data-scroll-target="#strategie-per-affrontare-queste-sfide"><span class="header-section-number">45.3.3</span> Strategie per affrontare queste sfide</a></li>
+  </ul></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">45.4</span> Commenti e considerazioni finali</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/bayesian_inference/07_summary_posterior.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
@@ -1432,13 +1441,14 @@ window.Quarto = {
 <p><strong>Prerequisiti</strong></p>
 <p><strong>Concetti e competenze chiave</strong></p>
 <p><strong>Preparazione del Notebook</strong></p>
-<div id="7df04cab-dd67-4f5e-af26-691b749f075b" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:30.279665Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:28.610854Z&quot;}" data-execution_count="1">
+<div id="7df04cab-dd67-4f5e-af26-691b749f075b" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:30.279665Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:28.610854Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> arviz <span class="im">as</span> az</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d9f9dda9-2722-45f4-8d66-bf873fbeab11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:33.266182Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:33.258952Z&quot;}" data-execution_count="2">
+<div id="d9f9dda9-2722-45f4-8d66-bf873fbeab11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:33.266182Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:33.258952Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>RANDOM_SEED <span class="op">=</span> <span class="dv">8927</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(RANDOM_SEED)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sns.set_theme(palette<span class="op">=</span><span class="st">"colorblind"</span>)</span>
@@ -1459,41 +1469,54 @@ window.Quarto = {
 </ul>
 <section id="stima-puntuale" class="level3" data-number="45.1.1">
 <h3 data-number="45.1.1" class="anchored" data-anchor-id="stima-puntuale"><span class="header-section-number">45.1.1</span> Stima puntuale</h3>
-<p>Nel contesto dell’inferenza bayesiana, il processo di stima del valore più credibile del parametro <span class="math inline">\(\theta\)</span> tramite la distribuzione a posteriori è un compito cruciale. Comunemente, tale processo si avvale di tre statistiche: la moda, la mediana e la media, la cui scelta è guidata dalla forma della distribuzione a posteriori. Queste statistiche sono utilizzate per ottenere una stima puntuale della tendenza centrale della distribuzione a posteriori, che a sua volta fornisce il “valore più credibile” del parametro. Questo valore rappresenta la stima a cui attribuiamo il massimo grado di fiducia soggettiva, basandoci sui dati osservati e sulle nostre credenze a priori.</p>
+<p>Nel contesto dell’inferenza bayesiana, il processo di stima del valore più credibile del parametro <span class="math inline">\(\theta\)</span> tramite la distribuzione a posteriori si avvale di tre statistiche: la moda, la mediana e la media, la cui scelta è guidata dalla forma della distribuzione a posteriori. Queste statistiche sono utilizzate per ottenere una stima puntuale della tendenza centrale della distribuzione a posteriori, che a sua volta fornisce il “valore più credibile” del parametro. Questo valore rappresenta la stima a cui attribuiamo il massimo grado di fiducia soggettiva, basandoci sui dati osservati e sulle nostre credenze a priori.</p>
+<p>Ecco una versione rivista, corretta e più chiara del testo:</p>
 <ol type="1">
+<li><p><strong>Moda (Massimo a posteriori, MAP)</strong>: La moda rappresenta il valore più probabile di un parametro, ovvero quello che massimizza la distribuzione a posteriori. Questo valore è noto come “massimo a posteriori” (MAP). La stima MAP prende origine dalla stima di massima verosimiglianza (MLE), che cerca il valore di <span class="math inline">\(\theta\)</span>, denotato come <span class="math inline">\(\hat{\theta}_{ML}\)</span>, che massimizza la funzione di verosimiglianza <span class="math inline">\(L(\theta \mid y)\)</span>:</p>
+<p><span class="math display">\[ \hat{\theta}_{ML} = \arg \max_\theta L(\theta \mid y). \]</span></p>
+<p>Nell’inferenza bayesiana, <span class="math inline">\(\theta\)</span> è considerato una variabile casuale, e si specifica una distribuzione a priori su <span class="math inline">\(\theta\)</span> per riflettere l’incertezza sul suo valore. Integrando l’informazione a priori nella funzione di verosimiglianza, si ottiene la formula per la stima MAP:</p>
+<p><span class="math display">\[ \hat{\theta}_{MAP} = \arg \max_\theta L(\theta \mid y)p(\theta). \]</span></p>
+<p>Questa formula evidenzia che la stima MAP corrisponde al valore che massimizza la densità a posteriori di <span class="math inline">\(\theta\)</span> dati i dati osservati <span class="math inline">\(y\)</span>, ovvero il valore che rappresenta la moda della distribuzione a posteriori.</p>
+<p>Sebbene il concetto di MAP sia intuitivo, presenta diversi problemi che ne limitano l’uso nella pratica.</p>
+<p>La prima difficoltà è di tipo computazionale: con i metodi MCMC comunemente utilizzati per stimare le distribuzioni a posteriori, è molto difficile individuare con precisione la posizione esatta del MAP nello spazio delle distribuzioni posteriori.</p>
+<p>Il secondo problema è legato all’uso dell’inferenza bayesiana in modelli complessi e in situazioni non asintotiche. In questi casi, la verosimiglianza o la distribuzione a posteriori possono avere forme irregolari o non normali. Se la distribuzione a posteriori è molto asimmetrica, il MAP potrebbe non rappresentare adeguatamente dove si concentra la maggior parte della probabilità. Di conseguenza, il MAP non sempre fornisce un’idea accurata del comportamento complessivo della distribuzione a posteriori.</p></li>
 <li><p><strong>Media a posteriori</strong>: La media a posteriori è il valore atteso del parametro <span class="math inline">\(\theta\)</span>, calcolato sulla base della distribuzione a posteriori. In termini matematici, nel caso continuo, è espressa dalla formula:</p>
-<p><span class="math display">\[ E(\theta | y) = \int_{-\infty}^{\infty} \theta \, p(\theta | y) \, d\theta. \]</span></p></li>
-<li><p><strong>Moda (Massimo a posteriori, MAP)</strong>: La moda identifica il valore più probabile del parametro, ovvero quello che massimizza la distribuzione a posteriori. Questo valore è noto come “massimo a posteriori” (MAP). La stima MAP inizia con il concetto di stima di massima verosimiglianza (MLE), che cerca il valore di <span class="math inline">\(\theta\)</span>, denotato come <span class="math inline">\(\hat{\theta}_{ML}\)</span>, che massimizza la funzione di verosimiglianza <span class="math inline">\(L(\theta | y)\)</span>, come segue:</p>
-<p><span class="math display">\[ \hat{\theta}_{ML} = \arg \max_\theta L(\theta | y). \]</span></p>
-<p>Nell’inferenza bayesiana, <span class="math inline">\(\theta\)</span> è considerato come una variabile casuale, e si specifica una distribuzione a priori su <span class="math inline">\(\theta\)</span> per riflettere la nostra incertezza su <span class="math inline">\(\theta\)</span>. Integrando la distribuzione a priori, otteniamo la formula per la stima MAP:</p>
-<p><span class="math display">\[ \hat{\theta}_{MAP} = \arg \max_\theta L(\theta | y)p(\theta). \]</span></p>
-<p>Questa formula evidenzia che la stima MAP corrisponde al valore che massimizza la densità a posteriori di <span class="math inline">\(\theta\)</span> dati <span class="math inline">\(y\)</span>, che coincide con la moda della densità a posteriori.</p></li>
+<p><span class="math display">\[ E(\theta \mid y) = \int_{-\infty}^{\infty} \theta \, p(\theta \mid y) \, d\theta. \]</span></p></li>
 <li><p><strong>Mediana</strong>: La mediana è il valore del parametro per cui il 50% della massa di probabilità a posteriori si distribuisce equamente a sinistra e a destra. È una misura robusta della tendenza centrale, particolarmente utile in presenza di distribuzioni asimmetriche o multimodali, dove la moda potrebbe non fornire una stima accurata del valore più probabile del parametro.</p></li>
 </ol>
 <p>Per valutare l’incertezza associata al parametro <span class="math inline">\(\theta\)</span>, è utile calcolare la varianza a posteriori. Questa varianza è basata sulla tendenza centrale definita dalla media a posteriori, e la sua radice quadrata fornisce la deviazione standard a posteriori, che misura l’incertezza a posteriori relativa a <span class="math inline">\(\theta\)</span>, espressa nelle stesse unità di misura dei dati. La formula per la varianza a posteriori è data da:</p>
-<p><span class="math display">\[ V(\theta|y) = E[((\theta - E[(\theta|y)])^2 |y) = \int_{-\infty}^{\infty} (\theta - E[\theta | y])^2 p(\theta | y) d\theta = E[\theta^2 |y] - E[\theta|y]^2. \]</span></p>
+<p><span class="math display">\[
+V(\theta|y) = E[((\theta - E[(\theta|y)])^2 |y) = \int_{-\infty}^{\infty} (\theta - E[\theta | y])^2 p(\theta | y) d\theta = E[\theta^2 |y] - E[\theta|y]^2.
+\]</span></p>
 <p>In sintesi, la media, la moda e la mediana a posteriori, insieme alla varianza a posteriori, forniscono una descrizione comprensiva del comportamento della distribuzione a posteriori di <span class="math inline">\(\theta\)</span>, permettendoci di derivare stime puntuali e misurare l’incertezza associata a <span class="math inline">\(\theta\)</span> in modo informativo.</p>
+<p>Ecco una versione migliorata del testo, più chiara e precisa:</p>
 </section>
 <section id="intervallo-di-credibilità" class="level3" data-number="45.1.2">
 <h3 data-number="45.1.2" class="anchored" data-anchor-id="intervallo-di-credibilità"><span class="header-section-number">45.1.2</span> Intervallo di credibilità</h3>
-<p>Nel contesto dell’inferenza bayesiana, l’intervallo di credibilità è uno strumento fondamentale per valutare l’ampiezza dell’intervallo che racchiude una determinata percentuale della massa della distribuzione a posteriori del parametro <span class="math inline">\(\theta\)</span>. Questo intervallo fornisce informazioni sulla nostra incertezza relativa al valore del parametro: un intervallo più ampio indica una maggiore incertezza associata. L’obiettivo primario dell’intervallo di credibilità è di fornire una misura quantitativa dell’incertezza legata alla stima del parametro <span class="math inline">\(\theta\)</span>.</p>
-<p>La definizione di intervallo di credibilità non determina un unico intervallo di ordine <span class="math inline">\((1 - \alpha) \cdot 100\%\)</span>, ma rende possibile una gamma infinita di tali intervalli. Di conseguenza, è essenziale introdurre condizioni aggiuntive per la selezione dell’intervallo di credibilità. Due delle condizioni aggiuntive più comuni sono l’intervallo di credibilità simmetrico e l’intervallo di credibilità più stretto.</p>
+<p>Nell’inferenza bayesiana, l’intervallo di credibilità è uno strumento utilizzato per definire un intervallo che contiene una determinata percentuale della massa della distribuzione a posteriori del parametro <span class="math inline">\(\theta\)</span>. Questo intervallo riflette l’incertezza associata alla stima del parametro: un intervallo più ampio suggerisce una maggiore incertezza. Lo scopo principale dell’intervallo di credibilità è fornire una misura quantitativa dell’incertezza riguardante <span class="math inline">\(\theta\)</span>.</p>
+<p>A differenza degli intervalli di confidenza frequentisti, non esiste un unico intervallo di credibilità per un dato livello di confidenza <span class="math inline">\((1 - \alpha) \cdot 100\%\)</span>. In effetti, è possibile costruire un numero infinito di tali intervalli. Per questo motivo, è necessario stabilire criteri aggiuntivi per selezionare l’intervallo di credibilità più appropriato. Tra le opzioni più comuni ci sono l’intervallo di credibilità simmetrico e l’intervallo di massima densità posteriore (HPD).</p>
 <ol type="1">
-<li><p><strong>Intervallo di Credibilità Simmetrico</strong>: Questa condizione richiede che l’intervallo di credibilità sia simmetrico rispetto al punto di stima puntuale. Se <span class="math inline">\(\hat{\theta}\)</span> è il valore stimato del parametro, l’intervallo di credibilità avrà la forma <span class="math inline">\((\hat{\theta} - a, \hat{\theta} + a)\)</span>, dove <span class="math inline">\(a\)</span> è un valore positivo adeguato. Un intervallo di credibilità simmetrico al livello <span class="math inline">\(\alpha\)</span> può essere rappresentato come:</p>
+<li><p><strong>Intervallo di Credibilità Simmetrico</strong>: Questo tipo di intervallo è centrato rispetto al punto di stima puntuale. Se <span class="math inline">\(\hat{\theta}\)</span> rappresenta la stima del parametro, l’intervallo simmetrico avrà la forma <span class="math inline">\((\hat{\theta} - a, \hat{\theta} + a)\)</span>, dove <span class="math inline">\(a\)</span> è un valore positivo scelto in modo tale che la massa totale inclusa sia pari a <span class="math inline">\((1 - \alpha)\)</span>. Più formalmente, un intervallo di credibilità simmetrico al livello <span class="math inline">\(\alpha\)</span> può essere espresso come:</p>
 <p><span class="math display">\[ I_{\alpha} = [q_{\alpha/2}, q_{1 - \alpha/2}], \]</span></p>
-<p>dove <span class="math inline">\(q_z\)</span> è un quantile della distribuzione a posteriori. Ad esempio, un intervallo di credibilità simmetrico al 94% sarà:</p>
-<p><span class="math display">\[ I_{0.06} = [q_{0.03}, q_{0.97}] \]</span></p>
-<p>assicurando che il 3% della densità di probabilità a posteriori sia compreso in ciascuna coda dell’intervallo.</p></li>
-<li><p><strong>Intervallo di Credibilità Più Stretto (Intervallo di Massima Densità Posteriore, HPD)</strong>: Questo intervallo è scelto in modo da avere la larghezza minima tra tutti gli intervalli di ordine <span class="math inline">\((1 - \alpha) \cdot 100\%\)</span>, rappresentando la stima più precisa possibile del parametro <span class="math inline">\(\theta\)</span>. A differenza dell’intervallo di credibilità simmetrico, l’intervallo di credibilità più stretto, o Intervallo di Massima Densità Posteriore (HPD), è costruito per includere tutti i valori di <span class="math inline">\(\theta\)</span> che godono di maggiore credibilità a posteriori. Questo intervallo può essere ottenuto tracciando una linea orizzontale sulla rappresentazione grafica della distribuzione a posteriori e regolando l’altezza della linea in modo che l’area sottesa alla curva sia pari a <span class="math inline">\(1 - \alpha\)</span>. L’intervallo HPD è il più stretto possibile tra tutti gli intervalli possibili con lo stesso livello di fiducia. Quando la distribuzione a posteriori è unimodale e simmetrica, l’intervallo di credibilità più stretto coincide con l’intervallo di credibilità simmetrico.</p></li>
+<p>dove <span class="math inline">\(q_z\)</span> rappresenta il quantile <span class="math inline">\(z\)</span> della distribuzione a posteriori. Ad esempio, un intervallo di credibilità simmetrico al 94% sarà:</p>
+<p><span class="math display">\[ I_{0.06} = [q_{0.03}, q_{0.97}], \]</span></p>
+<p>dove il 3% della massa a posteriori si trova in ciascuna delle due code della distribuzione.</p></li>
+<li><p><strong>Intervallo di Credibilità Più Stretto (Intervallo di Massima Densità Posteriore, HPD)</strong>: L’intervallo di massima densità posteriore (HPD) è l’intervallo più stretto possibile che contiene il <span class="math inline">\((1 - \alpha) \cdot 100\%\)</span> della massa a posteriori. A differenza dell’intervallo simmetrico, l’HPD include tutti i valori di <span class="math inline">\(\theta\)</span> che hanno la maggiore densità a posteriori. Per costruirlo, si disegna una linea orizzontale sulla distribuzione a posteriori e si regola l’altezza della linea in modo che l’area sotto la curva corrisponda a <span class="math inline">\((1 - \alpha)\)</span>. L’HPD risulta essere il più stretto tra tutti gli intervalli possibili per lo stesso livello di confidenza. Nel caso di una distribuzione a posteriori unimodale e simmetrica, l’HPD coincide con l’intervallo di credibilità simmetrico.</p></li>
 </ol>
-<p>Il calcolo degli intervalli di credibilità può richiedere l’uso di software statistici dedicati, data la complessità nel determinarli manualmente, specialmente in situazioni con modelli bayesiani più complessi o quando il calcolo coinvolge simulazioni numeriche.</p>
-<p>Un aspetto importante del trattare i parametri in modo probabilistico riguarda l’interpretazione degli intervalli di confidenza. Nell’ambito frequentista, è necessario immaginare un parametro fisso, ad esempio la media della popolazione <span class="math inline">\(\mu\)</span>, e immaginare un numero infinito di campioni ripetuti dalla popolazione caratterizzata da <span class="math inline">\(\mu\)</span>. Per ogni campione, possiamo ottenere la media del campione <span class="math inline">\(\bar{x}\)</span> e quindi formare un intervallo di confidenza al <span class="math inline">\(100(1 − \alpha)\%\)</span>. L’interpretazione corretta in termini frequentisti è che il <span class="math inline">\(100(1 − \alpha)\%\)</span> degli intervalli di confidenza formati in questo modo cattura il vero parametro <span class="math inline">\(\mu\)</span> sotto l’ipotesi nulla. In questo contesto, la probabilità che il parametro sia nell’intervallo è o 0 o 1.</p>
-<p>In contrasto, il framework bayesiano assume che un parametro abbia una distribuzione di probabilità. Campionando dalla distribuzione a posteriori dei parametri del modello, possiamo ottenere i suoi quantili e, dai quantili, possiamo ottenere direttamente la probabilità che un parametro rientri in un determinato intervallo. Quindi, in questo caso, un intervallo di probabilità a posteriori del 95% significherebbe che la probabilità che il parametro rientri nell’intervallo è 0.95. Questo è completamente diverso dall’interpretazione frequentista, e si allinea più sensatamente con il senso comune.</p>
+<section id="interpretazione" class="level4" data-number="45.1.2.1">
+<h4 data-number="45.1.2.1" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">45.1.2.1</span> Interpretazione</h4>
+<p>Il calcolo degli intervalli di credibilità, in particolare dell’intervallo di massima densità posteriore (HPD), richiede spesso l’uso di software statistici avanzati. Questo perché determinare manualmente tali intervalli può essere complicato, soprattutto nei modelli bayesiani con distribuzioni posteriori complesse o quando sono necessarie simulazioni numeriche per stimare la distribuzione a posteriori.</p>
+<p>Un aspetto cruciale dell’inferenza bayesiana riguarda l’interpretazione dell’incertezza. Nel contesto frequentista, si considera il parametro, come ad esempio la media della popolazione <span class="math inline">\(\mu\)</span>, come un valore fisso ma sconosciuto. L’inferenza frequentista si basa sull’immaginare un numero infinito di campioni ripetuti dalla popolazione. Per ogni campione, si può calcolare una media campionaria <span class="math inline">\(\bar{x}\)</span> e formare un intervallo di confidenza al <span class="math inline">\(100(1-\alpha)\%\)</span>. L’interpretazione corretta in termini frequentisti è che, nel lungo periodo, il <span class="math inline">\(100(1-\alpha)\%\)</span> degli intervalli di confidenza costruiti con questo metodo conterrà il vero valore del parametro <span class="math inline">\(\mu\)</span>. Tuttavia, per un singolo intervallo calcolato, la probabilità che contenga effettivamente <span class="math inline">\(\mu\)</span> è o 0 o 1, poiché <span class="math inline">\(\mu\)</span> è considerato un valore fisso.</p>
+<p>Nel framework bayesiano, invece, il parametro è trattato come una variabile aleatoria con una distribuzione di probabilità. Campionando dalla distribuzione a posteriori dei parametri, possiamo ottenere quantili che ci permettono di calcolare direttamente la probabilità che un parametro rientri in un determinato intervallo. Ad esempio, un intervallo di credibilità al 95% indica che c’è una probabilità del 95% che il parametro sia contenuto all’interno di quell’intervallo, data l’evidenza osservata. Questa interpretazione differisce profondamente da quella frequentista e risulta più intuitiva, poiché riflette direttamente il grado di incertezza che abbiamo riguardo al parametro.</p>
+<p>In sintesi, mentre l’intervallo di confidenza frequentista riguarda la ripetizione ipotetica del campionamento, l’intervallo di credibilità bayesiano fornisce una misura diretta dell’incertezza attuale sul valore di un parametro, basata sui dati osservati e sulle informazioni a priori. Questo approccio è spesso considerato più vicino al senso comune quando si tratta di interpretare la probabilità associata ai parametri.</p>
+</section>
 </section>
 </section>
 <section id="verifica-di-ipotesi-bayesiana" class="level2" data-number="45.2">
 <h2 data-number="45.2" class="anchored" data-anchor-id="verifica-di-ipotesi-bayesiana"><span class="header-section-number">45.2</span> Verifica di ipotesi bayesiana</h2>
-<p>L’inferenza bayesiana può anche procedere attraverso un altro approccio, conosciuto come verifica di ipotesi bayesiana. Questo secondo tipo di inferenza bayesiana si concentra su problemi in cui intendiamo valutare la plausibilità dell’affermazione che il parametro <span class="math inline">\(\theta\)</span> assuma valori all’interno di un intervallo specifico (ad esempio, <span class="math inline">\(\theta &gt; 0.5\)</span>). In questa situazione, è possibile calcolare la probabilità a posteriori che <span class="math inline">\(\theta\)</span> cada all’interno dell’intervallo di interesse (come ad esempio, [0.5, 1.0]), integrando la distribuzione a posteriori su tale intervallo.</p>
+<p>L’inferenza bayesiana può essere applicata anche nel contesto della verifica di ipotesi, in un approccio noto come <font color="orange">verifica di ipotesi bayesiana</font>. In questo tipo di inferenza, l’obiettivo è valutare la plausibilità che un parametro <span class="math inline">\(\theta\)</span> assuma valori all’interno di un determinato intervallo. Ad esempio, possiamo voler sapere quanto è probabile che <span class="math inline">\(\theta\)</span> sia maggiore di 0.5 o che rientri in un intervallo specifico, come [0.5, 1.0].</p>
+<p>In questo approccio, si calcola la <font color="orange">probabilità a posteriori</font> che <span class="math inline">\(\theta\)</span> si trovi all’interno dell’intervallo di interesse. Questa probabilità viene ottenuta integrando la distribuzione a posteriori su tale intervallo. Quindi, invece di rifiutare o accettare un’ipotesi come nel test di ipotesi frequentista, la verifica di ipotesi bayesiana fornisce una misura diretta della probabilità che un parametro rientri in un intervallo specifico, dato l’evidenza osservata e le informazioni a priori.</p>
+<p>In altre parole, questo approccio consente di quantificare la nostra incertezza rispetto all’affermazione che <span class="math inline">\(\theta\)</span> rientri in un certo intervallo, fornendo una probabilità che rappresenta direttamente la plausibilità di quell’ipotesi.</p>
 <div id="exm-" class="theorem example">
 <p><span class="theorem-title"><strong>Esempio 45.1</strong></span> Per comprendere meglio attraverso un esempio pratico, esaminiamo i dati relativi ai punteggi del BDI-II (Beck Depression Inventory - Second Edition) di 30 soggetti clinici, come riportato nello studio condotto da <span class="citation" data-cites="zetsche_2019future">Zetsche, Buerkner, e Renneberg (<a href="../../99-references.html#ref-zetsche_2019future" role="doc-biblioref">2019</a>)</span>. Il BDI-II è un questionario utilizzato per valutare la gravità dei sintomi depressivi.</p>
 <div id="75888346-5319-48b2-a9ea-aae0acf57696" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-28T11:15:40.189244Z&quot;,&quot;start_time&quot;:&quot;2024-03-28T11:15:40.183137Z&quot;}" data-execution_count="3">
@@ -1633,8 +1656,52 @@ f(\theta &gt; 0.5 \; \mid \; y = 17) = \int_{0.5}^{1}f(\theta \mid y=17)d\theta 
 </div>
 </div>
 </section>
-<section id="commenti-e-considerazioni-finali" class="level2" data-number="45.3">
-<h2 data-number="45.3" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">45.3</span> Commenti e considerazioni finali</h2>
+<section id="sintesi-della-distribuzione-a-posteriori-questioni-multivariate" class="level2" data-number="45.3">
+<h2 data-number="45.3" class="anchored" data-anchor-id="sintesi-della-distribuzione-a-posteriori-questioni-multivariate"><span class="header-section-number">45.3</span> Sintesi della distribuzione a posteriori: questioni multivariate</h2>
+<p>Quando si affronta un’analisi bayesiana con più parametri, la complessità aumenta. Le principali difficoltà riguardano le interazioni tra i parametri e il modo in cui queste influenzano le distribuzioni marginali. Questi fattori possono complicare notevolmente la sintesi della distribuzione a posteriori e, se non considerati attentamente, possono portare a interpretazioni errate.</p>
+<section id="correlazioni-nascoste-e-distribuzioni-marginali" class="level3" data-number="45.3.1">
+<h3 data-number="45.3.1" class="anchored" data-anchor-id="correlazioni-nascoste-e-distribuzioni-marginali"><span class="header-section-number">45.3.1</span> Correlazioni nascoste e distribuzioni marginali</h3>
+<p>Un problema comune nelle analisi con più parametri è rappresentato dalle <strong>correlazioni tra i parametri</strong>. Le distribuzioni marginali a posteriori, spesso riportate nei riassunti statistici, possono essere <strong>molto fuorvianti</strong> se considerate isolatamente. Quando i parametri sono fortemente correlati, le distribuzioni marginali possono apparire piatte o poco informative, inducendo a pensare che non ci sia molta informazione nella verosimiglianza.</p>
+<p>Tuttavia, le correlazioni tra parametri possono restringere notevolmente lo spazio delle combinazioni plausibili, escludendo vaste aree dello spazio dei parametri. Questo significa che, nonostante le marginali possano sembrare non informative, l’analisi congiunta dei parametri può rivelare una struttura sottostante che riduce l’incertezza su specifiche combinazioni. Pertanto, è essenziale esaminare le correlazioni congiunte tra i parametri per ottenere una visione più completa dell’incertezza.</p>
+<p>Con un numero maggiore di parametri, anche i grafici di correlazione bidimensionali possono diventare limitati, poiché potrebbero esistere correlazioni di ordine superiore che non emergono in rappresentazioni a due dimensioni.</p>
+</section>
+<section id="correlazioni-non-lineari" class="level3" data-number="45.3.2">
+<h3 data-number="45.3.2" class="anchored" data-anchor-id="correlazioni-non-lineari"><span class="header-section-number">45.3.2</span> Correlazioni non lineari</h3>
+<p>Un’altra difficoltà significativa riguarda le <strong>correlazioni non lineari</strong> tra i parametri. Quando queste correlazioni sono presenti, il massimo delle distribuzioni marginali non coincide necessariamente con il massimo della distribuzione congiunta. Per esempio, se due parametri presentano una correlazione complessa, come una forma a “banana”, il massimo delle distribuzioni marginali potrebbe trovarsi in una posizione diversa rispetto al massimo globale della distribuzione congiunta.</p>
+<p>Questo fenomeno rende più difficile sintetizzare correttamente la distribuzione a posteriori. In tali casi, la stima del <strong>massimo a posteriori (MAP)</strong> o altri riassunti, come gli <strong>intervalli di credibilità (CI)</strong> o gli <strong>intervalli di massima densità a posteriori (HPD)</strong>, calcolati sulle marginali, potrebbero essere fuorvianti. Quando la distribuzione a posteriori è asimmetrica nello spazio multivariato, le distribuzioni marginali non catturano adeguatamente le relazioni tra i parametri. Questa è una fonte comune di confusione, poiché si tende a sottovalutare l’importanza della struttura multivariata nella distribuzione a posteriori.</p>
+</section>
+<section id="strategie-per-affrontare-queste-sfide" class="level3" data-number="45.3.3">
+<h3 data-number="45.3.3" class="anchored" data-anchor-id="strategie-per-affrontare-queste-sfide"><span class="header-section-number">45.3.3</span> Strategie per affrontare queste sfide</h3>
+<ol type="1">
+<li><strong>Confronto tra distribuzioni predittive</strong>:
+<ul>
+<li>Confrontare la distribuzione predittiva a priori con quella a posteriori offre una visione più completa della riduzione dell’incertezza.</li>
+<li>Questo approccio è particolarmente utile in presenza di parametri multipli e correlazioni complesse, poiché la distribuzione predittiva a posteriori incorpora le interazioni tra i parametri, fornendo una rappresentazione più accurata della plausibilità dei diversi valori parametrici.</li>
+</ul></li>
+<li><strong>Analisi congiunta</strong>:
+<ul>
+<li>Esaminare le distribuzioni congiunte dei parametri, oltre alle distribuzioni marginali.</li>
+<li>Utilizzare grafici di dispersione bivariati o multivariati per visualizzare le relazioni tra i parametri.</li>
+<li>Tecniche avanzate di visualizzazione, come i <strong>pair plots</strong> o le <strong>heatmap</strong>, possono essere utili per esplorare relazioni in spazi ad alta dimensionalità.</li>
+</ul></li>
+<li><strong>Misure di dipendenza</strong>:
+<ul>
+<li>Utilizzare misure di dipendenza non lineare, come la <strong>correlazione di Spearman</strong> o l’<strong>informazione mutua</strong>, che possono catturare relazioni complesse che le misure lineari tradizionali potrebbero non rilevare.</li>
+</ul></li>
+<li><strong>Analisi di sensibilità</strong>:
+<ul>
+<li>Condurre un’analisi di sensibilità per valutare come i cambiamenti in un parametro influenzano gli altri parametri e le previsioni del modello. Questo permette di capire meglio le relazioni tra i parametri e il loro impatto sulle inferenze.</li>
+</ul></li>
+<li><strong>Tecniche di riduzione della dimensionalità</strong>:
+<ul>
+<li>Quando ci sono molti parametri, l’uso di metodi come l’<strong>analisi delle componenti principali (PCA)</strong> o il <strong>t-SNE</strong> può aiutare a identificare strutture latenti e ridurre la complessità del problema, facilitando l’interpretazione dei risultati.</li>
+</ul></li>
+</ol>
+<p>In sintesi, l’analisi multivariata in un contesto bayesiano richiede particolare attenzione nella sintesi delle distribuzioni a posteriori. Le distribuzioni marginali possono fornire informazioni utili, ma spesso nascondono importanti correlazioni e strutture di dipendenza tra i parametri. Un’analisi completa dovrebbe combinare l’esame delle marginali con una valutazione attenta delle relazioni congiunte tra i parametri, utilizzando tecniche di visualizzazione e misure di dipendenza adeguate. Questo approccio integrato permette di comprendere più a fondo la distribuzione a posteriori e di trarre inferenze più robuste e accurate.</p>
+</section>
+</section>
+<section id="commenti-e-considerazioni-finali" class="level2" data-number="45.4">
+<h2 data-number="45.4" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">45.4</span> Commenti e considerazioni finali</h2>
 <p>In conclusione, la distribuzione a posteriori rappresenta la nostra conoscenza aggiornata sui parametri sconosciuti. L’impiego delle statistiche descrittive e l’analisi degli intervalli di credibilità contribuiscono a tracciare un quadro completo della distribuzione a posteriori e delle nostre inferenze riguardo al parametro di interesse.</p>
 <p>Le stime puntuali, ottenute attraverso statistiche descrittive come media, mediana o moda a posteriori, offrono una singola valutazione numerica del parametro ignoto. Gli intervalli di credibilità forniscono un intervallo di valori all’interno del quale si ritiene, con un certo grado di probabilità soggettiva, che il parametro incognito possa rientrare. Questi intervalli quantificano l’incertezza associata al parametro e consentono di esprimere il livello di fiducia soggettiva riguardo ai possibili valori del parametro dopo l’analisi dei dati. Abbiamo inoltre esaminato il concetto di test di ipotesi bayesiano, il quale può essere condotto agevolmente calcolando l’area appropriata sotto la distribuzione a posteriori, in accordo con l’ipotesi in questione.</p>
 </section>
@@ -1910,57 +1977,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -2322,4 +2338,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
