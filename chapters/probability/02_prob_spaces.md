@@ -230,7 +230,7 @@ All'interno di questa collezione ci sono alcuni esempi notevoli. Ad esempio, una
 Una misura singolare (a) alloca la misura totale a un singolo elemento, mentre la misura uniforme (b) distribuisce la misura totale uniformemente a ciascun elemento.
 :::
 
-Le misure finite sono una categoria particolarmente importante nel campo della teoria della misura. Una misura si definisce finita quando la sua misura totale $M$ è un numero positivo e limitato, ovvero $0 < M < \infty$. 
+Le misure finite sono una categoria particolarmente importante nel campo della teoria della misura. Una misura si definisce finita quando la sua misura totale $M$ è un numero positivo e limitato, ovvero $0 < M < \infty$.
 
 L'importanza delle misure finite risiede nella possibilità di esprimere le allocazioni in termini relativi anziché assoluti. Questo significa che possiamo rappresentare la misura di ciascun elemento come una frazione o una percentuale della misura totale, invece di usare il valore assoluto.
 Invece di considerare la misura assoluta allocata a ciascun elemento $m_{n}$, possiamo considerare la *proporzione* della misura totale allocata a ciascun elemento
