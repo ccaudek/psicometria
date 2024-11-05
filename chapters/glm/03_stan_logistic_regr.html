@@ -1421,9 +1421,13 @@ window.Quarto = {
   <li><a href="#funzione-legame" id="toc-funzione-legame" class="nav-link" data-scroll-target="#funzione-legame"><span class="header-section-number">91.7</span> Funzione Legame</a></li>
   <li><a href="#coefficienti-del-modello-nella-regressione-logistica-e-la-loro-interpretazione" id="toc-coefficienti-del-modello-nella-regressione-logistica-e-la-loro-interpretazione" class="nav-link" data-scroll-target="#coefficienti-del-modello-nella-regressione-logistica-e-la-loro-interpretazione"><span class="header-section-number">91.8</span> Coefficienti del Modello nella Regressione Logistica e la loro Interpretazione</a>
   <ul>
-  <li><a href="#interpretazione-sui-logit" id="toc-interpretazione-sui-logit" class="nav-link" data-scroll-target="#interpretazione-sui-logit"><span class="header-section-number">91.8.1</span> Interpretazione sui Logit</a></li>
-  <li><a href="#interpretazione-sugli-odds-ratio-or" id="toc-interpretazione-sugli-odds-ratio-or" class="nav-link" data-scroll-target="#interpretazione-sugli-odds-ratio-or"><span class="header-section-number">91.8.2</span> Interpretazione sugli Odds Ratio (OR)</a></li>
-  <li><a href="#interpretazione-sulla-scala-delle-probabilità" id="toc-interpretazione-sulla-scala-delle-probabilità" class="nav-link" data-scroll-target="#interpretazione-sulla-scala-delle-probabilità"><span class="header-section-number">91.8.3</span> Interpretazione sulla Scala delle Probabilità</a></li>
+  <li><a href="#odds-ratio" id="toc-odds-ratio" class="nav-link" data-scroll-target="#odds-ratio"><span class="header-section-number">91.8.1</span> Odds Ratio</a></li>
+  <li><a href="#passo-1-calcolare-gli-odds-per-i-due-valori-di-x" id="toc-passo-1-calcolare-gli-odds-per-i-due-valori-di-x" class="nav-link" data-scroll-target="#passo-1-calcolare-gli-odds-per-i-due-valori-di-x"><span class="header-section-number">91.8.2</span> Passo 1: Calcolare gli odds per i due valori di <span class="math inline">\(X\)</span></a></li>
+  <li><a href="#passo-2-calcolare-lodds-ratio" id="toc-passo-2-calcolare-lodds-ratio" class="nav-link" data-scroll-target="#passo-2-calcolare-lodds-ratio"><span class="header-section-number">91.8.3</span> Passo 2: Calcolare l’odds ratio</a></li>
+  <li><a href="#interpretazione-dellodds-ratio" id="toc-interpretazione-dellodds-ratio" class="nav-link" data-scroll-target="#interpretazione-dellodds-ratio"><span class="header-section-number">91.8.4</span> Interpretazione dell’odds ratio</a></li>
+  <li><a href="#interpretazione-sui-logit" id="toc-interpretazione-sui-logit" class="nav-link" data-scroll-target="#interpretazione-sui-logit"><span class="header-section-number">91.8.5</span> Interpretazione sui Logit</a></li>
+  <li><a href="#interpretazione-sugli-odds-ratio-or" id="toc-interpretazione-sugli-odds-ratio-or" class="nav-link" data-scroll-target="#interpretazione-sugli-odds-ratio-or"><span class="header-section-number">91.8.6</span> Interpretazione sugli Odds Ratio (OR)</a></li>
+  <li><a href="#interpretazione-sulla-scala-delle-probabilità" id="toc-interpretazione-sulla-scala-delle-probabilità" class="nav-link" data-scroll-target="#interpretazione-sulla-scala-delle-probabilità"><span class="header-section-number">91.8.7</span> Interpretazione sulla Scala delle Probabilità</a></li>
   </ul></li>
   <li><a href="#un-esempio-concreto" id="toc-un-esempio-concreto" class="nav-link" data-scroll-target="#un-esempio-concreto"><span class="header-section-number">91.9</span> Un esempio concreto</a>
   <ul>
@@ -1431,7 +1435,7 @@ window.Quarto = {
   <ul>
   <li><a href="#la-regola-del-dividere-per-4" id="toc-la-regola-del-dividere-per-4" class="nav-link" data-scroll-target="#la-regola-del-dividere-per-4"><span class="header-section-number">91.9.1.1</span> La regola del dividere per 4</a></li>
   <li><a href="#scala-dei-logit" id="toc-scala-dei-logit" class="nav-link" data-scroll-target="#scala-dei-logit"><span class="header-section-number">91.9.1.2</span> Scala dei Logit</a></li>
-  <li><a href="#odds-ratio" id="toc-odds-ratio" class="nav-link" data-scroll-target="#odds-ratio"><span class="header-section-number">91.9.1.3</span> Odds Ratio</a></li>
+  <li><a href="#odds-ratio-1" id="toc-odds-ratio-1" class="nav-link" data-scroll-target="#odds-ratio-1"><span class="header-section-number">91.9.1.3</span> Odds Ratio</a></li>
   <li><a href="#scala-delle-probabilità" id="toc-scala-delle-probabilità" class="nav-link" data-scroll-target="#scala-delle-probabilità"><span class="header-section-number">91.9.1.4</span> Scala delle Probabilità</a></li>
   </ul></li>
   <li><a href="#riassunto" id="toc-riassunto" class="nav-link" data-scroll-target="#riassunto"><span class="header-section-number">91.9.2</span> Riassunto</a></li>
@@ -1768,24 +1772,79 @@ Y_i \sim Bin(n_i, \pi_i)
 <section id="coefficienti-del-modello-nella-regressione-logistica-e-la-loro-interpretazione" class="level2" data-number="91.8">
 <h2 data-number="91.8" class="anchored" data-anchor-id="coefficienti-del-modello-nella-regressione-logistica-e-la-loro-interpretazione"><span class="header-section-number">91.8</span> Coefficienti del Modello nella Regressione Logistica e la loro Interpretazione</h2>
 <p>Un aspetto cruciale per comprendere la relazione tra le variabili predittive e una variabile di risposta binaria è l’interpretazione dei coefficienti del modello.</p>
-<section id="interpretazione-sui-logit" class="level3" data-number="91.8.1">
-<h3 data-number="91.8.1" class="anchored" data-anchor-id="interpretazione-sui-logit"><span class="header-section-number">91.8.1</span> Interpretazione sui Logit</h3>
+<section id="odds-ratio" class="level3" data-number="91.8.1">
+<h3 data-number="91.8.1" class="anchored" data-anchor-id="odds-ratio"><span class="header-section-number">91.8.1</span> Odds Ratio</h3>
+<p>Il caso più semplice che consente di interpetare l’odds ratio in una regressione logistica è quando la variabile indipendente (X) è binaria (cioè può assumere solo valori 0 e 1).</p>
+<p>In una regressione logistica, il modello assume la forma:</p>
+<p><span class="math display">\[
+\log \left( \frac{P(Y = 1)}{P(Y = 0)} \right) = \beta_0 + \beta_1 X
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(\log \left( \frac{P(Y = 1)}{P(Y = 0)} \right)\)</span> è il logaritmo dell’odds che l’evento <span class="math inline">\(Y = 1\)</span> avvenga,</li>
+<li><span class="math inline">\(\beta_0\)</span> è l’intercetta del modello,</li>
+<li><span class="math inline">\(\beta_1\)</span> è il coefficiente per la variabile indipendente <span class="math inline">\(X\)</span>.</li>
+</ul>
+</section>
+<section id="passo-1-calcolare-gli-odds-per-i-due-valori-di-x" class="level3" data-number="91.8.2">
+<h3 data-number="91.8.2" class="anchored" data-anchor-id="passo-1-calcolare-gli-odds-per-i-due-valori-di-x"><span class="header-section-number">91.8.2</span> Passo 1: Calcolare gli odds per i due valori di <span class="math inline">\(X\)</span></h3>
+<p>Quando <span class="math inline">\(X = 0\)</span>, l’equazione diventa:</p>
+<p><span class="math display">\[
+\log \left( \frac{P(Y = 1 \mid X = 0)}{P(Y = 0 \mid X = 0)} \right) = \beta_0
+\]</span></p>
+<p>Questo significa che l’odds di <span class="math inline">\(Y = 1\)</span> dato che <span class="math inline">\(X = 0\)</span> è:</p>
+<p><span class="math display">\[
+\frac{P(Y = 1 \mid X = 0)}{P(Y = 0 \mid X = 0)} = e^{\beta_0}
+\]</span></p>
+<p>Allo stesso modo, quando <span class="math inline">\(X = 1\)</span>, l’equazione diventa:</p>
+<p><span class="math display">\[
+\log \left( \frac{P(Y = 1 \mid X = 1)}{P(Y = 0 \mid X = 1)} \right) = \beta_0 + \beta_1
+\]</span></p>
+<p>Quindi, l’odds di <span class="math inline">\(Y = 1\)</span> dato che <span class="math inline">\(X = 1\)</span> è:</p>
+<p><span class="math display">\[
+\frac{P(Y = 1 \mid X = 1)}{P(Y = 0 \mid X = 1)} = e^{\beta_0 + \beta_1}
+\]</span></p>
+</section>
+<section id="passo-2-calcolare-lodds-ratio" class="level3" data-number="91.8.3">
+<h3 data-number="91.8.3" class="anchored" data-anchor-id="passo-2-calcolare-lodds-ratio"><span class="header-section-number">91.8.3</span> Passo 2: Calcolare l’odds ratio</h3>
+<p>L’odds ratio è il rapporto tra gli odds quando <span class="math inline">\(X = 1\)</span> e quando <span class="math inline">\(X = 0\)</span>:</p>
+<p><span class="math display">\[
+\text{Odds Ratio} = \frac{\frac{P(Y = 1 \mid X = 1)}{P(Y = 0 \mid X = 1)}}{\frac{P(Y = 1 \mid X = 0)}{P(Y = 0 \mid X = 0)}} = \frac{e^{\beta_0 + \beta_1}}{e^{\beta_0}}
+\]</span></p>
+<p>Semplificando, otteniamo:</p>
+<p><span class="math display">\[
+\text{Odds Ratio} = e^{\beta_1}
+\]</span></p>
+</section>
+<section id="interpretazione-dellodds-ratio" class="level3" data-number="91.8.4">
+<h3 data-number="91.8.4" class="anchored" data-anchor-id="interpretazione-dellodds-ratio"><span class="header-section-number">91.8.4</span> Interpretazione dell’odds ratio</h3>
+<p>L’odds ratio <span class="math inline">\(e^{\beta_1}\)</span> rappresenta il cambiamento relativo negli odds di <span class="math inline">\(Y = 1\)</span> per un aumento di una unità di <span class="math inline">\(X\)</span> (in questo caso, il passaggio da <span class="math inline">\(X = 0\)</span> a <span class="math inline">\(X = 1\)</span>).</p>
+<p>Se <span class="math inline">\(\beta_1\)</span> è:</p>
+<ul>
+<li><strong>Maggiore di zero</strong> (<span class="math inline">\(e^{\beta_1} &gt; 1\)</span>): l’odds di <span class="math inline">\(Y = 1\)</span> aumenta quando <span class="math inline">\(X\)</span> passa da 0 a 1.</li>
+<li><strong>Minore di zero</strong> (<span class="math inline">\(e^{\beta_1} &lt; 1\)</span>): l’odds di <span class="math inline">\(Y = 1\)</span> diminuisce quando <span class="math inline">\(X\)</span> passa da 0 a 1.</li>
+<li><strong>Uguale a zero</strong> (<span class="math inline">\(e^{\beta_1} = 1\)</span>): l’odds di <span class="math inline">\(Y = 1\)</span> non cambia in base ai valori di <span class="math inline">\(X\)</span>.</li>
+</ul>
+<p>In sintesi, l’odds ratio <span class="math inline">\(e^{\beta_1}\)</span> fornisce una misura dell’associazione tra la variabile binaria <span class="math inline">\(X\)</span> e la probabilità dell’evento <span class="math inline">\(Y = 1\)</span>, rappresentando il moltiplicatore degli odds nel caso in cui <span class="math inline">\(X\)</span> passi da 0 a 1.</p>
+</section>
+<section id="interpretazione-sui-logit" class="level3" data-number="91.8.5">
+<h3 data-number="91.8.5" class="anchored" data-anchor-id="interpretazione-sui-logit"><span class="header-section-number">91.8.5</span> Interpretazione sui Logit</h3>
 <p>Nella regressione logistica, ogni coefficiente <span class="math inline">\(\beta_j\)</span> del modello può essere interpretato direttamente in termini di log-odds, che sono i logaritmi delle probabilità di ottenere un evento con esito positivo (<span class="math inline">\(y=1\)</span>). Quando interpretiamo i coefficienti:</p>
 <ul>
 <li><p><strong>Coefficienti Positivi (<span class="math inline">\(\beta_j &gt; 0\)</span>)</strong>: Un coefficiente positivo indica che c’è una relazione diretta tra il predittore e l’aumento dei log-odds di osservare l’evento di interesse. Questo significa che all’aumentare del valore del predittore, la probabilità dell’evento di interesse aumenta.</p></li>
 <li><p><strong>Coefficienti Negativi (<span class="math inline">\(\beta_j &lt; 0\)</span>)</strong>: Al contrario, un coefficiente negativo indica una relazione inversa tra il predittore e la probabilità logistica dell’evento. Con l’aumentare del predittore, i log-odds e quindi la probabilità dell’evento diminuiscono.</p></li>
 </ul>
 </section>
-<section id="interpretazione-sugli-odds-ratio-or" class="level3" data-number="91.8.2">
-<h3 data-number="91.8.2" class="anchored" data-anchor-id="interpretazione-sugli-odds-ratio-or"><span class="header-section-number">91.8.2</span> Interpretazione sugli Odds Ratio (OR)</h3>
+<section id="interpretazione-sugli-odds-ratio-or" class="level3" data-number="91.8.6">
+<h3 data-number="91.8.6" class="anchored" data-anchor-id="interpretazione-sugli-odds-ratio-or"><span class="header-section-number">91.8.6</span> Interpretazione sugli Odds Ratio (OR)</h3>
 <p>L’interpretazione dei coefficienti nella regressione logistica può estendersi agli odds ratio (OR), che forniscono informazioni sulla relazione tra i predittori e la probabilità dell’evento di interesse. Per esempio, consideriamo un modello con un predittore continuo <span class="math inline">\(X\)</span> e un coefficiente <span class="math inline">\(\beta_1 = 0.50\)</span>. Il logaritmo naturale dell’odds ratio, <span class="math inline">\(\log(OR) = 0.50\)</span>, viene esponenziato per ottenere:</p>
 <p><span class="math display">\[
 OR = e^{0.50} \approx 1.65.
 \]</span></p>
 <p>Questo risultato indica che per un’unità di incremento in <span class="math inline">\(X\)</span>, l’odds di sperimentare l’evento di interesse è circa 1.65 volte maggiore. In altre parole, l’incremento di una unità nel predittore <span class="math inline">\(X\)</span> aumenta l’odds di sperimentare l’evento di interesse di circa il 65%. Viceversa, un coefficiente negativo indicherebbe una diminuzione dell’odds per un incremento di una unità in <span class="math inline">\(X\)</span>.</p>
 </section>
-<section id="interpretazione-sulla-scala-delle-probabilità" class="level3" data-number="91.8.3">
-<h3 data-number="91.8.3" class="anchored" data-anchor-id="interpretazione-sulla-scala-delle-probabilità"><span class="header-section-number">91.8.3</span> Interpretazione sulla Scala delle Probabilità</h3>
+<section id="interpretazione-sulla-scala-delle-probabilità" class="level3" data-number="91.8.7">
+<h3 data-number="91.8.7" class="anchored" data-anchor-id="interpretazione-sulla-scala-delle-probabilità"><span class="header-section-number">91.8.7</span> Interpretazione sulla Scala delle Probabilità</h3>
 <p>La regressione logistica consente di interpretare i coefficienti non solo in termini di log-odds, ma anche relativamente alle variazioni di probabilità. Consideriamo un modello che predice la probabilità di superare un esame basandosi sul numero di ore di studio (<span class="math inline">\(X\)</span>).</p>
 <p>Supponiamo che il coefficiente associato alle ore di studio sia <span class="math inline">\(\beta_1 = 0.5\)</span>. Questo valore indica che ogni ora aggiuntiva di studio incrementa i log-odds di successo nell’esame. Per comprendere l’impatto di un’ora in più di studio sulla probabilità di successo, possiamo utilizzare la seguente formula:</p>
 <p><span class="math display">\[
@@ -2188,8 +2247,8 @@ p = \frac{e^{\text{logit}_p}}{1 + e^{\text{logit}_p}} = \frac{e^{\alpha + \beta 
 <li><strong><span class="math inline">\(\beta = 1.003503126\)</span></strong>: Questo è il coefficiente di <span class="math inline">\(x\)</span> e rappresenta il cambiamento nel logit per ogni incremento unitario in <span class="math inline">\(x\)</span>. In altre parole, per ogni incremento di 1 unità in <span class="math inline">\(x\)</span>, il logit della probabilità di successo aumenta di circa <span class="math inline">\(1.003503126\)</span>.</li>
 </ul>
 </section>
-<section id="odds-ratio" class="level4" data-number="91.9.1.3">
-<h4 data-number="91.9.1.3" class="anchored" data-anchor-id="odds-ratio"><span class="header-section-number">91.9.1.3</span> Odds Ratio</h4>
+<section id="odds-ratio-1" class="level4" data-number="91.9.1.3">
+<h4 data-number="91.9.1.3" class="anchored" data-anchor-id="odds-ratio-1"><span class="header-section-number">91.9.1.3</span> Odds Ratio</h4>
 <p>L’odds ratio (OR) misura il cambiamento relativo nelle odds di successo per un incremento unitario in <span class="math inline">\(x\)</span>. È ottenuto esponenziando il coefficiente <span class="math inline">\(\beta\)</span>:</p>
 <p><span class="math display">\[
 \text{OR} = e^{\beta} = e^{1.003503126} \approx 2.728
