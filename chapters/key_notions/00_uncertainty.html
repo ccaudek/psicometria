@@ -120,9 +120,14 @@ div.csl-indent {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Psicometria</a> 
-        <div class="sidebar-tools-main">
+        <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/ccaudek/psicometria/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Attiva/disattiva la modalità lettore">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
     </div>
       </div>
@@ -1367,9 +1372,11 @@ div.csl-indent {
   <li><a href="#incertezza-epistemica" id="toc-incertezza-epistemica" class="nav-link" data-scroll-target="#incertezza-epistemica"><span class="header-section-number">11.7.2</span> Incertezza Epistemica</a></li>
   <li><a href="#incertezza-ontologica" id="toc-incertezza-ontologica" class="nav-link" data-scroll-target="#incertezza-ontologica"><span class="header-section-number">11.7.3</span> Incertezza Ontologica</a></li>
   </ul></li>
-  <li><a href="#il-calcolo-bayesiano-dellincertezza" id="toc-il-calcolo-bayesiano-dellincertezza" class="nav-link" data-scroll-target="#il-calcolo-bayesiano-dellincertezza"><span class="header-section-number">11.8</span> Il calcolo bayesiano dell’incertezza</a></li>
-  <li><a href="#credenze-e-decisioni-nella-ricerca-psicologica" id="toc-credenze-e-decisioni-nella-ricerca-psicologica" class="nav-link" data-scroll-target="#credenze-e-decisioni-nella-ricerca-psicologica"><span class="header-section-number">11.9</span> Credenze e decisioni nella ricerca psicologica</a></li>
-  <li><a href="#conclusione" id="toc-conclusione" class="nav-link" data-scroll-target="#conclusione"><span class="header-section-number">11.10</span> Conclusione</a></li>
+  <li><a href="#il-calcolo-dellincertezza-nellapproccio-bayesiano" id="toc-il-calcolo-dellincertezza-nellapproccio-bayesiano" class="nav-link" data-scroll-target="#il-calcolo-dellincertezza-nellapproccio-bayesiano"><span class="header-section-number">11.8</span> Il calcolo dell’incertezza nell’approccio bayesiano</a>
+  <ul>
+  <li><a href="#il-ruolo-delle-credenze-e-delle-decisioni-nella-ricerca-psicologica" id="toc-il-ruolo-delle-credenze-e-delle-decisioni-nella-ricerca-psicologica" class="nav-link" data-scroll-target="#il-ruolo-delle-credenze-e-delle-decisioni-nella-ricerca-psicologica"><span class="header-section-number">11.8.1</span> Il ruolo delle credenze e delle decisioni nella ricerca psicologica</a></li>
+  </ul></li>
+  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">11.9</span> Riflessioni Conclusive</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/psicometria/blob/main/chapters/key_notions/00_uncertainty.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
     </div>
@@ -1399,86 +1406,69 @@ div.csl-indent {
 <p><strong>Concetti e competenze chiave</strong></p>
 <section id="introduzione" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">11.1</span> Introduzione</h2>
-<p>L’espressione “abbracciare l’incertezza” è una delle frasi più emblematiche tra i sostenitori della statistica bayesiana. In questo capitolo esploreremo il significato di questa affermazione, basandoci sulla trattazione presente nel primo capitolo di <em>Understanding uncertainty</em> di <span class="citation" data-cites="lindley2013understanding">Lindley (<a href="../../99-references.html#ref-lindley2013understanding" role="doc-biblioref">2013</a>)</span>. L’incertezza è un concetto centrale non solo per la statistica, ma per qualsiasi disciplina scientifica, e in particolare per la psicologia, che si confronta con fenomeni complessi e difficili da misurare.</p>
+<p>L’espressione “abbracciare l’incertezza” è tra le più emblematiche nel panorama della statistica bayesiana. In questo capitolo, approfondiremo il significato di questa affermazione, seguendo la trattazione introduttiva proposta nel primo capitolo di <em>Understanding Uncertainty</em> di Lindley <span class="citation" data-cites="lindley2013understanding">(<a href="../../99-references.html#ref-lindley2013understanding" role="doc-biblioref">Lindley, 2013</a>)</span>.</p>
 </section>
 <section id="lincertezza-nella-ricerca-psicologica" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="lincertezza-nella-ricerca-psicologica"><span class="header-section-number">11.2</span> L’incertezza nella ricerca psicologica</h2>
-<p>La psicologia, come molte altre scienze, si trova costantemente a confrontarsi con l’incertezza. Che si tratti di indagare i processi cognitivi, le emozioni o il comportamento umano, i ricercatori operano in un contesto di dati complessi, spesso ambigui, e soggetti a molteplici interpretazioni. Alcune affermazioni possono essere sostenute con un alto grado di confidenza, altre smentite con decisione, ma la maggior parte delle ipotesi cade in una zona grigia, in cui l’incertezza regna sovrana.</p>
-<p>Questo corso ha l’obiettivo di insegnare agli studenti come comprendere e gestire l’incertezza nella ricerca psicologica, utilizzando l’approccio bayesiano all’analisi dei dati. Questo metodo, incentrato sulla quantificazione delle nostre credenze e sul loro aggiornamento in base a nuove evidenze, permetterà agli studenti di affrontare in modo rigoroso e sistematico l’incertezza nella loro carriera accademica e nella pratica clinica.</p>
+<p>L’incertezza rappresenta un elemento cruciale non solo nella statistica, ma in tutte le discipline scientifiche, con particolare rilievo per la psicologia, che affronta fenomeni complessi e difficili da misurare. Nell’indagare processi cognitivi, emozioni e comportamenti, i ricercatori si confrontano con dati complessi, spesso ambigui e suscettibili di interpretazioni molteplici. Sebbene alcune affermazioni possano essere sostenute con elevata confidenza o confutate con certezza, la maggior parte delle ipotesi scientifiche si colloca in una zona grigia dominata dall’incertezza.</p>
+<p>L’obiettivo di questo insegnamento è guidare gli studenti nella comprensione e nella gestione dell’incertezza nella ricerca psicologica, adottando l’approccio bayesiano all’analisi dei dati. Questo metodo, basato sulla quantificazione e sull’aggiornamento delle credenze alla luce di nuove evidenze, fornirà agli studenti gli strumenti per affrontare l’incertezza in modo rigoroso e sistematico, sia nella carriera accademica sia nella pratica clinica.</p>
 </section>
 <section id="la-natura-soggettiva-dellincertezza" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="la-natura-soggettiva-dellincertezza"><span class="header-section-number">11.3</span> La natura soggettiva dell’incertezza</h2>
-<p>Un aspetto fondamentale dell’incertezza, spesso trascurato, è la sua dimensione soggettiva. <span class="citation" data-cites="definetti1970teoria">Finetti (<a href="../../99-references.html#ref-definetti1970teoria" role="doc-biblioref">1970</a>)</span> ha sottolineato come l’incertezza sia, in parte, una questione personale: ciò che è incerto per uno psicologo può non esserlo per un altro, a seconda della loro esperienza, conoscenza pregressa e interpretazione dei dati disponibili. Anche quando due ricercatori condividono la stessa incertezza su un dato problema, il loro grado di incertezza può variare notevolmente.</p>
-<p>Questo elemento soggettivo è particolarmente rilevante in psicologia, dove le differenze individuali e culturali influenzano la percezione e l’interpretazione dei fenomeni. L’approccio bayesiano consente di quantificare queste differenze soggettive, aggiornando le nostre credenze in modo coerente sulla base delle informazioni oggettive e della nostra esperienza.</p>
+<p>Un elemento cruciale dell’incertezza, spesso trascurato, è la sua dimensione soggettiva. De Finetti <span class="citation" data-cites="definetti1970teoria">(<a href="../../99-references.html#ref-definetti1970teoria" role="doc-biblioref">Finetti, 1970</a>)</span> ha evidenziato come l’incertezza sia, almeno in parte, una questione personale: ciò che è incerto per uno psicologo può non esserlo per un altro, in funzione delle loro esperienze, conoscenze pregresse e interpretazioni dei dati disponibili. Anche di fronte a una stessa questione, due ricercatori possono condividere un’incertezza comune, ma con gradi di intensità diversi.</p>
+<p>Questa componente soggettiva è particolarmente significativa in psicologia, dove le differenze individuali e culturali influenzano la percezione e l’interpretazione dei fenomeni. L’approccio bayesiano offre un potente strumento per affrontare questa soggettività, consentendo di quantificare le differenze tra credenze individuali e di aggiornarle in modo coerente sulla base di nuove evidenze oggettive.</p>
 </section>
 <section id="lonnipresenza-dellincertezza" class="level2" data-number="11.4">
 <h2 data-number="11.4" class="anchored" data-anchor-id="lonnipresenza-dellincertezza"><span class="header-section-number">11.4</span> L’onnipresenza dell’incertezza</h2>
-<p>Nella ricerca psicologica, l’incertezza è onnipresente. Ogni esperimento, ogni misurazione e ogni interpretazione dei dati comporta un certo grado di incertezza. Questo è particolarmente vero quando si studiano fenomeni complessi come il comportamento umano o i processi mentali, influenzati da innumerevoli variabili, molte delle quali difficili da controllare o misurare con precisione.</p>
-<p>Nonostante ciò, l’incertezza non deve essere vista come un ostacolo insormontabile. Al contrario, riconoscerla e quantificarla può portare a una comprensione più profonda e realistica dei fenomeni psicologici. Attraverso l’approccio bayesiano, impareremo a trattare l’incertezza come una parte integrata del processo di indagine scientifica.</p>
+<p>L’incertezza pervade ogni aspetto della ricerca psicologica. Ogni esperimento, misurazione o interpretazione dei dati comporta un margine di incertezza. Questa condizione è particolarmente evidente nello studio di fenomeni complessi come il comportamento umano o i processi mentali, dove innumerevoli variabili interagiscono, molte delle quali difficili da misurare o controllare con precisione.</p>
+<p>Tuttavia, l’incertezza non deve essere vista come un ostacolo insormontabile. Al contrario, riconoscerla e quantificarla può favorire una comprensione più profonda e realistica dei fenomeni psicologici. Attraverso l’approccio bayesiano, diventa possibile integrare l’incertezza nel processo di indagine scientifica, trattandola non come un limite, ma come una risorsa.</p>
 </section>
 <section id="superare-la-soppressione-dellincertezza" class="level2" data-number="11.5">
 <h2 data-number="11.5" class="anchored" data-anchor-id="superare-la-soppressione-dellincertezza"><span class="header-section-number">11.5</span> Superare la soppressione dell’incertezza</h2>
-<p>Nonostante la sua onnipresenza, l’incertezza è spesso soppressa o ignorata nella comunicazione scientifica. Questo avviene attraverso interpretazioni eccessivamente ottimistiche dei risultati, presentazione di conclusioni come fatti incontrovertibili o riluttanza nel riconoscere i limiti degli studi condotti. Tale tendenza è comprensibile: l’incertezza genera disagio, sia per i ricercatori che per il pubblico. Tuttavia, ignorarla può portare a conclusioni errate e a una visione distorta della realtà studiata.</p>
-<p>L’approccio bayesiano permette di affrontare l’incertezza in modo esplicito e costruttivo, insegnandoci a quantificarla, ragionarci sopra e comunicarla chiaramente. Questo non solo migliora la trasparenza della ricerca, ma consente di formulare conclusioni più accurate e oneste.</p>
+<p>Nonostante la sua onnipresenza, l’incertezza è spesso ignorata o minimizzata nella comunicazione scientifica. Questo può avvenire attraverso interpretazioni eccessivamente ottimistiche dei risultati, la presentazione di conclusioni come fatti certi, o una riluttanza a riconoscere i limiti degli studi condotti. Tale atteggiamento, sebbene comprensibile, può condurre a conclusioni errate e a una visione distorta della realtà.</p>
+<p>L’approccio bayesiano permette di affrontare l’incertezza in modo esplicito e costruttivo. Fornendo un quadro rigoroso per quantificarla, analizzarla e comunicarla chiaramente, migliora la trasparenza della ricerca e promuove conclusioni più oneste e accurate.</p>
 </section>
 <section id="i-benefici-dellincertezza" class="level2" data-number="11.6">
 <h2 data-number="11.6" class="anchored" data-anchor-id="i-benefici-dellincertezza"><span class="header-section-number">11.6</span> I benefici dell’incertezza</h2>
-<p>Contrariamente a quanto si possa pensare, l’incertezza offre numerosi vantaggi alla ricerca psicologica:</p>
+<p>Contrariamente a quanto si possa pensare, l’incertezza offre numerosi vantaggi per la ricerca psicologica:</p>
 <ul>
-<li>Stimola la curiosità e la ricerca: L’incertezza spinge i ricercatori a porre domande, esplorare nuove ipotesi e sviluppare metodi più raffinati per studiare i fenomeni psicologici.</li>
-<li>Promuove l’onestà intellettuale: Riconoscere l’incertezza rende i ricercatori più cauti nelle loro affermazioni e aperti a prospettive alternative.</li>
-<li>Migliora la qualità della ricerca: Considerare esplicitamente l’incertezza porta a disegni sperimentali più robusti e interpretazioni dei dati più accurate.</li>
-<li>Facilita la collaborazione: Riconoscere i limiti della nostra conoscenza ci rende più propensi a cercare l’input di altri ricercatori e a collaborare in team interdisciplinari.</li>
-<li>Riflette meglio la complessità della mente umana: L’incertezza è intrinseca a molti processi psicologici, e riconoscerla nei nostri modelli permette una rappresentazione più fedele di tale complessità.</li>
+<li><strong>Stimola l’esplorazione scientifica</strong>: La consapevolezza dell’incertezza incoraggia i ricercatori a formulare nuove ipotesi e a migliorare i metodi di studio.</li>
+<li><strong>Promuove l’onestà intellettuale</strong>: Accettare l’incertezza rende i ricercatori più cauti e aperti a prospettive alternative.</li>
+<li><strong>Migliora la qualità delle analisi</strong>: Integrare l’incertezza porta a disegni sperimentali più robusti e interpretazioni più accurate.</li>
+<li><strong>Facilita la collaborazione interdisciplinare</strong>: Riconoscere i limiti delle proprie conoscenze stimola la ricerca di input da altri esperti.</li>
+<li><strong>Riflette la complessità dei fenomeni psicologici</strong>: L’incertezza è intrinseca ai processi mentali e riconoscerla consente di rappresentarli in modo più realistico.</li>
 </ul>
 </section>
 <section id="tipi-di-incertezza" class="level2" data-number="11.7">
 <h2 data-number="11.7" class="anchored" data-anchor-id="tipi-di-incertezza"><span class="header-section-number">11.7</span> Tipi di incertezza</h2>
-<p>Nella ricerca, l’incertezza riguarda la mancanza o insufficienza di conoscenza. A seconda della sua origine, possiamo distinguere tra tre principali tipi di incertezza: aleatoria, epistemica e ontologica <span class="citation" data-cites="gansch2020system">(<a href="../../99-references.html#ref-gansch2020system" role="doc-biblioref">Gansch &amp; Adee, 2020</a>)</span>.</p>
+<p>L’incertezza nella ricerca può essere classificata in tre categorie principali, in base alla sua origine: aleatoria, epistemica e ontologica <span class="citation" data-cites="gansch2020system">(<a href="../../99-references.html#ref-gansch2020system" role="doc-biblioref">Gansch &amp; Adee, 2020</a>)</span>.</p>
 <section id="incertezza-aleatoria" class="level3" data-number="11.7.1">
 <h3 data-number="11.7.1" class="anchored" data-anchor-id="incertezza-aleatoria"><span class="header-section-number">11.7.1</span> Incertezza Aleatoria</h3>
-<p>L’incertezza aleatoria deriva dalla natura intrinsecamente casuale di un processo. È considerata irreducibile per un dato modello probabilistico ed è quantificata tramite distribuzioni probabilistiche.</p>
-<p>Ad esempio, se siamo interessati alla distribuzione delle posizioni di due pianeti nello spazio, possiamo usare un modello probabilistico che stima la probabilità che un pianeta si trovi in una determinata posizione. Tuttavia, la posizione esatta è soggetta a incertezza aleatoria.</p>
+<p>L’incertezza aleatoria è intrinseca alla natura casuale di un processo e non può essere eliminata per un dato modello probabilistico. Essa è considerata irreducibile e viene quantificata tramite distribuzioni probabilistiche. Ad esempio, nella misurazione della risposta di un individuo a uno stimolo, la variabilità intrinseca nel comportamento umano, dovuta a fattori imprevedibili, rappresenta un caso di incertezza aleatoria. Questo tipo di incertezza è una caratteristica fondamentale di molti fenomeni psicologici e biologici.</p>
 </section>
 <section id="incertezza-epistemica" class="level3" data-number="11.7.2">
 <h3 data-number="11.7.2" class="anchored" data-anchor-id="incertezza-epistemica"><span class="header-section-number">11.7.2</span> Incertezza Epistemica</h3>
-<p>L’incertezza epistemica riguarda la mancanza di conoscenza o la nostra comprensione limitata di un fenomeno. Un elemento chiave è che siamo consapevoli di questa mancanza: l’incertezza epistemica può essere definita come il “noto-ignoto” di un modello.</p>
-<p>Un modello è una rappresentazione semplificata della realtà, e questa semplificazione introduce un’incertezza legata ai dettagli non inclusi. Ad esempio, se iniziamo con un modello deterministico per il moto dei pianeti, per masse puntiformi idealizzate, il modello è completamente accurato e non ci sono incertezze. Tuttavia, nella realtà, i pianeti possono avere una distribuzione di massa eterogenea, e un modello basato su masse puntiformi non descrive più accuratamente il sistema fisico. La mancanza di precisione nel modello porta a un’incertezza epistemica, che potrebbe essere ridotta con un modello più accurato, ma richiederebbe informazioni complete sulla distribuzione di massa, non sempre disponibili.</p>
-<p>Consideriamo ora un modello probabilistico: la distribuzione probabilistica delle posizioni dei pianeti riflette l’incertezza aleatoria, ma le probabilità stimate non sono sempre precise. Il divario tra probabilità effettive e osservate rappresenta l’incertezza epistemica del modello probabilistico.</p>
+<p>L’incertezza epistemica deriva dalla conoscenza limitata o incompleta di un fenomeno. Essa rappresenta il “noto-ignoto”, cioè ciò che sappiamo di non sapere, ed è legata alle semplificazioni insite in ogni modello scientifico. Ad esempio, un modello psicologico che non consideri le influenze culturali o ambientali potrebbe risultare incompleto, introducendo incertezza epistemica. Diversamente dall’incertezza aleatoria, l’incertezza epistemica può essere ridotta attraverso il miglioramento dei modelli, l’inclusione di variabili rilevanti o la raccolta di ulteriori dati.</p>
 </section>
 <section id="incertezza-ontologica" class="level3" data-number="11.7.3">
 <h3 data-number="11.7.3" class="anchored" data-anchor-id="incertezza-ontologica"><span class="header-section-number">11.7.3</span> Incertezza Ontologica</h3>
-<p>L’incertezza ontologica si riferisce a una mancanza totale di conoscenza su aspetti rilevanti di un sistema, descritta come “ignoto-ignoto”. Questo tipo di incertezza implica che vi siano fenomeni o variabili sconosciuti che i nostri modelli non riescono ancora a identificare.</p>
-<p>Tornando all’esempio dei pianeti, immaginiamo di modellare un sistema con due pianeti. Se osserviamo comportamenti che non coincidono con le previsioni del nostro modello, potrebbe esserci un terzo pianeta non ancora scoperto che influisce sul sistema. Questa situazione rappresenta un caso di incertezza ontologica, poiché si basa su fattori che non avevamo preso in considerazione nel modello.</p>
-<p>In sintesi, questi tre tipi di incertezza rappresentano differenti sfide nella modellizzazione e nella comprensione dei sistemi complessi. Mentre l’incertezza aleatoria è intrinseca e non può essere eliminata, l’incertezza epistemica può essere ridotta migliorando i modelli e ottenendo più informazioni. L’incertezza ontologica, invece, rappresenta una frontiera di ciò che è ancora sconosciuto.</p>
+<p>L’incertezza ontologica riguarda l’“ignoto-ignoto”, ovvero aspetti di un sistema che non sono ancora stati identificati. In psicologia, questo potrebbe riferirsi a variabili o processi non ancora scoperti che influenzano un comportamento. Ad esempio, studiando i disturbi mentali, potrebbero emergere nuovi fattori di rischio precedentemente sconosciuti.</p>
 </section>
 </section>
-<section id="il-calcolo-bayesiano-dellincertezza" class="level2" data-number="11.8">
-<h2 data-number="11.8" class="anchored" data-anchor-id="il-calcolo-bayesiano-dellincertezza"><span class="header-section-number">11.8</span> Il calcolo bayesiano dell’incertezza</h2>
-<p>Il nucleo di questo insegnamento sarà l’apprendimento di come quantificare e ragionare sull’incertezza utilizzando l’approccio bayesiano <span class="citation" data-cites="gelman1995bayesian">(<a href="../../99-references.html#ref-gelman1995bayesian" role="doc-biblioref">Gelman et al., 1995</a>)</span>. Basato sul teorema di Bayes, questo metodo fornisce un framework coerente per aggiornare le credenze alla luce di nuove evidenze.</p>
-<p>I passi fondamentali includono:</p>
-<ol type="1">
-<li>Quantificare le credenze iniziali (prior) su fenomeni psicologici.</li>
-<li>Valutare la forza dell’evidenza fornita dai dati (likelihood).</li>
-<li>Combinare prior e likelihood per ottenere credenze aggiornate (posterior).</li>
-<li>Usare queste credenze aggiornate per prendere decisioni e pianificare ulteriori ricerche.</li>
-</ol>
-<p>Questo approccio trasforma l’incertezza in una quantità con cui ragionare rigorosamente e matematicamente.</p>
+<section id="il-calcolo-dellincertezza-nellapproccio-bayesiano" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="il-calcolo-dellincertezza-nellapproccio-bayesiano"><span class="header-section-number">11.8</span> Il calcolo dell’incertezza nell’approccio bayesiano</h2>
+<p>L’insegnamento si propone di fornire agli studenti strumenti per affrontare e quantificare l’incertezza attraverso l’approccio bayesiano <span class="citation" data-cites="gelman1995bayesian">(<a href="../../99-references.html#ref-gelman1995bayesian" role="doc-biblioref">Gelman et al., 1995</a>)</span>. Fondato sul teorema di Bayes, questo metodo rappresenta un quadro teorico rigoroso e sistematico per aggiornare le credenze alla luce di nuove evidenze, configurandosi come una componente centrale della metodologia scientifica.</p>
+<p>Il processo si basa su quattro passaggi essenziali. In primo luogo, si parte dalla quantificazione delle credenze iniziali, note come <em>prior</em>, che rappresentano le conoscenze pregresse o le ipotesi relative a un determinato fenomeno psicologico. Successivamente, si analizza la forza delle evidenze empiriche fornite dai dati raccolti, formalizzata nella <em>likelihood</em>. Queste due informazioni vengono combinate per generare le credenze aggiornate, chiamate <em>posterior</em>, che sintetizzano la conoscenza disponibile integrando i dati empirici e le ipotesi iniziali. Infine, le credenze aggiornate possono essere utilizzate per prendere decisioni più informate, pianificare ricerche future e orientare interventi.</p>
+<section id="il-ruolo-delle-credenze-e-delle-decisioni-nella-ricerca-psicologica" class="level3" data-number="11.8.1">
+<h3 data-number="11.8.1" class="anchored" data-anchor-id="il-ruolo-delle-credenze-e-delle-decisioni-nella-ricerca-psicologica"><span class="header-section-number">11.8.1</span> Il ruolo delle credenze e delle decisioni nella ricerca psicologica</h3>
+<p>Le credenze rivestono un ruolo fondamentale nella ricerca psicologica, influenzando tutte le fasi del processo scientifico, dalla progettazione degli esperimenti all’interpretazione dei risultati, fino alla scelta di interventi clinici. L’approccio bayesiano si distingue per la sua capacità di esplicitare e formalizzare queste credenze, consentendo di aggiornare il loro contenuto in modo coerente e trasparente man mano che emergono nuove evidenze.</p>
+<p>Questo metodo permette non solo di ottimizzare le decisioni basandosi su informazioni aggiornate, ma anche di comunicare chiaramente l’incertezza associata alle conclusioni, evidenziandone i limiti e garantendo maggiore trasparenza scientifica. Affrontare l’incertezza come una componente intrinseca della ricerca non solo migliora la qualità dell’analisi, ma consente anche di promuovere un approccio più realistico e rigoroso nello studio dei fenomeni psicologici.</p>
+<p>In sintesi, l’approccio bayesiano offre un modello operativo per integrare l’incertezza nel processo decisionale, trattandola non come un ostacolo, ma come un elemento essenziale per una comprensione più sfumata e accurata della realtà.</p>
 </section>
-<section id="credenze-e-decisioni-nella-ricerca-psicologica" class="level2" data-number="11.9">
-<h2 data-number="11.9" class="anchored" data-anchor-id="credenze-e-decisioni-nella-ricerca-psicologica"><span class="header-section-number">11.9</span> Credenze e decisioni nella ricerca psicologica</h2>
-<p>Le credenze guidano le decisioni dei ricercatori, che possono riguardare il disegno di esperimenti, l’interpretazione dei risultati o la scelta di interventi clinici. L’approccio bayesiano fornisce strumenti per:</p>
-<ul>
-<li>Articolare chiaramente le credenze prima di condurre una ricerca.</li>
-<li>Aggiornare le credenze man mano che si raccolgono nuovi dati.</li>
-<li>Prendere decisioni ottimali basate sulle credenze aggiornate.</li>
-<li>Comunicare in modo trasparente l’incertezza associata alle conclusioni.</li>
-</ul>
-<p>L’adozione di un approccio bayesiano può contribuire a una psicologia più affidabile, capace di affrontare le sfide complesse del tentativo di comprendere la mente e il comportamento umano.</p>
 </section>
-<section id="conclusione" class="level2" data-number="11.10">
-<h2 data-number="11.10" class="anchored" data-anchor-id="conclusione"><span class="header-section-number">11.10</span> Conclusione</h2>
-<p>Questo insegnamento guiderà verso l’analisi bayesiana dei dati psicologici, insegnando a riconoscere l’incertezza come parte integrante del processo scientifico. Utilizzando l’incertezza come strumento, possiamo ottenere una comprensione più sfumata e profonda dei fenomeni psicologici.</p>
+<section id="riflessioni-conclusive" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="riflessioni-conclusive"><span class="header-section-number">11.9</span> Riflessioni Conclusive</h2>
+<p>Questo insegnamento fornisce gli strumenti per applicare l’analisi bayesiana nell’ambito dei dati psicologici, insegnando a considerare l’incertezza come una parte integrante e preziosa del processo scientifico. Attraverso questo approccio, gli studenti potranno acquisire una comprensione più raffinata e strutturata dei fenomeni psicologici, integrando l’incertezza come elemento fondamentale per interpretare i dati e formulare inferenze rigorose.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
