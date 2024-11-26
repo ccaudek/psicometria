@@ -1,0 +1,94 @@
+---
+pagetitle: "B000286 - Psicometria (A.A. 2024/2025)"
+toc: false
+---
+
+```{r}
+#| echo: false
+#| fig-width: 3.5
+#| fig-asp: .618
+#| fig-align: center
+#| out-width: 60%
+library(ggplot2)
+theme_set(theme_void())
+source("slides/_common_dnorm_trunc.R")
+grid <- seq(0, 1, length.out = 101)
+set.seed(4)
+dat_x <- rnorm_trunc(10, mean = 0.6, sd = 0.2)
+lik_x <- compute_lik(dat_x)
+ggplot(data.frame(x = c(0, 1)), aes(x = x)) +
+    stat_function(
+        fun = dnorm_trunc, args = list(mean = .8, sd = .1),
+        aes(linetype = "Prior", col = "Prior")
+    ) +
+    geom_line(
+        data = data.frame(x = grid, dens = lik_x),
+        aes(
+            x = x, y = dens, linetype = "Likelihood",
+            col = "Likelihood"
+        )
+    ) +
+    geom_line(
+        data = data.frame(
+            x = grid,
+            dens = update_probs(
+                dnorm_trunc(grid, .8, .1),
+                lik_x
+            )
+        ),
+        aes(x = x, y = dens, col = "Posterior", linetype = "Posterior")
+    ) +
+    ylim(0, 7) +
+    labs(x = NULL, y = NULL) +
+    scale_color_manual("", values = c("red", "blue", "green")) +
+    scale_linetype_manual("", values = c("twodash", "solid", "dashed")) +
+    theme(legend.position = c(.3, .7))
+```
+
+# Benvenuti 
+
+Benvenuti nel sito web dell'insegnamento di [Psicometria](https://www.unifi.it/index.php?module=ofform2&mode=1&cmd=3&AA=2023&afId=689762), parte del [Corso di Laurea in Scienze e Tecniche Psicologiche](https://www.psicologia.unifi.it/vp-130-scienze-e-tecniche-psicologiche-l-24.html) dell'[Università degli Studi di Firenze](https://www.unifi.it/).
+
+## Descrizione
+
+L'insegnamento offre una formazione teorico-pratica nell'ambito dell'inferenza statistica, con particolare attenzione alle applicazioni in campo psicologico. Attraverso esercitazioni pratiche in Python e R, gli studenti acquisiranno competenze nell'analisi di dati e nell'utilizzo di modelli statistici avanzati.
+
+## Contenuti
+
+Il programma copre una vasta gamma di argomenti, partendo dalle tecniche di analisi descrittiva fino ai modelli statistici avanzati, inclusi quelli gerarchici e dinamici. Un focus particolare è dedicato all'inferenza causale basata sull'approccio bayesiano, che permette di esplorare le relazioni causali in maniera più flessibile e approfondita rispetto ai modelli lineari tradizionali. Questo approccio offre strumenti per un'analisi più approfondita e accurata dei fenomeni psicologici.
+
+## Obiettivi formativi
+
+Al termine dell'insegnamento, gli studenti saranno in grado di:
+
+-   applicare l'inferenza bayesiana a problemi pratici;
+
+-   comprendere e utilizzare modelli a parametro singolo e multiplo;
+
+-   padroneggiare gli strumenti computazionali (Python e R) per la modellazione bayesiana;
+
+-   analizzare criticamente i dati in ambito psicologico.
+
+## Materiale di Supporto e Esercitazioni
+
+Per supportare l’apprendimento e stimolare l’analisi critica, è disponibile un repository di esercizi pratici e materiali di approfondimento, accessibile [qui](https://ccaudek.github.io/psicometria-esercizi/).
+
+## Informazioni sull'insegnamento
+
+-   **Codice**: B000286 - Psicometria </br>
+-   **Modulo**: B000286 - Psicometria (Cognomi L-Z) </br>
+-   **Corso di laurea**: Scienze e Tecniche Psicologiche </br>
+-   **Anno Accademico**: 2024-2025 </br>
+-   **Materiali didattici**: È sufficiente disporre di un laptop/computer funzionante. Tutti i materiali didattici e il software necessario sono forniti gratuitamente a tutti gli studenti, senza richiedere alcun acquisto.</br>
+-   **Calendario**: Il corso si terrà dal 3 marzo al 31 maggio 2025.</br>
+-   **Orario delle lezioni**: Le lezioni si svolgeranno il lunedì e il martedì dalle 8:30 alle 10:30 e il giovedì dalle 11:30 alle 13:30.</br>
+-   **Luogo**: Le lezioni si terranno presso il Plesso didattico La Torretta.</br>
+-   **Modalità di svolgimento della didattica**: Le lezioni ed esercitazioni saranno svolte in modalità frontale.</br>
+
+::: callout-note
+Questo sito web è la fonte ufficiale per tutte le informazioni relative al programma dell'insegnamento *B000286 - Psicometria (Cognomi L-Z)* per l'A.A. 2024-2025 e le modalità d’esame.
+:::
+
+## Syllabus 
+
+Il Syllabus completo dell'insegnamento è scaricabile da [questo link](syllabus/syllabus.pdf).

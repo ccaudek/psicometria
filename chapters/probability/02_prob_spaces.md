@@ -7,65 +7,74 @@
 **Concetti e Competenze Chiave**
 
 
-## Introduzione {.unnumbered}
+## Introduzione alle Probabilità: Origine e Definizione
 
-### Introduzione alle Probabilità: Origine e Definizione
-
-Da dove derivano matematicamente i numeri che chiamiamo "probabilità"? Per rispondere, ci riferiamo alla trattazione di [Michael Betancourt](https://github.com/betanalpha/quarto_chapters/tree/main), che chiarisce il concetto di *distribuzione di probabilità*. Questo capitolo offre una versione semplificata del suo lavoro, mantenendo la notazione e le figure originali.
-
-Betancourt afferma che i principi della teoria della probabilità sono semplici; le difficoltà matematiche emergono principalmente nell'applicazione a insiemi complessi come i numeri reali. Per semplificare, Betancourt introduce i fondamenti della teoria della probabilità utilizzando uno spazio campionario composto da un numero finito di elementi.
+Da dove derivano matematicamente i numeri che chiamiamo "probabilità"? Per rispondere, in questo capitolo faremo riferimento alla trattazione di [Michael Betancourt](https://github.com/betanalpha/quarto_chapters/tree/main). Questo capitolo offre una versione semplificata del suo lavoro, mantenendo la notazione e le figure originali.
 
 ## Insiemi Finiti
 
+Per semplificare, Betancourt introduce i fondamenti della teoria della probabilità utilizzando uno spazio campionario composto da un numero finito di elementi.
+
 Un **insieme finito** è costituito da un numero finito di elementi distinti,
+
 $$
 X = \{x_1, ..., x_N\}.
 $$
-Qui, l'indice numerico serve a distinguere gli $N$ elementi individuali, senza implicare necessariamente un ordine particolare tra di essi. Per evitare qualsiasi presunzione di ordine, Betancourt utilizza un insieme di cinque elementi come esempio:
+
+Qui, l'indice numerico serve a distinguere gli $N$ elementi individuali, senza implicare necessariamente un ordine particolare tra di essi. Per evitare qualsiasi presunzione di ordine, Betancourt utilizza il seguente insieme arbitrario di cinque elementi quale esempio:
+
 $$
 X = \{\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit\}.
 $$
 
 ![Un insieme finito contiene un numero finito di elementi. Questo particolare insieme ne contiene cinque.](figures/ambient_set/ambient_set){width=50% #fig-ambient_set}
 
-Nelle applicazioni pratiche della teoria della probabilità, gli elementi astratti $x_{n}$ rappresentano oggetti concreti e significativi. Tuttavia, in questo capitolo, ci si concentrerà esclusivamente sui concetti matematici, evitando qualsiasi interpretazione particolare. Quando $X$ è inteso a rappresentare *tutti* gli oggetti di interesse in una data applicazione, viene denominato **spazio campionario**.
-
-Una volta definito lo spazio campionario, possiamo organizzare e manipolare i suoi elementi in vari modi.
+Nelle applicazioni pratiche della teoria della probabilità, gli elementi astratti $x_{n}$ rappresentano oggetti concreti. Tuttavia, in questo capitolo, ci si concentrerà esclusivamente sui concetti matematici, evitando qualsiasi interpretazione particolare. Quando l'insieme $X$ rappresenta *tutti* gli oggetti di interesse in una data applicazione, viene denominato **spazio campionario**. Una volta definito lo spazio campionario, possiamo organizzare e manipolare i suoi elementi in vari modi.
 
 ## Sottoinsiemi
 
-Un **sottoinsieme** di $X$ è qualsiasi collezione di elementi in $X$. Per evitare ambiguità, userò esclusivamente lettere romane minuscole $x$ per indicare un elemento variabile nello spazio campionario $X$ e lettere minuscole sans serif $\mathsf{x}$ per indicare un sottoinsieme variabile.
+Un **sottoinsieme** di $X$ è qualsiasi collezione di elementi in $X$. Per evitare ambiguità, Betancourt usa le lettere romane minuscole $x$ per indicare un elemento variabile nello spazio campionario $X$ e le lettere minuscole sans serif $\mathsf{x}$ per indicare un sottoinsieme variabile.
 
 Ad esempio, $\mathsf{x} = \{\Box, \diamondsuit, \heartsuit\}$ è un sottoinsieme di $X = \{\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit\}$. Importante notare che nel concetto di sottoinsieme non esiste la nozione di molteplicità, solo di appartenenza: un sottoinsieme può includere un elemento $x_{n}$ ma non può includerlo più volte.
 
 ![Un sottoinsieme $\mathsf{x} \subset X$ è qualsiasi collezione di elementi dallo spazio campionario $X$. Qui $\mathsf{x} = \{\Box, \diamondsuit, \heartsuit\}$ contiene solo tre dei cinque elementi in $X = \{\Box, \clubsuit, \diamondsuit, \heartsuit, \spadesuit\}.](figures/subset/subset){width=50% #fig-subset}
 
-Se $\mathsf{x}$ è un sottoinsieme dello spazio campionario $X$ allora scriviamo $\mathsf{x} \subset X$. Quando $\mathsf{x}$ potrebbe contenere tutti gli elementi di $X$, nel qual caso $\mathsf{x} = X$, allora scriviamo $\mathsf{x} \subseteq X$. 
+Se $\mathsf{x}$ è un sottoinsieme dello spazio campionario $X$ allora scriviamo $\mathsf{x} \subset X$. Quando $\mathsf{x}$ contiene tutti gli elementi di $X$, ovvero $\mathsf{x} = X$, allora scriviamo $\mathsf{x} \subseteq X$. 
 
-Indipendentemente da quanti elementi un insieme finito $X$ contiene, possiamo sempre costruire tre tipi speciali di sottoinsiemi. L'**insieme vuoto** $\emptyset = \{\}$ non contiene alcun elemento. D'altra parte, l'intero insieme stesso può essere considerato un sottoinsieme contenente tutti gli elementi. Un sottoinsieme contenente un singolo elemento è denotato $\{ x_{n} \}$ e chiamato **insieme atomico**.
+Indipendentemente da quanti elementi un insieme finito $X$ contiene, possiamo sempre costruire tre tipi speciali di sottoinsiemi. L'**insieme vuoto** $\emptyset = \{\}$ non contiene alcun elemento. D'altra parte, l'intero insieme stesso può essere considerato un sottoinsieme contenente tutti gli elementi. Un sottoinsieme contenente un singolo elemento è denotato $\{ x_{n} \}$ ed è chiamato **insieme atomico**.
 
 Ci sono
+
 $$
 {N \choose n} = \frac{ N! }{ n! (N - n)!}
 $$
-modi per selezionare $n$ elementi da un insieme finito di $N$ elementi totali, e quindi ${N \choose n}$ sottoinsiemi totali di dimensione $n$. Ad esempio, esiste un solo sottoinsieme che non contiene elementi,
+
+modi per selezionare $n$ elementi da un insieme finito di $N$ elementi totali, e quindi ${N \choose n}$ sottoinsiemi totali di dimensione $n$. Ad esempio, esiste un solo sottoinsieme che non contiene alcun elemento,
+
 $$
 {N \choose 0} = \frac{ N! }{ 0! (N - 0)!} = \frac{ N! }{ N! } = 1,
 $$
-che è solo l'insieme vuoto. Allo stesso modo, esiste un solo sottoinsieme che contiene tutti gli elementi,
+
+ed è l'insieme vuoto. Allo stesso modo, esiste un solo sottoinsieme che contiene tutti gli elementi,
+
 $$
 {N \choose N} = \frac{ N! }{ N! (N - N)!} = \frac{ N! }{ N! } = 1,
 $$
-che è solo l'insieme completo stesso. D'altra parte, ci sono
+
+ed è l'insieme completo stesso. D'altra parte, ci sono
+
 $$
 {N \choose 1} = \frac{ N! }{ 1! (N - 1)!} = N
 $$
+
 insiemi atomici distinti che contengono un solo elemento, uno per ciascun elemento in $X$.
 
 Contando tutti i sottoinsiemi di tutte le dimensioni possibili si ottiene
+
 $$
 \sum_{n = 0}^{N} {N \choose n} = 2^{N}
 $$
+
 sottoinsiemi possibili che possiamo costruire da un insieme finito con $N$ elementi. 
 
 La collezione di tutti i sottoinsiemi è essa stessa un insieme finito con $2^{N}$ elementi. Chiamiamo questo insieme **insieme potenza** di $X$ e lo denotiamo $2^{X}$.
@@ -417,7 +426,7 @@ Questa flessibilità nelle modalità di costruzione delle misure è particolarme
 
 Infine, la definizione di misura sui sottoinsiemi $\mu : 2^{X} \rightarrow [0, \infty]$ è cruciale per estendere la teoria della misura oltre gli insiemi finiti. Questa estensione è necessaria per definire misure in modo coerente su insiemi matematicamente più complessi, come la retta reale.
 
-## Commenti e considerazioni finali
+## Riflessioni Conclusive
 
 Il significato applicativo delle nozioni di misura e distribuzione di probabilità è centrale per comprendere come utilizzare questi concetti nella pratica, in particolare nella statistica bayesiana. Il punto cruciale è capire cosa rappresenta $M$, la "misura totale". Nelle applicazioni bayesiane, $M$ rappresenta la nostra certezza complessiva.
 
